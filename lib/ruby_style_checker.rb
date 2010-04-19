@@ -52,6 +52,9 @@ module RubyStyleChecker
     list_with_absolute_paths.sort
   end
 
+  # Checks a sing file for all defined styling parameters.
+  # 
+  # @param [String] file_name Path to a file to check styling on.
   def self.check_file file_name
     source = File.open(file_name, 'r')
     
@@ -61,6 +64,10 @@ module RubyStyleChecker
       
       if line.hard_tabbed?
         puts "Line is hard-tabbed:\n\t#{file_name}: #{line_number}"
+      end
+
+      if line.camel_case?
+        puts "Method name uses camel case:\n\t#{file_name}: #{line_number}"
       end
 
       line_number = line_number + 1

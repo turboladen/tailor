@@ -1,0 +1,3 @@
+def doSomething
+  return
+end

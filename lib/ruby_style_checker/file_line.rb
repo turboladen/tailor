@@ -49,7 +49,46 @@ module RubyStyleChecker
     # 
     # @return [Boolean] Returns true if the method name is camel case.
     def camel_case?
-      
+      # Make sure we're dealing with a method before evaluating.
+      if self.method?
+        words = self.split(/ /)
+
+        # The 2nd word is the method name, so evaluate that.
+        if words[1] =~ /[A-Z]/
+          return true
+        else
+          return false
+        end
+      end
+    end
+
+    # Checks to see if the line is the start of a method's definition.
+    # 
+    # @return [Boolean] Returns true if the line contains 'def' and the second word
+    #   begins with a lowercase letter.
+    def method?
+      words = self.split(/ /)
+      if words[0].eql? "def" and starts_with_lowercase?(words[1])
+        return true
+      else
+        return false
+      end
+    end
+
+    #-----------------------------------------------------------------
+    # Private methods
+    #-----------------------------------------------------------------
+    private
+    
+    # Checks to see if a word begins with a lowercase letter.
+    # 
+    # @param [String] word The word to check case on.
+    def starts_with_lowercase? word
+      if word =~ /^[a-z]/
+        return true
+      else
+        return false
+      end
     end
   end
 end
