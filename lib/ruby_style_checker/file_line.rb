@@ -19,7 +19,6 @@ module RubyStyleChecker
 
     # Determines the number of spaces the line is indented.
     # 
-    # @param [FileLine] line A line from a source file.
     # @return [Number] Returns the number of spaces the line is indented.
     def indented_spaces
       # Find out how many spaces exist at the beginning of the line
@@ -34,7 +33,6 @@ module RubyStyleChecker
 
     # Checks to see if the source code line is tabbed
     # 
-    # @param [String] line A line from a source file.
     # @return [Boolean] Returns true if the file contains a tab
     #   character before any others in that line.
     def hard_tabbed?
@@ -45,6 +43,13 @@ module RubyStyleChecker
         when /^\s+\t/ then true
         else false
       end
+    end
+
+    # Checks to see if the method is using camel case.
+    # 
+    # @return [Boolean] Returns true if the method name is camel case.
+    def camel_case?
+      
     end
   end
 end
