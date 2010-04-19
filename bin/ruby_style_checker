@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib/')
+
+require 'ruby_style_checker'
+
+def usage
+  puts "Usage: #{__FILE__} [path to validate files from]"
+end
+
+if ARGV[0].nil?
+  puts usage
+else
+  path_to_check = ARGV[0]
+  RubyStyleChecker.check path_to_check
+end
+

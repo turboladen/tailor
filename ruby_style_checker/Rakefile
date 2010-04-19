@@ -1,0 +1,50 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+
+def get_descr_from_readme
+  paragraph_count = 0
+  File.readlines('README', '').each do |paragraph|
+    paragraph_count += 1
+    if paragraph_count == 2
+      return paragraph
+    end
+  end
+end
+
+
+Hoe.spec 'ruby_style_checker' do
+  # developer('FIX', 'FIX@example.com')
+
+  # self.rubyforge_name = 'ruby_style_checkerx' # if different than 'ruby_style_checker'
+  self.version = RubyStyleChecker::VERSION
+  self.post_install_message = File.readlines 'PostInstall.txt'
+  self.readme_file    = 'README'
+  self.history_file   = 'History.txt'
+  self.description    = get_descr_from_readme
+  self.rspec_options  += ['--colour', '--format', 'specdoc']
+  self.yard_options   += ['--markup', 'textile', '--protected']
+  self.extra_dev_deps += [
+    ['rspec'],
+    ['yard', '>=0.5.3'],
+    ['cucumber', '>=0.6.3']
+end
+
+
+#-------------------------------------------------------------------------------
+# Overwrite the :clobber_docs Rake task so that it doesn't destroy our docs
+#   directory.
+#-------------------------------------------------------------------------------
+class Rake::Task
+  def overwrite(&block)
+    @actions.clear
+    enhance(&block)
+  end
+end
+
+Rake::Task[:clobber_docs].overwrite do
+end
+
+
+# vim: syntax=ruby
