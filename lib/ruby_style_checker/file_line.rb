@@ -110,16 +110,17 @@ module RubyStyleChecker
       end
     end
 
-    # Checks to see if the line has trailing whitespace at the end of it.
+    # Checks to see if the line has trailing whitespace at the end of it. Note that
+    #   this excludes empty lines that have spaces on them!
     #
     # @return [Number] Returns the number of trailing spaces at the end of the
     #   line.
     def trailing_whitespace_count
-      spaces = self.scan(/\x20+|\x09+$/)
+      spaces = self.scan(/\S(\x20+|\x09+)$/)
       if spaces.first.eql? nil
         return 0
       else
-        return spaces.first.length
+        return spaces.first.first.length
       end
     end
     

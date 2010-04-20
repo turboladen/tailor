@@ -66,7 +66,7 @@ describe RubyStyleChecker::FileLine do
   end
   
   it "should detect the number of trailing whitespace(s)" do
-    line = FileLine.new "  puts 'This is a line.'  "
+    line = FileLine.new "  puts 'This is a line.'  \n"
     line.trailing_whitespace_count.should == 2
   end
 end
