@@ -106,7 +106,7 @@ module RubyStyleChecker
       # Check for trailing whitespace
       count = line.trailing_whitespace_count
       if count > 0
-        puts "Line contains #{count} trailing whitespaces:"
+        puts "Line contains #{count} trailing whitespace(s):"
         puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
         problem_count += 1
       end

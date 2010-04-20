@@ -65,6 +65,6 @@ Then "the checker should tell me my indentation is OK" do
 end
 
 Then /^the checker should tell me each line has trailing whitespace$/ do
-  @result.should include("Line contains #{@whitespace_count} trailing whitespaces")
+  @result.should include("Line contains #{@whitespace_count} trailing whitespace(s)")
 end
   
