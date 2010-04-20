@@ -43,10 +43,25 @@ describe RubyStyleChecker::FileLine do
     end
   end
   
-  context "should check methods for camel case" do
-    it "when the method name is camel case" do
+  context "should check for camel case when" do
+    it "is a method and the method name is camel case" do
       line = FileLine.new "def doSomething"
-      line.camel_case?.should be_true
+      line.camel_case_method?.should be_true
+    end
+
+    it "is a method and the method name is snake case" do
+      line = FileLine.new "def do_something"
+      line.camel_case_method?.should be_false
+    end
+
+    it "is a class and the class name is camel case" do
+      line = FileLine.new "class AClass"
+      line.camel_case_class?.should be_true
+    end
+
+    it "is a class and the class name is snake case" do
+      line = FileLine.new "class A_Class"
+      line.camel_case_class?.should be_false
     end
   end
 end

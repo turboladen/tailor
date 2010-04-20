@@ -66,8 +66,12 @@ module RubyStyleChecker
         puts "Line is hard-tabbed:\n\t#{file_name}: #{line_number}"
       end
 
-      if line.camel_case?
+      if line.method? and line.camel_case_method?
         puts "Method name uses camel case:\n\t#{file_name}: #{line_number}"
+      end
+
+      if line.class? and !line.camel_case_class?
+        puts "Class name does NOT use camel case:\n\t#{file_name}: #{line_number}"
       end
 
       line_number = line_number + 1

@@ -5,26 +5,6 @@ require 'ruby_style_checker/file_line'
 include RubyStyleChecker
 include RubyStyleChecker::IndentationChecker
 
-# Counts keywords in the file provided.
-# 
-# @param [String] file Path to the file to check
-# @param [String] keyword Keyword to count
-# @return [Number] Number of keywords counted
-def count_keywords file, keyword
-  ruby_source = File.open(file, 'r')
-  
-  count = 0
-  ruby_source.each_line do |line|
-    if line =~ /^#{keyword}/
-      count =+ 1
-    end
-  end
-  ruby_source.close
-  count
-end
-
-
-
 #-----------------------------------------------------------------------------
 # "Given" statements
 #-----------------------------------------------------------------------------
@@ -48,10 +28,6 @@ Given /^that file does not contain any "([^\"]*)" statements$/ do |keyword|
   count.should == 0
 end
 
-Given /^the file contains only "([^\"]*)" "([^\"]*)" statement$/ do |count_in_spec, keyword|
-  count_in_file = count_keywords(@ruby_source, keyword)
-  count_in_file.should == count_in_spec.to_i
-end
 
 Given /^that file is indented properly$/ do
   @file_list.each do |file|
@@ -63,8 +39,7 @@ end
 # "When" statements
 #-----------------------------------------------------------------------------
 When "I run the checker on the project" do
-  #pending
-  #result = exec ""
+  @result = `#{@ruby_style_checker} #{@project_dir}`
 end
 
 #-----------------------------------------------------------------------------

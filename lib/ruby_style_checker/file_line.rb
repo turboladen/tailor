@@ -48,17 +48,39 @@ module RubyStyleChecker
     # Checks to see if the method is using camel case.
     # 
     # @return [Boolean] Returns true if the method name is camel case.
-    def camel_case?
-      # Make sure we're dealing with a method before evaluating.
-      if self.method?
-        words = self.split(/ /)
+    def camel_case_method?
+      words = self.split(/ /)
 
-        # The 2nd word is the method name, so evaluate that.
+      # If we're dealing with a method, check for uppercase chars 
+      if self.method?
+
+        # The 2nd word is the method name, so evaluate that for caps chars.
         if words[1] =~ /[A-Z]/
           return true
         else
           return false
         end
+      # If we're dealing with a class, check for an underscore.
+      else
+        return nil
+      end
+    end
+
+    # Checks to see if the class is using camel case.
+    # 
+    # @return [Boolean] Returns true if the class name is camel case.
+    def camel_case_class?
+      words = self.split(/ /)
+
+      # If we're dealing with a class, check for an underscore.
+      if self.class?
+        if words[1] =~ /_/
+          return false
+        else
+          return true
+        end
+      else
+        return nil
       end
     end
 
@@ -76,6 +98,19 @@ module RubyStyleChecker
     end
 
     #-----------------------------------------------------------------
+    # Checks to see if the line is the start of a class's definition.
+    # 
+    # @return [Boolean] Returns true if the line contains 'class' and the second word
+    #   begins with a uppercase letter.
+    def class?
+      words = self.split(/ /)
+      if words[0].eql? "class" and starts_with_uppercase?(words[1])
+        return true
+      else
+        return false
+      end
+    end
+
     # Private methods
     #-----------------------------------------------------------------
     private
@@ -85,6 +120,17 @@ module RubyStyleChecker
     # @param [String] word The word to check case on.
     def starts_with_lowercase? word
       if word =~ /^[a-z]/
+        return true
+      else
+        return false
+      end
+    end
+
+    # Checks to see if a word begins with an uppercase letter.
+    # 
+    # @param [String] word The word to check case on.
+    def starts_with_uppercase? word
+      if word =~ /^[A-Z]/
         return true
       else
         return false
