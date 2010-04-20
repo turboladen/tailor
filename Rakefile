@@ -9,7 +9,7 @@ Hoe.plugin :yard
 # Hoe.plugin :website
 # Hoe.plugin :cucumberfeatures
 
- Gets the description from the main README file
+# Gets the description from the main README file
 def get_descr_from_readme
   paragraph_count = 0
   File.readlines('README.rdoc', '').each do |paragraph|
