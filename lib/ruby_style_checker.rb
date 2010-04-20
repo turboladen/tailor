@@ -2,6 +2,7 @@ $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'fileutils'
+require 'pathname'
 require 'ruby_style_checker/file_line'
 
 module RubyStyleChecker
@@ -68,7 +69,14 @@ module RubyStyleChecker
   # @return [Number] Returns the number of errors on the file.
   def self.find_problems file_name
     source = File.open(file_name, 'r')
+    file_path = Pathname.new(file_name)
     
+    puts
+    puts "#-----------------------------------------------------------------------------------"
+    puts "# Looking for bad style in:"
+    puts "# \t'#{file_path}'"
+    puts "#-----------------------------------------------------------------------------------"
+
     problem_count = 0
     line_number = 1
     source.each_line do |source_line|
@@ -76,26 +84,30 @@ module RubyStyleChecker
       
       # Check for hard tabs
       if line.hard_tabbed?
-        puts "Line is hard-tabbed:\n\t#{file_name}: #{line_number}"
+        puts "Line is hard-tabbed:"
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
         problem_count += 1
       end
 
       # Check for camel-cased methods
       if line.method? and line.camel_case_method?
-        puts "Method name uses camel case:\n\t#{file_name}: #{line_number}"
+        puts "Method name uses camel case:"
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
         problem_count += 1
       end
 
       # Check for non-camel-cased classes
       if line.class? and !line.camel_case_class?
-        puts "Class name does NOT use camel case:\n\t#{file_name}: #{line_number}"
+        puts "Class name does NOT use camel case:"
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
         problem_count += 1
       end
 
       # Check for trailing whitespace
       count = line.trailing_whitespace_count
       if count > 0
-        puts "Line contains #{count} trailing whitespaces:\n\t#{file_name}: #{line_number}"
+        puts "Line contains #{count} trailing whitespaces:"
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
         problem_count += 1
       end
 
@@ -114,7 +126,8 @@ module RubyStyleChecker
     puts "The following files are out of style:"
 
     files_and_problems.each_pair do |file, problem_count|
-      puts "\t#{file}: #{problem_count} problems" unless problem_count == 0
+      file_path = Pathname.new(file)
+      puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{problem_count} problems" unless problem_count == 0
     end
   end
 end
