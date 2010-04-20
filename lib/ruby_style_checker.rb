@@ -19,14 +19,24 @@ module RubyStyleChecker
     'while'
     ]
     
+  # Check all files in a directory for style problems.
+  # 
+  # @param [String] project_base_dir Path to a directory to recurse into and look
+  #   for problems in.
+  # @return [Hash] Returns a hash that contains file_name => problem_count.
   def self.check project_base_dir
     # Get the list of files to process
     ruby_files_in_project = project_file_list(project_base_dir)
     
+    files_and_problems = Hash.new
+    
     # Process each file
     ruby_files_in_project.each do |file_name|
-      check_file file_name
+      problems = find_problems file_name
+      files_and_problems[file_name] = problems
     end
+
+    files_and_problems
   end
 
   # Gets a list of .rb files in the project.  This gets each file's absolute path
@@ -55,9 +65,11 @@ module RubyStyleChecker
   # Checks a sing file for all defined styling parameters.
   # 
   # @param [String] file_name Path to a file to check styling on.
-  def self.check_file file_name
+  # @return [Number] Returns the number of errors on the file.
+  def self.find_problems file_name
     source = File.open(file_name, 'r')
     
+    problem_count = 0
     line_number = 1
     source.each_line do |source_line|
       line = FileLine.new source_line
@@ -65,25 +77,44 @@ module RubyStyleChecker
       # Check for hard tabs
       if line.hard_tabbed?
         puts "Line is hard-tabbed:\n\t#{file_name}: #{line_number}"
+        problem_count += 1
       end
 
       # Check for camel-cased methods
       if line.method? and line.camel_case_method?
         puts "Method name uses camel case:\n\t#{file_name}: #{line_number}"
+        problem_count += 1
       end
 
       # Check for non-camel-cased classes
       if line.class? and !line.camel_case_class?
         puts "Class name does NOT use camel case:\n\t#{file_name}: #{line_number}"
+        problem_count += 1
       end
 
       # Check for trailing whitespace
       count = line.trailing_whitespace_count
       if count > 0
         puts "Line contains #{count} trailing whitespaces:\n\t#{file_name}: #{line_number}"
+        problem_count += 1
       end
 
-      line_number = line_number + 1
+      line_number += 1
+    end
+
+    problem_count
+  end
+
+  # Prints a summary report that shows which files had how many problems.
+  # 
+  # @param [Hash] files_and_problems Returns a hash that contains 
+  #   file_name => problem_count.
+  def self.print_report files_and_problems
+    puts
+    puts "The following files are out of style:"
+
+    files_and_problems.each_pair do |file, problem_count|
+      puts "\t#{file}: #{problem_count} problems" unless problem_count == 0
     end
   end
 end

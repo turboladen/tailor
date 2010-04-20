@@ -12,6 +12,7 @@ if ARGV[0].nil?
   puts usage
 else
   path_to_check = ARGV[0]
-  RubyStyleChecker.check path_to_check
+  files_and_problems = RubyStyleChecker.check path_to_check
+  RubyStyleChecker.print_report files_and_problems
 end
 
