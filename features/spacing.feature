@@ -23,4 +23,10 @@ Feature: Indentation
       And that file contains lines with hard tabs
     When I run the checker on the project
     Then the checker should tell me each line that has a hard tab
-  
+
+  Scenario: A single file that has all lines with trailing whitespace
+    Given I have a project directory "1_file_with_trailing_whitespace"
+      And I have "1" file in my project
+      And that file contains lines with trailing whitespace
+    When I run the checker on the project
+    Then the checker should tell me each line has trailing whitespace

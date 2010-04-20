@@ -62,16 +62,25 @@ module RubyStyleChecker
     source.each_line do |source_line|
       line = FileLine.new source_line
       
+      # Check for hard tabs
       if line.hard_tabbed?
         puts "Line is hard-tabbed:\n\t#{file_name}: #{line_number}"
       end
 
+      # Check for camel-cased methods
       if line.method? and line.camel_case_method?
         puts "Method name uses camel case:\n\t#{file_name}: #{line_number}"
       end
 
+      # Check for non-camel-cased classes
       if line.class? and !line.camel_case_class?
         puts "Class name does NOT use camel case:\n\t#{file_name}: #{line_number}"
+      end
+
+      # Check for trailing whitespace
+      count = line.trailing_whitespace_count
+      if count > 0
+        puts "Line contains #{count} trailing whitespaces:\n\t#{file_name}: #{line_number}"
       end
 
       line_number = line_number + 1

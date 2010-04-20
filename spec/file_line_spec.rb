@@ -64,4 +64,9 @@ describe RubyStyleChecker::FileLine do
       line.camel_case_class?.should be_false
     end
   end
+  
+  it "should detect the number of trailing whitespace(s)" do
+    line = FileLine.new "  puts 'This is a line.'  "
+    line.trailing_whitespace_count.should == 2
+  end
 end

@@ -97,7 +97,6 @@ module RubyStyleChecker
       end
     end
 
-    #-----------------------------------------------------------------
     # Checks to see if the line is the start of a class's definition.
     # 
     # @return [Boolean] Returns true if the line contains 'class' and the second word
@@ -111,6 +110,20 @@ module RubyStyleChecker
       end
     end
 
+    # Checks to see if the line has trailing whitespace at the end of it.
+    #
+    # @return [Number] Returns the number of trailing spaces at the end of the
+    #   line.
+    def trailing_whitespace_count
+      spaces = self.scan(/\s+$/)
+      if spaces.first.eql? nil
+        return 0
+      else
+        return spaces.first.length
+      end
+    end
+    
+    #-----------------------------------------------------------------
     # Private methods
     #-----------------------------------------------------------------
     private

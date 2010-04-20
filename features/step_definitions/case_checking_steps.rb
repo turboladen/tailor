@@ -20,7 +20,7 @@ Given /^the file contains a "([^\"]*)" that has a camel\-cased name$/ do |keywor
 end
 
 Given /^the file contains a "([^\"]*)" that has a snake\-cased name$/ do |keyword|
-    contains_camel_case?(keyword).should be_false
+  contains_camel_case?(keyword).should be_false
 end
 
 Then /^the checker should tell me I have a camel\-cased method name$/ do
