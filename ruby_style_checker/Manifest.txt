@@ -1,8 +1,0 @@
-.autotest
-History.txt
-Manifest.txt
-README.txt
-Rakefile
-bin/ruby_style_checker
-lib/ruby_style_checker.rb
-test/test_ruby_style_checker.rb
