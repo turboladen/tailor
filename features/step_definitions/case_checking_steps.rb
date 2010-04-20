@@ -27,6 +27,10 @@ Then /^the checker should tell me I have a camel\-cased method name$/ do
   @result.should include("Method name uses camel case")
 end
 
+Then /^the checker shouldn't tell me the method name is camel\-case$/ do
+  @result.should_not include("Method name uses camel case")
+end
+
 Then /^the checker shouldn't tell me the class name is camel\-case$/ do
   @result.should_not include("Class name uses camel case")
 end
