@@ -23,15 +23,16 @@ end
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.spec 'ruby_style_checker' do
-  self.version      = RubyStyleChecker::VERSION
+  self.summary      = "Utility for checking style of Ruby files."
   self.developer('Steve Loveless', 'steve.loveless@gmail.com')
   self.post_install_message = File.readlines 'PostInstall.txt'
-  #self.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
-  self.rubyforge_name       = self.name
+  self.rubyforge_name = self.name
+  self.version        = RubyStyleChecker::VERSION
+  self.url            = 'http://github.com/turboladen/ruby-style-checker'
+  self.description    = get_descr_from_readme
   self.readme_file    = 'README.rdoc'
   self.history_file   = 'History.txt'
-  self.description    = get_descr_from_readme
-  self.rspec_options  += ['--colour', '--format', 'specdoc']
+  self.rspec_options  += ['--color', '--format', 'specdoc']
   self.extra_dev_deps += [
     ['rspec'],
     ['yard', '>=0.5.3'],
