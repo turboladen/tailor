@@ -12,17 +12,17 @@ a number of style guides that are popular in the Ruby community.
 
 * Recursively checks for bad style in Ruby files in a directory 
 * Checks for:
- * Indentation
-  * Hard-tabs in indentation
- * Name cases
-  * Snake case class & module names
-  * Camel case method names
- * Extra whitespace
-  * At the end of lines
-  * On empty lines
-  * After commas
- * Missing whitespace
-  * Before commas
+  * Indentation
+    * Hard-tabs in indentation
+  * Name cases
+    * Snake case class & module names
+    * Camel case method names
+  * Extra whitespace
+    * At the end of lines
+    * On empty lines
+    * After commas
+  * Missing whitespace
+    * Before commas
 
 == SYNOPSIS:
 
