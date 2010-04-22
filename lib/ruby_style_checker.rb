@@ -19,18 +19,18 @@ module RubyStyleChecker
     'until',
     'while'
     ]
-    
+
   # Check all files in a directory for style problems.
-  # 
+  #
   # @param [String] project_base_dir Path to a directory to recurse into and look
   #   for problems in.
   # @return [Hash] Returns a hash that contains file_name => problem_count.
   def self.check project_base_dir
     # Get the list of files to process
     ruby_files_in_project = project_file_list(project_base_dir)
-    
+
     files_and_problems = Hash.new
-    
+
     # Process each file
     ruby_files_in_project.each do |file_name|
       problems = find_problems file_name
@@ -49,28 +49,28 @@ module RubyStyleChecker
     if File.directory? base_dir
       FileUtils.cd base_dir
     end
-    
+
     # Get the .rb files
     ruby_files_in_project = Dir.glob(File.join('*', '**', '*.rb'))
     Dir.glob(File.join('*.rb')).each { |f| ruby_files_in_project << f }
-    
+
     # Expand paths to all files in the list
     list_with_absolute_paths = Array.new
     ruby_files_in_project.each do |file|
       list_with_absolute_paths << File.expand_path(file)
     end
-    
+
     list_with_absolute_paths.sort
   end
 
   # Checks a sing file for all defined styling parameters.
-  # 
+  #
   # @param [String] file_name Path to a file to check styling on.
   # @return [Number] Returns the number of errors on the file.
   def self.find_problems file_name
     source = File.open(file_name, 'r')
     file_path = Pathname.new(file_name)
-    
+
     puts
     puts "#-----------------------------------------------------------------------------------"
     puts "# Looking for bad style in:"
@@ -81,7 +81,7 @@ module RubyStyleChecker
     line_number = 1
     source.each_line do |source_line|
       line = FileLine.new source_line
-      
+
       # Check for hard tabs
       if line.hard_tabbed?
         puts "Line is hard-tabbed:"
@@ -118,8 +118,8 @@ module RubyStyleChecker
   end
 
   # Prints a summary report that shows which files had how many problems.
-  # 
-  # @param [Hash] files_and_problems Returns a hash that contains 
+  #
+  # @param [Hash] files_and_problems Returns a hash that contains
   #   file_name => problem_count.
   def self.print_report files_and_problems
     puts

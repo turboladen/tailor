@@ -69,4 +69,41 @@ describe RubyStyleChecker::FileLine do
     line = FileLine.new "  puts 'This is a line.'  \n"
     line.trailing_whitespace_count.should == 2
   end
+
+  # TODO: These methods should probably all be called by line.check_comma_spacing
+  #   or something.  As it stands, these tests are going to start to get confusing,
+  #   plus having one entry point for checking commas probably makes the most sense.
+  context "spacing after a comma" do
+    it "should detect no space after a comma" do
+      line = FileLine.new "  def do_something this,that"
+      line.no_space_after_comma?.should be_true
+    end
+
+    it "should skip code that has 1 space after a comma" do
+      line = FileLine.new "  def do_something this, that"
+      line.no_space_after_comma?.should be_false
+    end
+
+    it "should detect 2 spaces after a comma" do
+      line = FileLine.new "  def do_something this,  that"
+      line.two_or_more_spaces_after_comma?.should be_true
+    end
+
+    it "should skip code that has 1 space after a comma" do
+      line = FileLine.new "  def do_something this, that"
+      line.two_or_more_spaces_after_comma?.should be_false
+    end
+  end
+
+  context "comments" do
+    it "should detect a regular full line comment" do
+      line = FileLine.new "  # This is a comment."
+      line.line_comment?.should be_true
+    end
+    
+    it "should skip code that's not a full line comment" do
+      line = FileLine.new "  puts 'this is some code.'"
+      line.line_comment?.should be_false
+    end
+  end
 end

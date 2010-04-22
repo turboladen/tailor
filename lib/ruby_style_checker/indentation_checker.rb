@@ -1,10 +1,10 @@
 module RubyStyleChecker
-  module IndentationChecker    
+  module IndentationChecker
     def validate_indentation file
       results = Array.new
-      
+
       source = File.open(file, 'r')
-      
+
       # Start the line number at 1, not 0
       line_number = 1
 
@@ -12,12 +12,12 @@ module RubyStyleChecker
         line = FileLine.new(line_of_code)
 
         # Make sure the line isn't hard-tabbed
-        if line.hard_tabbed? 
+        if line.hard_tabbed?
           results << "Line #{line_number} is hard-tabbed."
         end
 
         # Check for indentation
-        #spaces = line.indented_spaces 
+        #spaces = line.indented_spaces
         #current_depth_level = spaces / 2
 
         line_number =+ 1
