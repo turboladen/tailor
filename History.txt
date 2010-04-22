@@ -1,4 +1,16 @@
-=== 0.0.1 2010-04-16
+=== 0.0.1 2010-04-22
 
-* 1 major enhancement:
-  * Initial release
+* Initial release!
+* Command-line executable takes a directory and checks all files, recursively.
+* Checks for:
+  * Indentation
+    * Hard-tabs in indentation
+  * Name cases
+    * Snake case class & module names
+    * Camel case method names
+  * Extra whitespace
+    * At the end of lines
+    * On empty lines
+    * After commas
+  * Missing whitespace
+    * Before commas
