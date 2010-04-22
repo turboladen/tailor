@@ -36,10 +36,10 @@ end
 
 Given /^that file contains lines with trailing whitespace$/ do
   @ruby_source = File.open(@file_list[0], 'r')
-  
+
   @ruby_source.each_line do |line|
     source_line = RubyStyleChecker::FileLine.new line
-    
+
     @whitespace_count = source_line.trailing_whitespace_count
 
     @whitespace_count.should > 0
@@ -67,4 +67,3 @@ end
 Then /^the checker should tell me each line has trailing whitespace$/ do
   @result.should include("Line contains #{@whitespace_count} trailing whitespace(s)")
 end
-  

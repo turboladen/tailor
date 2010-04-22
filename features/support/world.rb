@@ -6,13 +6,13 @@ include RubyStyleChecker
 
 
 # Counts keywords in the file provided.
-# 
+#
 # @param [String] file Path to the file to check
 # @param [String] keyword Keyword to count
 # @return [Number] Number of keywords counted
 def count_keywords file, keyword
   ruby_source = File.open(file, 'r')
-  
+
   count = 0
   ruby_source.each_line do |line|
     if line =~ /^#{keyword}/

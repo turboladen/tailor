@@ -20,7 +20,7 @@ describe RubyStyleChecker::FileLine do
       line.indented_spaces.should == 1
     end
   end
-  
+
   context "should check hard tabs" do
     it "when the line is indented 1 hard tab" do
       line = FileLine.new "\tdef do_something"
@@ -42,7 +42,7 @@ describe RubyStyleChecker::FileLine do
       line.hard_tabbed?.should be_false
     end
   end
-  
+
   context "should check for camel case when" do
     it "is a method and the method name is camel case" do
       line = FileLine.new "def doSomething"
@@ -64,7 +64,7 @@ describe RubyStyleChecker::FileLine do
       line.camel_case_class?.should be_false
     end
   end
-  
+
   it "should detect the number of trailing whitespace(s)" do
     line = FileLine.new "  puts 'This is a line.'  \n"
     line.trailing_whitespace_count.should == 2
@@ -100,7 +100,7 @@ describe RubyStyleChecker::FileLine do
       line = FileLine.new "  # This is a comment."
       line.line_comment?.should be_true
     end
-    
+
     it "should skip code that's not a full line comment" do
       line = FileLine.new "  puts 'this is some code.'"
       line.line_comment?.should be_false
