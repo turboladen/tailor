@@ -6,7 +6,7 @@ require 'pathname'
 require 'tailor/file_line'
 
 module Tailor
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 
   RUBY_KEYWORDS_WITH_END = [
     'begin',

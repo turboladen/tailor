@@ -13,6 +13,7 @@ features/step_definitions/spacing_steps.rb
 features/support/1_file_with_camel_case_class/camel_case_class.rb
 features/support/1_file_with_camel_case_method/camel_case_method.rb
 features/support/1_file_with_hard_tabs/hard_tab.rb
+features/support/1_file_with_long_lines/long_lines.rb
 features/support/1_file_with_snake_case_class/snake_case_class.rb
 features/support/1_file_with_snake_case_method/snake_case_method.rb
 features/support/1_file_with_trailing_whitespace/trailing_whitespace.rb
@@ -31,6 +32,5 @@ script/generate
 spec/file_line_spec.rb
 spec/spec.opts
 spec/spec_helper.rb
-spec/support/bobo.rb
-spec/tailor.rb
+spec/tailor_spec.rb
 tasks/rspec.rake

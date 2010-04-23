@@ -1,3 +1,8 @@
+=== 0.0.2 2010-04-23
+
+* Renamed project from ruby_style_checker to Tailor
+* Added check for lines > 80 characters
+
 === 0.0.1 2010-04-22
 
 * Initial release!
@@ -12,5 +17,3 @@
     * At the end of lines
     * On empty lines
     * After commas
-  * Missing whitespace
-    * Before commas
