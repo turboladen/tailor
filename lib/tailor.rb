@@ -124,6 +124,11 @@ module Tailor
   # Prints to screen where the problem was found and adds 1 to the total
   #   number of problems.
   # 
+  # @param [String] message Tell the user this problem occurred.
+  # @param [Pathname] file_path Path of the file in which the problem
+  #   occurred.
+  # @param [Number] line_number Line number of the file in which the problem
+  #   occurred.
   def log_problem message, file_path, line_number
     puts message
     puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
