@@ -85,44 +85,49 @@ module Tailor
 
       # Check for hard tabs
       if line.hard_tabbed?
-        puts "Line is hard-tabbed:"
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-        problem_count += 1
+        message = "Line is hard-tabbed:"
+        log_problem message, file_path, line_number
       end
 
       # Check for camel-cased methods
       if line.method? and line.camel_case_method?
-        puts "Method name uses camel case:"
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-        problem_count += 1
+        message = "Method name uses camel case:"
+        log_problem message, file_path, line_number
       end
 
       # Check for non-camel-cased classes
       if line.class? and !line.camel_case_class?
-        puts "Class name does NOT use camel case:"
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-        problem_count += 1
+        message = "Class name does NOT use camel case:"
+        log_problem message, file_path, line_number
       end
 
       # Check for trailing whitespace
       count = line.trailing_whitespace_count
       if count > 0
-        puts "Line contains #{count} trailing whitespace(s):"
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-        problem_count += 1
+        message = "Line contains #{count} trailing whitespace(s):"
+        log_problem message, file_path, line_number
       end
 
       # Check for long lines
       if line.too_long?
-        puts "Line is greater than #{FileLine::LINE_LENGTH_MAX} characters:"
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-        problem_count += 1
+        message = "Line is greater than #{FileLine::LINE_LENGTH_MAX} characters:"
+        log_problem message, file_path, line_number
       end
 
       line_number += 1
     end
 
     problem_count
+  end
+
+  ##
+  # Prints to screen where the problem was found and adds 1 to the total
+  #   number of problems.
+  # 
+  def log_problem message, file_path, line_number
+    puts message
+    puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
+    problem_count += 1
   end
 
   # Prints a summary report that shows which files had how many problems.
