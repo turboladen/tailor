@@ -1,4 +1,4 @@
-module RubyStyleChecker
+module Tailor
   module IndentationChecker
     def validate_indentation file
       results = Array.new

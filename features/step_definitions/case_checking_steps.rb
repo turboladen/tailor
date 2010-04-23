@@ -1,4 +1,4 @@
-require 'ruby_style_checker/file_line'
+require 'tailor/file_line'
 
 def contains_camel_case? keyword
   @ruby_source = File.open(@file_list[0], 'r')

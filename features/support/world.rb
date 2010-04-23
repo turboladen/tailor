@@ -1,8 +1,8 @@
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
 
-require 'ruby_style_checker'
+require 'tailor'
 
-include RubyStyleChecker
+include Tailor
 
 
 # Counts keywords in the file provided.
@@ -26,7 +26,7 @@ end
 
 # Prep for the testing
 Before do
-  @ruby_style_checker = "#{File.dirname(__FILE__)}/../../bin/ruby_style_checker"
+  @tailor = "#{File.dirname(__FILE__)}/../../bin/tailor"
 end
 
 

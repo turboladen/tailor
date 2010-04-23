@@ -1,4 +1,4 @@
-module RubyStyleChecker
+module Tailor
 
   # Calling modules will get the Ruby file to check, then read by line.  This
   #   class allows for checking of line-specific style by Represents a single
@@ -148,6 +148,10 @@ module RubyStyleChecker
       end
     end
 
+    ##
+    # Checks to see if there's no spaces after a comma.
+    # 
+    # @return [Boolean] Returns true if there isn't a space after a comma.
     def no_space_after_comma?
       if self.scan(/\w\,\w/).empty?
         return false
@@ -156,6 +160,10 @@ module RubyStyleChecker
       end
     end
 
+    ##
+    # Checks to see if there's no space before a comma.
+    # 
+    # @return [Boolean] Returns true if there's no space before a comma.
     def no_space_before_comma?
       if self.scan(/\w\s\,/)
         return true
