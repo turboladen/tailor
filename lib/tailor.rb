@@ -78,7 +78,7 @@ module Tailor
     puts "# \t'#{file_path}'"
     puts "#-------------------------------------------------------------------"
 
-    problem_count = 0
+    @problem_count = 0
     line_number = 1
     source.each_line do |source_line|
       line = FileLine.new source_line
@@ -117,7 +117,7 @@ module Tailor
       line_number += 1
     end
 
-    problem_count
+    @problem_count
   end
 
   ##
@@ -129,10 +129,10 @@ module Tailor
   #   occurred.
   # @param [Number] line_number Line number of the file in which the problem
   #   occurred.
-  def log_problem message, file_path, line_number
+  def self.log_problem message, file_path, line_number
     puts message
     puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-    problem_count += 1
+    @problem_count += 1
   end
 
   # Prints a summary report that shows which files had how many problems.
@@ -146,7 +146,7 @@ module Tailor
     files_and_problems.each_pair do |file, problem_count|
       file_path = Pathname.new(file)
       unless problem_count == 0
-        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{problem_count} problems"
+        puts "\t#{problem_count} problems in: #{file_path.relative_path_from(Pathname.pwd)}"
       end
     end
   end
