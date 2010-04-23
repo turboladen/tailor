@@ -2,7 +2,7 @@ require 'rubygems'
 gem 'hoe', '>= 2.1.0'
 require 'hoe'
 require 'fileutils'
-require './lib/ruby_style_checker'
+require './lib/tailor'
 
 Hoe.plugin :newgem
 Hoe.plugin :yard
@@ -22,13 +22,13 @@ end
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.spec 'ruby_style_checker' do
+$hoe = Hoe.spec 'tailor' do
   self.summary      = "Utility for checking style of Ruby files."
   self.developer('Steve Loveless', 'steve.loveless@gmail.com')
   self.post_install_message = File.readlines 'PostInstall.txt'
   self.rubyforge_name = self.name
-  self.version        = RubyStyleChecker::VERSION
-  self.url            = 'http://github.com/turboladen/ruby_style_checker'
+  self.version        = Tailor::VERSION
+  self.url            = 'http://github.com/turboladen/tailor'
   self.description    = get_descr_from_readme
   self.readme_file    = 'README.rdoc'
   self.history_file   = 'History.txt'

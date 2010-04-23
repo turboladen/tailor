@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
-require 'ruby_style_checker/file_line'
+require 'tailor/file_line'
 
-include RubyStyleChecker
+include Tailor
 
-describe RubyStyleChecker::FileLine do
+describe Tailor::FileLine do
   context "should return the number of leading spaces in a line" do
     it "when the line is not indented" do
       line = FileLine.new "def do_something"

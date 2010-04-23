@@ -1,9 +1,9 @@
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
-require 'ruby_style_checker/indentation_checker'
-require 'ruby_style_checker/file_line'
+require 'tailor/indentation_checker'
+require 'tailor/file_line'
 
-include RubyStyleChecker
-include RubyStyleChecker::IndentationChecker
+include Tailor
+include Tailor::IndentationChecker
 
 #-----------------------------------------------------------------------------
 # "Given" statements
@@ -12,7 +12,7 @@ Given /^that file contains lines with hard tabs$/ do
   @ruby_source = File.open(@file_list[0], 'r')
   contains_hard_tabs = false
   @ruby_source.each_line do |line|
-    source_line = RubyStyleChecker::FileLine.new line
+    source_line = Tailor::FileLine.new line
     if source_line.hard_tabbed?
       contains_hard_tabs = true
       break
@@ -30,7 +30,7 @@ end
 
 Given /^that file is indented properly$/ do
   @file_list.each do |file|
-    RubyStyleChecker::IndentationChecker.validate_indentation file
+    Tailor::IndentationChecker.validate_indentation file
   end
 end
 
@@ -38,7 +38,7 @@ Given /^that file contains lines with trailing whitespace$/ do
   @ruby_source = File.open(@file_list[0], 'r')
 
   @ruby_source.each_line do |line|
-    source_line = RubyStyleChecker::FileLine.new line
+    source_line = Tailor::FileLine.new line
 
     @whitespace_count = source_line.trailing_whitespace_count
 
@@ -50,7 +50,7 @@ end
 # "When" statements
 #-----------------------------------------------------------------------------
 When "I run the checker on the project" do
-  @result = `#{@ruby_style_checker} #{@project_dir}`
+  @result = `#{@tailor} #{@project_dir}`
 end
 
 #-----------------------------------------------------------------------------

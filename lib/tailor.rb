@@ -3,9 +3,9 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'fileutils'
 require 'pathname'
-require 'ruby_style_checker/file_line'
+require 'tailor/file_line'
 
-module RubyStyleChecker
+module Tailor
   VERSION = '0.0.1'
 
   RUBY_KEYWORDS_WITH_END = [

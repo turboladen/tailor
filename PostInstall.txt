@@ -1,2 +1,2 @@
 
-For more information on ruby_style_checker, see http://github.com/turboladen/ruby_style-checker
+For more information on tailor, see http://github.com/turboladen/tailor
