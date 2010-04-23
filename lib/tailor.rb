@@ -53,7 +53,7 @@ module Tailor
 
     # Get the .rb files
     ruby_files_in_project = Dir.glob(File.join('*', '**', '*.rb'))
-    Dir.glob(File.join('*.rb')).each { |f| ruby_files_in_project << f }
+    Dir.glob(File.join('*.rb')).each { |file| ruby_files_in_project << file }
 
     # Expand paths to all files in the list
     list_with_absolute_paths = Array.new

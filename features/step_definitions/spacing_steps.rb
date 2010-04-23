@@ -58,7 +58,7 @@ Given /^that file contains lines longer than 80 characters$/ do
     else
       too_long = false
     end
-
+    
     too_long.should be_true
   end
 end
@@ -83,11 +83,10 @@ Then "the checker should tell me my indentation is OK" do
 end
 
 Then /^the checker should tell me each line has trailing whitespace$/ do
-  message= "Line contains #{@whitespace_count} trailing whitespace(s)"
-  @result.should include message
+  @result.should include("Line contains #{@whitespace_count} trailing whitespace(s)")
 end
 
 Then /^the checker should tell me each line is too long$/ do
-  msg = "Line is greater than #{Tailor::FileLine::LINE_LENGTH_MAX} characters"
-  @result.should include msg
+  @result.should include("Line is greater than 
+    #{Tailor::FileLine::LINE_LENGTH_MAX} characters")
 end
