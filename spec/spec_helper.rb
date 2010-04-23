@@ -7,4 +7,4 @@ rescue LoadError
 end
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'ruby_style_checker'
+require 'tailor'
