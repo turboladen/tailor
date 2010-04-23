@@ -46,6 +46,24 @@ Given /^that file contains lines with trailing whitespace$/ do
   end
 end
 
+Given /^that file contains lines longer than 80 characters$/ do
+  @ruby_source = File.open(@file_list[0], 'r')
+
+  @ruby_source.each_line do |line|
+    source_line = Tailor::FileLine.new line
+
+    if source_line.too_long?
+      too_long = true
+      break
+    else
+      too_long = false
+    end
+
+    too_long.should be_true
+  end
+end
+
+
 #-----------------------------------------------------------------------------
 # "When" statements
 #-----------------------------------------------------------------------------
@@ -65,5 +83,11 @@ Then "the checker should tell me my indentation is OK" do
 end
 
 Then /^the checker should tell me each line has trailing whitespace$/ do
-  @result.should include("Line contains #{@whitespace_count} trailing whitespace(s)")
+  message= "Line contains #{@whitespace_count} trailing whitespace(s)"
+  @result.should include message
+end
+
+Then /^the checker should tell me each line is too long$/ do
+  msg = "Line is greater than #{Tailor::FileLine::LINE_LENGTH_MAX} characters"
+  @result.should include msg
 end

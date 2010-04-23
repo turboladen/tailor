@@ -70,9 +70,10 @@ describe Tailor::FileLine do
     line.trailing_whitespace_count.should == 2
   end
 
-  # TODO: These methods should probably all be called by line.check_comma_spacing
-  #   or something.  As it stands, these tests are going to start to get confusing,
-  #   plus having one entry point for checking commas probably makes the most sense.
+  # TODO: These methods should probably all be called by
+  #   line.check_comma_spacingor something.  As it stands, these tests are
+  #   going to start to get confusing, plus having one entry point for
+  #   checking commas probably makes the most sense.
   context "spacing after a comma" do
     it "should detect no space after a comma" do
       line = FileLine.new "  def do_something this,that"
@@ -104,6 +105,32 @@ describe Tailor::FileLine do
     it "should skip code that's not a full line comment" do
       line = FileLine.new "  puts 'this is some code.'"
       line.line_comment?.should be_false
+    end
+  end
+
+  context "line length" do
+    it "should detect greater than 80 characters" do
+      string_81_chars = '#' * 81
+      line = FileLine.new string_81_chars
+      line.too_long?.should be_true
+    end
+
+    it "should detect greater than 80 spaces" do
+      string_81_spaces = ' ' * 81
+      line = FileLine.new string_81_spaces
+      line.too_long?.should be_true
+    end
+
+    it "should be OK with 80 chars" do
+      string_80_chars = '#' * 80
+      line = FileLine.new string_80_chars
+      line.too_long?.should be_false
+    end
+
+    it "should be OK with 80 spaces" do
+      string_80_spaces  = ' ' * 80
+      line = FileLine.new string_80_spaces
+      line.too_long?.should be_false
     end
   end
 end

@@ -30,3 +30,11 @@ Feature: Indentation
       And that file contains lines with trailing whitespace
     When I run the checker on the project
     Then the checker should tell me each line has trailing whitespace
+
+  Scenario: A single file that has a comment and a code line 90 characters long
+    Given I have a project directory "1_file_with_long_lines"
+      And I have "1" file in my project
+      And that file contains lines longer than 80 characters
+    When I run the checker on the project
+    Then the checker should tell me each line is too long
+  

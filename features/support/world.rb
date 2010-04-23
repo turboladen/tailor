@@ -40,7 +40,8 @@ Given /^I have a project directory "([^\"]*)"$/ do |project_dir|
   @project_dir = project_dir
 end
 
-Given /^the file contains only "([^\"]*)" "([^\"]*)" statement$/ do |count_in_spec, keyword|
+Given /^the file contains only "([^\"]*)" "([^\"]*)" statement$/ do
+  |count_in_spec, keyword|
   #count_in_file = count_keywords(@ruby_source, keyword)
   count_in_file = count_keywords(@file_list[0], keyword)
   count_in_file.should == count_in_spec.to_i

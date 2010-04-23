@@ -5,6 +5,8 @@ module Tailor
   #   line of a file of Ruby code.  Inherits from String so "self" can be used.
   class FileLine < String
 
+    LINE_LENGTH_MAX = 80
+
     # This passes the line of code to String (the parent) so that it can act
     #   like a standard string.
     #
@@ -85,8 +87,8 @@ module Tailor
 
     # Checks to see if the line is the start of a method's definition.
     #
-    # @return [Boolean] Returns true if the line contains 'def' and the second word
-    #   begins with a lowercase letter.
+    # @return [Boolean] Returns true if the line contains 'def' and the second
+    #   word begins with a lowercase letter.
     def method?
       words = self.split(/ /)
       if words[0].eql? "def" and starts_with_lowercase?(words[1])
@@ -98,8 +100,8 @@ module Tailor
 
     # Checks to see if the line is the start of a class's definition.
     #
-    # @return [Boolean] Returns true if the line contains 'class' and the second word
-    #   begins with a uppercase letter.
+    # @return [Boolean] Returns true if the line contains 'class' and the
+    #   second word begins with a uppercase letter.
     def class?
       words = self.split(/ /)
       if words[0].eql? "class" and starts_with_uppercase?(words[1])
@@ -121,8 +123,8 @@ module Tailor
       end
     end
 
-    # Checks to see if the line has trailing whitespace at the end of it. Note that
-    #   this excludes empty lines that have spaces on them!
+    # Checks to see if the line has trailing whitespace at the end of it. Note
+    #   that this excludes empty lines that have spaces on them!
     #
     # @return [Number] Returns the number of trailing spaces at the end of the
     #   line.
@@ -135,9 +137,9 @@ module Tailor
       end
     end
 
-    # Checks to see if a single space exists after a comma in uncomented code.  This
-    #   method doesn't check if the line is a comment, so this should be done before
-    #   calling this method.  @see #line_comment?.
+    # Checks to see if a single space exists after a comma in uncomented code.
+    #   This method doesn't check if the line is a comment, so this should be
+    #   done before calling this method.  @see #line_comment?.
     #
     # @return [Boolean] Returns true if only 1 space exists after a comma.
     def two_or_more_spaces_after_comma?
@@ -150,7 +152,7 @@ module Tailor
 
     ##
     # Checks to see if there's no spaces after a comma.
-    # 
+    #
     # @return [Boolean] Returns true if there isn't a space after a comma.
     def no_space_after_comma?
       if self.scan(/\w\,\w/).empty?
@@ -162,7 +164,7 @@ module Tailor
 
     ##
     # Checks to see if there's no space before a comma.
-    # 
+    #
     # @return [Boolean] Returns true if there's no space before a comma.
     def no_space_before_comma?
       if self.scan(/\w\s\,/)
@@ -172,10 +174,11 @@ module Tailor
       end
     end
 
-    # Counts the number of spaces around a comma and returns before and after values
-    #   as a hash.
+    # Counts the number of spaces around a comma and returns before and after
+    #   values as a hash.
     #
-    # @return [Hash<:before,:after>] Returns a Hash with values for :before and :after.
+    # @return [Hash<:before,:after>] Returns a Hash with values for :before and
+    #   :after.
     def spaces_around_comma
       spaces = Hash.new
 
@@ -183,6 +186,16 @@ module Tailor
       spaces[:after] = self.scan(/,(\x20+)/)
 
       spaces
+    end
+
+    ##
+    # Checks to see if the line is greater than the defined max (80 chars is
+    #   default).
+    #
+    # @return [Boolean] Returns true if the line length exceeds the allowed
+    #   length.
+    def too_long?
+      self.length > LINE_LENGTH_MAX ? true : false
     end
 
     #-----------------------------------------------------------------

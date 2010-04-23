@@ -22,8 +22,8 @@ module Tailor
 
   # Check all files in a directory for style problems.
   #
-  # @param [String] project_base_dir Path to a directory to recurse into and look
-  #   for problems in.
+  # @param [String] project_base_dir Path to a directory to recurse into and
+  #   look for problems in.
   # @return [Hash] Returns a hash that contains file_name => problem_count.
   def self.check project_base_dir
     # Get the list of files to process
@@ -40,10 +40,11 @@ module Tailor
     files_and_problems
   end
 
-  # Gets a list of .rb files in the project.  This gets each file's absolute path
-  #   in order to alleviate any possible confusion.
+  # Gets a list of .rb files in the project.  This gets each file's absolute
+  #   path in order to alleviate any possible confusion.
   #
-  # @param [String] base_dir Directory to start recursing from to look for .rb files
+  # @param [String] base_dir Directory to start recursing from to look for .rb
+  #   files
   # @return [Array] Sorted list of absolute file paths in the project
   def self.project_file_list base_dir
     if File.directory? base_dir
@@ -72,10 +73,10 @@ module Tailor
     file_path = Pathname.new(file_name)
 
     puts
-    puts "#-----------------------------------------------------------------------------------"
+    puts "#-------------------------------------------------------------------"
     puts "# Looking for bad style in:"
     puts "# \t'#{file_path}'"
-    puts "#-----------------------------------------------------------------------------------"
+    puts "#-------------------------------------------------------------------"
 
     problem_count = 0
     line_number = 1
@@ -111,6 +112,13 @@ module Tailor
         problem_count += 1
       end
 
+      # Check for long lines
+      if line.too_long?
+        puts "Line is greater than #{FileLine::LINE_LENGTH_MAX} characters:"
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
+        problem_count += 1
+      end
+
       line_number += 1
     end
 
@@ -127,7 +135,9 @@ module Tailor
 
     files_and_problems.each_pair do |file, problem_count|
       file_path = Pathname.new(file)
-      puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{problem_count} problems" unless problem_count == 0
+      unless problem_count == 0
+        puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{problem_count} problems"
+      end
     end
   end
 end

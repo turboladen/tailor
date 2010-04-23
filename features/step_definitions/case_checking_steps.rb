@@ -15,11 +15,13 @@ def contains_camel_case? keyword
   end
 end
 
-Given /^the file contains a "([^\"]*)" that has a camel\-cased name$/ do |keyword|
+Given /^the file contains a "([^\"]*)" that has a camel\-cased name$/ do
+  |keyword|
   contains_camel_case?(keyword).should be_true
 end
 
-Given /^the file contains a "([^\"]*)" that has a snake\-cased name$/ do |keyword|
+Given /^the file contains a "([^\"]*)" that has a snake\-cased name$/ do
+  |keyword|
   contains_camel_case?(keyword).should be_false
 end
 
