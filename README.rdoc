@@ -1,10 +1,10 @@
-= ruby_style_checker
+= tailor
 
-* http://github.com/turboladen/ruby_style_checker
+* http://github.com/turboladen/tailor
 
 == DESCRIPTION:
 
-ruby_style_checker is an executable that recursively parses Ruby files in a 
+tailor is an executable that recursively parses Ruby files in a 
 directory and checks them for bad style.  Rules for judging style are based on 
 a number of style guides that are popular in the Ruby community.
 
@@ -34,7 +34,7 @@ a number of style guides that are popular in the Ruby community.
 
 == INSTALL:
 
-* (sudo) gem install ruby_style_checker
+* (sudo) gem install tailor
 
 == LICENSE:
 
