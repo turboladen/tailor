@@ -14,7 +14,7 @@ def get_descr_from_readme
   paragraph_count = 0
   File.readlines('README.rdoc', '').each do |paragraph|
     paragraph_count += 1
-    if paragraph_count == 2
+    if paragraph_count == 4
       return paragraph
     end
   end
