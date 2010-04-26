@@ -5,52 +5,69 @@ require 'tailor/file_line'
 include Tailor
 include Tailor::IndentationChecker
 
+def check_file
+  ruby_source = File.open(@file_list[0], 'r')
+  
+  ruby_source.each_line do |line|
+    yield(line)
+  end
+end
+
 #-----------------------------------------------------------------------------
 # "Given" statements
 #-----------------------------------------------------------------------------
 Given /^that file contains lines with hard tabs$/ do
-  @ruby_source = File.open(@file_list[0], 'r')
   contains_hard_tabs = false
-  @ruby_source.each_line do |line|
-    source_line = Tailor::FileLine.new line
+  line_number = 1
+
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
     if source_line.hard_tabbed?
       contains_hard_tabs = true
       break
     end
+    line_number += 1
   end
+
   contains_hard_tabs.should be_true
 end
 
 Given /^that file does not contain any "([^\"]*)" statements$/ do |keyword|
-  @ruby_source = File.open(@file_list[0], 'r')
+  ruby_source = File.open(@file_list[0], 'r')
 
-  count = count_keywords(@ruby_source, keyword)
+  count = count_keywords(ruby_source, keyword)
   count.should == 0
 end
 
 Given /^that file is indented properly$/ do
-  @file_list.each do |file|
-    Tailor::IndentationChecker.validate_indentation file
-  end
+  pending
 end
 
 Given /^that file contains lines with trailing whitespace$/ do
-  @ruby_source = File.open(@file_list[0], 'r')
+  line_number = 1
 
-  @ruby_source.each_line do |line|
-    source_line = Tailor::FileLine.new line
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
 
     @whitespace_count = source_line.trailing_whitespace_count
 
     @whitespace_count.should > 0
+
+    line_number += 1
   end
 end
 
 Given /^that file contains lines longer than 80 characters$/ do
-  @ruby_source = File.open(@file_list[0], 'r')
+  line_number = 1
 
-  @ruby_source.each_line do |line|
-    source_line = Tailor::FileLine.new line
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
 
     if source_line.too_long?
       too_long = true
@@ -60,9 +77,76 @@ Given /^that file contains lines longer than 80 characters$/ do
     end
     
     too_long.should be_true
+
+    line_number += 1
   end
 end
 
+Given /^that file contains a "([^\"]*)" line without spaces after commas$/ do |line_type|
+  is_line_type = false
+  bad_spacing = false
+  line_number = 1
+  
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
+
+    is_line_type = source_line.send("#{line_type}_line?")
+    bad_spacing = source_line.no_space_after_comma?
+
+    break line if is_line_type.eql? true and bad_spacing.eql? true
+    
+    line_number += 1
+  end
+
+  is_line_type.should be_true
+  bad_spacing.should be_true
+end
+
+Given /^that file contains a "([^\"]*)" line with > 1 spaces after commas$/ do |line_type|
+  is_line_type = false
+  bad_spacing = false
+  line_number = 1
+  
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
+
+    is_line_type = source_line.send("#{line_type}_line?")
+    bad_spacing = source_line.more_than_one_space_after_comma?
+
+    break line if is_line_type.eql? true and bad_spacing.eql? true
+    
+    line_number += 1
+  end
+
+  is_line_type.should be_true
+  bad_spacing.should be_true
+end
+
+Given /^that file contains a "([^\"]*)" line with spaces before commas$/ do |line_type|
+  is_line_type = false
+  bad_spacing = false
+  line_number = 1
+  
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
+
+    is_line_type = source_line.send("#{line_type}_line?")
+    bad_spacing = source_line.space_before_comma?
+
+    break line if is_line_type == true and bad_spacing == true
+
+    line_number += 1
+  end
+
+  is_line_type.should be_true
+  bad_spacing.should be_true
+end
 
 #-----------------------------------------------------------------------------
 # "When" statements
@@ -75,7 +159,7 @@ end
 # "Then" statements
 #-----------------------------------------------------------------------------
 Then /^the checker should tell me each line that has a hard tab$/ do
-  @result.should include("Line is hard-tabbed")
+  @result.should include("Line contains hard tabs")
 end
 
 Then "the checker should tell me my indentation is OK" do
@@ -87,6 +171,21 @@ Then /^the checker should tell me each line has trailing whitespace$/ do
 end
 
 Then /^the checker should tell me each line is too long$/ do
-  @result.should include("Line is greater than 
-    #{Tailor::FileLine::LINE_LENGTH_MAX} characters")
+  message = "Line is greater than #{Tailor::FileLine::LINE_LENGTH_MAX} characters"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has commas without spaces after them$/ do
+  message = "Line has a comma with 0 spaces after it"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has commas with spaces before them$/ do
+  message = "Line has at least one space before a comma"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has commas with > 1 spaces after them$/ do
+  message = "Line has a comma with > 1 space after it"
+  @result.should include(message)
 end

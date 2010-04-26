@@ -81,37 +81,46 @@ module Tailor
     @problem_count = 0
     line_number = 1
     source.each_line do |source_line|
-      line = FileLine.new source_line
+      line = FileLine.new(source_line, file_path, line_number)
 
-      # Check for hard tabs
+      # Check for indenting by spaces only
       if line.hard_tabbed?
-        message = "Line is hard-tabbed:"
-        log_problem message, file_path, line_number
+        log_problem file_path, line_number
       end
 
       # Check for camel-cased methods
-      if line.method? and line.camel_case_method?
-        message = "Method name uses camel case:"
-        log_problem message, file_path, line_number
+      if line.method_line? and line.camel_case_method?
+        log_problem file_path, line_number
       end
 
       # Check for non-camel-cased classes
-      if line.class? and !line.camel_case_class?
-        message = "Class name does NOT use camel case:"
-        log_problem message, file_path, line_number
+      if line.class_line? and line.snake_case_class?
+        log_problem file_path, line_number
       end
 
       # Check for trailing whitespace
-      count = line.trailing_whitespace_count
-      if count > 0
-        message = "Line contains #{count} trailing whitespace(s):"
-        log_problem message, file_path, line_number
+      if line.trailing_whitespace?
+        log_problem file_path, line_number
       end
 
       # Check for long lines
       if line.too_long?
-        message = "Line is greater than #{FileLine::LINE_LENGTH_MAX} characters:"
-        log_problem message, file_path, line_number
+        log_problem file_path, line_number
+      end
+
+      # Check for spacing after commas
+      if line.more_than_one_space_after_comma?
+        log_problem file_path, line_number
+      end
+
+      # Check for spacing after commas
+      if line.no_space_after_comma?
+        log_problem file_path, line_number
+      end
+
+      # Check for spacing after commas
+      if line.space_before_comma?
+        log_problem file_path, line_number
       end
 
       line_number += 1
@@ -124,13 +133,11 @@ module Tailor
   # Prints to screen where the problem was found and adds 1 to the total
   #   number of problems.
   # 
-  # @param [String] message Tell the user this problem occurred.
   # @param [Pathname] file_path Path of the file in which the problem
   #   occurred.
   # @param [Number] line_number Line number of the file in which the problem
   #   occurred.
-  def self.log_problem message, file_path, line_number
-    puts message
+  def self.log_problem file_path, line_number
     puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
     @problem_count += 1
   end

@@ -12,9 +12,9 @@ module Tailor
         line = FileLine.new(line_of_code)
 
         # Make sure the line isn't hard-tabbed
-        if line.hard_tabbed?
-          results << "Line #{line_number} is hard-tabbed."
-        end
+        #if line.soft_tabbed?
+        #  results << "Line #{line_number} is hard-tabbed."
+        #end
 
         # Check for indentation
         #spaces = line.indented_spaces

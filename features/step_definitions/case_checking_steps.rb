@@ -8,7 +8,7 @@ def contains_camel_case? keyword
     line = FileLine.new source_line
 
     if keyword.eql? "method"
-      line.camel_case_method? ? (return true) : (return false)
+      line.snake_case_method? ? (return false) : (return false)
     elsif keyword.eql? "class"
       line.camel_case_class? ? (return true) : (return false)
     end
