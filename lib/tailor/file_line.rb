@@ -142,7 +142,7 @@ module Tailor
     #
     # @return [Boolean] Returns true if the line begins with a pound symbol.
     def comment_line?
-      if self.scan(/\s?#/).empty?
+      if self.scan(/\s*#/).empty?
         return false
       else
         return true
@@ -221,6 +221,62 @@ module Tailor
         return true
       else
         return nil
+      end
+    end
+
+    ##
+    # Checks to see if there's spaces after an open parenthesis.
+    # 
+    # @return [Boolean] Returns true if there's spaces after an open
+    #   parenthesis.
+    def space_after_open_parenthesis?
+      if self.scan(/\(\x20+/).first.nil?
+        return false
+      elsif self.scan(/\(\x20+/)
+        print_problem "Line has an open parenthesis with spaces after it:"
+        return true
+      end
+    end
+
+    ##
+    # Checks to see if there's spaces after an open bracket.
+    # 
+    # @return [Boolean] Returns true if there's spaces after an open
+    #   bracket.
+    def space_after_open_bracket?
+      if self.scan(/\[\x20+/).first.nil?
+        return false
+      elsif self.scan(/\[\x20+/)
+        print_problem "Line has an open bracket with spaces after it:"
+        return true
+      end
+    end
+
+    ##
+    # Checks to see if there's spaces before a closed parenthesis.
+    # 
+    # @return [Boolean] Returns true if there's spaces before a closed
+    #   parenthesis.
+    def space_before_closed_parenthesis?
+      if self.scan(/\x20+\)/).first.nil?
+        return false
+      elsif self.scan(/\x20+\)/)
+        print_problem "Line has a closed parenthesis with spaces before it:"
+        return true
+      end
+    end
+
+    ##
+    # Checks to see if there's spaces before a closed brackets.
+    # 
+    # @return [Boolean] Returns true if there's spaces before a closed
+    #   bracket.
+    def space_before_closed_bracket?
+      if self.scan(/\x20+\]/).first.nil?
+        return false
+      elsif self.scan(/\x20+\]/)
+        print_problem "Line has a closed bracket with spaces before it:"
+        return true
       end
     end
 

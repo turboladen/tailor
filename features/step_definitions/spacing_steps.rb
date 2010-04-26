@@ -13,6 +13,28 @@ def check_file
   end
 end
 
+def check_spacing method_name, line_type
+  is_line_type = false
+  bad_spacing = false
+  line_number = 1
+
+  file_path = Pathname.new(File.expand_path(@file_list[0]))
+
+  check_file do |line|
+    source_line = Tailor::FileLine.new(line, file_path, line_number)
+
+    is_line_type = source_line.send("#{line_type}_line?")
+    bad_spacing = source_line.send(method_name)
+
+    break line if is_line_type == true and bad_spacing == true
+
+    line_number += 1
+  end
+
+  is_line_type.should be_true
+  bad_spacing.should be_true
+end
+
 #-----------------------------------------------------------------------------
 # "Given" statements
 #-----------------------------------------------------------------------------
@@ -83,69 +105,27 @@ Given /^that file contains lines longer than 80 characters$/ do
 end
 
 Given /^that file contains a "([^\"]*)" line without spaces after commas$/ do |line_type|
-  is_line_type = false
-  bad_spacing = false
-  line_number = 1
-
-  file_path = Pathname.new(File.expand_path(@file_list[0]))
-
-  check_file do |line|
-    source_line = Tailor::FileLine.new(line, file_path, line_number)
-
-    is_line_type = source_line.send("#{line_type}_line?")
-    bad_spacing = source_line.no_space_after_comma?
-
-    break line if is_line_type.eql? true and bad_spacing.eql? true
-
-    line_number += 1
-  end
-
-  is_line_type.should be_true
-  bad_spacing.should be_true
+  check_spacing("no_space_after_comma?", line_type)
 end
 
 Given /^that file contains a "([^\"]*)" line with > 1 spaces after commas$/ do |line_type|
-  is_line_type = false
-  bad_spacing = false
-  line_number = 1
-
-  file_path = Pathname.new(File.expand_path(@file_list[0]))
-
-  check_file do |line|
-    source_line = Tailor::FileLine.new(line, file_path, line_number)
-
-    is_line_type = source_line.send("#{line_type}_line?")
-    bad_spacing = source_line.more_than_one_space_after_comma?
-
-    break line if is_line_type.eql? true and bad_spacing.eql? true
-
-    line_number += 1
-  end
-
-  is_line_type.should be_true
-  bad_spacing.should be_true
+  check_spacing("more_than_one_space_after_comma?", line_type)
 end
 
 Given /^that file contains a "([^\"]*)" line with spaces before commas$/ do |line_type|
-  is_line_type = false
-  bad_spacing = false
-  line_number = 1
+  check_spacing("space_before_comma?", line_type)
+end
 
-  file_path = Pathname.new(File.expand_path(@file_list[0]))
+Given /^that file contains a "([^\"]*)" line with spaces after open parentheses$/ do |line_type|
+  check_spacing("space_after_open_parenthesis?", line_type)
+end
 
-  check_file do |line|
-    source_line = Tailor::FileLine.new(line, file_path, line_number)
+Given /^that file contains a "([^\"]*)" line with spaces after an open bracket$/ do |line_type|
+  check_spacing("space_after_open_bracket?", line_type)
+end
 
-    is_line_type = source_line.send("#{line_type}_line?")
-    bad_spacing = source_line.space_before_comma?
-
-    break line if is_line_type == true and bad_spacing == true
-
-    line_number += 1
-  end
-
-  is_line_type.should be_true
-  bad_spacing.should be_true
+Given /^that file contains a "([^\"]*)" line with spaces after an open parenthesis$/ do |line_type|
+  check_spacing("space_before_closed_parenthesis?", line_type)
 end
 
 #-----------------------------------------------------------------------------
@@ -187,5 +167,25 @@ end
 
 Then /^the checker should tell me each line has commas with > 1 spaces after them$/ do
   message = "Line has a comma with > 1 space after it"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has open parentheses with spaces before them$/ do
+  message = "Line has an open parenthesis with spaces after it"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has open brackets with spaces before them$/ do
+  message = "Line has an open bracket with spaces after it"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has closed parentheses with spaces before them$/ do
+  message = "Line has a closed parenthesis with spaces before it"
+  @result.should include(message)
+end
+
+Then /^the checker should tell me each line has closed brackets with spaces before them$/ do
+  message = "Line has a closed bracket with spaces before it"
   @result.should include(message)
 end

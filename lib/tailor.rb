@@ -107,6 +107,18 @@ module Tailor
       # Check for spacing after commas
       @problem_count += 1 if line.space_before_comma?
 
+      # Check for spacing after open parentheses
+      @problem_count += 1 if line.space_after_open_parenthesis?
+
+      # Check for spacing after open brackets
+      @problem_count += 1 if line.space_after_open_bracket?
+
+      # Check for spacing after closed parentheses
+      @problem_count += 1 if line.space_before_closed_parenthesis?
+
+      # Check for spacing after closed brackets
+      @problem_count += 1 if line.space_before_closed_bracket?
+
       line_number += 1
     end
 

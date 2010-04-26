@@ -64,4 +64,39 @@ Feature: Spacing
       And that file contains a "statement" line with spaces before commas
     When I run the checker on the project
     Then the checker should tell me each line has commas with spaces before them
-  
+
+  Scenario: A single file that has a comment, method, and statement with spaces after open parentheses
+    Given I have a project directory "1_file_with_bad_parenthesis"
+      And I have "1" file in my project
+      And that file contains a "comment" line with spaces after an open parenthesis
+      And that file contains a "method" line with spaces after an open parenthesis
+      And that file contains a "statement" line with spaces after an open parenthesis
+    When I run the checker on the project
+    Then the checker should tell me each line has open parentheses with spaces before them
+
+  Scenario: A single file that has a comment, method, and statement with spaces after open brackets
+    Given I have a project directory "1_file_with_bad_parenthesis"
+      And I have "1" file in my project
+      And that file contains a "comment" line with spaces after an open bracket
+      And that file contains a "method" line with spaces after an open bracket
+      And that file contains a "statement" line with spaces after an open bracket
+    When I run the checker on the project
+    Then the checker should tell me each line has open brackets with spaces before them
+
+  Scenario: A single file that has a comment, method, and statement with spaces before closed parentheses
+    Given I have a project directory "1_file_with_bad_parenthesis"
+      And I have "1" file in my project
+      And that file contains a "comment" line with spaces after an open parenthesis
+      And that file contains a "method" line with spaces after an open parenthesis
+      And that file contains a "statement" line with spaces after an open parenthesis
+    When I run the checker on the project
+    Then the checker should tell me each line has closed parentheses with spaces before them
+
+  Scenario: A single file that has a comment, method, and statement with spaces before closed brackets
+    Given I have a project directory "1_file_with_bad_parenthesis"
+      And I have "1" file in my project
+      And that file contains a "comment" line with spaces after an open bracket
+      And that file contains a "method" line with spaces after an open bracket
+      And that file contains a "statement" line with spaces after an open bracket
+    When I run the checker on the project
+    Then the checker should tell me each line has closed brackets with spaces before them

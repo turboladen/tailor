@@ -79,10 +79,6 @@ describe Tailor::FileLine do
     line.trailing_whitespace_count.should == 2
   end
 
-  # TODO: These methods should probably all be called by
-  #   line.check_comma_spacingor something.  As it stands, these tests are
-  #   going to start to get confusing, plus having one entry point for
-  #   checking commas probably makes the most sense.
   context "comma spacing" do
     context "after the comma" do
       it "should detect 2 spaces after a comma" do
@@ -145,6 +141,64 @@ describe Tailor::FileLine do
         line = FileLine.new("  def do_something that", Pathname.new(__FILE__),
           __LINE__)
         line.space_before_comma?.should be_false
+      end
+    end
+  end
+
+  context "parenthesis/bracket spacing" do
+    context "open parenthesis" do
+      it "should detect a space after" do
+        line = FileLine.new("  def do_something( that, this)", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_after_open_parenthesis?.should be_true
+      end
+
+      it "should be OK with no space after" do
+        line = FileLine.new("  def do_something(that, this)", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_after_open_parenthesis?.should be_false
+      end
+    end
+
+    context "closed parenthesis" do
+      it "should detect a space before" do
+        line = FileLine.new("  def do_something(that, this )", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_before_closed_parenthesis?.should be_true
+      end
+
+      it "should be OK with no space after" do
+        line = FileLine.new("  def do_something(that, this)", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_before_closed_parenthesis?.should be_false
+      end
+    end
+
+    context "open bracket" do
+      it "should detect a space after" do
+        line = FileLine.new("[ that, this]", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_after_open_bracket?.should be_true
+      end
+
+      it "should be OK with no space after" do
+        line = FileLine.new("[that, this]", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_after_open_bracket?.should be_false
+      end
+    end
+
+    context "closed parenthesis" do
+      it "should detect a space before" do
+        line = FileLine.new("  def do_something(that, this )", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_before_closed_parenthesis?.should be_true
+      end
+
+      it "should be OK with no space after" do
+        line = FileLine.new("  def do_something(that, this)", 
+          Pathname.new(__FILE__), __LINE__)
+        line.space_before_closed_parenthesis?.should be_false
       end
     end
   end
