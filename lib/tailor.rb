@@ -84,62 +84,33 @@ module Tailor
       line = FileLine.new(source_line, file_path, line_number)
 
       # Check for indenting by spaces only
-      if line.hard_tabbed?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.hard_tabbed?
 
       # Check for camel-cased methods
-      if line.method_line? and line.camel_case_method?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.method_line? and line.camel_case_method?
 
       # Check for non-camel-cased classes
-      if line.class_line? and line.snake_case_class?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.class_line? and line.snake_case_class?
 
       # Check for trailing whitespace
-      if line.trailing_whitespace?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.trailing_whitespace?
 
       # Check for long lines
-      if line.too_long?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.too_long?
 
       # Check for spacing after commas
-      if line.more_than_one_space_after_comma?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.more_than_one_space_after_comma?
 
       # Check for spacing after commas
-      if line.no_space_after_comma?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.no_space_after_comma?
 
       # Check for spacing after commas
-      if line.space_before_comma?
-        log_problem file_path, line_number
-      end
+      @problem_count += 1 if line.space_before_comma?
 
       line_number += 1
     end
 
     @problem_count
-  end
-
-  ##
-  # Prints to screen where the problem was found and adds 1 to the total
-  #   number of problems.
-  # 
-  # @param [Pathname] file_path Path of the file in which the problem
-  #   occurred.
-  # @param [Number] line_number Line number of the file in which the problem
-  #   occurred.
-  def self.log_problem file_path, line_number
-    puts "\t#{file_path.relative_path_from(Pathname.pwd)}: #{line_number}"
-    @problem_count += 1
   end
 
   # Prints a summary report that shows which files had how many problems.
@@ -153,7 +124,8 @@ module Tailor
     files_and_problems.each_pair do |file, problem_count|
       file_path = Pathname.new(file)
       unless problem_count == 0
-        puts "\t#{problem_count} problems in: #{file_path.relative_path_from(Pathname.pwd)}"
+        print "\t#{problem_count} problems in: "
+        puts "#{file_path.relative_path_from(Pathname.pwd)}"
       end
     end
   end

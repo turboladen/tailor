@@ -19,7 +19,8 @@ module Tailor
     # @param [String] line_of_code Line from a Ruby file that will be checked
     #   for styling.
     # @param [Pathname] file_path Path to the file the line is in.
-    # @param [Number] line_number Line number in the file that contains the line.
+    # @param [Number] line_number Line number in the file that contains the
+    #   line.
     # @return [String] Returns a String that includes all of the methods
     #   defined here.
     def initialize line_of_code, file_path, line_number
@@ -125,8 +126,9 @@ module Tailor
     ##
     # Checks to see if the line is a regular statement (not a class, method, or
     #   comment).
-    # 
-    # @return [Boolean] Returns true if the line is not a class, method or comment.
+    #
+    # @return [Boolean] Returns true if the line is not a class, method or
+    #   comment.
     def statement_line?
       if self.method_line? or self.class_line? or self.comment_line?
         return false
@@ -134,10 +136,10 @@ module Tailor
         return true
       end
     end
-    
+
     ##
     # Checks to see if the line contains a comma.
-    # 
+    #
     # @return [Boolean] Returns true if the line contains a comma.
     def contains_comma?
       self.scan(/\,/) ? true : false
@@ -156,13 +158,14 @@ module Tailor
     end
 
     ##
-    # Checks to see if there's whitespace at the end of the line.  Prints the 
+    # Checks to see if there's whitespace at the end of the line.  Prints the
     #   number of whitespaces at the end of the line.
-    # 
-    # @return [Boolean] Returns true if theres whitespace at the end of the line.
+    #
+    # @return [Boolean] Returns true if theres whitespace at the end of the
+    #   line.
     def trailing_whitespace?
       count = self.trailing_whitespace_count
-      
+
       if count > 0
         print_problem "Line contains #{count} trailing whitespace(s):"
         return true
@@ -201,9 +204,9 @@ module Tailor
 
     ##
     # Checks to see if there's no spaces after a comma and the next word.
-    # 
-    # @return [Boolean] Returns true if there's no spaces between a comma and the next
-    #   word.
+    #
+    # @return [Boolean] Returns true if there's no spaces between a comma and
+    #   the next word.
     def no_space_after_comma?
       if self.scan(/\w\x20?\,\w/).first.nil?
         return false
@@ -212,12 +215,12 @@ module Tailor
         return true
       end
     end
-    
+
     ##
     # Checks to see if there's spaces before a comma.
     #
-    # @return [Boolean] Returns true if there's any spaces before a comma. Returns
-    #   nil if the line doesn't contain a comma.
+    # @return [Boolean] Returns true if there's any spaces before a comma.
+    #   Returns nil if the line doesn't contain a comma.
     def space_before_comma?
       if self.scan(/\w\x20+\,/).first.nil?
         return false
@@ -236,8 +239,8 @@ module Tailor
     # @return [Boolean] Returns true if the line length exceeds the allowed
     #   length.
     def too_long?
-      if self.length > LINE_LENGTH_MAX 
-        puts "Line is greater than #{LINE_LENGTH_MAX} characters:"
+      if self.length > LINE_LENGTH_MAX
+        print_problem "Line is greater than #{LINE_LENGTH_MAX} characters:"
         return true
       else
         return false
@@ -257,7 +260,7 @@ module Tailor
       puts message
       puts "\t#{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}"
     end
-    
+
     # Checks to see if a word begins with a lowercase letter.
     #
     # @param [String] word The word to check case on.

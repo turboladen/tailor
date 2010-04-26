@@ -7,7 +7,7 @@ include Tailor::IndentationChecker
 
 def check_file
   ruby_source = File.open(@file_list[0], 'r')
-  
+
   ruby_source.each_line do |line|
     yield(line)
   end
@@ -75,7 +75,7 @@ Given /^that file contains lines longer than 80 characters$/ do
     else
       too_long = false
     end
-    
+
     too_long.should be_true
 
     line_number += 1
@@ -86,7 +86,7 @@ Given /^that file contains a "([^\"]*)" line without spaces after commas$/ do |l
   is_line_type = false
   bad_spacing = false
   line_number = 1
-  
+
   file_path = Pathname.new(File.expand_path(@file_list[0]))
 
   check_file do |line|
@@ -96,7 +96,7 @@ Given /^that file contains a "([^\"]*)" line without spaces after commas$/ do |l
     bad_spacing = source_line.no_space_after_comma?
 
     break line if is_line_type.eql? true and bad_spacing.eql? true
-    
+
     line_number += 1
   end
 
@@ -108,7 +108,7 @@ Given /^that file contains a "([^\"]*)" line with > 1 spaces after commas$/ do |
   is_line_type = false
   bad_spacing = false
   line_number = 1
-  
+
   file_path = Pathname.new(File.expand_path(@file_list[0]))
 
   check_file do |line|
@@ -118,7 +118,7 @@ Given /^that file contains a "([^\"]*)" line with > 1 spaces after commas$/ do |
     bad_spacing = source_line.more_than_one_space_after_comma?
 
     break line if is_line_type.eql? true and bad_spacing.eql? true
-    
+
     line_number += 1
   end
 
@@ -130,7 +130,7 @@ Given /^that file contains a "([^\"]*)" line with spaces before commas$/ do |lin
   is_line_type = false
   bad_spacing = false
   line_number = 1
-  
+
   file_path = Pathname.new(File.expand_path(@file_list[0]))
 
   check_file do |line|
