@@ -21,6 +21,9 @@ here http://wiki.github.com/turboladen/tailor.
   * Extra whitespace
     * At the end of lines
     * On empty lines
+    * Before & after commas
+    * Before & after open/closed parentheses
+    * Before & after open/closed square brackets
   * Line length
     * Should be <= 80 characters
 

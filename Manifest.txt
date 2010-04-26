@@ -1,3 +1,4 @@
+.autotest
 History.txt
 Manifest.txt
 PostInstall.txt
@@ -10,6 +11,8 @@ features/spacing.feature
 features/step_definitions/case_checking_steps.rb
 features/step_definitions/common_steps.rb
 features/step_definitions/spacing_steps.rb
+features/support/1_file_with_bad_comma_spacing/bad_comma_spacing.rb
+features/support/1_file_with_bad_parenthesis/bad_parenthesis.rb
 features/support/1_file_with_camel_case_class/camel_case_class.rb
 features/support/1_file_with_camel_case_method/camel_case_method.rb
 features/support/1_file_with_hard_tabs/hard_tab.rb
