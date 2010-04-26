@@ -137,14 +137,6 @@ module Tailor
       end
     end
 
-    ##
-    # Checks to see if the line contains a comma.
-    #
-    # @return [Boolean] Returns true if the line contains a comma.
-    def contains_comma?
-      self.scan(/\,/) ? true : false
-    end
-
     # Checks to see if the whole line is a basic comment line.  This doesn't
     #   check for trailing-line comments (@see #trailing_comment?).
     #
