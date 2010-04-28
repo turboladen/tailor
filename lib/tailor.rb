@@ -4,6 +4,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'fileutils'
 require 'pathname'
 require 'tailor/file_line'
+require 'tailor/spacing'
 
 module Tailor
   VERSION = '0.0.3'

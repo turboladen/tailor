@@ -1,9 +1,7 @@
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
-require 'tailor/indentation_checker'
 require 'tailor/file_line'
 
 include Tailor
-include Tailor::IndentationChecker
 
 def check_file
   ruby_source = File.open(@file_list[0], 'r')
