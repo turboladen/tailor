@@ -21,6 +21,15 @@ module Tailor
     'while'
     ]
 
+  OPERATORS = {
+    :arithmetic => ['+', '-', '*', '/'],
+    :assignment => ['=', '+=', '-=', '*=', '/=', '%=', '**=', '||=', '&&='],
+    :comparison => ['==', '===', '!=', '>', '<', '>=', '<=', '<=>'],
+    :logical => ['&&', '||'],
+    :ternary => ['?', ':'],
+    :regex => ['=~']
+  }
+
   # Check all files in a directory for style problems.
   #
   # @param [String] project_base_dir Path to a directory to recurse into and
@@ -119,6 +128,13 @@ module Tailor
 
       # Check for spacing after closed brackets
       @problem_count += 1 if line.space_before_closed_bracket?
+
+      # Check for spacing around operators
+      OPERATORS.each_pair do |op_group, op_values|
+        op_values.each do |op|
+          @problem_count += 1 if line.no_space_around? op
+        end
+      end
 
       line_number += 1
     end

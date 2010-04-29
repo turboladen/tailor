@@ -134,5 +134,51 @@ module Tailor
         return true
       end
     end
+
+    ##
+    # Checks to see if there's no spaces around operators.
+    # 
+    # @return [Boolean] Returns true if there's more or less than one
+    #   space around the defined list of operators.
+    def no_space_around? word
+      if no_space_on_left_side?(word) or no_space_on_right_side?(word)
+        print_problem "Line has a '#{word}' with 0 spaces around it:"
+        return true
+      elsif !no_space_on_left_side?(word) and !no_space_on_right_side?(word)
+        return false
+      end
+    end
+
+    def no_space_on_right_side? word
+      case word
+      when '||'
+        word = '|\|'
+      when '||='
+        word = '|\|='
+      end
+      right_side_match = Regexp.new('\\' + word + '\x20{0}\w')
+
+      if self.scan(right_side_match).first.nil?
+        return false
+      elsif !self.scan(right_side_match).first.nil?
+        return true
+      end
+    end
+
+    def no_space_on_left_side? word
+      case word
+      when '||'
+        word = '|\|'
+      when '||='
+        word = '|\|='
+      end
+      left_side_match = Regexp.new('\w\x20{0}\\' + word)
+
+      if self.scan(left_side_match).first.nil?
+        return false
+      elsif !self.scan(left_side_match).first.nil?
+        return true
+      end
+    end
   end
 end

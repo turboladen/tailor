@@ -27,7 +27,8 @@ features/support/matchers.rb
 features/support/world.rb
 lib/tailor.rb
 lib/tailor/file_line.rb
-lib/tailor/indentation_checker.rb
+lib/tailor/indentation.rb
+lib/tailor/spacing.rb
 ruby-style-checker.rb
 script/console
 script/destroy
@@ -36,4 +37,5 @@ spec/file_line_spec.rb
 spec/spec.opts
 spec/spec_helper.rb
 spec/tailor_spec.rb
+tailor.gemspec
 tasks/rspec.rake
