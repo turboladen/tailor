@@ -81,7 +81,7 @@ module Tailor
 
     ##
     # Checks to see if there's spaces after an open parenthesis.
-    # 
+    #
     # @return [Boolean] Returns true if there's spaces after an open
     #   parenthesis.
     def space_after_open_parenthesis?
@@ -95,7 +95,7 @@ module Tailor
 
     ##
     # Checks to see if there's spaces after an open bracket.
-    # 
+    #
     # @return [Boolean] Returns true if there's spaces after an open
     #   bracket.
     def space_after_open_bracket?
@@ -149,14 +149,13 @@ module Tailor
       end
     end
 
+    ##
+    # Checks to see if there's no spaces on the right side of the given word.
+    # 
+    # @return [Boolean] Returns true if there's no space on the right side of
+    #   the given word.
     def no_space_on_right_side? word
-      case word
-      when '||'
-        word = '|\|'
-      when '||='
-        word = '|\|='
-      end
-      right_side_match = Regexp.new('\\' + word + '\x20{0}\w')
+      right_side_match = Regexp.new(Regexp.escape(word) + '\x20{0}\w')
 
       if self.scan(right_side_match).first.nil?
         return false
@@ -165,14 +164,13 @@ module Tailor
       end
     end
 
+    ##
+    # Checks to see if there's no spaces on the left side of the given word.
+    # 
+    # @return [Boolean] Returns true if there's no space on the left side of
+    #   the given word.
     def no_space_on_left_side? word
-      case word
-      when '||'
-        word = '|\|'
-      when '||='
-        word = '|\|='
-      end
-      left_side_match = Regexp.new('\w\x20{0}\\' + word)
+      left_side_match = Regexp.new('\w\x20{0}' + Regexp.escape(word))
 
       if self.scan(left_side_match).first.nil?
         return false

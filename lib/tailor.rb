@@ -7,7 +7,7 @@ require 'tailor/file_line'
 require 'tailor/spacing'
 
 module Tailor
-  VERSION = '0.0.3'
+  VERSION = '0.0.4'
 
   RUBY_KEYWORDS_WITH_END = [
     'begin',

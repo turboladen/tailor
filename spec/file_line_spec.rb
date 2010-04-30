@@ -223,6 +223,30 @@ describe Tailor::FileLine do
     end
   end
 
+  describe "with curly braces" do
+    it "should detect 0 spaces around a {" do
+      line = create_file_line " 5.times{|num| puts num }", __LINE__
+      line.no_space_around?('{').should be_true
+    end
+
+    it "should detect 0 spaces on the left side of a {" do
+      line = create_file_line " 5.times{ |num| puts num }", __LINE__
+      line.no_space_around?('{').should be_true
+    end
+
+    it "should detect 0 spaces on the right side of a {" do
+      line = create_file_line " 5.times {|num| puts num }", __LINE__
+      line.no_space_around?('{').should be_true
+    end
+
+    context "#no_space_on_right_side?" do
+      it "should detect 0 spaces on the right side of a {" do
+        line = create_file_line " 5.times {|num| puts num }", __LINE__
+        line.no_space_on_right_side?('{').should be_true
+      end
+    end
+  end
+  
   describe "with comments" do
     it "should detect a regular full line comment" do
       line = create_file_line "  # This is a comment.", __LINE__

@@ -33,6 +33,7 @@ module Tailor
       super line_of_code
       @file_path = file_path
       @line_number = line_number
+      Regexp.escape(self)
     end
 
     # Checks to see if the method name is using camel case.
