@@ -30,6 +30,11 @@ module Tailor
     :regex => ['=~']
   }
 
+  ##
+  # Returns a list of all known methods that end with a question mark.
+  # 
+  # @return [Array<String>] An array of method names with question marks
+  #   at the end of them.
   def self.question_mark_words
     list = []
 
