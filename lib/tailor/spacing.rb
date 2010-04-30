@@ -1,3 +1,4 @@
+require 'tailor'
 require 'file_line'
 
 module Tailor
@@ -143,10 +144,10 @@ module Tailor
     # @return [Boolean] Returns true if there's more or less than one
     #   space around the defined list of operators.
     def no_space_around? word
-      if no_space_on_left_side?(word) or no_space_on_right_side?(word)
+      if no_space_before?(word) or no_space_after?(word)
         print_problem "Line has a '#{word}' with 0 spaces around it:"
         return true
-      elsif !no_space_on_left_side?(word) and !no_space_on_right_side?(word)
+      elsif !no_space_before?(word) and !no_space_after?(word)
         return false
       end
     end
@@ -156,7 +157,7 @@ module Tailor
     # 
     # @return [Boolean] Returns true if there's no space on the right side of
     #   the given word.
-    def no_space_on_right_side? word
+    def no_space_after? word
       right_side_match = Regexp.new(Regexp.escape(word) + '\x20{0}\w')
       
       if self.scan(right_side_match).first.nil?
@@ -171,12 +172,12 @@ module Tailor
     # 
     # @return [Boolean] Returns true if there's no space on the left side of
     #   the given word.
-    def no_space_on_left_side? word
+    def no_space_before? word
       left_side_match = Regexp.new('\w\x20{0}' + Regexp.escape(word))
 
       # Get out if the check is for a '?' and that's part of a method name.
       m_name = self.method_name
-      if !self.method_name.nil? and !m_name.scan(/\?$/).first.nil?
+      if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
         return false
       end
 
@@ -202,8 +203,8 @@ module Tailor
     def contains_question_mark_word?
 
       # Check to see if the FileLine contains any of these methods
-      list = question_mark_words
-      list.each do |word|
+      #list = Tailor.question_mark_words
+      QUESTION_MARK_WORDS.each do |word|
         if self.include?(word)
           return true
         end
@@ -216,15 +217,5 @@ module Tailor
     # 
     # @return [Array<String>] An array of method names with question marks
     #   at the end of them.
-    def question_mark_words
-      list = []
-
-      methods.grep(/\?$/).each { |m| list << m.to_s }
-      protected_methods.grep(/\?$/).each { |m| list << m.to_s }
-      private_methods.grep(/\?$/).each { |m| list << m.to_s }
-      Module.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
-
-      list.sort
-    end
   end
 end

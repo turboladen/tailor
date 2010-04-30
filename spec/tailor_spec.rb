@@ -24,4 +24,11 @@ describe Tailor do
   it "should have a VERSION constant" do
     Tailor.const_defined?('VERSION').should == true
   end
+
+  it "should return a list of methods with question marks" do
+    list = Tailor.question_mark_words
+    list.each do |word|
+      word.should =~ /\w\?$/
+    end
+  end
 end

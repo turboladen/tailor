@@ -90,17 +90,17 @@ describe Tailor::FileLine do
           line.no_space_around?(op).should be_false
         end
 
-        context "#no_space_on_right_side?" do
+        context "#no_space_after?" do
           it "should detect 0 spaces on the right side of a #{op} sign" do
             line = create_file_line "  1 #{op}1", __LINE__
-            line.no_space_on_right_side?(op).should be_true
+            line.no_space_after?(op).should be_true
           end
         end
         
-        context "#no_space_on_left_side?" do
+        context "#no_space_before?" do
           it "should detect 0 spaces on the left side of a #{op} sign" do
             line = create_file_line "  1#{op} 1", __LINE__
-            line.no_space_on_left_side?(op).should be_true
+            line.no_space_before?(op).should be_true
           end
         end
       end
@@ -108,12 +108,12 @@ describe Tailor::FileLine do
 
     it "should be OK if the line is a method with a ?" do
       line = create_file_line "  def hungry?", __LINE__
-      line.no_space_on_right_side?('?').should be_false
+      line.no_space_after?('?').should be_false
     end
 
     it "should be OK if the line is a known method with a ?" do
       line = create_file_line "  'string'.include?(thing)", __LINE__
-      line.no_space_on_right_side?('?').should be_false
+      line.no_space_after?('?').should be_false
     end
   end
 
@@ -183,10 +183,10 @@ describe Tailor::FileLine do
       line.no_space_around?('{').should be_true
     end
 
-    context "#no_space_on_right_side?" do
+    context "#no_space_after?" do
       it "should detect 0 spaces on the right side of a {" do
         line = create_file_line " 5.times {|num| puts num }", __LINE__
-        line.no_space_on_right_side?('{').should be_true
+        line.no_space_after?('{').should be_true
       end
     end
   end
@@ -197,14 +197,6 @@ describe Tailor::FileLine do
   end
 
   context "question marks" do
-    it "should return a list of methods with question marks" do
-      line = create_file_line "", __LINE__
-      list = line.question_mark_words
-      list.each do |word|
-        word.should =~ /\w\?$/
-      end
-    end
-
     it "should detect a word with a ?" do
       line = create_file_line "  thing.nil?", __LINE__
       line.contains_question_mark_word?.should be_true

@@ -30,6 +30,19 @@ module Tailor
     :regex => ['=~']
   }
 
+  def self.question_mark_words
+    list = []
+
+    methods.grep(/\?$/).each { |m| list << m.to_s }
+    protected_methods.grep(/\?$/).each { |m| list << m.to_s }
+    private_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Module.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
+
+    list.sort
+  end
+
+  QUESTION_MARK_WORDS = question_mark_words
+
   # Check all files in a directory for style problems.
   #
   # @param [String] project_base_dir Path to a directory to recurse into and
