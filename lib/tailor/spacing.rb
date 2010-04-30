@@ -1,3 +1,5 @@
+require 'file_line'
+
 module Tailor
 
   # This module provides methods for detecting spacing problems on a single
@@ -156,7 +158,7 @@ module Tailor
     #   the given word.
     def no_space_on_right_side? word
       right_side_match = Regexp.new(Regexp.escape(word) + '\x20{0}\w')
-
+      
       if self.scan(right_side_match).first.nil?
         return false
       elsif !self.scan(right_side_match).first.nil?
@@ -172,11 +174,57 @@ module Tailor
     def no_space_on_left_side? word
       left_side_match = Regexp.new('\w\x20{0}' + Regexp.escape(word))
 
+      # Get out if the check is for a '?' and that's part of a method name.
+      m_name = self.method_name
+      if !self.method_name.nil? and !m_name.scan(/\?$/).first.nil?
+        return false
+      end
+
+      # Get out if the word is supposed to have a question mark at the end
+      # of it.
+      if self.contains_question_mark_word?
+        return false
+      end
+
       if self.scan(left_side_match).first.nil?
         return false
       elsif !self.scan(left_side_match).first.nil?
         return true
       end
+    end
+
+    ##
+    # Checks to see if the word given to it is one that is OK to contain a
+    #   question mark at the end of it.
+    #
+    # @return [Boolean] Returns true if the word is in the list of words with
+    #   question marks at the end of it.
+    def contains_question_mark_word?
+
+      # Check to see if the FileLine contains any of these methods
+      list = question_mark_words
+      list.each do |word|
+        if self.include?(word)
+          return true
+        end
+      end
+      return false
+    end
+
+    ##
+    # Returns a list of all known methods that end with a question mark.
+    # 
+    # @return [Array<String>] An array of method names with question marks
+    #   at the end of them.
+    def question_mark_words
+      list = []
+
+      methods.grep(/\?$/).each { |m| list << m.to_s }
+      protected_methods.grep(/\?$/).each { |m| list << m.to_s }
+      private_methods.grep(/\?$/).each { |m| list << m.to_s }
+      Module.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
+
+      list.sort
     end
   end
 end

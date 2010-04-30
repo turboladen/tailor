@@ -33,7 +33,6 @@ module Tailor
       super line_of_code
       @file_path = file_path
       @line_number = line_number
-      Regexp.escape(self)
     end
 
     # Checks to see if the method name is using camel case.
@@ -82,12 +81,26 @@ module Tailor
     #
     # @return [Boolean] Returns true if the line starts with 'def'.
     def method_line?
-      words = self.split(/ /)
+      words = self.strip.split(/ /)
       if words[0].eql? "def"
         return true
       else
         return false
       end
+    end
+
+    ##
+    # Returns the name of the method if the line is one that contains a method
+    #   definition.
+    # 
+    # @return [String] The method name.
+    def method_name
+      unless self.method_line?
+        return nil
+      end
+      
+      words = self.strip.split(/ /)
+      words[1]
     end
 
     # Checks to see if the line is the start of a class's definition.
