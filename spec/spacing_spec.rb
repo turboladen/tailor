@@ -90,17 +90,27 @@ describe Tailor::FileLine do
           line.no_space_around?(op).should be_false
         end
 
-        context "#no_space_after?" do
-          it "should detect 0 spaces on the right side of a #{op} sign" do
+        context "#spaces_after" do
+          it "should report 0 spaces on the right side of a #{op} sign" do
             line = create_file_line "  1 #{op}1", __LINE__
-            line.no_space_after?(op).should be_true
+            line.spaces_after(op).first.should == 0
+          end
+
+          it "should report 1 space on the right side of a a #{op} sign" do
+            line = create_file_line "  1 #{op} 1", __LINE__
+            line.spaces_after(op).first.should == 1
           end
         end
         
-        context "#no_space_before?" do
-          it "should detect 0 spaces on the left side of a #{op} sign" do
+        context "#spaces_before" do
+          it "should report 0 spaces on the left side of a #{op} sign" do
             line = create_file_line "  1#{op} 1", __LINE__
-            line.no_space_before?(op).should be_true
+            line.spaces_before(op).first.should == 0
+          end
+
+          it "should report 1 space on the left side of a #{op} sign" do
+            line = create_file_line "  1 #{op} 1", __LINE__
+            line.spaces_before(op).first.should == 1
           end
         end
       end
@@ -108,12 +118,14 @@ describe Tailor::FileLine do
 
     it "should be OK if the line is a method with a ?" do
       line = create_file_line "  def hungry?", __LINE__
-      line.no_space_after?('?').should be_false
+      line.question_mark_method?.should be_true
+      line.no_space_around?('?').should be_false
     end
 
     it "should be OK if the line is a known method with a ?" do
       line = create_file_line "  'string'.include?(thing)", __LINE__
-      line.no_space_after?('?').should be_false
+      line.contains_question_mark_word?.should be_true
+      line.no_space_around?('?').should be_false
     end
   end
 
@@ -173,20 +185,20 @@ describe Tailor::FileLine do
       line.no_space_around?('{').should be_true
     end
 
-    it "should detect 0 spaces on the left side of a {" do
+    it "should detect 0 spaces before a {" do
       line = create_file_line " 5.times{ |num| puts num }", __LINE__
       line.no_space_around?('{').should be_true
     end
 
-    it "should detect 0 spaces on the right side of a {" do
+    it "should detect 0 spaces after a {" do
       line = create_file_line " 5.times {|num| puts num }", __LINE__
       line.no_space_around?('{').should be_true
     end
 
-    context "#no_space_after?" do
+    context "#spaces_after?" do
       it "should detect 0 spaces on the right side of a {" do
         line = create_file_line " 5.times {|num| puts num }", __LINE__
-        line.no_space_after?('{').should be_true
+        line.spaces_after('{').first.should == 0
       end
     end
   end

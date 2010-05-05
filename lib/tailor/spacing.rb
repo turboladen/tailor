@@ -112,7 +112,7 @@ module Tailor
 
     ##
     # Checks to see if there's spaces before a closed parenthesis.
-    # 
+    #
     # @return [Boolean] Returns true if there's spaces before a closed
     #   parenthesis.
     def space_before_closed_parenthesis?
@@ -126,7 +126,7 @@ module Tailor
 
     ##
     # Checks to see if there's spaces before a closed brackets.
-    # 
+    #
     # @return [Boolean] Returns true if there's spaces before a closed
     #   bracket.
     def space_before_closed_bracket?
@@ -140,56 +140,83 @@ module Tailor
 
     ##
     # Checks to see if there's no spaces around operators.
-    # 
+    #
+    # @param [String] string The string to check for spaces around.
     # @return [Boolean] Returns true if there's more or less than one
     #   space around the defined list of operators.
-    def no_space_around? word
-      if no_space_before?(word) or no_space_after?(word)
-        print_problem "Line has a '#{word}' with 0 spaces around it:"
-        return true
-      elsif !no_space_before?(word) and !no_space_after?(word)
-        return false
-      end
-    end
-
-    ##
-    # Checks to see if there's no spaces on the right side of the given word.
-    # 
-    # @return [Boolean] Returns true if there's no space on the right side of
-    #   the given word.
-    def no_space_after? word
-      right_side_match = Regexp.new(Regexp.escape(word) + '\x20{0}\w')
-      
-      if self.scan(right_side_match).first.nil?
-        return false
-      elsif !self.scan(right_side_match).first.nil?
-        return true
-      end
-    end
-
-    ##
-    # Checks to see if there's no spaces on the left side of the given word.
-    # 
-    # @return [Boolean] Returns true if there's no space on the left side of
-    #   the given word.
-    def no_space_before? word
-      left_side_match = Regexp.new('\w\x20{0}' + Regexp.escape(word))
-
-      # Get out if the check is for a '?' and that's part of a method name.
-      m_name = self.method_name
-      if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
-        return false
-      end
-
+    def no_space_around? string
       # Get out if the word is supposed to have a question mark at the end
       # of it.
       if self.contains_question_mark_word?
         return false
       end
 
-      if self.scan(left_side_match).first.nil?
+      # Get out if the check is for a '?' and that's part of a method name.
+      if self.question_mark_method?
         return false
-      elsif !self.scan(left_side_match).first.nil?
+      end
+
+      before_counts = []
+      after_counts = []
+
+      spaces_before(string).each { |s| before_counts << s }
+      spaces_after(string).each { |s| after_counts << s }
+
+      # Map before and after values to a single hash
+      counts = Hash[before_counts.zip(after_counts)]
+
+      counts.each_pair do |key, value|
+        if key == 0 or value == 0
+          print_problem "Line has a '#{string}' with 0 spaces around it:"
+          return true
+        else key > 0 and value > 0
+          return false
+        end
+      end
+    end
+
+    ##
+    # Gets the number of spaces after a string.
+    #
+    # @param [String] string The string to check for spaces after.
+    # @return [Array<Number>] An array that holds the number of spaces after
+    #   every time the given string appears in a line.
+    def spaces_after string
+      right_side_match = Regexp.new(Regexp.escape(string) + '\x20*')
+      
+      occurences = self.scan(right_side_match)
+
+      results = []
+      occurences.each do |o|
+        string_spaces = o.sub(string, '')
+        results << string_spaces.size
+      end
+
+      results
+    end
+
+    ##
+    # Gets the number of spaces before a string.
+    # 
+    # @param [String] string The string to check for spaces before.
+    # @return [Array<Number>] An array that holds the number of spaces before
+    #   every time the given string appears in a line.
+    def spaces_before string
+      left_side_match = Regexp.new('\x20*' + Regexp.escape(string))
+
+      occurences = self.scan(left_side_match)
+      results = []
+      occurences.each do |o|
+        string_spaces = o.sub(string, '')
+        results << string_spaces.size
+      end
+
+      results
+    end
+
+    def question_mark_method?
+      m_name = self.method_name
+      if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
         return true
       end
     end
@@ -203,7 +230,7 @@ module Tailor
     def contains_question_mark_word?
 
       # Check to see if the FileLine contains any of these methods
-      #list = Tailor.question_mark_words
+      # list = Tailor.question_mark_words
       QUESTION_MARK_WORDS.each do |word|
         if self.include?(word)
           return true
