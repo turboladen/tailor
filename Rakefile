@@ -8,6 +8,7 @@ Hoe.plugin :newgem
 Hoe.plugin :yard
 # Hoe.plugin :website
 # Hoe.plugin :cucumberfeatures
+Hoe.plugins.delete :rubyforge
 
 # Gets the description from the main README file
 def get_descr_from_readme
