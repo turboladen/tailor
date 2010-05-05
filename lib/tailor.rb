@@ -150,7 +150,8 @@ module Tailor
       # Check for spacing around operators
       OPERATORS.each_pair do |op_group, op_values|
         op_values.each do |op|
-          @problem_count += 1 if line.no_space_around? op
+          @problem_count += 1 if line.no_space_before? op
+          @problem_count += 1 if line.no_space_after? op
         end
       end
 

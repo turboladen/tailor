@@ -70,45 +70,79 @@ describe Tailor::FileLine do
   describe "with operators" do
     Tailor::OPERATORS.each_pair do |op_group, op_values|
       op_values.each do |op|
-        it "should detect 0 spaces around a #{op} sign" do
-          line = create_file_line "  1#{op}1", __LINE__
-          line.no_space_around?(op).should be_true
-        end
+        context "#no_space_after?" do
+          it "should detect 0 spaces around a #{op} sign" do
+            line = create_file_line "  1#{op}1", __LINE__
+            line.no_space_after?(op).should be_true
+          end
 
-        it "should detect 0 spaces on the left side of a #{op} sign" do
-          line = create_file_line "  1#{op} 1", __LINE__
-          line.no_space_around?(op).should be_true
-        end
+          it "should be OK with 0 spaces before but 1 space after a #{op} sign" do
+            line = create_file_line "  1#{op} 1", __LINE__
+            line.no_space_after?(op).should be_false
+          end
 
-        it "should detect 0 spaces on the right side of a #{op} sign" do
-          line = create_file_line "  1 #{op}1", __LINE__
-          line.no_space_around?(op).should be_true
-        end
+          it "should report 0 spaces after a #{op} sign" do
+            line = create_file_line "  1 #{op}1", __LINE__
+            line.no_space_after?(op).should be_true
+          end
 
-        it "should be OK with 1 space on both sides of a #{op} sign" do
-          line = create_file_line "  1 #{op} 1", __LINE__
-          line.no_space_around?(op).should be_false
+          it "should be OK with 1 space around a #{op} sign" do
+            line = create_file_line "  1 #{op} 1", __LINE__
+            line.no_space_after?(op).should be_false
+          end
+
+          it "should be OK an #{op} sign isn't in the string" do
+            line = create_file_line "  1 plus 1", __LINE__
+            line.no_space_after?(op).should be_false
+          end
         end
 
         context "#spaces_after" do
-          it "should report 0 spaces on the right side of a #{op} sign" do
+          it "should report 0 spaces after a #{op} sign" do
             line = create_file_line "  1 #{op}1", __LINE__
             line.spaces_after(op).first.should == 0
           end
 
-          it "should report 1 space on the right side of a a #{op} sign" do
+          it "should report 1 space after a #{op} sign" do
             line = create_file_line "  1 #{op} 1", __LINE__
             line.spaces_after(op).first.should == 1
           end
         end
         
+        context "#no_space_before?" do
+          it "should detect 0 spaces around a #{op} sign" do
+            line = create_file_line "  1#{op}1", __LINE__
+            line.no_space_before?(op).should be_true
+          end
+
+          it "should be OK with 0 spaces after but 1 space before a #{op} sign" do
+            line = create_file_line "  1 #{op}1", __LINE__
+            line.no_space_before?(op).should be_false
+          end
+
+          it "should report 0 spaces before a #{op} sign" do
+            line = create_file_line "  1#{op} 1", __LINE__
+            line.no_space_before?(op).should be_true
+          end
+
+          it "should be OK with 1 space around a #{op} sign" do
+            line = create_file_line "  1 #{op} 1", __LINE__
+            line.no_space_before?(op).should be_false
+          end
+
+          it "should be OK an #{op} sign isn't in the string" do
+            line = create_file_line "  1 plus 1", __LINE__
+            line.no_space_before?(op).should be_false
+          end
+        end
+
         context "#spaces_before" do
-          it "should report 0 spaces on the left side of a #{op} sign" do
+          it "should report 0 spaces before a #{op} sign" do
             line = create_file_line "  1#{op} 1", __LINE__
             line.spaces_before(op).first.should == 0
           end
 
-          it "should report 1 space on the left side of a #{op} sign" do
+          it "should report 1 space before a #{op} sign" do
             line = create_file_line "  1 #{op} 1", __LINE__
             line.spaces_before(op).first.should == 1
           end
@@ -119,13 +153,13 @@ describe Tailor::FileLine do
     it "should be OK if the line is a method with a ?" do
       line = create_file_line "  def hungry?", __LINE__
       line.question_mark_method?.should be_true
-      line.no_space_around?('?').should be_false
+      line.no_space_before?('?').should be_false
     end
 
     it "should be OK if the line is a known method with a ?" do
       line = create_file_line "  'string'.include?(thing)", __LINE__
       line.contains_question_mark_word?.should be_true
-      line.no_space_around?('?').should be_false
+      line.no_space_before?('?').should be_false
     end
   end
 
@@ -180,19 +214,88 @@ describe Tailor::FileLine do
   end
 
   describe "with curly braces" do
-    it "should detect 0 spaces around a {" do
-      line = create_file_line " 5.times{|num| puts num }", __LINE__
-      line.no_space_around?('{').should be_true
+    context "#no_space_before?" do
+      it "should detect 0 spaces around a {" do
+        line = create_file_line " 5.times{|num| puts num }", __LINE__
+        line.no_space_before?('{').should be_true
+      end
+
+      it "should detect 0 spaces around a }" do
+        line = create_file_line " 5.times { |num| puts num}", __LINE__
+        line.no_space_before?('}').should be_true
+      end
+
+      it "should detect 0 spaces before a {" do
+        line = create_file_line " 5.times{ |num| puts num }", __LINE__
+        line.no_space_before?('{').should be_true
+      end
+
+      it "should detect 0 spaces before a }" do
+        line = create_file_line " 5.times { |num| puts num}", __LINE__
+        line.no_space_before?('}').should be_true
+      end
+
+      it "should be OK with 1 space before a { but 0 spaces after" do
+        line = create_file_line " 5.times {|num| puts num }", __LINE__
+        line.no_space_before?('{').should be_false
+      end
+
+      it "should be OK with 1 space before a } but 0 spaces after" do
+        line = create_file_line " 5.times { |num| puts num }", __LINE__
+        line.no_space_before?('}').should be_false
+      end
+
+      it "should be OK with 1 space around a {" do
+        line = create_file_line " 5.times { |num| puts num }", __LINE__
+        line.no_space_before?('{').should be_false
+      end
+
+      it "should be OK with 1 space around a }" do
+        line = create_file_line " 5.times { |num| puts num } ", __LINE__
+        line.no_space_before?('}').should be_false
+      end
     end
 
-    it "should detect 0 spaces before a {" do
-      line = create_file_line " 5.times{ |num| puts num }", __LINE__
-      line.no_space_around?('{').should be_true
-    end
+    context "#no_space_after?" do
+      it "should detect 0 spaces around a {" do
+        line = create_file_line " 5.times{|num| puts num }", __LINE__
+        line.no_space_after?('{').should be_true
+      end
 
-    it "should detect 0 spaces after a {" do
-      line = create_file_line " 5.times {|num| puts num }", __LINE__
-      line.no_space_around?('{').should be_true
+      it "should detect 0 spaces around a }" do
+        line = create_file_line " 5.times { |num| puts num}", __LINE__
+        line.no_space_after?('}').should be_true
+      end
+
+      it "should detect 0 spaces after a {" do
+        line = create_file_line " 5.times {|num| puts num }", __LINE__
+        line.no_space_after?('{').should be_true
+      end
+
+      it "should detect 0 spaces after a }" do
+        line = create_file_line " 5.times { |num| puts num }", __LINE__
+        line.no_space_after?('}').should be_true
+      end
+
+      it "should be OK with 1 space after a { but 0 spaces before" do
+        line = create_file_line " 5.times{ |num| puts num }", __LINE__
+        line.no_space_after?('{').should be_false
+      end
+
+      it "should be OK with 1 space after a } but 0 spaces before" do
+        line = create_file_line " 5.times{ |num| puts num} ", __LINE__
+        line.no_space_after?('}').should be_false
+      end
+
+      it "should be OK with 1 space around a {" do
+        line = create_file_line " 5.times { |num| puts num }", __LINE__
+        line.no_space_after?('{').should be_false
+      end
+
+      it "should be OK with 1 space around a }" do
+        line = create_file_line " 5.times { |num| puts num } ", __LINE__
+        line.no_space_after?('}').should be_false
+      end
     end
 
     context "#spaces_after?" do

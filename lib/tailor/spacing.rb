@@ -139,12 +139,13 @@ module Tailor
     end
 
     ##
-    # Checks to see if there's no spaces around operators.
-    #
-    # @param [String] string The string to check for spaces around.
-    # @return [Boolean] Returns true if there's more or less than one
-    #   space around the defined list of operators.
-    def no_space_around? string
+    # Checks to see if there's no spaces before a given string.  If the line
+    #   being checked is a method with a question mark at the end of it, this
+    #   skips checking the line.
+    # 
+    # @param [String] string The string to check for spaces before.
+    # @return [Boolean] True if there are no spaces before the string.
+    def no_space_before? string
       # Get out if the word is supposed to have a question mark at the end
       # of it.
       if self.contains_question_mark_word?
@@ -156,23 +157,38 @@ module Tailor
         return false
       end
 
-      before_counts = []
-      after_counts = []
+      counts = []
+      spaces_before(string).each { |s| counts << s }
 
-      spaces_before(string).each { |s| before_counts << s }
-      spaces_after(string).each { |s| after_counts << s }
-
-      # Map before and after values to a single hash
-      counts = Hash[before_counts.zip(after_counts)]
-
-      counts.each_pair do |key, value|
-        if key == 0 or value == 0
-          print_problem "Line has a '#{string}' with 0 spaces around it:"
-          return true
-        else key > 0 and value > 0
-          return false
+      result = false
+      counts.each do |count|
+        if count == 0
+          print_problem "Line has a '#{string}' with 0 spaces before it:"
+          result = true
         end
       end
+
+      result
+    end
+
+    ##
+    # Checks to see if there's no spaces after a given string.
+    # 
+    # @param [String] string The string to check for spaces after.
+    # @return [Boolean] True if there are no spaces after the string.
+    def no_space_after? string
+      counts = []
+      spaces_after(string).each { |s| counts << s }
+
+      result = false
+      counts.each do |count|
+        if count == 0
+          print_problem "Line has a '#{string}' with 0 spaces after it:"
+          result = true
+        end
+      end
+
+      result
     end
 
     ##
