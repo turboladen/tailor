@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper.rb'
 
 describe Kernel do
   def self.get_requires
-    Dir.chdir '../lib'
+    Dir.chdir File.expand_path(File.dirname(__FILE__)) + '/../lib'
     filenames = Dir.glob 'Tailor/*.rb'
     requires = filenames.each do |fn|
       fn.chomp!(File.extname(fn))
