@@ -30,31 +30,6 @@ module Tailor
     :regex => ['=~']
   }
 
-  ##
-  # Returns a list of all known methods that end with a question mark.
-  # 
-  # @return [Array<String>] An array of method names with question marks
-  #   at the end of them.
-  def self.question_mark_words
-    list = []
-
-    # This should really load/eval the class/module that's being checked
-    # to get the methods out of that instead of just getting what's already
-    # loaded.
-    methods.grep(/\?$/).each { |m| list << m.to_s }
-    protected_methods.grep(/\?$/).each { |m| list << m.to_s }
-    private_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Tailor.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Tailor.singleton_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Tailor.private_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Tailor.public_instance_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Tailor.private_instance_methods.grep(/\?$/).each { |m| list << m.to_s }
-
-    list.sort
-  end
-
-  QUESTION_MARK_WORDS = self.question_mark_words
-
   # Check all files in a directory for style problems.
   #
   # @param [String] project_base_dir Path to a directory to recurse into and

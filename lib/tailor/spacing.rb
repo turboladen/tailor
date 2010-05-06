@@ -264,13 +264,12 @@ module Tailor
       results
     end
 
+    ##
+    # Checks to see if the line contains a method name with a ?.
+    # 
+    # @return [Boolean] True if the line contains a method line include?.
     def question_mark_method?
       m_name = self.method_name
-      #if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
-      #  return true
-      #elsif contains_question_mark_word?
-      #  return true
-      #elsif self.scan(/\w+\?/)
       if self.scan(/[a-zA-Z|_]\w*\?/).empty?
         return false
       else
@@ -291,30 +290,17 @@ module Tailor
       end
     end
 
+    ##
+    # Checks to see if the word/chars are in a Regexp in the line.
+    #
+    # @param [String] word The word/chars to see if they're in a Regexp.
+    # @return [Boolean] True if the word/chars are in a Regexp.
     def word_is_in_regexp? word
       if self.scan(/\/.*#{Regexp.escape(word)}+(.*\/|)/).empty?
         return false
       else
         return true
       end
-    end
-
-    ##
-    # Checks to see if the word given to it is one that is OK to contain a
-    #   question mark at the end of it.
-    #
-    # @return [Boolean] Returns true if the word is in the list of words with
-    #   question marks at the end of it.
-    def contains_question_mark_word?
-
-      # Check to see if the FileLine contains any of these methods
-      # list = Tailor.question_mark_words
-      QUESTION_MARK_WORDS.each do |word|
-        if self.include?(word)
-          return true
-        end
-      end
-      return false
     end
   end
 end
