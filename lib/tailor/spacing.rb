@@ -271,7 +271,7 @@ module Tailor
       #elsif contains_question_mark_word?
       #  return true
       #elsif self.scan(/\w+\?/)
-      if self.scan(/(^\D+)\?/).empty?
+      if self.scan(/[a-zA-Z|_]\w*\?/).empty?
         return false
       else
         return true
