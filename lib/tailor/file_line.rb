@@ -149,8 +149,9 @@ module Tailor
     # @return [Boolean] Returns true if the line length exceeds the allowed
     #   length.
     def too_long?
-      if self.length > LINE_LENGTH_MAX
-        print_problem "Line is greater than #{LINE_LENGTH_MAX} characters:"
+      length = self.length
+      if length > LINE_LENGTH_MAX
+        print_problem "Line is >#{LINE_LENGTH_MAX} characters (#{length}):"
         return true
       else
         return false

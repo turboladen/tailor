@@ -149,7 +149,7 @@ Then /^the checker should tell me each line has trailing whitespace$/ do
 end
 
 Then /^the checker should tell me each line is too long$/ do
-  message = "Line is greater than #{Tailor::FileLine::LINE_LENGTH_MAX} characters"
+  message = "Line is >#{Tailor::FileLine::LINE_LENGTH_MAX} characters"
   @result.should include(message)
 end
 

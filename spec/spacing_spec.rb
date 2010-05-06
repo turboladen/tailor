@@ -147,6 +147,30 @@ describe Tailor::FileLine do
             line.spaces_before(op).first.should == 1
           end
         end
+
+        context "#word_is_in_string?" do
+          it "should report that the #{op} is in a string" do
+            line = create_file_line "'  1 #{op} 1'", __LINE__
+            line.word_is_in_string?(op).should be_true
+          end
+
+          it "should report that the #{op} is NOT in a string" do
+            line = create_file_line "  1 #{op} 1", __LINE__
+            line.word_is_in_string?(op).should be_false
+          end
+        end
+
+        context "#word_is_in_regexp?" do
+          it "should report that the #{op} is in a Regexp" do
+            line = create_file_line "/\\" + op + "$/", __LINE__
+            line.word_is_in_regexp?(op).should be_true
+          end
+
+          it "should report that the #{op} is NOT in a Regexp" do
+            line = create_file_line "\\" + op + "$", __LINE__
+            line.word_is_in_regexp?(op).should be_false
+          end
+        end
       end
     end
 

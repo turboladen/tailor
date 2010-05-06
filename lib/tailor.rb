@@ -38,15 +38,22 @@ module Tailor
   def self.question_mark_words
     list = []
 
+    # This should really load/eval the class/module that's being checked
+    # to get the methods out of that instead of just getting what's already
+    # loaded.
     methods.grep(/\?$/).each { |m| list << m.to_s }
     protected_methods.grep(/\?$/).each { |m| list << m.to_s }
     private_methods.grep(/\?$/).each { |m| list << m.to_s }
-    Module.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Tailor.instance_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Tailor.singleton_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Tailor.private_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Tailor.public_instance_methods.grep(/\?$/).each { |m| list << m.to_s }
+    Tailor.private_instance_methods.grep(/\?$/).each { |m| list << m.to_s }
 
     list.sort
   end
 
-  QUESTION_MARK_WORDS = question_mark_words
+  QUESTION_MARK_WORDS = self.question_mark_words
 
   # Check all files in a directory for style problems.
   #

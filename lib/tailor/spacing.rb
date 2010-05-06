@@ -142,18 +142,27 @@ module Tailor
     # Checks to see if there's no spaces before a given string.  If the line
     #   being checked is a method with a question mark at the end of it, this
     #   skips checking the line.
-    # 
+    #
     # @param [String] string The string to check for spaces before.
     # @return [Boolean] True if there are no spaces before the string.
     def no_space_before? string
-      # Get out if the word is supposed to have a question mark at the end
-      # of it.
-      if self.contains_question_mark_word?
+      # Get out if the check is for a '?' and that's part of a method name.
+      if self.question_mark_method?
         return false
       end
 
-      # Get out if the check is for a '?' and that's part of a method name.
-      if self.question_mark_method?
+      # Get out if this line is a comment line
+      if self.comment_line?
+        return false
+      end
+
+      # Get out if the string is within another string
+      if word_is_in_string? string
+        return false
+      end
+
+      # Get out if the string is within another string
+      if word_is_in_regexp? string
         return false
       end
 
@@ -173,10 +182,30 @@ module Tailor
 
     ##
     # Checks to see if there's no spaces after a given string.
-    # 
+    #
     # @param [String] string The string to check for spaces after.
     # @return [Boolean] True if there are no spaces after the string.
     def no_space_after? string
+      # Get out if the check is for a '?' and that's part of a method name.
+      if self.question_mark_method?
+        return false
+      end
+
+      # Get out if this line is a comment line
+      if self.comment_line?
+        return false
+      end
+
+      # Get out if the string is within another string
+      if word_is_in_string? string
+        return false
+      end
+
+      # Get out if the string is within another string
+      if word_is_in_regexp? string
+        return false
+      end
+
       counts = []
       spaces_after(string).each { |s| counts << s }
 
@@ -198,8 +227,13 @@ module Tailor
     # @return [Array<Number>] An array that holds the number of spaces after
     #   every time the given string appears in a line.
     def spaces_after string
+      # Get out if this line is a comment line
+      if self.comment_line?
+        return false
+      end
+
       right_side_match = Regexp.new(Regexp.escape(string) + '\x20*')
-      
+
       occurences = self.scan(right_side_match)
 
       results = []
@@ -213,7 +247,7 @@ module Tailor
 
     ##
     # Gets the number of spaces before a string.
-    # 
+    #
     # @param [String] string The string to check for spaces before.
     # @return [Array<Number>] An array that holds the number of spaces before
     #   every time the given string appears in a line.
@@ -232,7 +266,35 @@ module Tailor
 
     def question_mark_method?
       m_name = self.method_name
-      if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
+      #if !m_name.nil? and !m_name.scan(/\?$/).first.nil?
+      #  return true
+      #elsif contains_question_mark_word?
+      #  return true
+      #elsif self.scan(/\w+\?/)
+      if self.scan(/(^\D+)\?/).empty?
+        return false
+      else
+        return true
+      end
+    end
+
+    ##
+    # Checks to see if the word/chars are in a string in the line.
+    #
+    # @param [String] word The word/chars to see if they're in a string.
+    # @return [Boolean] True if the word/chars are in a string.
+    def word_is_in_string? word
+      if self.scan(/(\'|\").*#{Regexp.escape(word)}+.*(\'|\")/).empty?
+        return false
+      else
+        return true
+      end
+    end
+
+    def word_is_in_regexp? word
+      if self.scan(/\/.*#{Regexp.escape(word)}+(.*\/|)/).empty?
+        return false
+      else
         return true
       end
     end
