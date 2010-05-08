@@ -21,13 +21,29 @@ module Tailor
     'while'
     ]
 
+  # These operators should always have 1 space around them
   OPERATORS = {
-    :arithmetic => ['+', '-', '*', '/'],
-    :assignment => ['=', '+=', '-=', '*=', '/=', '%=', '**=', '||=', '&&='],
-    :comparison => ['==', '===', '!=', '>', '<', '>=', '<=', '<=>'],
+    :arithmetic => ['+', '-', '*', '/', '%', '++', '--', '**'],
+    :assignment => ['=', '+=', '-=', '*=', '/=', '%=', '*=', '**=', '|', '&=', 
+      '&&=', '>>=', '<<=', '||='],
+    :comparison => ['==', '===', '!=', '>', '<', '>=', '<=', '<=>', '!', '~'],
+    :gem_version => ['~>'],
     :logical => ['&&', '||'],
-    :ternary => ['?', ':'],
-    :regex => ['=~']
+    :regex => ['^', '|', '!~', '=~'],
+    :shift => ['<<', '>>'],
+    :ternary => ['?', ':']
+  }
+
+  # These operators should never have spaces around them
+  NO_SPACE_AROUND_OPERATORS = {
+    :range => ['..', '...'],
+    :scope_resolution => ['::']
+  }
+
+  # Don't do anything about these ops; they're just here so we know not to do
+  # anything with them.
+  DO_NOTHING_OPS = {
+    :elements => ['[]', '[]=']
   }
 
   # Check all files in a directory for style problems.
