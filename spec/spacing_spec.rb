@@ -182,7 +182,7 @@ describe Tailor::FileLine do
 
     it "should be OK if the line is a known method with a ?" do
       line = create_file_line "  'string'.include?(thing)", __LINE__
-      line.contains_question_mark_word?.should be_true
+      line.question_mark_method?.should be_true
       line.no_space_before?('?').should be_false
     end
   end
@@ -330,20 +330,15 @@ describe Tailor::FileLine do
     end
   end
 
-  it "should return a list of methods with ?s at the end" do
-    line = create_file_line "  bob.nil?", __LINE__
-    line.contains_question_mark_word?
-  end
-
   context "question marks" do
     it "should detect a word with a ?" do
       line = create_file_line "  thing.nil?", __LINE__
-      line.contains_question_mark_word?.should be_true
+      line.question_mark_method?.should be_true
     end
 
     it "should skip a word without a ?" do
       line = create_file_line "  thing.strip!", __LINE__
-      line.contains_question_mark_word?.should be_false
+      line.question_mark_method?.should be_false
     end
   end
 end
