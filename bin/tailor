@@ -11,8 +11,17 @@ end
 if ARGV[0].nil?
   puts usage
 else
-  path_to_check = ARGV[0]
-  files_and_problems = Tailor.check path_to_check
-  Tailor.print_report files_and_problems
-end
+  begin
+    path_to_check = ARGV[0]
+    
+    unless File.file?(path_to_check) or File.directory?(path_to_check)
+      raise "Invalid file or directory: #{path_to_check}"
+    end
 
+    files_and_problems = Tailor.check path_to_check
+    Tailor.print_report files_and_problems
+  rescue Exception => ex
+    puts ex
+    puts
+  end
+end
