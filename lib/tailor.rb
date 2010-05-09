@@ -59,7 +59,7 @@ module Tailor
 
     # Process each file
     ruby_files_in_project.each do |file_name|
-      problems = find_problems file_name
+      problems = find_problems_in file_name
       files_and_problems[file_name] = problems
     end
 
@@ -94,7 +94,7 @@ module Tailor
   #
   # @param [String] file_name Path to a file to check styling on.
   # @return [Number] Returns the number of errors on the file.
-  def self.find_problems file_name
+  def self.find_problems_in file_name
     source = File.open(file_name, 'r')
     file_path = Pathname.new(file_name)
 
