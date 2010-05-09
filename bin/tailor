@@ -25,7 +25,8 @@ else
     # Print summary of the problems we found
     Tailor.print_report files_and_problems
   rescue Exception => ex
-    puts ex
+    puts ex.message
+    puts ex.backtrace
     puts
   end
 end
