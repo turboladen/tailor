@@ -106,9 +106,43 @@ module Tailor
 
     @problem_count = 0
     line_number = 1
+    current_level = 0.0
+    next_level = 0.0
+
     source.each_line do |source_line|
       line = FileLine.new(source_line, file_path, line_number)
 
+      puts "#{line_number}----"
+
+      if line.outdent?
+        current_level -= 1.0
+        next_level = current_level + 1.0
+        puts ":outdent: current = #{current_level}; next = #{next_level}"
+      end
+      
+      if line.contains_end?
+        current_level -= 1.0
+        next_level = current_level
+        puts ":end: current = #{current_level}; next = #{next_level}"
+      end
+
+      if line.indent?
+        next_level = current_level + 1.0
+        puts ":indent: current = #{current_level}; next = #{next_level}"
+      end
+
+      if !line.indent? and !line.outdent? and !line.contains_end?
+        puts ":same: current = #{current_level}; next = #{next_level}"
+      end
+
+      if line.indent? or line.outdent? or line.contains_end?
+        if line.at_improper_level? current_level
+          @problem_count += 1
+        end
+      end
+
+      current_level = next_level
+      
       # Check for indenting by spaces only
       @problem_count += 1 if line.hard_tabbed?
 

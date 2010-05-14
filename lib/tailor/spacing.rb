@@ -1,3 +1,5 @@
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../')
+
 require 'tailor'
 require 'file_line'
 
@@ -87,6 +89,7 @@ module Tailor
     #
     # @return [Boolean] Returns true if there's spaces after an open
     #   parenthesis.
+    # TODO: Refactor to use #no_space_after?
     def space_after_open_parenthesis?
       if self.scan(/\(\x20+/).first.nil?
         return false
@@ -101,6 +104,7 @@ module Tailor
     #
     # @return [Boolean] Returns true if there's spaces after an open
     #   bracket.
+    # TODO: Refactor to use #no_space_after?
     def space_after_open_bracket?
       if self.scan(/\[\x20+/).first.nil?
         return false
@@ -115,6 +119,7 @@ module Tailor
     #
     # @return [Boolean] Returns true if there's spaces before a closed
     #   parenthesis.
+    # TODO: Refactor to use #no_space_before?
     def space_before_closed_parenthesis?
       if self.scan(/\x20+\)/).first.nil?
         return false
@@ -129,6 +134,7 @@ module Tailor
     #
     # @return [Boolean] Returns true if there's spaces before a closed
     #   bracket.
+    # TODO: Refactor to use #no_space_before?
     def space_before_closed_bracket?
       if self.scan(/\x20+\]/).first.nil?
         return false
@@ -299,6 +305,20 @@ module Tailor
       if self.scan(/\/.*#{Regexp.escape(word)}+(.*\/|)/).empty?
         return false
       else
+        return true
+      end
+    end
+
+    ##
+    # Checks to see if the source code line contains any hard tabs.
+    #
+    # @return [Boolean] Returns true if the file line contains hard tabs.
+    #   false if the line contains only spaces.
+    def hard_tabbed?
+      if self.scan(/\t/).empty?
+        return false
+      else
+        print_problem "Line contains hard tabs:"
         return true
       end
     end

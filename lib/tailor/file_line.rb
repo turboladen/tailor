@@ -1,8 +1,8 @@
 $:.unshift(File.expand_path(File.dirname(__FILE__)))
 
-require 'pathname'
 require 'spacing'
 require 'indentation'
+require 'logger'
 
 module Tailor
 
@@ -33,6 +33,9 @@ module Tailor
       super line_of_code
       @file_path = file_path
       @line_number = line_number
+      @logger = ::Logger.new(STDOUT)
+      #@logger.datetime_format = "%H:%M:%S"
+      @logger.datetime_format = ""
     end
 
     # Checks to see if the method name is using camel case.
@@ -135,7 +138,15 @@ module Tailor
     #
     # @return [Boolean] Returns true if the line begins with a pound symbol.
     def comment_line?
-      if self.scan(/\s*#/).empty?
+      if self.scan(/^\s*#/).empty?
+        return false
+      else
+        return true
+      end
+    end
+
+    def empty_line?
+      if self.scan(/^\s*$/).empty?
         return false
       else
         return true
