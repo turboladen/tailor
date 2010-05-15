@@ -76,29 +76,9 @@ module Tailor
     end
 
     ##
-    # Determines how much the next line should be indented/outdented.  If it
-    #   finds one of the expressions, it should return either 1.0 or -1.0; if
-    #   it doesn't it returns 0.0.
+    # Checks to see if the line contains a statement that should be indented.
     # 
-    # @return [Float] The level to which the next line should be indented/outdented
-    #   by.
-    def indent_type
-      if self.empty_line?
-        return :empty
-      end
-
-      if end?
-        return :end
-      end
-
-      if self.comment_line?
-        return :same
-      end
-
-
-      return :same
-    end
-
+    # @return [Boolean] True if the line contains one of the statements.
     def indent?
       return false if self.comment_line?
 
@@ -115,6 +95,10 @@ module Tailor
       return false
     end
 
+    ##
+    # Checks to see if the line contains a statement that should be outdented.
+    # 
+    # @return [Boolean] True if the line contains one of the statements.
     def outdent?
       return false if self.comment_line?
 
@@ -130,6 +114,11 @@ module Tailor
       return false
     end
 
+    ##
+    # Checks to see if the line contains a statement that ends a code chunk:
+    #   end, ], or }.
+    # 
+    # @return [Boolean] True if the line contains one of the statements.
     def contains_end?
       return false if self.comment_line?
 
@@ -138,7 +127,7 @@ module Tailor
         
         # If it does contain an expression, set the proper level to be out 1.0.
         unless result.empty?
-          @logger.debug "Found match: #{regexp}"
+          #@logger.debug "Found match: #{regexp}"
           return true
         end
       end
