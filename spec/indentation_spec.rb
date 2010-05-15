@@ -12,10 +12,14 @@ def strip_regex regexp
     return original_regexp.gsub!("\\b", '')
   when /\w+{2,}/
     return original_regexp.scan(/\w+{2,}/).first
-  when /\{{1}/
+  when /\\\{\[/
     return '{'
-  else
+  when /\*\\\}/
+    return '}'
+  when /\\\[\[/
     return '['
+  when /\*\\\]/
+    return ']'
   end
 end
 
@@ -40,41 +44,66 @@ describe Tailor::Indentation do
   end
 
   context "should know what level of indentation a line is at" do
-    INDENT_EXPRESSIONS.each do |regexp|
-      expression = strip_regex(regexp)
+    context "for indent expressions" do
+      INDENT_EXPRESSIONS.each do |regexp|
+        expression = strip_regex(regexp)
 
-      it "when the '#{expression }' line is not indented" do
-        line = create_file_line "#{expression}", __LINE__
-        line.is_at_level.should == 0.0
-      end
+        it "when the '#{expression }' line is not indented" do
+          line = create_file_line "#{expression}", __LINE__
+          line.is_at_level.should == 0.0
+        end
 
-      it "when the '#{expression}' line is indented only 1 space" do
-        line = create_file_line " #{expression}", __LINE__
-        line.is_at_level.should == 0.5
-      end
+        it "when the '#{expression}' line is indented only 1 space" do
+          line = create_file_line " #{expression}", __LINE__
+          line.is_at_level.should == 0.5
+        end
 
-      it "when the '#{expression}' line is indented 2 spaces" do
-        line = create_file_line "  #{expression}", __LINE__
-        line.is_at_level.should == 1.0
+        it "when the '#{expression}' line is indented 2 spaces" do
+          line = create_file_line "  #{expression}", __LINE__
+          line.is_at_level.should == 1.0
+        end
       end
     end
 
-    OUTDENT_EXPRESSIONS.each do |regexp|
-      expression = strip_regex(regexp)
+    context "for outdent expressions" do
+      OUTDENT_EXPRESSIONS.each do |regexp|
+        expression = strip_regex(regexp)
 
-      it "when the '#{expression }' line is not indented" do
-        line = create_file_line "#{expression}", __LINE__
-        line.is_at_level.should == 0.0
+        it "when the '#{expression }' line is not indented" do
+          line = create_file_line "#{expression}", __LINE__
+          line.is_at_level.should == 0.0
+        end
+
+        it "when the '#{expression}' line is indented only 1 space" do
+          line = create_file_line " #{expression}", __LINE__
+          line.is_at_level.should == 0.5
+        end
+
+        it "when the '#{expression}' line is indented 2 spaces" do
+          line = create_file_line "  #{expression}", __LINE__
+          line.is_at_level.should == 1.0
+        end
       end
+    end
 
-      it "when the '#{expression}' line is indented only 1 space" do
-        line = create_file_line " #{expression}", __LINE__
-        line.is_at_level.should == 0.5
-      end
+    context "for end expressions" do
+      END_EXPRESSIONS.each do |regexp|
+        expression = strip_regex(regexp)
 
-      it "when the '#{expression}' line is indented 2 spaces" do
-        line = create_file_line "  #{expression}", __LINE__
-        line.is_at_level.should == 1.0
+        it "when the '#{expression }' line is not indented" do
+          line = create_file_line "#{expression}", __LINE__
+          line.is_at_level.should == 0.0
+        end
+
+        it "when the '#{expression}' line is indented only 1 space" do
+          line = create_file_line " #{expression}", __LINE__
+          line.is_at_level.should == 0.5
+        end
+
+        it "when the '#{expression}' line is indented 2 spaces" do
+          line = create_file_line "  #{expression}", __LINE__
+          line.is_at_level.should == 1.0
+        end
       end
     end
   end
