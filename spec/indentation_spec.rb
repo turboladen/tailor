@@ -58,5 +58,24 @@ describe Tailor::Indentation do
         line.is_at_level.should == 1.0
       end
     end
+
+    OUTDENT_EXPRESSIONS.each do |regexp|
+      expression = strip_regex(regexp)
+
+      it "when the '#{expression }' line is not indented" do
+        line = create_file_line "#{expression}", __LINE__
+        line.is_at_level.should == 0.0
+      end
+
+      it "when the '#{expression}' line is indented only 1 space" do
+        line = create_file_line " #{expression}", __LINE__
+        line.is_at_level.should == 0.5
+      end
+
+      it "when the '#{expression}' line is indented 2 spaces" do
+        line = create_file_line "  #{expression}", __LINE__
+        line.is_at_level.should == 1.0
+      end
+    end
   end
 end
