@@ -4,7 +4,24 @@ require 'pathname'
 
 include Tailor
 
-describe Tailor::FileLine do
+def strip_regex regexp
+  original_regexp = regexp.source
+
+  case original_regexp
+  when /\\b\w+\\b/
+    return original_regexp.gsub!("\\b", '')
+  when /\w+{2,}/
+    return original_regexp.scan(/\w+{2,}/).first
+  when /\{{1}/
+    return '{'
+  else
+    return '['
+  end
+end
+
+describe Tailor::Indentation do
+  include Tailor::Indentation
+  
   context "should return the number of leading spaces in a line" do
     it "when the line is not indented" do
       line = create_file_line "def do_something", __LINE__
@@ -22,25 +39,24 @@ describe Tailor::FileLine do
     end
   end
 
-  context "should check indenting by spaces" do
-    it "when the line is indented 1 hard tab" do
-      line = create_file_line "\tdef do_something", __LINE__
-      line.hard_tabbed?.should be_true
-    end
+  context "should know what level of indentation a line is at" do
+    INDENT_EXPRESSIONS.each do |regexp|
+      expression = strip_regex(regexp)
 
-    it "when the line is indented with a space and 1 hard tab" do
-      line = create_file_line " \tdef do_something", __LINE__
-      line.hard_tabbed?.should be_true
-    end
+      it "when the '#{expression }' line is not indented" do
+        line = create_file_line "#{expression}", __LINE__
+        line.is_at_level.should == 0.0
+      end
 
-    it "when the line is indented with a space" do
-      line = create_file_line " def do_something", __LINE__
-      line.hard_tabbed?.should be_false
-    end
+      it "when the '#{expression}' line is indented only 1 space" do
+        line = create_file_line " #{expression}", __LINE__
+        line.is_at_level.should == 0.5
+      end
 
-    it "when the line is not indented" do
-      line = create_file_line "def do_something", __LINE__
-      line.hard_tabbed?.should be_false
+      it "when the '#{expression}' line is indented 2 spaces" do
+        line = create_file_line "  #{expression}", __LINE__
+        line.is_at_level.should == 1.0
+      end
     end
   end
 end
