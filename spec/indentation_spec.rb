@@ -140,4 +140,18 @@ describe Tailor::Indentation do
       end
     end
   end
+  
+  context "#at_improper_level?" do
+    it "should return true if the line is at the wrong level" do
+      proper_level = 1.0
+      line = create_file_line "class SomeClass", __LINE__
+      line.at_improper_level?(proper_level).should be_true
+    end
+
+    it "should return false if the line is at the right level" do
+      proper_level = 0.0
+      line = create_file_line "class SomeClass", __LINE__
+      line.at_improper_level?(proper_level).should be_false
+    end
+  end
 end
