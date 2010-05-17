@@ -107,4 +107,37 @@ describe Tailor::Indentation do
       end
     end
   end
+
+  context "#indent?" do
+    INDENT_EXPRESSIONS.each do |regexp|
+      expression = strip_regex(regexp)
+
+      it "should return true if the line contains #{expression}" do
+        line = create_file_line "#{expression}", __LINE__
+        line.indent?.should be_true
+      end
+    end
+  end
+
+  context "#outdent?" do
+    OUTDENT_EXPRESSIONS.each do |regexp|
+      expression = strip_regex(regexp)
+
+      it "should return true if the line contains #{expression}" do
+        line = create_file_line "#{expression}", __LINE__
+        line.outdent?.should be_true
+      end
+    end
+  end
+
+  context "#contains_end?" do
+    END_EXPRESSIONS.each do |regexp|
+      expression = strip_regex(regexp)
+
+      it "should return true if the line contains #{expression}" do
+        line = create_file_line "#{expression}", __LINE__
+        line.contains_end?.should be_true
+      end
+    end
+  end
 end
