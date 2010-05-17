@@ -154,4 +154,35 @@ describe Tailor::Indentation do
       line.at_improper_level?(proper_level).should be_false
     end
   end
+
+  context "#ends_with_operator?" do
+    OPERATORS.each_pair do |op_family, op_values|
+      op_values.each do |op|
+        it "should return true if the line ends with a #{op}" do
+          line = create_file_line "1 #{op}", __LINE__
+          line.ends_with_operator?.should be_true
+        end
+
+        it "should return true if the line ends with a #{op} plus spaces" do
+          line = create_file_line "1 #{op}  ", __LINE__
+          line.ends_with_operator?.should be_true
+        end
+
+        it "should return true if the line ends with a #{op} plus tabs" do
+          line = create_file_line "1 #{op}\t\t", __LINE__
+          line.ends_with_operator?.should be_true
+        end
+
+        it "should return true if the line only has spaces plus a #{op}" do
+          line = create_file_line "    #{op}", __LINE__
+          line.ends_with_operator?.should be_true
+        end
+      end
+    end
+
+    it "should return false if the line doesn't contain an operator" do
+      line = create_file_line "  def some_method(thing)", __LINE__
+      line.ends_with_operator?.should be_false
+    end
+  end
 end

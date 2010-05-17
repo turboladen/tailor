@@ -6,6 +6,7 @@ module Tailor
   module Indentation
 
     INDENT_SIZE = 2
+    HARD_TAB_SIZE = 4
 
     INDENT_EXPRESSIONS = [
       /^class\b/,
@@ -78,17 +79,15 @@ module Tailor
     ##
     # Checks to see if the line contains a statement that should be indented.
     # 
-    # @return [Boolean] True if the line contains one of the statements.
+    # @return [Boolean] True if the line contains one of the statements and
+    #   does not contain 'end'.
     def indent?
       return false if self.comment_line?
 
       INDENT_EXPRESSIONS.each do |regexp|
         result = self.strip.scan(regexp)
 
-        #unless result.empty? and self.scan(/\s+end\s*$/)
-        #if(!result.empty? && !(self =~ /\s+end\s*$/))
         if(self.strip =~ regexp && !(self =~ /\s+end\s*$/))
-          #return 1.0
           return true
         end
       end
@@ -107,7 +106,6 @@ module Tailor
         
         # If it does contain an expression, set the proper level to be out 1.0.
         unless result.empty?
-          #return -1.0
           return true
         end
       end
@@ -134,6 +132,13 @@ module Tailor
       return false
     end
 
+    ##
+    # Simply compares the level the line is at to the parameter that's passed
+    #   in.  The proper level is maintained outside of this module.
+    # 
+    # @return [Boolean] True if level of the line doesn't match the level
+    #   passed in.  Also retruns true if the line is an empty line, since that
+    #   line doens't need to be checked.
     def at_improper_level? proper_level
       current_level = self.is_at_level
 
@@ -145,6 +150,21 @@ module Tailor
         print_problem message
         return true
       end
+    end
+
+    def ends_with_operator?
+      OPERATORS.each_pair do |op_family, op_values|
+        op_values.each do |op|
+          result = self.scan(/.*#{Regexp.escape(op)}\s*$/)
+          unless result.empty?
+            #logger = Logger.new(STDOUT)
+            #logger.debug "Matched on op: #{op}"
+            return true
+          end
+        end
+      end
+
+      return false
     end
   end
 end
