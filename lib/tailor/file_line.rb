@@ -181,8 +181,8 @@ module Tailor
     #
     # @param [String] Error message to print.
     def print_problem message
-      #puts message
-      print red(bold(message)), "\n"
+      puts red(bold(message))
+      #print red(bold(message)), "\n"
       puts "\t#{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}"
     end
 
