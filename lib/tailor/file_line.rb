@@ -138,10 +138,10 @@ module Tailor
     #
     # @return [Boolean] Returns true if the line begins with a pound symbol.
     def comment_line?
-      if self.scan(/^\s*#/).empty?
-        return false
-      else
+      unless self.scan(/^\s*#/).empty?
         return true
+      else
+        return false
       end
     end
 
