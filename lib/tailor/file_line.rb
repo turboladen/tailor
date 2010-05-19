@@ -3,6 +3,7 @@ $:.unshift(File.expand_path(File.dirname(__FILE__)))
 require 'spacing'
 require 'indentation'
 require 'logger'
+require 'term/ansicolor'
 
 module Tailor
 
@@ -16,6 +17,7 @@ module Tailor
   class FileLine < String
     include Tailor::Spacing
     include Tailor::Indentation
+    include Term::ANSIColor
 
     LINE_LENGTH_MAX = 80
 
@@ -179,7 +181,8 @@ module Tailor
     #
     # @param [String] Error message to print.
     def print_problem message
-      puts message
+      #puts message
+      print red(bold(message)), "\n"
       puts "\t#{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}"
     end
 
