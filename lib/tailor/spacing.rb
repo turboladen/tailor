@@ -21,9 +21,9 @@ module Tailor
       if count > 0
         print_problem "Line contains #{count} trailing whitespace(s):"
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     ##
@@ -34,11 +34,12 @@ module Tailor
     #   line.
     def trailing_whitespace_count
       spaces = self.scan(/(\x20+|\x09+)$/)
+
       if spaces.first.eql? nil
         return 0
-      else
-        return spaces.first.first.length
       end
+
+      return spaces.first.first.length
     end
 
     ##
@@ -79,9 +80,9 @@ module Tailor
       elsif self.scan(/\w\x20+\,/)
         print_problem "Line has at least one space before a comma:"
         return true
-      else
-        return nil
       end
+
+      return nil
     end
 
     ##
@@ -278,9 +279,9 @@ module Tailor
       m_name = self.method_name
       if self.scan(/[a-zA-Z|_]\w*\?/).empty?
         return false
-      else
-        return true
       end
+
+      return true
     end
 
     ##
@@ -291,9 +292,9 @@ module Tailor
     def word_is_in_string? word
       if self.scan(/(\'|\").*#{Regexp.escape(word)}+.*(\'|\")/).empty?
         return false
-      else
-        return true
       end
+
+      return true
     end
 
     ##
@@ -304,9 +305,9 @@ module Tailor
     def word_is_in_regexp? word
       if self.scan(/\/.*#{Regexp.escape(word)}+(.*\/|)/).empty?
         return false
-      else
-        return true
       end
+
+      return true
     end
 
     ##
@@ -317,10 +318,10 @@ module Tailor
     def hard_tabbed?
       if self.scan(/\t/).empty?
         return false
-      else
-        print_problem "Line contains hard tabs:"
-        return true
       end
+
+      print_problem "Line contains hard tabs:"
+      return true
     end
   end
 end
