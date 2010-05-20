@@ -1,9 +1,12 @@
+require 'spacing'
+
 module Tailor
 
   # Provides methods for checking indentation problems in a FileLine.
   # 
   # 
   module Indentation
+    include Tailor::Spacing
 
     INDENT_SIZE = 2
     HARD_TAB_SIZE = 4
@@ -71,9 +74,9 @@ module Tailor
     def is_at_level
       if indented_spaces.eql? 0
         return 0.0
-      else
-        return indented_spaces.to_f / 2.0
       end
+
+      return indented_spaces.to_f / 2.0
     end
 
     ##
@@ -137,31 +140,104 @@ module Tailor
     #   in.  The proper level is maintained outside of this module.
     # 
     # @return [Boolean] True if level of the line doesn't match the level
-    #   passed in.  Also retruns true if the line is an empty line, since that
+    #   passed in.  Also returns true if the line is an empty line, since that
     #   line doens't need to be checked.
     def at_improper_level? proper_level
       current_level = self.is_at_level
 
       if current_level == proper_level or self.empty_line?
         return false
-      else
-        message = "Line is at level #{current_level}, "
-        message += "but should be at level #{proper_level}:"
-        print_problem message
-        return true
       end
+
+      message = "Line is at level #{current_level}, "
+      message += "but should be at level #{proper_level}:"
+      print_problem message
+      return true
     end
 
     def ends_with_operator?
+      if self.comment_line?
+        return false
+      end
+
+      result = false
+
       OPERATORS.each_pair do |op_family, op_values|
         op_values.each do |op|
-          result = self.scan(/.*#{Regexp.escape(op)}\s*$/)
-          unless result.empty?
-            #logger = Logger.new(STDOUT)
-            #logger.debug "Matched on op: #{op}"
-            return true
+          match = self.scan(/.*#{Regexp.escape(op)}\s*$/)
+
+          next if op == '?' and self.question_mark_method?
+            
+          unless match.empty?
+            logger = Logger.new(STDOUT)
+            logger.debug "Matched on op: #{op}"
+            result = true
           end
         end
+      end
+
+      return result
+    end
+
+    def ends_with_comma?
+      if self.comment_line?
+        return false
+      end
+
+      unless self.scan(/.*,\s*$/).empty?
+        puts "Ends with comma."
+        return true
+      end
+
+      return false
+    end
+
+    def ends_with_backslash?
+      if self.comment_line?
+        return false
+      end
+
+      unless self.scan(/.*\\\s*$/).empty?
+        puts "Ends with backslash."
+        return true
+      end
+
+      return false
+    end
+
+    def unclosed_parenthesis?
+      if self.comment_line?
+        return false
+      end
+
+      unless self.scan(/\([^\)]*(?!=\))\s*$/).empty?
+        puts "Ends with unclose parenthesis."
+        return true
+      end
+
+      return false
+    end
+
+    def only_closed_parenthesis?
+      if self.comment_line?
+        return false
+      end
+
+      unless self.scan(/^\s*[^\(](\w*|\s*)\)/).empty?
+        return true
+      end
+
+      return false
+    end
+
+    def multi_line_statement?
+      if self.comment_line?
+        return false
+      end
+
+      if self.ends_with_operator? or self.ends_with_comma? or
+        self.ends_with_backslash? or self.unclosed_parenthesis?
+        return true
       end
 
       return false
