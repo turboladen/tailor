@@ -56,9 +56,9 @@ module Tailor
       if words[1] =~ /[A-Z]/
         print_problem "Method name uses camel case:"
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     # Checks to see if the class name is using snake case.
@@ -77,9 +77,9 @@ module Tailor
       if words[1] =~ /_/
         print_problem "Class name does NOT use camel case:"
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     # Checks to see if the line is the start of a method's definition.
@@ -89,21 +89,21 @@ module Tailor
       words = self.strip.split(/ /)
       if words[0].eql? "def"
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     ##
     # Returns the name of the method if the line is one that contains a method
     #   definition.
-    # 
+    #
     # @return [String] The method name.
     def method_name
       unless self.method_line?
         return nil
       end
-      
+
       words = self.strip.split(/ /)
       words[1]
     end
@@ -116,9 +116,9 @@ module Tailor
       words = self.split(/ /)
       if words[0].eql? "class" and starts_with_uppercase?(words[1])
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     ##
@@ -130,9 +130,9 @@ module Tailor
     def statement_line?
       if self.method_line? or self.class_line? or self.comment_line?
         return false
-      else
-        return true
       end
+
+      return true
     end
 
     # Checks to see if the whole line is a basic comment line.  This doesn't
@@ -166,9 +166,9 @@ module Tailor
       if length > LINE_LENGTH_MAX
         print_problem "Line is >#{LINE_LENGTH_MAX} characters (#{length}):"
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     #-----------------------------------------------------------------
@@ -191,9 +191,9 @@ module Tailor
     def starts_with_lowercase? word
       if word =~ /^[a-z]/
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     # Checks to see if a word begins with an uppercase letter.
@@ -202,9 +202,9 @@ module Tailor
     def starts_with_uppercase? word
       if word =~ /^[A-Z]/
         return true
-      else
-        return false
       end
+
+      return false
     end
   end
 end
