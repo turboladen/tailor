@@ -13,7 +13,7 @@ module Tailor
     # Checks to see if there's whitespace at the end of the line.  Prints the
     #   number of whitespaces at the end of the line.
     #
-    # @return [Boolean] Returns true if theres whitespace at the end of the
+    # @return [Boolean] Returns true if there's whitespace at the end of the
     #   line.
     def trailing_whitespace?
       count = self.trailing_whitespace_count
@@ -276,7 +276,6 @@ module Tailor
     # 
     # @return [Boolean] True if the line contains a method line include?.
     def question_mark_method?
-      m_name = self.method_name
       if self.scan(/[a-zA-Z|_]\w*\?/).empty?
         return false
       end
