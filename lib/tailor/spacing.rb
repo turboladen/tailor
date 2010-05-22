@@ -15,11 +15,11 @@ module Tailor
         "[Spacing]  Line has a comma with > 1 space after it:"
         ],
       :no_space_after_comma => [
-        /\,\w/,
+        /\,\x20{0}\S/,
         "[Spacing]  Line has a comma with 0 spaces after it:"
         ],
       :space_before_comma => [
-        /\w\x20+\,/,
+        /\S\x20+\,/,
         "[Spacing]  Line has at least one space before a comma:"
         ],
       :space_after_open_parenthesis => [
