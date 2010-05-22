@@ -69,6 +69,10 @@ module Tailor
         ]
       }
 
+    ##
+    # Detect spacing problems around all predefined bad cases.
+    # 
+    # @return [Number] The number of problems discovered during detection.
     def spacing_problems
       problem_count = 0
 
