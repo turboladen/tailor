@@ -52,7 +52,7 @@ module Tailor
         "[Spacing]  Line contains 0 spaces on at least one side of a '{':"
         ],
       :no_space_before_closed_curly_brace => [
-        /\w\x20{0}\}$/,
+        /\w\x20{0}\}\s*$/,
         "[Spacing]  Line contains 0 spaces before a '}':"
         ],
       :more_than_one_space_around_open_curly_brace => [
@@ -60,7 +60,7 @@ module Tailor
         "[Spacing]  Line contains >1 spaces around a '{':"
         ],
       :more_than_one_space_before_closed_curly_brace => [
-        /\w\x20{2,}\}$/,
+        /\w\x20{2,}\}\s*$/,
         "[Spacing]  Line contains >1 spaces before a '}':"
         ],
       :not_one_space_around_ternary_colon => [
