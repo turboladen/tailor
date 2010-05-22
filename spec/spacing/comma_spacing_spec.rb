@@ -77,4 +77,73 @@ describe Tailor::FileLine, "spacing around commas" do
       line.spacing_problems.should == 2 # 1 for 2 spaces, 1 for whitespace
     end
   end
+
+  context "in a statement with an Array" do
+    it "should be OK when no commas" do
+      line = create_file_line "  bobo = ['hi']", __LINE__
+      line.spacing_problems.should == 0
+    end
+
+    it "should be OK when 1 space after a comma" do
+      line = create_file_line "  bobo = ['hi', 'meow']", __LINE__
+      line.spacing_problems.should == 0
+    end
+
+    it "should detect 2 spaces after a comma" do
+      line = create_file_line "  bobo = ['hi',  'meow']", __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 0 spaces after a comma" do
+      line = create_file_line "  bobo = ['hi','meow']", __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 1 space before a comma" do
+      line = create_file_line "  bobo = ['hi' , 'meow']", __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 1 space before a comma and 0 spaces after" do
+      line = create_file_line "  bobo = ['hi' ,'meow']", __LINE__
+      line.spacing_problems.should == 2
+    end
+  end
+
+  context "in a statement with a Hash" do
+    it "should be OK when no commas" do
+      line = create_file_line "bobo = { :hi => 'meow' }", __LINE__
+      line.spacing_problems.should == 0
+    end
+
+    it "should be OK when 1 space after a comma" do
+      line = create_file_line "bobo = { :hi => 'meow', :bye => 'meow' }",
+        __LINE__
+      line.spacing_problems.should == 0
+    end
+
+    it "should detect 2 spaces after a comma" do
+      line = create_file_line "bobo = { :hi => 'meow',  :bye => 'meow' }",
+        __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 0 spaces after a comma" do
+      line = create_file_line "bobo = { :hi => 'meow',:bye => 'meow' }",
+        __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 1 space before a comma" do
+      line = create_file_line "bobo = { :hi => 'meow' , :bye => 'meow' }",
+        __LINE__
+      line.spacing_problems.should == 1
+    end
+
+    it "should detect 1 space before a comma and 0 spaces after" do
+      line = create_file_line "bobo = { :hi => 'meow' ,:bye => 'meow' }",
+        __LINE__
+      line.spacing_problems.should == 2
+    end
+  end
 end
