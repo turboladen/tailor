@@ -132,31 +132,7 @@ describe Tailor::FileLine do
     end
   end
 =end
-  describe "with parentheses/brackets" do
-    context "open parenthesis" do
-      it "should detect a space after" do
-        line = create_file_line "  def do_something( that, this)", __LINE__
-        line.space_after_open_parenthesis?.should be_true
-      end
-
-      it "should be OK with no space after" do
-        line = create_file_line "  def do_something(that, this)", __LINE__
-        line.space_after_open_parenthesis?.should be_false
-      end
-    end
-
-    context "closed parenthesis" do
-      it "should detect a space before" do
-        line = create_file_line "  def do_something(that, this )", __LINE__
-        line.space_before_closed_parenthesis?.should be_true
-      end
-
-      it "should be OK with no space after" do
-        line = create_file_line "  def do_something(that, this)", __LINE__
-        line.space_before_closed_parenthesis?.should be_false
-      end
-    end
-
+  describe "with brackets" do
     context "open bracket" do
       it "should detect a space after" do
         line = create_file_line "[ that, this]", __LINE__
@@ -166,18 +142,6 @@ describe Tailor::FileLine do
       it "should be OK with no space after" do
         line = create_file_line "[that, this]", __LINE__
         line.space_after_open_bracket?.should be_false
-      end
-    end
-
-    context "closed parenthesis" do
-      it "should detect a space before" do
-        line = create_file_line "  def do_something(that, this )", __LINE__
-        line.space_before_closed_parenthesis?.should be_true
-      end
-
-      it "should be OK with no space after" do
-        line = create_file_line "  def do_something(that, this)", __LINE__
-        line.space_before_closed_parenthesis?.should be_false
       end
     end
   end
