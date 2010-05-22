@@ -19,3 +19,13 @@ bobo = true ? true  : false
 # Skip when colon is part of a symbol or namespace operator
 bobo = { :thing => :clown }
 bobo[:thing] == :dog ? bobo[:thing] : Class::String
+
+# Skip when colon is part of Regexp class
+bobo[:thing].scan(/[:alpha:])/)
+
+# Skip when setting load path
+$:.unshift File.dirname(__FILE__)
+
+# Skip when question mark method is followed by a symbol
+if bobo[:thing].eql? :clown
+end

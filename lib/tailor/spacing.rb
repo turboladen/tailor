@@ -64,8 +64,8 @@ module Tailor
         "[Spacing]  Line contains >1 spaces before a '}':"
         ],
       :not_one_space_around_ternary_colon => [
-        /^.*\?.*(\w(\x20{0}|\x20{2,}):(?!:)|[^:|\[]:(\x20{0}|\x20{2,})\w)/,
-        "[Spacing]  Line contains ternary ':' with more or less than 1 space:"
+        /^.*\?.*\w((\x20{0}|\x20{2,}):(?!:)|[^:|\[]:(\x20{0}|\x20{2,})\w)/,
+        "[Spacing]  Line contains ternary ':' with not 1 space around it:"
         ]
       }
 
