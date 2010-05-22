@@ -11,62 +11,82 @@ describe Tailor::FileLine do
     line.trailing_whitespace_count.should == 2
   end
   
-  describe "with commas" do
-    context "after the comma" do
-      it "should detect 2 spaces after a comma" do
-        line = create_file_line "  def do_something this,  that", __LINE__
-        line.more_than_one_space_after_comma?.should be_true
-      end
-
-      it "should detect 2 spaces after a comma when at the end of a line" do
-        line = create_file_line "  # This is a comment that,  \n", __LINE__
-        line.more_than_one_space_after_comma?.should be_true
-      end
-
-      it "should be OK when 1 space after a comma" do
-        line = create_file_line "  def do_something this, that", __LINE__
-        line.more_than_one_space_after_comma?.should be_false
-      end
-
+  describe "spacing around commas" do
+    context "in a method line" do
       it "should be OK when no commas" do
         line = create_file_line "  def do_something this", __LINE__
-        line.more_than_one_space_after_comma?.should be_false
+        line.spacing_problems.should == 0
+      end
+
+      it "should be OK when 0 spaces before and 1 space after a comma" do
+        line = create_file_line "  def do_something this, that", __LINE__
+        line.spacing_problems.should == 0
+      end
+
+      it "should detect 2 spaces after a comma" do
+        line = create_file_line "  def do_something this,  that", __LINE__
+        line.spacing_problems.should == 1
       end
 
       it "should detect 0 spaces after a comma" do
         line = create_file_line "  def do_something this,that", __LINE__
-        line.no_space_after_comma?.should be_true
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 1 space before a comma" do
+        line = create_file_line "  def do_something this , that", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 1 space before a comma and 0 spaces after" do
+        line = create_file_line "  def do_something this ,that", __LINE__
+        line.spacing_problems.should == 2
+      end
+    end
+
+    context "in a comment line" do
+      it "should be OK when no commas" do
+        line = create_file_line "  # Comment line", __LINE__
+        line.spacing_problems.should == 0
       end
 
       it "should be OK when 1 space after a comma" do
-        line = create_file_line "  def do_something this, that", __LINE__
-        line.no_space_after_comma?.should be_false
+        line = create_file_line "  # Comment line, and stuff", __LINE__
+        line.spacing_problems.should == 0
+      end
+
+      it "should detect 2 spaces after a comma" do
+        line = create_file_line "  # Comment line,  and stuff", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 0 spaces after a comma" do
+        line = create_file_line "  # Comment line,and stuff", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 1 space before a comma" do
+        line = create_file_line "  # Comment line , and stuff", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 1 space before a comma and 0 spaces after" do
+        line = create_file_line "  # Comment line ,and stuff", __LINE__
+        line.spacing_problems.should == 2
       end
 
       it "should be OK when 0 spaces after a comma, but end of the line" do
         line = create_file_line "  # This is a comment that,\n", __LINE__
-        line.no_space_after_comma?.should be_false
-      end
-    end
-
-    context "before the comma" do
-      it "should detect 1 space before a comma" do
-        line = create_file_line "  def do_something this , that", __LINE__
-        line.space_before_comma?.should be_true
+        line.spacing_problems.should == 0
       end
 
-      it "should be OK when 0 spaces before a comma" do
-        line = create_file_line "  def do_something this, that", __LINE__
-        line.space_before_comma?.should be_false
-      end
-
-      it "should be OK when no commas" do
-        line = create_file_line "  def do_something that", __LINE__
-        line.space_before_comma?.should be_false
+      it "should detect 2 spaces after a comma when at the end of a line" do
+        line = create_file_line "  # This is a comment that,  \n", __LINE__
+        line.spacing_problems.should == 2 # 1 for 2 spaces, 1 for whitespace
       end
     end
   end
-
+=begin
   describe "with operators" do
     Tailor::OPERATORS.each_pair do |op_group, op_values|
       op_values.each do |op|
@@ -186,7 +206,7 @@ describe Tailor::FileLine do
       line.no_space_before?('?').should be_false
     end
   end
-
+=end
   describe "with parentheses/brackets" do
     context "open parenthesis" do
       it "should detect a space after" do
@@ -339,6 +359,28 @@ describe Tailor::FileLine do
     it "should skip a word without a ?" do
       line = create_file_line "  thing.strip!", __LINE__
       line.question_mark_method?.should be_false
+    end
+  end
+
+  context "should check indenting by spaces" do
+    it "when the line is indented 1 hard tab" do
+      line = create_file_line "\tdef do_something", __LINE__
+      line.hard_tabbed?.should be_true
+    end
+
+    it "when the line is indented with a space and 1 hard tab" do
+      line = create_file_line " \tdef do_something", __LINE__
+      line.hard_tabbed?.should be_true
+    end
+
+    it "when the line is indented with a space" do
+      line = create_file_line " def do_something", __LINE__
+      line.hard_tabbed?.should be_false
+    end
+
+    it "when the line is not indented" do
+      line = create_file_line "def do_something", __LINE__
+      line.hard_tabbed?.should be_false
     end
   end
 end
