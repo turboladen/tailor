@@ -8,6 +8,7 @@ module Tailor
   # This module provides methods for detecting spacing problems on a single
   # line in a file.  The real intent here is to mix in to the FileLine class.
   module Spacing
+    # TODO: Add skipping of comment lines.
     SPACING_CONDITIONS = {
       :more_than_one_space_after_comma => [
         /\,\x20{2,}/,
@@ -23,19 +24,19 @@ module Tailor
         ],
       :space_after_open_parenthesis => [
         /\(\x20+/,
-        "[Spacing]  Line has an open parenthesis with spaces after it:"
-        ],
-      :space_after_open_bracket => [
-        /\[\x20+/,
-        "[Spacing]  Line has an open bracket with spaces after it:"
+        "[Spacing]  Line has a '(' with spaces after it:"
         ],
       :space_before_closed_parenthesis => [
-        /\x20+\)/,
-        "[Spacing]  Line has a closed parenthesis with spaces before it:"
+        /^\s*[^#]\w+.*\x20+\)/,
+        "[Spacing]  Line has a ')' with spaces before it:"
+        ],
+      :space_around_open_bracket => [
+        /^\s*[^#](\w+\x20+\[|.*\[\x20+)/,
+        "[Spacing]  Line has a '[' with at least 1 space around it:"
         ],
       :space_before_closed_bracket => [
-        /\x20+\]/,
-        "[Spacing]  Line has a closed bracket with spaces before it:"
+        /^\s*[^#]\w+.*\x20+\]/,
+        "[Spacing]  Line has a ']' with spaces before it:"
         ],
       :hard_tabbed => [
         /\t+/,
@@ -47,11 +48,11 @@ module Tailor
         "[Spacing]  Line contains trailing whitespaces:"
         ],
       :no_space_around_open_curly_brace => [
-        /\w\x20{0}\{|\{\x20{0}\|/,
-        "[Spacing]  Line contains 0 spaces on one side of a '{':"
+        /^\s*[^#][^def].*(=|\w)\x20{0}\{|\{\x20{0}(\||:)/,
+        "[Spacing]  Line contains 0 spaces on at least one side of a '{':"
         ],
       :no_space_before_closed_curly_brace => [
-        /\w\x20{0}\}/,
+        /\w\x20{0}\}$/,
         "[Spacing]  Line contains 0 spaces before a '}':"
         ],
       :more_than_one_space_around_open_curly_brace => [
@@ -59,8 +60,12 @@ module Tailor
         "[Spacing]  Line contains >1 spaces around a '{':"
         ],
       :more_than_one_space_before_closed_curly_brace => [
-        /\w\x20{2,}\}/,
+        /\w\x20{2,}\}$/,
         "[Spacing]  Line contains >1 spaces before a '}':"
+        ],
+      :not_one_space_around_ternary_colon => [
+        /^.*\?.*(\w(\x20{0}|\x20{2,}):(?!:)|[^:|\[]:(\x20{0}|\x20{2,})\w)/,
+        "[Spacing]  Line contains ternary ':' with more or less than 1 space:"
         ]
       }
 
