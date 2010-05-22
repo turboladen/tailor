@@ -132,20 +132,6 @@ describe Tailor::FileLine do
     end
   end
 =end
-  describe "with brackets" do
-    context "open bracket" do
-      it "should detect a space after" do
-        line = create_file_line "[ that, this]", __LINE__
-        line.space_after_open_bracket?.should be_true
-      end
-
-      it "should be OK with no space after" do
-        line = create_file_line "[that, this]", __LINE__
-        line.space_after_open_bracket?.should be_false
-      end
-    end
-  end
-
   describe "with curly braces" do
     context "#no_space_before?" do
       it "should detect 0 spaces around a {" do
