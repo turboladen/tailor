@@ -186,9 +186,10 @@ module Tailor
     # @param [String] Error message to print.
     def print_problem message
       if @line_problem_count == 1
-        puts "Problems in #{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}:"
+        puts ""
+        puts "Problems in #{@file_path.relative_path_from(Pathname.pwd)} [#{@line_number}]:"
       end
-      puts red(bold("\t"+ message))
+      puts red("\t"+ message)
     end
 
     # Checks to see if a word begins with a lowercase letter.
