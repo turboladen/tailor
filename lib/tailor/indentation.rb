@@ -72,11 +72,13 @@ module Tailor
     # 
     # @return [Float] The level.
     def is_at_level
-      if indented_spaces.eql? 0
+      spaces = indented_spaces
+
+      if spaces.eql? 0
         return 0.0
       end
 
-      return indented_spaces.to_f / 2.0
+      return spaces.to_f / 2.0
     end
 
     ##
@@ -151,6 +153,7 @@ module Tailor
 
       message = "Line is at level #{current_level}, "
       message += "but should be at level #{proper_level}:"
+      @line_problem_count += 1
       print_problem message
       return true
     end

@@ -12,60 +12,60 @@ module Tailor
     SPACING_CONDITIONS = {
       :more_than_one_space_after_comma => [
         /\,\x20{2,}/,
-        "[Spacing]  Line has a comma with > 1 space after it:"
+        "[Spacing]  Line has a comma with > 1 space after it"
         ],
       :no_space_after_comma => [
         /\,\x20{0}\S/,
-        "[Spacing]  Line has a comma with 0 spaces after it:"
+        "[Spacing]  Line has a comma with 0 spaces after it"
         ],
       :space_before_comma => [
         /\S\x20+\,/,
-        "[Spacing]  Line has at least one space before a comma:"
+        "[Spacing]  Line has at least one space before a comma"
         ],
       :space_after_open_parenthesis => [
         /\(\x20+/,
-        "[Spacing]  Line has a '(' with spaces after it:"
+        "[Spacing]  Line has a '(' with spaces after it"
         ],
       :space_before_closed_parenthesis => [
         /^\s*[^#]\w+.*\x20+\)/,
-        "[Spacing]  Line has a ')' with spaces before it:"
+        "[Spacing]  Line has a ')' with spaces before it"
         ],
       :space_around_open_bracket => [
         /^\s*[^#](\w+\x20+\[|.*\[\x20+)/,
-        "[Spacing]  Line has a '[' with at least 1 space around it:"
+        "[Spacing]  Line has a '[' with at least 1 space around it"
         ],
       :space_before_closed_bracket => [
         /^\s*[^#]\w+.*\x20+\]/,
-        "[Spacing]  Line has a ']' with spaces before it:"
+        "[Spacing]  Line has a ']' with spaces before it"
         ],
       :hard_tabbed => [
         /\t+/,
-        "[Spacing]  Line contains hard tabs:"
+        "[Spacing]  Line contains hard tabs"
         ],
       :trailing_whitespace => [
         /(\x20+|\x09+)$/,
         #"[Spacing]  Line contains #{trailing_whitespace_count} " +
-        "[Spacing]  Line contains trailing whitespaces:"
+        "[Spacing]  Line contains trailing whitespaces"
         ],
       :no_space_around_open_curly_brace => [
         /^\s*((?:(?!def).)*)(=|\w)\x20{0}\{|\{\x20{0}(\||:)/,
-        "[Spacing]  Line contains 0 spaces on at least one side of a '{':"
+        "[Spacing]  Line contains 0 spaces on at least one side of a '{'"
         ],
       :no_space_before_closed_curly_brace => [
         /\w\x20{0}\}\s*$/,
-        "[Spacing]  Line contains 0 spaces before a '}':"
+        "[Spacing]  Line contains 0 spaces before a '}'"
         ],
       :more_than_one_space_around_open_curly_brace => [
         /\w\x20{2,}\{|\{\x20{2,}\|/,
-        "[Spacing]  Line contains >1 spaces around a '{':"
+        "[Spacing]  Line contains >1 spaces around a '{'"
         ],
       :more_than_one_space_before_closed_curly_brace => [
         /\w\x20{2,}\}\s*$/,
-        "[Spacing]  Line contains >1 spaces before a '}':"
+        "[Spacing]  Line contains >1 spaces before a '}'"
         ],
       :not_one_space_around_ternary_colon => [
         /^.*\?.*\w((\x20{0}|\x20{2,}):(?!:)|[^:|\[]:(\x20{0}|\x20{2,})\w)/,
-        "[Spacing]  Line contains ternary ':' with not 1 space around it:"
+        "[Spacing]  Line contains ternary ':' with not 1 space around it"
         ]
       }
 
@@ -79,6 +79,7 @@ module Tailor
       SPACING_CONDITIONS.each_pair do |condition, values|
         unless self.scan(values.first).empty?
           problem_count += 1
+          @line_problem_count += 1
           print_problem values[1]
         end
       end
@@ -96,6 +97,7 @@ module Tailor
       count = self.trailing_whitespace_count
 
       if count > 0
+        @line_problem_count += 1
         print_problem "Line contains #{count} trailing whitespace(s):"
         return true
       end
@@ -149,6 +151,7 @@ module Tailor
       result = false
       counts.each do |count|
         if count == 0
+          @line_problem_count += 1
           print_problem "Line has a '#{string}' with 0 spaces before it:"
           result = true
         end
@@ -189,6 +192,7 @@ module Tailor
       result = false
       counts.each do |count|
         if count == 0
+          @line_problem_count += 1
           print_problem "Line has a '#{string}' with 0 spaces after it:"
           result = true
         end

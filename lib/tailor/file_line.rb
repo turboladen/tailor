@@ -35,6 +35,7 @@ module Tailor
       super line_of_code
       @file_path = file_path
       @line_number = line_number
+      @line_problem_count = 0
       @logger = ::Logger.new(STDOUT)
       #@logger.datetime_format = "%H:%M:%S"
       @logger.datetime_format = ""
@@ -54,7 +55,8 @@ module Tailor
 
       # The 2nd word is the method name, so evaluate that for caps chars.
       if words[1] =~ /[A-Z]/
-        print_problem "Method name uses camel case:"
+        @line_problem_count += 1
+        print_problem "Method name uses camel case"
         return true
       end
 
@@ -75,7 +77,8 @@ module Tailor
 
       # The 2nd word is the class name, so check that.
       if words[1] =~ /_/
-        print_problem "Class name does NOT use camel case:"
+        @line_problem_count += 1
+        print_problem "Class name does NOT use camel case"
         return true
       end
 
@@ -164,7 +167,8 @@ module Tailor
     def too_long?
       length = self.length
       if length > LINE_LENGTH_MAX
-        print_problem "Line is >#{LINE_LENGTH_MAX} characters (#{length}):"
+        @line_problem_count += 1
+        print_problem "Line is >#{LINE_LENGTH_MAX} characters (#{length})"
         return true
       end
 
@@ -181,8 +185,10 @@ module Tailor
     #
     # @param [String] Error message to print.
     def print_problem message
-      puts red(bold(message))
-      puts "\t#{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}"
+      if @line_problem_count == 1
+        puts "Problems in #{@file_path.relative_path_from(Pathname.pwd)}: #{@line_number}:"
+      end
+      puts red(bold("\t"+ message))
     end
 
     # Checks to see if a word begins with a lowercase letter.
