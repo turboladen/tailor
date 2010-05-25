@@ -195,11 +195,16 @@ describe Tailor::FileLine, "with curly braces" do
       line = create_file_line "  a_string = \"This has #{Class.methods}\"", __LINE__
       line.spacing_problems.should == 0
     end
+
+    it "should be OK when substituting in a heredoc" do
+      line = create_file_line "#{Class.methods}", __LINE__
+      line.spacing_problems.should == 0
+    end
   end
 
   it "should be OK when used as default params in a method definition" do
     thing = ""
-    line = create_file_line "  def a_method one={}", __LINE__
+    line = create_file_line "def a_method one={}", __LINE__
     line.spacing_problems.should == 0
   end
 end

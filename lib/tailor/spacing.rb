@@ -52,7 +52,7 @@ module Tailor
         "[Spacing]  Line contains 0 spaces on at least one side of a '{'"
         ],
       :no_space_before_closed_curly_brace => [
-        /\w\x20{0}\}\s*$/,
+        /^\s*((?:(?!#\{).)*)(?:(?!\{)\S)\x20{0}\}/,
         "[Spacing]  Line contains 0 spaces before a '}'"
         ],
       :more_than_one_space_around_open_curly_brace => [
