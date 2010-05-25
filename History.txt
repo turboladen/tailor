@@ -1,3 +1,10 @@
+=== 0.0.0 2010-05-21
+
+* Added checks for spacing around { and }
+* Added check for spacing around ternary ':'
+* Colorized error messages to be red
+* Problem message are now grouped by file line (when multiple problems per line)
+
 === 0.0.3 2010-04-26
 
 * Added checks for spacing around commas
