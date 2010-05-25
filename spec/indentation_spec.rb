@@ -185,4 +185,75 @@ describe Tailor::Indentation do
       line.ends_with_operator?.should be_false
     end
   end
+
+  context "#ends_with_comma?" do
+    it "should return true if it ends with a ," do
+      line = create_file_line "  def some_method(thing,", __LINE__
+      line.ends_with_comma?.should be_true
+    end
+
+    it "should return true if it ends with a , and spaces" do
+      line = create_file_line "  def some_method(thing,  ", __LINE__
+      line.ends_with_comma?.should be_true
+    end
+
+    it "should return true if it ends with a , and tabs" do
+      line = create_file_line "  def some_method(thing,\t", __LINE__
+      line.ends_with_comma?.should be_true
+    end
+
+    it "should return false if it doesn't end with a ," do
+      line = create_file_line "  def some_method(thing)", __LINE__
+      line.ends_with_comma?.should be_false
+    end
+
+    it "should return false if it has a , but doesn't end with one" do
+      line = create_file_line "  def some_method(thing, other)", __LINE__
+      line.ends_with_comma?.should be_false
+    end
+  end
+
+  context "#ends_with_backslash?" do
+    it "should return true if it ends with a \\" do
+      line = create_file_line "  def some_method(thing,\\", __LINE__
+      line.ends_with_backslash?.should be_true
+    end
+
+    it "should return true if it ends with a \\ and spaces" do
+      line = create_file_line "  def some_method(thing,\\  ", __LINE__
+      line.ends_with_backslash?.should be_true
+    end
+
+    it "should return true if it ends with a \\ and tabs" do
+      line = create_file_line "  def some_method(thing,\\\t", __LINE__
+      line.ends_with_backslash?.should be_true
+    end
+
+    it "should return false if it doesn't end with a \\" do
+      line = create_file_line "  def some_method(thing)", __LINE__
+      line.ends_with_backslash?.should be_false
+    end
+  end
+
+  context "#unclosed_parenthesis?" do
+    it "should return true if it has a ( but no )" do
+      line = create_file_line "  def some_method(thing,", __LINE__
+      line.unclosed_parenthesis?.should be_true
+    end
+
+    it "should return true if it has a ( but no ) and spaces" do
+      line = create_file_line "  def some_method(thing,  ", __LINE__
+      line.unclosed_parenthesis?.should be_true
+    end
+
+    it "should return true if it has a ( but no ) and tabs" do
+      line = create_file_line "  def some_method(thing,\t\t", __LINE__
+      line.unclosed_parenthesis?.should be_true
+    end
+
+    it "should return false if it has a ( and a )" do
+      line = create_file_line "  def some_method(thing)", __LINE__
+      line.unclosed_parenthesis?.should be_true
+    end
+  end
 end
