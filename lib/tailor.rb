@@ -1,5 +1,5 @@
 $:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || 
+  $:.include?(File.dirname(__FILE__)) ||
   $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'fileutils'
@@ -13,7 +13,7 @@ module Tailor
   # These operators should always have 1 space around them
   OPERATORS = {
     :arithmetic => ['+', '-', '*', '/', '%', '++', '--', '**'],
-    :assignment => ['=', '+=', '-=', '*=', '/=', '%=', '*=', '**=', '|', '&=', 
+    :assignment => ['=', '+=', '-=', '*=', '/=', '%=', '*=', '**=', '|', '&=',
       '&&=', '>>=', '<<=', '||='],
     :comparison => ['==', '===', '!=', '>', '<', '>=', '<=', '<=>', '!', '~'],
     :gem_version => ['~>'],
@@ -148,7 +148,7 @@ end
         puts ":outdent: current = #{current_level}; next = #{next_level}" +
           "; multi_line_next = #{multi_line_next_level}"
       end
-      
+
       if line.contains_end?
         current_level -= 1.0
         next_level = current_level
@@ -189,7 +189,7 @@ end
       end
 =end
       @problem_count += line.spacing_problems
-      
+
       # Check for camel-cased methods
       @problem_count += 1 if line.method_line? and line.camel_case_method?
 
@@ -200,7 +200,7 @@ end
       @problem_count += 1 if line.too_long?
 
       # Check for spacing around operators
-=begin 
+=begin
       OPERATORS.each_pair do |op_group, op_values|
         op_values.each do |op|
           @problem_count += 1 if line.no_space_before? op

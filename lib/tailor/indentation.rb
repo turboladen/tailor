@@ -3,8 +3,6 @@ require 'spacing'
 module Tailor
 
   # Provides methods for checking indentation problems in a FileLine.
-  # 
-  # 
   module Indentation
     include Tailor::Spacing
 
@@ -43,7 +41,7 @@ module Tailor
 #      /^[^\{]*\}/,    # matches and end } when no { appears
 #      /^[^\[]*\]/
       ]
-    
+
     END_EXPRESSIONS = [
       /^end\b/,
       /^[^\{]*\}/,    # matches and end } when no { appears
@@ -69,7 +67,7 @@ module Tailor
     # Determines the level to which the line is indented.  For Ruby, this
     #   should be 2 spaces.  Note that this treats lines that are indented an
     #   odd number of spaces as a multiple of 0.5 levels of indentation.
-    # 
+    #
     # @return [Float] The level.
     def is_at_level
       spaces = indented_spaces
@@ -83,7 +81,7 @@ module Tailor
 
     ##
     # Checks to see if the line contains a statement that should be indented.
-    # 
+    #
     # @return [Boolean] True if the line contains one of the statements and
     #   does not contain 'end'.
     def indent?
@@ -101,14 +99,14 @@ module Tailor
 
     ##
     # Checks to see if the line contains a statement that should be outdented.
-    # 
+    #
     # @return [Boolean] True if the line contains one of the statements.
     def outdent?
       return false if self.comment_line?
 
       OUTDENT_EXPRESSIONS.each do |regexp|
         result = self.strip.scan(regexp)
-        
+
         # If it does contain an expression, set the proper level to be out 1.0.
         unless result.empty?
           return true
@@ -120,14 +118,14 @@ module Tailor
     ##
     # Checks to see if the line contains a statement that ends a code chunk:
     #   end, ], or }.
-    # 
+    #
     # @return [Boolean] True if the line contains one of the statements.
     def contains_end?
       return false if self.comment_line?
 
       END_EXPRESSIONS.each do |regexp|
         result = self.strip.scan(regexp)
-        
+
         # If it does contain an expression, set the proper level to be out 1.0.
         unless result.empty?
           #@logger.debug "Found match: #{regexp}"
@@ -140,7 +138,7 @@ module Tailor
     ##
     # Simply compares the level the line is at to the parameter that's passed
     #   in.  The proper level is maintained outside of this module.
-    # 
+    #
     # @return [Boolean] True if level of the line doesn't match the level
     #   passed in.  Also returns true if the line is an empty line, since that
     #   line doens't need to be checked.
@@ -170,7 +168,7 @@ module Tailor
           match = self.scan(/.*#{Regexp.escape(op)}\s*$/)
 
           next if op == '?' and self.question_mark_method?
-            
+
           unless match.empty?
             logger = Logger.new(STDOUT)
             logger.debug "Matched on op: #{op}"
