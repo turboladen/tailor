@@ -71,10 +71,14 @@ module Tailor
 
     ##
     # Detect spacing problems around all predefined bad cases.
-    # 
+    #
     # @return [Number] The number of problems discovered during detection.
     def spacing_problems
       problem_count = 0
+
+      # Disregard text in regexps
+      self.gsub!(/\/.*?\//, "''")
+      self.gsub!(/'.*?'/, "''")
 
       SPACING_CONDITIONS.each_pair do |condition, values|
         unless self.scan(values.first).empty?
@@ -228,7 +232,7 @@ module Tailor
 
     ##
     # Checks to see if the line contains a method name with a ?.
-    # 
+    #
     # @return [Boolean] True if the line contains a method line include?.
     def question_mark_method?
       if self.scan(/[a-zA-Z|_]\w*\?/).empty?
