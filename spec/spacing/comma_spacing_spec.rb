@@ -4,6 +4,11 @@ require 'tailor/file_line'
 include Tailor
 
 describe Tailor::FileLine, "spacing around commas" do
+  it "should be OK when followed by a \\ to signify line-continue" do
+    line = create_file_line "string = 'One, two, three,'\\", __LINE__
+    line.spacing_problems.should == 0
+  end
+
   context "in a method line" do
     it "should be OK when no commas" do
       line = create_file_line "  def do_something this", __LINE__
