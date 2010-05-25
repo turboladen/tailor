@@ -186,8 +186,12 @@ module Tailor
     # @param [String] Error message to print.
     def print_problem message
       if @line_problem_count == 1
+        line_info = "Problems in"
+        line_info += " #{@file_path.relative_path_from(Pathname.pwd)}"
+        line_info += " [#{@line_number}]:"
+
         puts ""
-        puts "Problems in #{@file_path.relative_path_from(Pathname.pwd)} [#{@line_number}]:"
+        puts line_info
       end
       puts red("\t"+ message)
     end
