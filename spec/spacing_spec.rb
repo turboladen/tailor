@@ -145,25 +145,20 @@ describe Tailor::FileLine do
     end
   end
 
-  context "should check indenting by spaces" do
-    it "when the line is indented 1 hard tab" do
+  context "indenting by hardtabs" do
+    it "should find when indented by 1 hard tab" do
       line = create_file_line "\tdef do_something", __LINE__
-      line.hard_tabbed?.should be_true
+      line.spacing_problems.should == 1
     end
 
-    it "when the line is indented with a space and 1 hard tab" do
+    it "should find when indented with a space and 1 hard tab" do
       line = create_file_line " \tdef do_something", __LINE__
-      line.hard_tabbed?.should be_true
+      line.spacing_problems.should == 1
     end
 
-    it "when the line is indented with a space" do
-      line = create_file_line " def do_something", __LINE__
-      line.hard_tabbed?.should be_false
-    end
-
-    it "when the line is not indented" do
+    it "should be OK when the line is not indented" do
       line = create_file_line "def do_something", __LINE__
-      line.hard_tabbed?.should be_false
+      line.spacing_problems.should == 0
     end
   end
 end
