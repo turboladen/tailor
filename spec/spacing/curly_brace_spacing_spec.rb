@@ -182,6 +182,54 @@ describe Tailor::FileLine, "with curly braces" do
         line.spacing_problems.should == 2
       end
     end
+
+    context "with string substituted value" do
+      before do
+        @value = 1
+      end
+
+      it "should be OK with 1 space before, 1 after {, 1 before }" do
+        line = create_file_line "  thing = { \"one\" => \"#{@value}\" }", __LINE__
+        line.spacing_problems.should == 0
+      end
+
+      it "should be OK with proper spacing and a space at the end" do
+        line = create_file_line "  thing = { \"one\" => \"#{@value}\" } ", __LINE__
+        line.spacing_problems.should == 1  # Trailing whitespace
+      end
+
+      it "should detect 0 spaces after {" do
+        line = create_file_line "  thing = {\"one\" => \"#{@value}\" }", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 0 spaces before {" do
+        line = create_file_line "  thing ={ \"one\" => \"#{@value}\" }", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 0 spaces before and after {" do
+        line = create_file_line "  thing ={\"one\" => \"#{@value}\" }", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 0 spaces before }" do
+        line = create_file_line "  thing = { \"one\" => \"#{@value}\"}", __LINE__
+        line.spacing_problems.should == 1
+      end
+
+      it "should detect 0 spaces before and after { and }" do
+        line = create_file_line "  thing ={\"one\" => \"#{@value}\"}", __LINE__
+        line.spacing_problems.should == 2
+      end
+
+      it "should detect 0 spaces after { and  before }" do
+        line = create_file_line "thing = {'id'=>\"#{@value}\", " +
+          "'attributes' => { 'friendly-name' => \"#{@value}\"}}",
+          __LINE__
+        line.spacing_problems.should == 2
+      end
+    end
   end
 
   context "in Strings" do
