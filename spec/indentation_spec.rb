@@ -253,7 +253,7 @@ describe Tailor::Indentation do
 
     it "should return false if it has a ( and a )" do
       line = create_file_line "  def some_method(thing)", __LINE__
-      line.unclosed_parenthesis?.should be_true
+      line.unclosed_parenthesis?.should be_false
     end
   end
 end
