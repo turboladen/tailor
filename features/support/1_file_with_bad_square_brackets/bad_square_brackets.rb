@@ -6,6 +6,7 @@ thing = []
 thing = [ ]
 
 # Perfect with element
+one = 'won'
 thing = [one]
 
 # 1 space after [ with element
@@ -30,6 +31,7 @@ thing [0]
 thing[0 ]
 
 # Pefect multi-line
+two = 'too'
 thing = [
   one,
   two
