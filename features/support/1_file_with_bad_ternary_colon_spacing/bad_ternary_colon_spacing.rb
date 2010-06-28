@@ -21,7 +21,7 @@ bobo = { :thing => :clown }
 bobo[:thing] == :dog ? bobo[:thing] : Class::String
 
 # Skip when colon is part of Regexp class
-bobo[:thing].scan(/[:alpha:])/)
+bobo[:thing].scan(/[:alpha:]/)
 
 # Skip when setting load path
 $:.unshift File.dirname(__FILE__)
