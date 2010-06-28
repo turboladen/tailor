@@ -79,7 +79,12 @@ describe Tailor::FileLine, "spacing around commas" do
 
     it "should detect 2 spaces after a comma when at the end of a line" do
       line = create_file_line "  # This is a comment that,  \n", __LINE__
-      line.spacing_problems.should == 2 # 1 for 2 spaces, 1 for whitespace
+      line.spacing_problems.should == 1   # 1 for whitespace
+    end
+
+    it "should detect 2 spaces after a comma" do
+      line = create_file_line "  # This is a comment that,  meows", __LINE__
+      line.spacing_problems.should == 1
     end
   end
 
