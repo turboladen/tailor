@@ -1,36 +1,36 @@
 # Blocks...
 # No space after {
-1..10.each {|number| puts number }
+1..10.times {|number| puts number }
 
 # No space before {
-1..10.each{ |number| puts number }
+1..10.times{ |number| puts number }
 
 # No space before or after {
-1..10.each{|number| puts number }
+1..10.times{|number| puts number }
 
 # No space before }
-1..10.each { |number| puts number}
+1..10.times { |number| puts number}
 
 # No space before or after { and }
-1..10.each{|number| puts number}
+1..10.times{|number| puts number}
 
 # >1 space before {
-1..10.each  { |number| puts number }
+1..10.times  { |number| puts number }
 
 # >1 space after {
-1..10.each {  |number| puts number }
+1..10.times {  |number| puts number }
 
 # >1 space before, no spaces after {
-1..10.each  {|number| puts number }
+1..10.times  {|number| puts number }
 
 # >1 space after, no spaces before {
-1..10.each{  |number| puts number }
+1..10.times{  |number| puts number }
 
 # >1 space before }
-1..10.each { |number| puts number  }
+1..10.times { |number| puts number  }
 
 # Perfect
-1..10.each { |number| puts number }
+1..10.times { |number| puts number }
 
 
 # Hashes...
