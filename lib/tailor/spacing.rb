@@ -1,7 +1,5 @@
-$:.unshift File.expand_path(File.dirname(__FILE__) + '/../')
-
 require 'tailor'
-require 'file_line'
+require 'tailor/file_line'
 
 module Tailor
 
@@ -11,7 +9,7 @@ module Tailor
     # TODO: Add skipping of comment lines.
     SPACING_CONDITIONS = {
       :more_than_one_space_after_comma => [
-        /\,\x20{2,}/,
+        /\,\x20{2,}(\w|'|"|:).*((?:(?!#\s*)).)*$/,
         "[Spacing]  Line has a comma with > 1 space after it"
         ],
       :no_space_after_comma => [

@@ -1,7 +1,5 @@
-$:.unshift(File.expand_path(File.dirname(__FILE__)))
-
-require 'spacing'
-require 'indentation'
+require 'tailor/spacing'
+require 'tailor/indentation'
 require 'logger'
 require 'term/ansicolor'
 
