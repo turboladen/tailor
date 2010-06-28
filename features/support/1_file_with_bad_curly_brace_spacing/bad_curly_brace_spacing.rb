@@ -53,8 +53,8 @@ thing ={:one => 1}
 thing = { :one => 1 }
 
 # Skip on default params in methods...
-def a_method; one={}; end
+def a_method; one={}; end;
 
 # Skip on strings...
 a_string = "This is a #{thing}..."
-b_string = "This has #{class.methods}"
+b_string = "This has #{Class.methods}"
