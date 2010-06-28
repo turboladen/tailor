@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
-$:.unshift File.expand_path(File.dirname(__FILE__) + '/../lib/')
+$:.unshift(File.dirname(__FILE__) + '/../lib/') unless
+  $:.include?(File.dirname(__FILE__) + '/../lib/') ||
+  $:.include?(File.expand_path(File.dirname(__FILE__) + '/../lib/'))
 
 require 'tailor'
 
