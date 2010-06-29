@@ -58,9 +58,9 @@ module Tailor
 
       unless spaces.nil?
         return spaces.length
-      else
-        return 0
       end
+
+      return 0
     end
 
     ##
@@ -94,6 +94,7 @@ module Tailor
           return true
         end
       end
+
       return false
     end
 
@@ -112,6 +113,7 @@ module Tailor
           return true
         end
       end
+
       return false
     end
 
@@ -132,6 +134,7 @@ module Tailor
           return true
         end
       end
+
       return false
     end
 
@@ -153,6 +156,7 @@ module Tailor
       message += "but should be at level #{proper_level}:"
       @line_problem_count += 1
       print_problem message
+
       return true
     end
 
