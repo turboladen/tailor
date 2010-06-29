@@ -143,17 +143,21 @@ module Tailor
     def comment_line?
       unless self.scan(/^\s*#/).empty?
         return true
-      else
-        return false
       end
+
+	    return false
     end
 
+    ##
+    # Checks to see if the whole line is only space characters.
+    #
+    # @return [Boolean] Returns true if the line is only space characters.
     def empty_line?
       if self.scan(/^\s*$/).empty?
         return false
-      else
-        return true
       end
+
+      return true
     end
 
     ##
