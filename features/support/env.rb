@@ -1,5 +1,4 @@
 $:.unshift File.dirname(__FILE__) + "/../../lib/tailor"
-#require File.dirname(__FILE__) + "/../../lib/tailor"
 require "tailor"
 
 gem 'cucumber'
