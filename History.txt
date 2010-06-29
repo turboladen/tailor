@@ -1,4 +1,4 @@
-=== 0.0.0 2010-05-21
+=== 0.1.0 2010-05-21
 
 * Added checks for spacing around { and }
 * Added check for spacing around ternary ':'
