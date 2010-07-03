@@ -37,6 +37,9 @@ $hoe = Hoe.spec 'tailor' do
   self.readme_file    = 'README.rdoc'
   self.history_file   = 'History.txt'
   self.rspec_options  += ['--color', '--format', 'specdoc']
+  self.extra_deps     += [
+    ['term-ansicolor']
+  ]
   self.extra_dev_deps += [
     ['rspec'],
     ['yard', '>=0.5.3'],

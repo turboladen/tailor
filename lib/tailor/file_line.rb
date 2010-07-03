@@ -1,6 +1,7 @@
+require 'logger'
+require 'rubygems'
 require 'tailor/spacing'
 require 'tailor/indentation'
-require 'logger'
 require 'term/ansicolor'
 
 module Tailor
