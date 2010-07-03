@@ -34,7 +34,7 @@ here http://wiki.github.com/turboladen/tailor.
 
 == REQUIREMENTS:
 
-* None yet!
+* Ruby 1.8.7 or 1.9.1 (haven't tested on others)
 
 == INSTALL:
 
