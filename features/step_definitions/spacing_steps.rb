@@ -1,15 +1,4 @@
-$:.unshift(File.dirname(__FILE__) + '/../../lib')
 require 'tailor/file_line'
-
-include Tailor
-
-def check_file
-  ruby_source = File.open(@file_list[0], 'r')
-
-  ruby_source.each_line do |line|
-    yield(line)
-  end
-end
 
 def check_spacing method_name, line_type
   is_line_type = false
@@ -52,17 +41,6 @@ Given /^that file contains lines with hard tabs$/ do
   end
 
   contains_hard_tabs.should be_true
-end
-
-Given /^that file does not contain any "([^\"]*)" statements$/ do |keyword|
-  ruby_source = File.open(@file_list[0], 'r')
-
-  count = count_keywords(ruby_source, keyword)
-  count.should == 0
-end
-
-Given /^that file is indented properly$/ do
-  pending
 end
 
 Given /^that file contains lines with trailing whitespace$/ do
@@ -127,21 +105,10 @@ Given /^that file contains a "([^\"]*)" line with spaces after an open parenthes
 end
 
 #-----------------------------------------------------------------------------
-# "When" statements
-#-----------------------------------------------------------------------------
-When "I run the checker on the project" do
-  @result = `#{@tailor} #{@project_dir}`
-end
-
-#-----------------------------------------------------------------------------
 # "Then" statements
 #-----------------------------------------------------------------------------
 Then /^the checker should tell me each line that has a hard tab$/ do
   @result.should include("Line contains hard tabs")
-end
-
-Then "the checker should tell me my indentation is OK" do
-  pending
 end
 
 Then /^the checker should tell me each line has trailing whitespace$/ do
