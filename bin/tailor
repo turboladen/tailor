@@ -7,7 +7,10 @@ $:.unshift(File.dirname(__FILE__) + '/../lib/') unless
 require 'tailor'
 
 def usage
-  puts "Usage: #{__FILE__} [path to validate files from]"
+  puts "Usage:"
+  puts "\t#{__FILE__} [directory with .rb files]"
+  puts "\t -OR-"
+  puts "\t#{__FILE__} [single .rb file]"
 end
 
 if ARGV[0].nil?
@@ -21,8 +24,12 @@ else
       raise "Invalid file or directory: #{path_to_check}"
     end
 
-    # Check the requested files/dirs for problems
-    files_and_problems = Tailor.check path_to_check
+    if File.file?(path_to_check)
+      files_and_problems = Tailor.check_file path_to_check
+    elsif File.directory?(path_to_check)
+      # Check the requested files/dirs for problems
+      files_and_problems = Tailor.check path_to_check
+    end
 
     # Print summary of the problems we found
     Tailor.print_report files_and_problems

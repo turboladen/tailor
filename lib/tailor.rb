@@ -8,7 +8,7 @@ require 'tailor/file_line'
 require 'tailor/spacing'
 
 module Tailor
-  VERSION = '0.1.1'
+  VERSION = '0.1.2'
 
   # These operators should always have 1 space around them
   OPERATORS = {
@@ -51,6 +51,20 @@ module Tailor
       problems = find_problems_in file_name
       files_and_problems[file_name] = problems
     end
+
+    files_and_problems
+  end
+
+
+  # Check a single file for style problems.
+  #
+  # @param [String] file_name Path to a file to check style on.
+  # @return [Hash] Returns a hash that contains file_name => problem_count.
+  def self.check_file file_name
+    files_and_problems = Hash.new
+
+    problems = find_problems_in File.expand_path(file_name)
+    files_and_problems[file_name] = problems
 
     files_and_problems
   end
@@ -226,9 +240,14 @@ end
 
     files_and_problems.each_pair do |file, problem_count|
       file_path = Pathname.new(file)
+
       unless problem_count == 0
         print "\t#{problem_count} problems in: "
-        puts "#{file_path.relative_path_from(Pathname.pwd)}"
+        if files_and_problems.size > 1
+          puts "#{file_path.relative_path_from(Pathname.pwd)}"
+        else
+          puts "#{file_path}"
+        end
       end
     end
   end

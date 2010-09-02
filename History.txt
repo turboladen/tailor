@@ -1,3 +1,7 @@
+=== 0.1.2 2010-09-01
+
+* Added ability to check a single file
+
 === 0.1.0 2010-05-21
 
 * Added checks for spacing around { and }

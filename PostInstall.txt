@@ -2,5 +2,9 @@
 Thanks for checking out Tailor.  To run, simply do:
   # tailor [directory to check]
 
+  -OR-
+  
+  # tailor [.rb file to check]
+
 
 For more information on tailor, see http://github.com/turboladen/tailor
