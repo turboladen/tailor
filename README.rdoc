@@ -48,7 +48,7 @@ working on solving this.
 
 == INSTALL:
 
-* (sudo) gem install tailor
+  $ (sudo) gem install tailor
 
 == LICENSE:
 
