@@ -33,13 +33,10 @@ here http://wiki.github.com/turboladen/tailor.
 == SYNOPSIS:
 
 Run tailor like:
-<pre>
-$ tailor path/to/check/
-</pre>
+
+  $ tailor path/to/check/
 ...or...
-<pre>
-$ tail file_to_check.rb
-</pre>
+  $ tail file_to_check.rb
 
 There are a number of false-positives and false-negatives in detection of the
 above rules, so please don't expect perfection in this detection.  :)  I'm
