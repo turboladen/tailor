@@ -10,7 +10,9 @@ here http://wiki.github.com/turboladen/tailor.
 
 == FEATURES/PROBLEMS:
 
-* Recursively checks for bad style in Ruby files in a directory 
+* Checks for bad style in Ruby files
+  * Recursively in a directory, or...
+  * A given file
 * Checks for:
   * Indentation
     * Hard-tabs in indentation
@@ -30,7 +32,18 @@ here http://wiki.github.com/turboladen/tailor.
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+Run tailor like:
+<pre>
+$ tailor path/to/check/
+</pre>
+...or...
+<pre>
+$ tail file_to_check.rb
+</pre>
+
+There are a number of false-positives and false-negatives in detection of the
+above rules, so please don't expect perfection in this detection.  :)  I'm
+working on solving this.
 
 == REQUIREMENTS:
 
