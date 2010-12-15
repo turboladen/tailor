@@ -1,3 +1,7 @@
+=== 0.1.3 2010-12-14
+
+* Added check for .erb files
+
 === 0.1.2 2010-09-01
 
 * Added ability to check a single file
