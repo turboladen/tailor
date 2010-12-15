@@ -4,7 +4,7 @@ Thanks for checking out Tailor.  To run, simply do:
 
   -OR-
   
-  # tailor [.rb file to check]
+  # tailor [.rb/.erb file to check]
 
 
 For more information on tailor, see http://github.com/turboladen/tailor
