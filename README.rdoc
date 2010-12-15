@@ -10,7 +10,7 @@ here http://wiki.github.com/turboladen/tailor.
 
 == FEATURES/PROBLEMS:
 
-* Checks for bad style in Ruby files
+* Checks for bad style in .rb and .erb files
   * Recursively in a directory, or...
   * A given file
 * Checks for:
