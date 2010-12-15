@@ -8,7 +8,7 @@ require 'tailor/file_line'
 require 'tailor/spacing'
 
 module Tailor
-  VERSION = '0.1.2'
+  VERSION = '0.1.3'
 
   # These operators should always have 1 space around them
   OPERATORS = {
