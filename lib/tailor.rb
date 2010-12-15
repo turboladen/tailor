@@ -70,7 +70,7 @@ module Tailor
   end
 
   # Gets a list of .rb files in the project.  This gets each file's absolute
-  #   path in order to alleviate any possible confusion.
+  # path in order to alleviate any possible confusion.
   #
   # @param [String] base_dir Directory to start recursing from to look for .rb
   #   files
@@ -83,6 +83,9 @@ module Tailor
     # Get the .rb files
     ruby_files_in_project = Dir.glob(File.join('*', '**', '*.rb'))
     Dir.glob(File.join('*.rb')).each { |file| ruby_files_in_project << file }
+
+    # Get the .erb files
+    Dir.glob(File.join('*.erb')).each { |file| ruby_files_in_project << file }
 
     # Expand paths to all files in the list
     list_with_absolute_paths = Array.new
