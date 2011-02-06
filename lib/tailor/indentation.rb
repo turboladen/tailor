@@ -210,7 +210,7 @@ module Tailor
       end
 
       unless self.scan(/\([^\)]*(?!=\))\s*$/).empty?
-        puts "Ends with unclose parenthesis."
+        puts "Ends with unclosed parenthesis."
         return true
       end
 

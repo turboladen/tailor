@@ -212,10 +212,10 @@ module Tailor
 
       right_side_match = Regexp.new(Regexp.escape(string) + '\x20*')
 
-      occurences = self.scan(right_side_match)
+      occurrences = self.scan(right_side_match)
 
       results = []
-      occurences.each do |o|
+      occurrences.each do |o|
         string_spaces = o.sub(string, '')
         results << string_spaces.size
       end
