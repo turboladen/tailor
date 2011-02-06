@@ -30,7 +30,7 @@ thing [0]
 # 1 space before ] with element reference
 thing[0 ]
 
-# Pefect multi-line
+# Perfect multi-line
 two = 'too'
 thing = [
   one,
