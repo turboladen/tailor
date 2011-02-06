@@ -193,7 +193,7 @@ end
 
       # If this is the last line of the multi-line statement...
       if multi_line == true and multi_line_statement
-        puts "Assinging current (#{current_level}) to multi_next (#{multi_line_next_level})"
+        puts "Assigning current (#{current_level}) to multi_next (#{multi_line_next_level})"
         current_level = multi_line_next_level
       elsif multi_line == true and !multi_line_statement
         multi_line = false
