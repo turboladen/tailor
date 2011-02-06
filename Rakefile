@@ -4,7 +4,7 @@ require 'hoe'
 require 'fileutils'
 require './lib/tailor'
 
-# Load nsm5200 rakefile extensions
+# Load rakefile extensions
 Dir["#{File.dirname(__FILE__)}/lib/tasks/*.rake"].each { |ext| load ext }
 
 Hoe.plugin :newgem
@@ -78,10 +78,4 @@ end
 
 # Now define the tasks
 require 'newgem/tasks'
-Dir['tasks/**/*.rake'].each { |t| load t }
-
-# TODO - want other tests/tasks run by default? Add them to the list
-# remove_task :default
-# task :default => [:spec, :features]
-
 
