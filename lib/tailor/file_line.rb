@@ -30,7 +30,7 @@ module Tailor
     # line.
     # @return [String] Returns a String that includes all of the methods
     # defined here.
-    def initialize line_of_code, file_path, line_number
+    def initialize(line_of_code, file_path, line_number)
       super line_of_code
       @file_path = file_path
       @line_number = line_number
