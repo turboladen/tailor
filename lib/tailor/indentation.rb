@@ -59,7 +59,7 @@ module Tailor
         return spaces.length
       end
 
-      return 0
+      0
     end
 
     # Determines the level to which the line is indented.  For Ruby, this
@@ -74,7 +74,7 @@ module Tailor
         return 0.0
       end
 
-      return spaces.to_f / 2.0
+      spaces.to_f / 2.0
     end
 
     # Checks to see if the line contains a statement that should be indented.
@@ -151,7 +151,7 @@ module Tailor
       @line_problem_count += 1
       print_problem message
 
-      return true
+      true
     end
 
     def ends_with_operator?
