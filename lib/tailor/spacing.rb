@@ -67,7 +67,6 @@ module Tailor
         ]
       }
 
-    ##
     # Detect spacing problems around all predefined bad cases.
     #
     # @return [Number] The number of problems discovered during detection.
@@ -85,15 +84,15 @@ module Tailor
           print_problem values[1]
         end
       end
+
       problem_count
     end
 
-    ##
     # Checks to see if there's whitespace at the end of the line.  Prints the
-    #   number of whitespaces at the end of the line.
+    # number of whitespaces at the end of the line.
     #
     # @return [Boolean] Returns true if there's whitespace at the end of the
-    #   line.
+    # line.
 =begin
     def trailing_whitespace?
       count = self.trailing_whitespace_count
@@ -107,12 +106,11 @@ module Tailor
       return false
     end
 =end
-    ##
     # Checks to see if the line has trailing whitespace at the end of it. Note
-    #   that this excludes empty lines that have spaces on them!
+    # that this excludes empty lines that have spaces on them!
     #
     # @return [Number] Returns the number of trailing spaces at the end of the
-    #   line.
+    # line.
     def trailing_whitespace_count
       spaces = self.scan(/(\x20+|\x09+)$/)
 
@@ -120,14 +118,13 @@ module Tailor
         return 0
       end
 
-      return spaces.first.first.length
+      spaces.first.first.length
     end
     module_function :trailing_whitespace_count
 
-    ##
     # Checks to see if there's no spaces before a given string.  If the line
-    #   being checked is a method with a question mark at the end of it, this
-    #   skips checking the line.
+    # being checked is a method with a question mark at the end of it, this
+    # skips checking the line.
     #
     # @param [String] string The string to check for spaces before.
     # @return [Boolean] True if there are no spaces before the string.
@@ -162,7 +159,6 @@ module Tailor
       result
     end
 
-    ##
     # Checks to see if there's no spaces after a given string.
     #
     # @param [String] string The string to check for spaces after.
@@ -203,12 +199,11 @@ module Tailor
       result
     end
 
-    ##
     # Gets the number of spaces after a string.
     #
     # @param [String] string The string to check for spaces after.
     # @return [Array<Number>] An array that holds the number of spaces after
-    #   every time the given string appears in a line.
+    # every time the given string appears in a line.
     def spaces_after string
       # Get out if this line is a comment line
       if self.comment_line?
@@ -228,7 +223,6 @@ module Tailor
       results
     end
 
-    ##
     # Checks to see if the line contains a method name with a ?.
     #
     # @return [Boolean] True if the line contains a method line include?.
@@ -237,7 +231,7 @@ module Tailor
         return false
       end
 
-      return true
+      true
     end
   end
 end

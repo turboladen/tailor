@@ -104,7 +104,7 @@ module Tailor
     source = File.open(file_name, 'r')
     file_path = Pathname.new(file_name)
 
-    puts
+    puts ""
     puts "#-------------------------------------------------------------------"
     puts "# Looking for bad style in:"
     puts "# \t'#{file_path}'"
@@ -238,7 +238,7 @@ end
   # @param [Hash] files_and_problems Returns a hash that contains
   #   file_name => problem_count.
   def self.print_report files_and_problems
-    puts
+    puts ""
     puts "The following files are out of style:"
 
     files_and_problems.each_pair do |file, problem_count|
