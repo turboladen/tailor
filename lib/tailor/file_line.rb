@@ -7,12 +7,12 @@ require 'term/ansicolor'
 module Tailor
 
   # Calling modules will get the Ruby file to check, then read by line.  This
-  #   class allows for checking of line-specific style by Represents a single
-  #   line of a file of Ruby code.  Inherits from String so "self" can be used.
+  # class allows for checking of line-specific style by Represents a single
+  # line of a file of Ruby code.  Inherits from String so "self" can be used.
   #
   # Methods are named such that they check for bad style conditions, and return
-  #   true and print the associated error message when the bad style condition
-  #   is discovered in the file line.
+  # true and print the associated error message when the bad style condition
+  # is discovered in the file line.
   class FileLine < String
     include Tailor::Spacing
     include Tailor::Indentation
@@ -21,15 +21,15 @@ module Tailor
     LINE_LENGTH_MAX = 80
 
     # This passes the line of code to String (the parent) so that it can act
-    #   like a standard string.
+    # like a standard string.
     #
     # @param [String] line_of_code Line from a Ruby file that will be checked
-    #   for styling.
+    # for styling.
     # @param [Pathname] file_path Path to the file the line is in.
     # @param [Number] line_number Line number in the file that contains the
-    #   line.
+    # line.
     # @return [String] Returns a String that includes all of the methods
-    #   defined here.
+    # defined here.
     def initialize line_of_code, file_path, line_number
       super line_of_code
       @file_path = file_path
@@ -43,7 +43,7 @@ module Tailor
     # Checks to see if the method name is using camel case.
     #
     # @return [Boolean] Returns true if the method name is camel case.
-    #   Returns nil if this line doesn't contain a method definition.
+    # Returns nil if this line doesn't contain a method definition.
     def camel_case_method?
       words = self.split(/ /)
 
@@ -65,7 +65,7 @@ module Tailor
     # Checks to see if the class name is using snake case.
     #
     # @return [Boolean] Returns true if the class name is snake case.
-    #   Returns nil if this line doesn't contain a class definition.
+    # Returns nil if this line doesn't contain a class definition.
     def snake_case_class?
       words = self.split(/ /)
 
@@ -98,7 +98,7 @@ module Tailor
 
     ##
     # Returns the name of the method if the line is one that contains a method
-    #   definition.
+    # definition.
     #
     # @return [String] The method name.
     def method_name
@@ -113,7 +113,7 @@ module Tailor
     # Checks to see if the line is the start of a class's definition.
     #
     # @return [Boolean] Returns true if the line contains 'class' and the
-    #   second word begins with a uppercase letter.
+    # second word begins with a uppercase letter.
     def class_line?
       words = self.split(/ /)
       if words[0].eql? "class" and starts_with_uppercase?(words[1])
@@ -125,10 +125,10 @@ module Tailor
 
     ##
     # Checks to see if the line is a regular statement (not a class, method, or
-    #   comment).
+    # comment).
     #
     # @return [Boolean] Returns true if the line is not a class, method or
-    #   comment.
+    # comment.
     def statement_line?
       if self.method_line? or self.class_line? or self.comment_line?
         return false
@@ -138,7 +138,7 @@ module Tailor
     end
 
     # Checks to see if the whole line is a basic comment line.  This doesn't
-    #   check for trailing-line comments (@see #trailing_comment?).
+    # check for trailing-line comments (@see #trailing_comment?).
     #
     # @return [Boolean] Returns true if the line begins with a pound symbol.
     def comment_line?
@@ -163,10 +163,10 @@ module Tailor
 
     ##
     # Checks to see if the line is greater than the defined max (80 chars is
-    #   default).
+    # default).
     #
     # @return [Boolean] Returns true if the line length exceeds the allowed
-    #   length.
+    # length.
     def too_long?
       length = self.length
       if length > LINE_LENGTH_MAX
