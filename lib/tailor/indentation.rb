@@ -48,7 +48,6 @@ module Tailor
       /^[^\[]*\]/     # matches and end ] when no [ appears
       ]
 
-    ##
     # Determines the number of spaces the line is indented.
     #
     # @return [Number] Returns the number of spaces the line is indented.
@@ -63,10 +62,9 @@ module Tailor
       return 0
     end
 
-    ##
     # Determines the level to which the line is indented.  For Ruby, this
-    #   should be 2 spaces.  Note that this treats lines that are indented an
-    #   odd number of spaces as a multiple of 0.5 levels of indentation.
+    # should be 2 spaces.  Note that this treats lines that are indented an
+    # odd number of spaces as a multiple of 0.5 levels of indentation.
     #
     # @return [Float] The level.
     def is_at_level
@@ -79,11 +77,10 @@ module Tailor
       return spaces.to_f / 2.0
     end
 
-    ##
     # Checks to see if the line contains a statement that should be indented.
     #
     # @return [Boolean] True if the line contains one of the statements and
-    #   does not contain 'end'.
+    # does not contain 'end'.
     def indent?
       return false if self.comment_line?
 
@@ -95,10 +92,9 @@ module Tailor
         end
       end
 
-      return false
+      false
     end
 
-    ##
     # Checks to see if the line contains a statement that should be outdented.
     #
     # @return [Boolean] True if the line contains one of the statements.
@@ -114,12 +110,11 @@ module Tailor
         end
       end
 
-      return false
+      false
     end
 
-    ##
     # Checks to see if the line contains a statement that ends a code chunk:
-    #   end, ], or }.
+    # end, ], or }.
     #
     # @return [Boolean] True if the line contains one of the statements.
     def contains_end?
@@ -135,16 +130,15 @@ module Tailor
         end
       end
 
-      return false
+      false
     end
 
-    ##
     # Simply compares the level the line is at to the parameter that's passed
-    #   in.  The proper level is maintained outside of this module.
+    # in.  The proper level is maintained outside of this module.
     #
     # @return [Boolean] True if level of the line doesn't match the level
-    #   passed in.  Also returns true if the line is an empty line, since that
-    #   line doens't need to be checked.
+    # passed in.  Also returns true if the line is an empty line, since that
+    # line doesn't need to be checked.
     def at_improper_level? proper_level
       current_level = self.is_at_level
 
@@ -181,7 +175,7 @@ module Tailor
         end
       end
 
-      return result
+      result
     end
 
     def ends_with_comma?
@@ -194,7 +188,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     def ends_with_backslash?
@@ -207,7 +201,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     def unclosed_parenthesis?
@@ -220,7 +214,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     def only_closed_parenthesis?
@@ -232,7 +226,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     def multi_line_statement?
@@ -245,7 +239,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
   end
 end
