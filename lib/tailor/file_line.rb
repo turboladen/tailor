@@ -59,7 +59,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     # Checks to see if the class name is using snake case.
@@ -81,7 +81,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     # Checks to see if the line is the start of a method's definition.
@@ -93,10 +93,9 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
-    ##
     # Returns the name of the method if the line is one that contains a method
     # definition.
     #
@@ -120,10 +119,9 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
-    ##
     # Checks to see if the line is a regular statement (not a class, method, or
     # comment).
     #
@@ -134,7 +132,7 @@ module Tailor
         return false
       end
 
-      return true
+      true
     end
 
     # Checks to see if the whole line is a basic comment line.  This doesn't
@@ -146,10 +144,9 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
-    ##
     # Checks to see if the whole line is only space characters.
     #
     # @return [Boolean] Returns true if the line is only space characters.
@@ -158,10 +155,9 @@ module Tailor
         return false
       end
 
-      return true
+      true
     end
 
-    ##
     # Checks to see if the line is greater than the defined max (80 chars is
     # default).
     #
@@ -175,7 +171,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     #-----------------------------------------------------------------
@@ -183,8 +179,7 @@ module Tailor
     #-----------------------------------------------------------------
     private
 
-    ##
-    # Prints the file name and line number that the problem occured on.
+    # Prints the file name and line number that the problem occurred on.
     #
     # @param [String] Error message to print.
     def print_problem message
@@ -196,6 +191,7 @@ module Tailor
         puts ""
         puts line_info
       end
+
       puts red("\t"+ message)
     end
 
@@ -207,7 +203,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
 
     # Checks to see if a word begins with an uppercase letter.
@@ -218,7 +214,7 @@ module Tailor
         return true
       end
 
-      return false
+      false
     end
   end
 end
