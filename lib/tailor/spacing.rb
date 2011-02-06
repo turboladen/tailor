@@ -9,15 +9,15 @@ module Tailor
     # TODO: Add skipping of comment lines.
     SPACING_CONDITIONS = {
       :more_than_one_space_after_comma => [
-        /\,\x20{2,}(\w|'|"|:).*((?:(?!#\s*)).)*$/,
+        /,\x20{2,}(\w|'|"|:).*((?:(?!#\s*)).)*$/,
         "[Spacing]  Line has a comma with > 1 space after it"
         ],
       :no_space_after_comma => [
-        /\,\x20{0}\S/,
+        /,\x20{0}\S/,
         "[Spacing]  Line has a comma with 0 spaces after it"
         ],
       :space_before_comma => [
-        /\S\x20+\,/,
+        /\S\x20+,/,
         "[Spacing]  Line has at least one space before a comma"
         ],
       :space_after_open_parenthesis => [
