@@ -45,7 +45,7 @@ module MyModule
       end
 
       # Now how about a block...
-      1..10.each do |number|
+      1..10.times do |number|
         begin
         rescue
         ensure
