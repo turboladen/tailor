@@ -1,5 +1,13 @@
-require 'rubygems'
 require './lib/tailor'
+require 'bundler'
+
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
 
 # Load rakefile extensions
 Dir["#{File.dirname(__FILE__)}/lib/tasks/*.rake"].each { |ext| load ext }
@@ -17,8 +25,10 @@ Jeweler::Tasks.new do |gem|
   gem.executables          = ['tailor']
   gem.extra_rdoc_files     = ['README.rdoc', 'ChangeLog.rdoc']
   gem.add_runtime_dependency 'term-ansicolor', '>=1.0.5'
+  gem.add_development_dependency 'bundler', '~>1.0.12'
   gem.add_development_dependency 'cucumber', '~>0.10.2'
   gem.add_development_dependency 'jeweler', '~>1.5.2'
+  gem.add_development_dependency 'metric_fu' '>=2.0.0'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'simplecov'
