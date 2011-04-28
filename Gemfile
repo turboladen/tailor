@@ -8,4 +8,5 @@ group :development do
   gem 'rake', '~>0.8.7'
   gem 'rspec'
   gem 'simplecov'
+  gem 'yard', '~>0.6.8'
 end

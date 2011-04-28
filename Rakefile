@@ -1,81 +1,28 @@
 require 'rubygems'
-gem 'hoe', '>= 2.1.0'
-require 'hoe'
-require 'fileutils'
 require './lib/tailor'
 
 # Load rakefile extensions
 Dir["#{File.dirname(__FILE__)}/lib/tasks/*.rake"].each { |ext| load ext }
 
-Hoe.plugin :newgem
-Hoe.plugin :yard
-# Hoe.plugin :website
-Hoe.plugin :cucumberfeatures
-Hoe.plugins.delete :rubyforge
-
-# Gets the description from the main README file
-def get_descr_from_readme
-  paragraph_count = 0
-  File.readlines('README.rdoc', '').each do |paragraph|
-    paragraph_count += 1
-    if paragraph_count == 4
-      return paragraph
-    end
-  end
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  gem.name                 = 'tailor'
+  gem.version              = Tailor::VERSION
+  gem.summary              = "Utility for checking style of Ruby files."
+  gem.authors              = ['Steve Loveless']
+  gem.email                = ['steve.loveless@gmail.com']
+  gem.post_install_message = File.readlines 'PostInstall.txt'
+  gem.homepage             = 'http://github.com/turboladen/tailor'
+  gem.description          = %Q{TODO}
+  gem.executables          = ['tailor']
+  gem.extra_rdoc_files     = ['README.rdoc', 'ChangeLog.rdoc']
+  gem.add_runtime_dependency 'term-ansicolor', '>=1.0.5'
+  gem.add_development_dependency 'cucumber', '~>0.10.2'
+  gem.add_development_dependency 'jeweler', '~>1.5.2'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'simplecov'
+  gem.add_development_dependency 'yard', '~>0.6.8'
+  gem.test_files = Dir.glob 'spec/**/*.rb'
 end
-
-# Generate all the Rake tasks
-# Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.spec 'tailor' do
-  self.summary      = "Utility for checking style of Ruby files."
-  self.developer('Steve Loveless', 'steve.loveless@gmail.com')
-  self.post_install_message = File.readlines 'PostInstall.txt'
-  self.rubyforge_name = self.name
-  self.version        = Tailor::VERSION
-  self.url            = 'http://github.com/turboladen/tailor'
-  self.description    = get_descr_from_readme
-  self.readme_file    = 'README.rdoc'
-  self.history_file   = 'History.txt'
-  self.rspec_options  += ['--color', '--format', 'specdoc']
-  self.extra_deps     += [
-    ['term-ansicolor']
-  ]
-  self.extra_dev_deps += [
-    ['rspec'],
-    ['yard', '>=0.5.3'],
-    ['hoe-yard', '>=0.1.2'],
-    ['cucumber', '>=0.6.3']
-  ]
-
-  self.test_globs   = 'spec/*.rb'
-
-  # Extra Yard options
-  self.yard_title   = "#{self.name} Documentation (#{self.version})"
-  self.yard_markup  = :rdoc
-  self.yard_opts    += ['--main', self.readme_file]
-  self.yard_opts    += ['--output-dir', 'doc']
-  self.yard_opts    += ['--private']
-  self.yard_opts    += ['--protected']
-  self.yard_opts    += ['--verbose']
-  self.yard_opts    += ['--files', 
-    ['Manifest.txt', 'History.txt']
-  ]
-end
-
-#-------------------------------------------------------------------------------
-# Overwrite the :clobber_docs Rake task so that it doesn't destroy our docs
-#   directory.
-#-------------------------------------------------------------------------------
-class Rake::Task
-  def overwrite(&block)
-    @actions.clear
-    enhance(&block)
-  end
-end
-
-Rake::Task[:clobber_docs].overwrite do
-end
-
-# Now define the tasks
-require 'newgem/tasks'
-
+Jeweler::RubygemsDotOrgTasks.new
