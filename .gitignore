@@ -1,0 +1,7 @@
+.autotest
+.loadpath
+.project
+.yardoc/
+logic.txt
+output.txt
+tmp/
