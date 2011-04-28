@@ -1,4 +1,4 @@
-require './lib/tailor'
+require_relative 'lib/tailor'
 require 'bundler'
 
 begin
@@ -10,7 +10,7 @@ rescue Bundler::BundlerError => e
 end
 
 # Load rakefile extensions
-Dir["#{File.dirname(__FILE__)}/lib/tasks/*.rake"].each { |ext| load ext }
+Dir["tasks/*.rake"].each { |ext| load ext }
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
@@ -26,6 +26,7 @@ Jeweler::Tasks.new do |gem|
   gem.extra_rdoc_files     = ['README.rdoc', 'ChangeLog.rdoc']
   gem.add_runtime_dependency 'term-ansicolor', '>=1.0.5'
   gem.add_development_dependency 'bundler', '~>1.0.12'
+  gem.add_development_dependency 'code_statistics', '~>0.2.13'
   gem.add_development_dependency 'cucumber', '~>0.10.2'
   gem.add_development_dependency 'jeweler', '~>1.5.2'
   gem.add_development_dependency 'metric_fu' '>=2.0.0'
