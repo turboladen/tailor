@@ -26,3 +26,16 @@ Jeweler::Tasks.new do |gem|
   gem.test_files = Dir.glob 'spec/**/*.rb'
 end
 Jeweler::RubygemsDotOrgTasks.new
+
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
+end
+task :default => :spec
+
+require 'cucumber/rake/task'
+Cucumber::Rake::Task.new(:features)
+
+require 'yard'
+YARD::Rake::YardocTask.new
