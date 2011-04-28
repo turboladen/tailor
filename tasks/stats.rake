@@ -1,3 +1,5 @@
+require 'code_statistics'
+
 STATS_DIRECTORIES = [
   %w(Library            lib/),
   %w(Feature\ tests     features/),
@@ -6,6 +8,5 @@ STATS_DIRECTORIES = [
 
 desc "Report code statistics (KLOCs, etc) from the application"
 task :stats do
-  require 'code_statistics'
   CodeStatistics.new(*STATS_DIRECTORIES).to_s
 end
