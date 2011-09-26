@@ -6,9 +6,10 @@ require 'fileutils'
 require 'pathname'
 require 'tailor/file_line'
 require 'tailor/spacing'
+require_relative 'tailor/line_lexer'
 
 module Tailor
-  VERSION = '0.1.3'
+  VERSION = '0.2.0'
 
   # These operators should always have 1 space around them
   OPERATORS = {
@@ -111,18 +112,26 @@ module Tailor
     puts "#-------------------------------------------------------------------"
 
     @problem_count = 0
-    line_number = 1
+    lexed_file = Tailor::LineLexer.new(source).parse
+    p lexed_file
+    
+    lexed_file.each do |token|
+      p token
+      line_number = token.first.first
+      
+      if line_number == token.first.first
+        puts line_number
+      end
+    end
 =begin
     current_level = 0.0
     next_level = 0.0
     multi_line_next_level = 0.0
     multi_line = false
-=end
 
     source.each_line do |source_line|
       line = FileLine.new(source_line, file_path, line_number)
 
-=begin
       puts "line num: #{line_number}"
 if line.ends_with_comma?
   puts "COMMA"
@@ -204,7 +213,6 @@ end
         puts "Assigning current (#{current_level}) = next (#{next_level}) "
         current_level = next_level
       end
-=end
       @problem_count += line.spacing_problems
 
       # Check for camel-cased methods
@@ -217,17 +225,16 @@ end
       @problem_count += 1 if line.too_long?
 
       # Check for spacing around operators
-=begin
       OPERATORS.each_pair do |op_group, op_values|
         op_values.each do |op|
           @problem_count += 1 if line.no_space_before? op
           @problem_count += 1 if line.no_space_after? op
         end
       end
-=end
 
       line_number += 1
     end
+=end
 
     @problem_count
   end
@@ -245,6 +252,7 @@ end
 
       unless problem_count == 0
         print "\t#{problem_count} problems in: "
+
         if files_and_problems.size > 1
           puts "#{file_path.relative_path_from(Pathname.pwd)}"
         else
