@@ -4,11 +4,11 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'fileutils'
 require 'pathname'
+require 'tailor/version'
 require 'tailor/file_line'
 require 'tailor/spacing'
 
 module Tailor
-  VERSION = '0.1.3'
 
   # These operators should always have 1 space around them
   OPERATORS = {
