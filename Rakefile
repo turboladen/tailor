@@ -21,7 +21,7 @@ Jeweler::Tasks.new do |gem|
   gem.email                = ['steve.loveless@gmail.com']
   gem.post_install_message = File.readlines 'PostInstall.txt'
   gem.homepage             = 'http://github.com/turboladen/tailor'
-  gem.description          = %Q{TODO}
+  gem.description          = %Q{ruby style checking tool}
   gem.executables          = ['tailor']
   gem.extra_rdoc_files     = ['README.rdoc', 'ChangeLog.rdoc']
   gem.add_runtime_dependency 'term-ansicolor', '>=1.0.5'
@@ -29,7 +29,7 @@ Jeweler::Tasks.new do |gem|
   gem.add_development_dependency 'code_statistics', '~>0.2.13'
   gem.add_development_dependency 'cucumber', '~>0.10.2'
   gem.add_development_dependency 'jeweler', '~>1.5.2'
-  gem.add_development_dependency 'metric_fu' '>=2.0.0'
+  gem.add_development_dependency 'metric_fu', '>=2.0.0'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'simplecov'
