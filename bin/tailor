@@ -8,9 +8,9 @@ require 'tailor'
 
 def usage
   puts "Usage:"
-  puts "\t#{__FILE__} [directory with .rb files]"
+  puts "\t#{File.basename(__FILE__)} [directory with .rb files]"
   puts "\t -OR-"
-  puts "\t#{__FILE__} [single .rb file]"
+  puts "\t#{File.basename(__FILE__)} [single .rb file]"
 end
 
 if ARGV[0].nil?
