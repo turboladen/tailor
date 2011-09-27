@@ -80,7 +80,7 @@ module Tailor
     # Checks to see if the line contains a statement that should be indented.
     #
     # @return [Boolean] True if the line contains one of the statements and
-    # does not contain 'end'.
+    #   does not contain 'end'.
     def indent?
       return false if self.comment_line?
 
@@ -137,8 +137,8 @@ module Tailor
     # in.  The proper level is maintained outside of this module.
     #
     # @return [Boolean] True if level of the line doesn't match the level
-    # passed in.  Also returns true if the line is an empty line, since that
-    # line doesn't need to be checked.
+    #   passed in.  Also returns true if the line is an empty line, since that
+    #   line doesn't need to be checked.
     def at_improper_level? proper_level
       current_level = self.is_at_level
 

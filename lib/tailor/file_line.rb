@@ -24,12 +24,12 @@ module Tailor
     # like a standard string.
     #
     # @param [String] line_of_code Line from a Ruby file that will be checked
-    # for styling.
+    #   for styling.
     # @param [Pathname] file_path Path to the file the line is in.
     # @param [Number] line_number Line number in the file that contains the
-    # line.
+    #   line.
     # @return [String] Returns a String that includes all of the methods
-    # defined here.
+    #   defined here.
     def initialize(line_of_code, file_path, line_number)
       super line_of_code
       @file_path = file_path
@@ -43,7 +43,7 @@ module Tailor
     # Checks to see if the method name is using camel case.
     #
     # @return [Boolean] Returns true if the method name is camel case.
-    # Returns nil if this line doesn't contain a method definition.
+    #   Returns nil if this line doesn't contain a method definition.
     def camel_case_method?
       words = self.split(/ /)
 
@@ -65,7 +65,7 @@ module Tailor
     # Checks to see if the class name is using snake case.
     #
     # @return [Boolean] Returns true if the class name is snake case.
-    # Returns nil if this line doesn't contain a class definition.
+    #   Returns nil if this line doesn't contain a class definition.
     def snake_case_class?
       words = self.split(/ /)
 
@@ -112,7 +112,7 @@ module Tailor
     # Checks to see if the line is the start of a class's definition.
     #
     # @return [Boolean] Returns true if the line contains 'class' and the
-    # second word begins with a uppercase letter.
+    #   second word begins with a uppercase letter.
     def class_line?
       words = self.split(/ /)
       if words[0].eql? "class" and starts_with_uppercase?(words[1])
@@ -126,7 +126,7 @@ module Tailor
     # comment).
     #
     # @return [Boolean] Returns true if the line is not a class, method or
-    # comment.
+    #   comment.
     def statement_line?
       if self.method_line? or self.class_line? or self.comment_line?
         return false
@@ -162,7 +162,7 @@ module Tailor
     # default).
     #
     # @return [Boolean] Returns true if the line length exceeds the allowed
-    # length.
+    #   length.
     def too_long?
       length = self.length
       if length > LINE_LENGTH_MAX

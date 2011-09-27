@@ -92,7 +92,7 @@ module Tailor
     # number of whitespaces at the end of the line.
     #
     # @return [Boolean] Returns true if there's whitespace at the end of the
-    # line.
+    #   line.
 =begin
     def trailing_whitespace?
       count = self.trailing_whitespace_count
@@ -110,7 +110,7 @@ module Tailor
     # that this excludes empty lines that have spaces on them!
     #
     # @return [Number] Returns the number of trailing spaces at the end of the
-    # line.
+    #   line.
     def trailing_whitespace_count
       spaces = self.scan(/(\x20+|\x09+)$/)
 
@@ -203,7 +203,7 @@ module Tailor
     #
     # @param [String] string The string to check for spaces after.
     # @return [Array<Number>] An array that holds the number of spaces after
-    # every time the given string appears in a line.
+    #   every time the given string appears in a line.
     def spaces_after string
       # Get out if this line is a comment line
       if self.comment_line?

@@ -38,7 +38,7 @@ module Tailor
   # Check all files in a directory for style problems.
   #
   # @param [String] project_base_dir Path to a directory to recurse into and
-  # look for problems in.
+  #   look for problems in.
   # @return [Hash] Returns a hash that contains file_name => problem_count.
   def self.check project_base_dir
     # Get the list of files to process
@@ -73,7 +73,7 @@ module Tailor
   # path in order to alleviate any possible confusion.
   #
   # @param [String] base_dir Directory to start recursing from to look for .rb
-  # files.
+  #   files.
   # @return [Array] Sorted list of absolute file paths in the project.
   def self.project_file_list base_dir
     if File.directory? base_dir
@@ -235,7 +235,7 @@ end
   # Prints a summary report that shows which files had how many problems.
   #
   # @param [Hash] files_and_problems Returns a hash that contains
-  # file_name => problem_count.
+  #   file_name => problem_count.
   def self.print_report files_and_problems
     puts ""
     puts "The following files are out of style:"
