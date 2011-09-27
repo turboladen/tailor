@@ -1,28 +1,36 @@
+=== 0.1.4 2011-09-27
+
+* gh-81: Return exit status of 1 if problems were found.
+* Fixed Rakefile and .gemspec. [sergio-fry]
+* Removed dependency on jeweler for gem building.
+* Added -v/--version to bin/tailor.
+* Fixed documenatation indentation.
+
 === 0.1.3 2010-12-14
 
-* Added check for .erb files
+* Added check for .erb files.
 
 === 0.1.2 2010-09-01
 
-* Added ability to check a single file
+* Added ability to check a single file.
 
 === 0.1.0 2010-05-21
 
-* Added checks for spacing around { and }
-* Added check for spacing around ternary ':'
-* Colorized error messages to be red
-* Problem message are now grouped by file line (when multiple problems per line)
-* Temporarily removed reporting of # of trailing whitespaces
+* Added checks for spacing around { and }.
+* Added check for spacing around ternary ':'.
+* Colorized error messages to be red.
+* Problem message are now grouped by file line (when multiple problems per line).
+* Temporarily removed reporting of # of trailing whitespaces.
 
 === 0.0.3 2010-04-26
 
-* Added checks for spacing around commas
-* Added checks for spacing around open/closed parenthesis/brackets
+* Added checks for spacing around commas.
+* Added checks for spacing around open/closed parenthesis/brackets.
 
 === 0.0.2 2010-04-23
 
-* Renamed project from ruby_style_checker to Tailor
-* Added check for lines > 80 characters
+* Renamed project from ruby_style_checker to Tailor.
+* Added check for lines > 80 characters.
 
 === 0.0.1 2010-04-22
 
