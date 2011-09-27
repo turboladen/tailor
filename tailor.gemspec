@@ -21,13 +21,17 @@ Gem::Specification.new do |s|
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.extra_rdoc_files = %w(ChangeLog.rdoc README.rdoc)
   s.homepage = "http://github.com/turboladen/tailor"
-  s.post_install_message = %w(
-Thanks for checking out Tailor.  To run, simply do:
-$ tailor [directory to check]
+  s.post_install_message = <<MSG
+Thanks for checking out tailor.  To check Ruby style, simply do:
+  $ tailor [directory to check]
 
--OR-
-$ tailor [.rb/.erb file to check]
+  -OR-
+
+  $ tailor [.rb/.erb file to check]
+
 For more information on tailor, see http://github.com/turboladen/tailor)
+
+MSG
 
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
