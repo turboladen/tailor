@@ -25,7 +25,7 @@ end
 
 describe Tailor::Indentation do
   include Tailor::Indentation
-  
+
   context "should return the number of leading spaces in a line" do
     it "when the line is not indented" do
       line = create_file_line "def do_something", __LINE__
@@ -45,7 +45,7 @@ describe Tailor::Indentation do
 
   context "should know what level of indentation a line is at" do
     context "for indent expressions" do
-      INDENT_EXPRESSIONS.each do |regexp|
+      Tailor::Indentation::INDENT_EXPRESSIONS.each do |regexp|
         expression = strip_regex(regexp)
 
         it "when the '#{expression }' line is not indented" do
@@ -66,7 +66,7 @@ describe Tailor::Indentation do
     end
 
     context "for outdent expressions" do
-      OUTDENT_EXPRESSIONS.each do |regexp|
+      Tailor::Indentation::OUTDENT_EXPRESSIONS.each do |regexp|
         expression = strip_regex(regexp)
 
         it "when the '#{expression }' line is not indented" do
@@ -87,7 +87,7 @@ describe Tailor::Indentation do
     end
 
     context "for end expressions" do
-      END_EXPRESSIONS.each do |regexp|
+      Tailor::Indentation::END_EXPRESSIONS.each do |regexp|
         expression = strip_regex(regexp)
 
         it "when the '#{expression }' line is not indented" do
@@ -109,7 +109,7 @@ describe Tailor::Indentation do
   end
 
   context "#indent?" do
-    INDENT_EXPRESSIONS.each do |regexp|
+    Tailor::Indentation::INDENT_EXPRESSIONS.each do |regexp|
       expression = strip_regex(regexp)
 
       it "should return true if the line contains #{expression}" do
@@ -120,7 +120,7 @@ describe Tailor::Indentation do
   end
 
   context "#outdent?" do
-    OUTDENT_EXPRESSIONS.each do |regexp|
+    Tailor::Indentation::OUTDENT_EXPRESSIONS.each do |regexp|
       expression = strip_regex(regexp)
 
       it "should return true if the line contains #{expression}" do
@@ -131,7 +131,7 @@ describe Tailor::Indentation do
   end
 
   context "#contains_end?" do
-    END_EXPRESSIONS.each do |regexp|
+    Tailor::Indentation::END_EXPRESSIONS.each do |regexp|
       expression = strip_regex(regexp)
 
       it "should return true if the line contains #{expression}" do
@@ -140,7 +140,7 @@ describe Tailor::Indentation do
       end
     end
   end
-  
+
   context "#at_improper_level?" do
     it "should return true if the line is at the wrong level" do
       proper_level = 1.0
