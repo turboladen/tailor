@@ -2,7 +2,7 @@
 
 * gh-81: Return exit status of 1 if problems were found.
 * Fixed Rakefile and .gemspec. [sergio-fry]
-* Removed dependency on jeweler for gem building.
+* Removed dependency on hoe for gem building.
 * Added -v/--version to bin/tailor.
 * Fixed documenatation indentation.
 
