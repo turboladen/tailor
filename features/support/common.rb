@@ -1,7 +1,3 @@
-$:.unshift(File.dirname(__FILE__) + '/../../lib')
-
-require 'tailor'
-
 include Tailor
 
 module CommonHelpers

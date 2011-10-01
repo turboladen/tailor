@@ -1,4 +1,4 @@
-require 'tailor/spacing'
+require_relative 'spacing'
 
 module Tailor
 

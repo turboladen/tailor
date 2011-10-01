@@ -1,11 +1,7 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) ||
-  $:.include?(File.expand_path(File.dirname(__FILE__)))
-
 require 'fileutils'
 require 'pathname'
-require 'tailor/file_line'
-require 'tailor/spacing'
+require_relative 'tailor/file_line'
+require_relative 'tailor/spacing'
 require_relative 'tailor/line_lexer'
 
 module Tailor
@@ -100,10 +96,22 @@ module Tailor
   # Checks a sing file for all defined styling parameters.
   #
   # @param [String] file_name Path to a file to check styling on.
+  # @param [Hash] options
+  # @option options [String] file_name
+  # @option options [String] source_string
   # @return [Number] Returns the number of errors on the file.
-  def self.find_problems_in file_name
-    source = File.open(file_name, 'r')
-    file_path = Pathname.new(file_name)
+  def self.find_problems_in options
+    if options[:file_name]
+      source = File.open(options[:file_name], 'r')
+      file_path = Pathname.new(options[:file_name])
+    elsif options[:source_string]
+      source = options[:source_string]
+      puts source
+    else
+      # Old way.  Keep for old compat; nuke after proving ripper.
+      source = File.open(options, 'r')
+      file_path = Pathname.new(options)
+    end
 
     puts ""
     puts "#-------------------------------------------------------------------"
@@ -112,16 +120,14 @@ module Tailor
     puts "#-------------------------------------------------------------------"
 
     @problem_count = 0
-    lexed_file = Tailor::LineLexer.new(source).parse
-    p lexed_file
-    
-    lexed_file.each do |token|
-      p token
+    parsed_file = Tailor::LineLexer.new(source).parse
+
+    parsed_file.each do |token|
       line_number = token.first.first
-      
-      if line_number == token.first.first
-        puts line_number
-      end
+      code = token.last
+      puts code
+      not_really_a_line = FileLine.new(code, file_path, line_number)
+      not_really_a_line.spacing_problems
     end
 =begin
     current_level = 0.0

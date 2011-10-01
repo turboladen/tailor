@@ -8,6 +8,7 @@ module Tailor
     end
     
     def check_line_ending
+      puts "meow"
       p @current[@current.length - 1].last
     end
   end

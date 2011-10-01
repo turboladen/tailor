@@ -1,5 +1,5 @@
-require 'tailor'
-require 'tailor/file_line'
+require_relative '../tailor'
+require_relative 'file_line'
 
 module Tailor
 
