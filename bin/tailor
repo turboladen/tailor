@@ -7,35 +7,66 @@ $:.unshift(File.dirname(__FILE__) + '/../lib/') unless
 require 'tailor'
 
 def usage
-  puts "Usage:"
-  puts "\t#{__FILE__} [directory with .rb files]"
-  puts "\t -OR-"
-  puts "\t#{__FILE__} [single .rb file]"
+  <<USEAGE
+  Usage:
+    $ #{File.basename(__FILE__)} [directory with .rb files]"
+      -OR-
+    $ #{File.basename(__FILE__)} [single .rb file]"
+
+USEAGE
+end
+
+def version
+  <<VERSION
+tailor (v#{Tailor::VERSION})
+  A Ruby style checker by @turboladen.
+  http://github.com/turboladen/tailor
+VERSION
+
 end
 
 if ARGV[0].nil?
+  puts version
+  puts
   puts usage
+elsif ARGV[0] =~ /^--version|-v$/
+  puts <<-VERSION
+#{version}
+  _________________________________________________________________________
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+  |     |     |     |     |     |     |     |     |     |     |     |     |
+  |           |           |           |           |           |           |
+  |           1           2           3           4           5           |
+  |                                                                       |
+  -------------------------------------------------------------------------
+
+  VERSION
+
 else
   begin
     path_to_check = ARGV[0]
-    
+
     # Check to make sure we got a file or directory
     unless File.file?(path_to_check) or File.directory?(path_to_check)
       raise "Invalid file or directory: #{path_to_check}"
     end
 
-    if File.file?(path_to_check)
-      files_and_problems = Tailor.check_file path_to_check
+    files_and_problems = if File.file?(path_to_check)
+      Tailor.check_file path_to_check
     elsif File.directory?(path_to_check)
       # Check the requested files/dirs for problems
-      files_and_problems = Tailor.check path_to_check
+      Tailor.check path_to_check
     end
+
+    problem_count = files_and_problems.values.inject(:+)
 
     # Print summary of the problems we found
     Tailor.print_report files_and_problems
-  rescue Exception => ex
+  rescue RuntimeError => ex
     puts ex.message
     puts ex.backtrace
     puts
+  ensure
+    exit(1) if problem_count > 0
   end
 end
