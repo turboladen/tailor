@@ -1,4 +1,10 @@
-require_relative "../../lib/tailor"
+$:.unshift File.dirname(__FILE__) + "/../../lib/tailor"
+require "tailor"
+
+gem 'cucumber'
+require 'cucumber'
+gem 'rspec'
+require 'rspec'
 
 Before do
   @tmp_root = File.dirname(__FILE__) + "/../../tmp"
