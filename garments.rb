@@ -1,5 +1,6 @@
-garment :vertical_whitespace do
-  any_class.must_have(2, :blank_lines, :before) if preceded_by(any_code)
+cloth :vertical_whitespace do
+  any_class.must_have(2, :blank_lines, :before) if preceded_by(:any_code)
+  stitch { classes.must_have(2, :blank_lines, :before) if preceded_by :any_code }
   any_class.must_have(2, :blank_lines, :after) if followed_by(any_code)
   any_method.must_have(1, :blank_line, :before) unless preceded_by(a_full_line_comment)
   any_method.must_have(1, :blank_line, :after)
@@ -11,7 +12,7 @@ garment :vertical_whitespace do
   any_multiline_loop.must_have(1, :blank_line, :before) unless preceded_by(outdented_code, a_full_line_comment)
 end
 
-garment :horizontal_whitespace do
+cloth :horizontal_whitespace do
   a_comma.must_be preceded_by(0, :spaces)
   the_characters(",", ";").must_be followed_by(1, :space)
   a_multiline_method.must_be indented_by(2, :spaces)
@@ -19,9 +20,13 @@ garment :horizontal_whitespace do
   the_operator("=").must_be surrounded_by(1, :space) unless used_in(method_parameters)
 end
 
+cloth :code_line do
+  length.must_be <= 120
+end
+
 garment :rails do
   stitch :vertical_whitespace
-
-  line_length.must <= 120
-
+  stitch :horizontal_whitespace
+  stitch :code_line
 end
+
