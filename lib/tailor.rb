@@ -121,11 +121,12 @@ module Tailor
 
     @problem_count = 0
     parsed_file = Tailor::LineLexer.new(source).parse
+    require 'ap'
+    #ap parsed_file
 
     parsed_file.each do |token|
       line_number = token.first.first
       code = token.last
-      puts code
       not_really_a_line = FileLine.new(code, file_path, line_number)
       not_really_a_line.spacing_problems
     end
