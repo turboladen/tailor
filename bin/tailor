@@ -62,7 +62,7 @@ else
 
     # Print summary of the problems we found
     Tailor.print_report files_and_problems
-  rescue RuntimeError => ex
+  rescue => ex
     puts ex.message
     puts ex.backtrace
     puts

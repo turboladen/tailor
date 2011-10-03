@@ -1,11 +1,11 @@
 require 'fileutils'
 require 'pathname'
+require_relative 'tailor/version'
 require_relative 'tailor/file_line'
 require_relative 'tailor/spacing'
 require_relative 'tailor/line_lexer'
 
 module Tailor
-  VERSION = '0.2.0'
 
   # These operators should always have 1 space around them
   OPERATORS = {
@@ -60,7 +60,7 @@ module Tailor
   def self.check_file file_name
     files_and_problems = Hash.new
 
-    problems = find_problems_in File.expand_path(file_name)
+    problems = find_problems_in(file_name: File.expand_path(file_name))
     files_and_problems[file_name] = problems
 
     files_and_problems
