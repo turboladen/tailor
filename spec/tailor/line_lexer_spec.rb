@@ -35,7 +35,19 @@ describe Tailor::LineLexer do
     it "skips good indentation" do
       source = "class Thing\n  not_indented = 0\nend"
       lexer = Tailor::LineLexer.new source
-      expect { lexer.parse }.to raise_error "hell"
+      expect { lexer.parse }.to_not raise_error "hell"
+    end
+
+    it "skips good multiple indentations" do
+      source = <<-SRC
+class Thing
+  def a_method
+    not_indented = 0
+  end
+end
+SRC
+      lexer = Tailor::LineLexer.new source
+      expect { lexer.parse }.to_not raise_error "hell"
     end
   end
 end

@@ -21,7 +21,7 @@ module Tailor
 
     def on_nl(token)
       @current = current_line(super)
-      check_indentation unless actual_indentation.nil?
+      check_indentation unless actual_indentation.zero?
     end
 
     def current_line(me)
@@ -50,7 +50,7 @@ module Tailor
       if @current.first[1] == :on_sp
         @current.first.last.size
       else
-        nil
+        0
       end
     end
 
