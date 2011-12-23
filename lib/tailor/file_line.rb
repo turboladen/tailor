@@ -175,9 +175,9 @@ module Tailor
     end
 
     #-----------------------------------------------------------------
-    # Private methods
+    # Protected methods
     #-----------------------------------------------------------------
-    private
+    protected
 
     # Prints the file name and line number that the problem occurred on.
     #
