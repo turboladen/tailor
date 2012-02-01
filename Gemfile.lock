@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     tailor (0.1.5)
+      log_switch (>= 0.2.0)
       term-ansicolor (>= 1.0.5)
 
 GEM
@@ -42,6 +43,7 @@ GEM
     i18n (0.6.0)
     json (1.6.1)
     json_pure (1.6.1)
+    log_switch (0.2.0)
     main (4.7.1)
     metric_fu (2.1.1)
       Saikuro (>= 1.1.0)

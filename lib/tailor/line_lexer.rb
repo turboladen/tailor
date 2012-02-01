@@ -1,6 +1,6 @@
 require 'ripper'
 
-module Tailor
+class Tailor
   class LineLexer < Ripper::Lexer
     INDENTATION_SPACE_COUNT = 2
 
@@ -8,61 +8,87 @@ module Tailor
 
     def method_missing(method_name, args)
       puts '---------------'
-      puts method_name.to_s
+      Tailor.log method_name.to_s
       super
     end
 
     def initialize(source)
       @indentation_tracker = []
-      @proper_indentation_level = 0
+      Tailor.log "Setting @proper_indentation[:this_line] to 0."
+      @proper_indentation = {}
+      @proper_indentation[:this_line] = 0
+      @proper_indentation[:next_line] = 0
 
       super source
     end
 
+    def log *args
+      args.first.insert(0, "#{lineno}: ")
+      Tailor.log(*args)
+    end
+
+    # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
-      @current = current_line(super)
+      log "#on_nl"
+      log "Setting @proper_indentation[:this_line] = that of :next_line"
+      @proper_indentation[:this_line] = @proper_indentation[:next_line]
+      log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      @current_line_lexed = current_line(super)
+      log "@current_line_lexed = #{@current_line_lexed}"
       check_indentation unless actual_indentation.zero?
     end
 
     def current_line(me)
-      puts self.lineno
+      log "#current_line.  Line: #{self.lineno}"
       me.find_all { |token| token.first.first == lineno }
     end
 
     def on_ignored_nl(token)
-      @current = current_line(super)
+      log "#on_ignored_nl.  Ignoring line #{lineno}."
+      @current_line_lexed = current_line(super)
     end
 
     def on_kw(token)
+      log "#on_kw."
+
       case token
       when "class"
-        @proper_indentation_level += 1
-        @indentation_tracker << { type: :class, inner_level: @proper_indentation_level }
+        log "#on_kw class.  @proper_indentation[:next_line] += 1"
+        @proper_indentation[:next_line] += 1
+        @indentation_tracker << { type: :class, inner_level: @proper_indentation[:next_line] }
       when "def"
-        @proper_indentation_level += 1
-        @indentation_tracker << { type: :method, inner_level: @proper_indentation_level }
+        log "#on_kw def.  @proper_indentation[:next_line] += 1"
+        @proper_indentation[:next_line] += 1
+        @indentation_tracker << { type: :method, inner_level: @proper_indentation[:next_line] }
       when "end"
-        @proper_indentation_level -= 1
+        log "#on_kw 'end'.  @proper_indentation[:next_line] -= 1"
+        @proper_indentation[:next_line] -= 1
       end
     end
 
     def actual_indentation
-      if @current.first[1] == :on_sp
-        @current.first.last.size
+      log "#actual_indentation"
+
+      log "@current_line_lexed.first[1] = #{@current_line_lexed.first[1]}"
+      if @current_line_lexed.first[1] == :on_sp
+        log "@current_line_lexed.first.last.size = #{@current_line_lexed.first.last.size}"
+        @current_line_lexed.first.last.size
       else
         0
       end
     end
 
     def check_indentation
-      puts "correct indent level: #{@proper_indentation_level}"
-      puts "column level: #{column}"
-      puts "actual indent level: #{actual_indentation}"
+      log "Checking indentation of line #{lineno}."
+      log "  * correct column level: #{@proper_indentation[:this_line]}"
+      log "  * column: #{column}"
+      log "  * actual column level: #{actual_indentation}"
 
       unless @proper_indentation_level == (actual_indentation / INDENTATION_SPACE_COUNT)
-        puts "indentation doesn't match on:"
-        p @current
-        raise "hell"
+        log "  * indentation doesn't match on:"
+        p @current_line_lexed
+        #raise "hell"
       end
     end
   end
