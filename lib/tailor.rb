@@ -1,5 +1,6 @@
 require 'log_switch'
 require_relative 'tailor/runtime_error'
+require_relative 'tailor/line_lexer'
 
 class Tailor
   extend LogSwitch

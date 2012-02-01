@@ -53,4 +53,43 @@ describe Tailor do
       end
     end
   end
+
+  describe "#check_file" do
+    let(:file_contents) { double "file contents" }
+    let(:lexer) { double "LineLexer" }
+
+    it "opens and reads the file" do
+      file_contents.should_receive(:read)
+      File.should_receive(:open).and_return file_contents
+      lexer.stub(:lex)
+      lexer.stub(:problems)
+      Tailor::LineLexer.stub(:new).and_return lexer
+
+      Tailor.check_file("this_file.rb")
+
+      Tailor::LineLexer.unstub(:new)
+    end
+
+    it "lexes the file" do
+      File.stub_chain(:open, :read).and_return file_contents
+      lexer.should_receive(:lex)
+      Tailor::LineLexer.should_receive(:new).with(file_contents).and_return lexer
+      lexer.stub(:problems)
+
+      Tailor.check_file("this_file.rb")
+
+      File.unstub(:open)
+    end
+
+    it "returns the problems as a Hash" do
+      File.stub_chain(:open, :read).and_return file_contents
+      lexer.stub(:lex)
+      lexer.should_receive(:problems)
+      Tailor::LineLexer.stub(:new).and_return lexer
+
+      Tailor.check_file("this_file.rb")
+
+      File.unstub(:open)
+    end
+  end
 end
