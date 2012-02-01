@@ -43,17 +43,11 @@ else
   begin
     stuff_to_check = ARGV[0]
 
-    # Check to make sure we got a file or directory
     unless Tailor.checkable? stuff_to_check
       raise "Invalid file or directory: #{stuff_to_check}"
     end
 
     Tailor.check_style(stuff_to_check)
-
-    #problem_count = files_and_problems.values.inject(:+)
-
-    # Print summary of the problems we found
-    #Tailor.print_report files_and_problems
     Tailor.print_report
   rescue => ex
     puts ex.message
