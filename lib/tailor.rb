@@ -1,5 +1,5 @@
 require 'log_switch'
-
+require_relative 'tailor/runtime_error'
 
 class Tailor
   extend LogSwitch
@@ -16,7 +16,7 @@ class Tailor
         Tailor.log "Checking style of a directory."
         Dir.glob(path).each { |f| check_file(f) }
       else
-        raise "Not sure what this is: #{path}..."
+        raise Tailor::RuntimeError, "Not sure what this is: #{path}..."
       end
     end
 

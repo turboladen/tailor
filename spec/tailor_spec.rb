@@ -17,5 +17,40 @@ describe Tailor do
         Tailor.check_style("a_file.rb")
       end
     end
+
+    context "directory" do
+      before do
+        File.stub(:file?).and_return false
+        File.stub(:directory?).and_return true
+        Dir.stub(:glob).and_return ['first_file.rb', 'second_file.rb']
+      end
+
+      after do
+        File.unstub(:file?)
+        File.unstub(:directory?)
+        Dir.unstub(:glob)
+      end
+
+      it "calls #check_file for each file in the directory" do
+        Tailor.should_receive(:check_file).twice
+        Tailor.check_style("a_directory")
+      end
+    end
+
+    context "not a file or directory" do
+      before do
+        File.stub(:file?).and_return false
+        File.stub(:directory?).and_return false
+      end
+
+      after do
+        File.unstub(:file?)
+        File.unstub(:directory?)
+      end
+
+      it "raises a Tailor::RuntimeError" do
+        expect { Tailor.check_style("something else") }.to raise_error Tailor::RuntimeError
+      end
+    end
   end
 end
