@@ -8,30 +8,42 @@ class Tailor
     end
 
     module ClassMethods
-      def check_style(object)
-        if File.file?(object)
+
+      # @return [Hash]
+      attr_accessor :problems
+
+      # Delegates to
+      def check_style(path)
+        @problems = {}
+
+        if File.file?(path)
           Tailor.log "This is a file!"
-          check_file(object)
-        elsif File.directory?(object)
-          check_directory(object)
+          check_file(path)
+        elsif File.directory?(path)
+          Dir.glob(path).each { |f| check_file(f) }
         else
-          raise "Not sure what this is: #{object}; looks like it's a #{object.class}..."
+          raise "Not sure what this is: #{path}; looks like it's a #{path.class}..."
         end
       end
 
+      # @return [Hash] List of problem types and how many.
       def check_file file
         file_text = File.open(file, 'r').read
         lexer = Tailor::LineLexer.new(file_text)
         lexer.lex
+
+        lexer.problems
       end
 
+      # @todo This could delegate to Ruport (or something similar) for allowing
+      #   output of different types.
       def print_report
-        # Stubbing for now
+        puts "#{problem_count} errors."
       end
 
+      # @return [Fixnum] The number of problems found so far.
       def problem_count
-        # Stubbing for now
-        0
+        problems.empty? ? 0 : problems.values.inject(:+)
       end
 
       # Checks to see if +path_to_check+ is a real file or directory.

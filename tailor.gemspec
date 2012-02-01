@@ -40,6 +40,7 @@ MSG
 
   s.add_runtime_dependency(%q<log_switch>, [">= 0.2.0"])
   s.add_runtime_dependency(%q<term-ansicolor>, [">= 1.0.5"])
+  s.add_development_dependency(%q<aruba>, [">=0"])
   s.add_development_dependency(%q<code_statistics>, ["~> 0.2.13"])
   s.add_development_dependency(%q<cucumber>, [">= 0.10.2"])
   s.add_development_dependency(%q<metric_fu>, [">= 2.0.0"])

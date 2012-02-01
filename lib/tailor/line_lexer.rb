@@ -5,6 +5,7 @@ class Tailor
     INDENTATION_SPACE_COUNT = 2
 
     attr_reader :indentation_tracker
+    attr_accessor :problems
 
     def method_missing(method_name, args)
       puts '---------------'
@@ -50,7 +51,7 @@ class Tailor
     end
 
     def on_kw(token)
-      log "#on_kw."
+      log "#on_kw"
 
       case token
       when "class"
@@ -64,19 +65,29 @@ class Tailor
       when "end"
         log "#on_kw 'end'.  @proper_indentation[:next_line] -= 1"
         @proper_indentation[:next_line] -= 1
+      else
+        log "no rule for keyword '#{token}'..."
       end
     end
 
     def actual_indentation
       log "#actual_indentation"
+      log "token type = #{token_type}"
 
-      log "@current_line_lexed.first[1] = #{@current_line_lexed.first[1]}"
-      if @current_line_lexed.first[1] == :on_sp
-        log "@current_line_lexed.first.last.size = #{@current_line_lexed.first.last.size}"
+      if token_type == :on_sp
+        log "token size = #{token_size}"
         @current_line_lexed.first.last.size
       else
         0
       end
+    end
+
+    def token_type
+      @current_line_lexed.first[1]
+    end
+
+    def token_size
+      @current_line_lexed.first.last.size
     end
 
     def check_indentation
