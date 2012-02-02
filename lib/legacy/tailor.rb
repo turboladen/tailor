@@ -166,7 +166,7 @@ end
       elsif multi_line == true and multi_line_statement
         puts ":multi-line: current = #{current_level}; next = #{next_level}" +
           "; multi_line_next = #{multi_line_next_level}"
-        # Keep current_line and next_line the same
+        # Keep current_lex and next_line the same
       elsif multi_line == true and !multi_line_statement and line.indent?
         #next_level -= 1.0
         puts ":multi-line: current = #{current_level}; next = #{next_level}" +

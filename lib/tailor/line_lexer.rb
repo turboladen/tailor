@@ -3,25 +3,33 @@ require 'ripper'
 class Tailor
   class LineLexer < Ripper::Lexer
     INDENTATION_SPACE_COUNT = 2
+    KEYWORDS_TO_INDENT = [:class, :def, :if, :elsif, :do, :when]
 
-    attr_reader :indentation_tracker
+    attr_reader :indentation_tracker, :keywords
     attr_accessor :problems
 
-    def method_missing(method_name, args)
-      puts '---------------'
-      Tailor.log method_name.to_s
-      super
-    end
 
+    # @param [String] source The source to analyze.
     def initialize(source)
       @indentation_tracker = []
       Tailor.log "Setting @proper_indentation[:this_line] to 0."
       @proper_indentation = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
+      @keywords = []
+
+      @problems = {}
 
       super source
     end
+
+=begin
+    def method_missing(method_name, args)
+      puts '---------------'
+      Tailor.log "Got method: '#{method_name.to_s}'"
+      super
+    end
+=end
 
     def log *args
       args.first.insert(0, "#{lineno}: ")
@@ -33,26 +41,56 @@ class Tailor
       log "#on_nl"
       log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
-      log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
-      @current_line_lexed = current_line(super)
-      log "@current_line_lexed = #{@current_line_lexed}"
-      check_indentation unless actual_indentation.zero?
+      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+      #@current_line_lexed = current_lex(super)
+      #log "@current_line_lexed = #{@current_line_lexed}"
+      #check_indentation unless actual_indentation.zero?
     end
 
-    def current_line(me)
+    # @param [Array] lexed_output The lexed output for the whole file.
+    # @return [Array]
+    def current_lex(lexed_output)
       log "#current_line.  Line: #{self.lineno}"
-      me.find_all { |token| token.first.first == lineno }
+
+      lexed_output.find_all { |token| token.first.first == lineno }
     end
 
     def on_ignored_nl(token)
       log "#on_ignored_nl.  Ignoring line #{lineno}."
-      @current_line_lexed = current_line(super)
+      #@current_line_lexed = current_lex(super)
+      @proper_indentation[:this_line] = @proper_indentation[:next_line]
+      log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
     end
 
     def on_kw(token)
-      log "#on_kw"
+      log "#on_kw. token: #{token}.  token class: #{token.class}"
 
+      @keywords << { keyword: token, line: lineno, column: column }
+
+      if KEYWORDS_TO_INDENT.include?(token.to_sym)
+        log "indent keyword found: #{token}"
+
+        if token.to_sym == (:elsif || :else)
+          @proper_indentation[:this_line] -= 1
+          #@proper_indentation[:next_line] -= 1
+        else
+          @proper_indentation[:next_line] += 1
+        end
+
+        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      end
+
+      if token == "end"
+        log "outdent keyword found: end"
+        @proper_indentation[:this_line] -= 1
+        @proper_indentation[:next_line] -= 1
+        log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      end
+
+
+=begin
       case token
       when "class"
         log "#on_kw class.  @proper_indentation[:next_line] += 1"
@@ -68,6 +106,10 @@ class Tailor
       else
         log "no rule for keyword '#{token}'..."
       end
+=end
+
+      log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
+      log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
     end
 
     def actual_indentation

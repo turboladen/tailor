@@ -1,9 +1,12 @@
 require 'log_switch'
+require 'awesome_print'
 require_relative 'tailor/runtime_error'
 require_relative 'tailor/line_lexer'
 
 class Tailor
   extend LogSwitch
+
+  self.log = true
 
   class << self
     # Main entry-point method.
@@ -11,11 +14,14 @@ class Tailor
     # @param [String] path File or directory to check files in.
     def check_style(path)
       if File.file?(path)
-        Tailor.log "Checking style of a single file."
+        Tailor.log "Checking style of a single file: #{path}."
         check_file(path)
       elsif File.directory?(path)
-        Tailor.log "Checking style of a directory."
-        Dir.glob(path).each { |f| check_file(f) }
+        Tailor.log "Checking style of directory: #{path}"
+        Dir.glob(path).each do |f|
+          Tailor.log "Checking style of file: #{path}."
+          check_file(f)
+        end
       else
         raise Tailor::RuntimeError, "Not sure what this is: #{path}..."
       end
@@ -28,6 +34,7 @@ class Tailor
       file_text = File.open(file, 'r').read
       lexer = Tailor::LineLexer.new(file_text)
       lexer.lex
+      puts "keywords:"
       problems.merge(lexer.problems)
     end
 
