@@ -1,6 +1,8 @@
 require_relative 'version'
 
 class Tailor
+
+  # Just some methods to get stuff out of the CLI file.
   module CLIHelpers
 
     # @return [String]

@@ -11,7 +11,6 @@ opts = Trollop.options do
   version Tailor::CLIHelpers.version
 end
 
-#p opts
 stuff_to_check = ARGV[0]
 
 if stuff_to_check.nil?
