@@ -4,6 +4,7 @@ PATH
     tailor (1.0.0.alpha)
       log_switch (>= 0.2.0)
       term-ansicolor (>= 1.0.5)
+      trollop
 
 GEM
   remote: http://rubygems.org/
@@ -120,6 +121,7 @@ GEM
     simplecov-html (0.5.3)
     syntax (1.0.0)
     term-ansicolor (1.0.7)
+    trollop (1.16.2)
     yard (0.7.5)
 
 PLATFORMS

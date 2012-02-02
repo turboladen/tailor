@@ -1,59 +1,35 @@
 #!/usr/bin/env ruby
 
+require 'trollop'
 require_relative '../lib/tailor'
-require_relative '../lib/tailor/version'
+require_relative '../lib/tailor/cli_helpers'
+require_relative '../lib/tailor/runtime_error'
 
-def usage
-  <<USEAGE
-  Usage:
-    $ #{File.basename(__FILE__)} [directory with .rb files]"
-      -OR-
-    $ #{File.basename(__FILE__)} [single .rb file]"
 
-USEAGE
+opts = Trollop.options do
+  banner Tailor::CLIHelpers.banner
+  version Tailor::CLIHelpers.version
 end
 
-def version
-  <<VERSION
-tailor (v#{Tailor::VERSION})
-  A Ruby style checker by @turboladen.
-  http://github.com/turboladen/tailor
-VERSION
+#p opts
+stuff_to_check = ARGV[0]
 
+if stuff_to_check.nil?
+  puts Tailor::CLIHelpers.banner
+  exit
 end
 
-if ARGV[0].nil?
-  puts version
-  puts
-  puts usage
-elsif ARGV[0] =~ /^--version|-v$/
-  puts <<-VERSION
-#{version}
-  _________________________________________________________________________
-  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-  |     |     |     |     |     |     |     |     |     |     |     |     |
-  |           |           |           |           |           |           |
-  |           1           2           3           4           5           |
-  |                                                                       |
-  -------------------------------------------------------------------------
-
-  VERSION
-
-else
-  begin
-    stuff_to_check = ARGV[0]
-
-    unless Tailor.checkable? stuff_to_check
-      raise "Invalid file or directory: #{stuff_to_check}"
-    end
-
-    Tailor.check_style(stuff_to_check)
-    Tailor.print_report
-  rescue => ex
-    puts ex.message
-    puts ex.backtrace
-    puts
-  ensure
-    exit(1) if Tailor.problem_count > 0
+begin
+  unless Tailor.checkable? stuff_to_check
+    raise Tailor::RuntimeError, "Invalid file or directory: #{stuff_to_check}"
   end
+
+  Tailor.check_style(stuff_to_check)
+  Tailor.print_report
+rescue Tailor::RuntimeError => ex
+  puts ex.message
+  puts ex.backtrace.join("\n")
+  puts
+ensure
+  exit(1) if Tailor.problem_count > 0
 end
