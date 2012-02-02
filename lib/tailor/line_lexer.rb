@@ -5,11 +5,24 @@ class Tailor
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   class LineLexer < Ripper::Lexer
     KEYWORDS_TO_INDENT = [
-      :class, :module, :def, :if, :elsif, :else, :do, :when, :begin, :rescue,
-      :ensure, :case, :while
+       'begin',
+      'case',
+      'class',
+      'def',
+      'do',
+      'else',
+      'elsif',
+      'ensure',
+      'if',
+      'module',
+      'rescue',
+      'unless',
+      'when',
+      'while'
     ]
     CONTINUATION_KEYWORDS = [
-      :elsif, :else, :when, :rescue, :ensure
+      #:elsif, :else, :when, :rescue, :ensure
+      'elsif', 'else', 'when', 'rescue', 'ensure'
     ]
 
     attr_reader :indentation_tracker
@@ -32,13 +45,13 @@ class Tailor
     end
 
     def log(*args)
-      args.first.insert(0, "#{lineno}: ")
+      args.first.insert(0, "#{lineno}[#{column}]: ")
       Tailor.log(*args)
     end
 
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
-      log "#on_nl"
+      log "nl"
 
       # check indentation
       c = current_lex(super)
@@ -70,20 +83,31 @@ class Tailor
     end
 
     def on_ignored_nl(token)
-      log "#on_ignored_nl.  Ignoring line #{lineno}."
-      #@current_line_lexed = current_lex(super)
+      log "ignored_nl."
+
+      # check indentation
+      c = current_lex(super)
+      indentation = current_line_indent(c)
+      if indentation != @proper_indentation[:this_line]
+        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
+        log message
+        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+      end
+
+      # prep for next line
+      log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
-      log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
     end
 
     def on_kw(token)
-      log "#on_kw. token: #{token}.  token class: #{token.class}"
+      log "kw. token: #{token}"
 
-      if KEYWORDS_TO_INDENT.include?(token.to_sym)
+      if KEYWORDS_TO_INDENT.include?(token)
         log "indent keyword found: #{token}"
+        @indent_keyword_line = lineno
 
-        if CONTINUATION_KEYWORDS.include? token.to_sym
+        if CONTINUATION_KEYWORDS.include? token
           @proper_indentation[:this_line] -= @config[:spaces]
         else
           @proper_indentation[:next_line] += @config[:spaces]
@@ -94,7 +118,11 @@ class Tailor
 
       if token == "end"
         log "outdent keyword found: end"
-        @proper_indentation[:this_line] -= @config[:spaces]
+
+        unless single_line_indent_statement?
+          @proper_indentation[:this_line] -= @config[:spaces]
+        end
+
         @proper_indentation[:next_line] -= @config[:spaces]
         log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -106,8 +134,12 @@ class Tailor
       super(token)
     end
 
+    def single_line_indent_statement?
+      @indent_keyword_line == lineno
+    end
+
     def on_lbracket(token)
-      log "#on_lbracket"
+      log "lbracket"
       @bracket_start_line = lineno
       @proper_indentation[:next_line] += @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -115,11 +147,13 @@ class Tailor
     end
 
     def on_rbracket(token)
-      log "#on_rbracket"
+      log "rbracket"
 
       if multiline_brackets?
         @proper_indentation[:this_line] -= @config[:spaces]
       end
+
+      @bracket_start_line = nil
 
       @proper_indentation[:next_line] -= @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -127,7 +161,7 @@ class Tailor
     end
 
     def on_lbrace(token)
-      log "#on_lbrace"
+      log "lbrace"
       @brace_start_line = lineno
       @proper_indentation[:next_line] += @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -135,23 +169,47 @@ class Tailor
     end
 
     def on_rbrace(token)
-      log "#on_rbrace"
+      log "rbrace"
 
       if multiline_braces?
+        log "multiline braces!"
         @proper_indentation[:this_line] -= @config[:spaces]
       end
 
-      @proper_indentation[:next_line] -= @config[:spaces]
+      @brace_start_line = nil
+
+      # Ripper won't match a closing } in #{} so we have to track if we're
+      # inside of one.  If we are, don't decrement then :next_line.
+      unless @embexpr_beg
+        @proper_indentation[:next_line] -= @config[:spaces]
+      end
+
+      @embexpr_beg = false
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
 
     def multiline_braces?
-      @brace_start_line < lineno
+      if @brace_start_line.nil?
+        false
+      else
+        @brace_start_line < lineno
+      end
     end
 
     def multiline_brackets?
       @bracket_start_line < lineno
+    end
+
+    def on_embexpr_beg(token)
+      log "embexpr_beg"
+      @embexpr_beg = true
+      super(token)
+    end
+
+    def on_embexpr_end(token)
+      log "embexpr_end: token: '#{token}'"
+      super(token)
     end
   end
 end
