@@ -15,18 +15,19 @@ class Tailor
     attr_accessor :problems
 
 
-    # @param [String] source The source to analyze.
-    def initialize(source)
+    # @param [String] file_name The name of the file to read and analyze.
+    def initialize(file_name)
+      @file_name = file_name
+      file_text = File.open(@file_name, 'r').read
       @indentation_tracker = []
       Tailor.log "Setting @proper_indentation[:this_line] to 0."
       @proper_indentation = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
       @keywords = []
-
       @problems = []
 
-      super source
+      super file_text
     end
 
     def log *args
@@ -44,7 +45,7 @@ class Tailor
       if indentation != @proper_indentation[:this_line]
         message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
         log message
-        @problems << { type: :indentation, line: lineno, message: message }
+        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
       end
 
       # prep for next line

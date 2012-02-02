@@ -18,9 +18,9 @@ class Tailor
         check_file(path)
       elsif File.directory?(path)
         Tailor.log "Checking style of directory: #{path}"
-        Dir.glob(path).each do |f|
-          Tailor.log "Checking style of file: #{path}."
-          check_file(f)
+        Dir.glob("#{path}/**/*").each do |child|
+          Tailor.log "Checking style of file: #{child}."
+          check_style(child)
         end
       else
         raise Tailor::RuntimeError, "Not sure what this is: #{path}..."
@@ -31,8 +31,7 @@ class Tailor
     #
     # @param [String] file The file to open, read, and check.
     def check_file file
-      file_text = File.open(file, 'r').read
-      lexer = Tailor::LineLexer.new(file_text)
+      lexer = Tailor::LineLexer.new(file)
       lexer.lex
        p lexer.problems
       problems.concat(lexer.problems)
@@ -43,6 +42,7 @@ class Tailor
     def print_report
       puts "Problems:"
       problems.each { |problem| p problem }
+      puts "problem count: #{problem_count}"
     end
 
     # @return [Hash]
