@@ -3,7 +3,13 @@ require 'ripper'
 class Tailor
   class LineLexer < Ripper::Lexer
     INDENTATION_SPACE_COUNT = 2
-    KEYWORDS_TO_INDENT = [:class, :def, :if, :elsif, :do, :when]
+    KEYWORDS_TO_INDENT = [
+      :class, :module, :def, :if, :elsif, :else, :do, :when, :begin, :rescue,
+      :ensure, :case, :while
+    ]
+    CONTINUATION_KEYWORDS = [
+      :elsif, :else, :when, :rescue, :ensure
+    ]
 
     attr_reader :indentation_tracker, :keywords
     attr_accessor :problems
@@ -18,18 +24,10 @@ class Tailor
       @proper_indentation[:next_line] = 0
       @keywords = []
 
-      @problems = {}
+      @problems = []
 
       super source
     end
-
-=begin
-    def method_missing(method_name, args)
-      puts '---------------'
-      Tailor.log "Got method: '#{method_name.to_s}'"
-      super
-    end
-=end
 
     def log *args
       args.first.insert(0, "#{lineno}: ")
@@ -39,12 +37,20 @@ class Tailor
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
       log "#on_nl"
+
+      # check indentation
+      c = current_lex(super)
+      indentation = current_line_indent(c)
+      if indentation != @proper_indentation[:this_line]
+        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
+        log message
+        @problems << { type: :indentation, line: lineno, message: message }
+      end
+
+      # prep for next line
       log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
       log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
-      #@current_line_lexed = current_lex(super)
-      #log "@current_line_lexed = #{@current_line_lexed}"
-      #check_indentation unless actual_indentation.zero?
     end
 
     # @param [Array] lexed_output The lexed output for the whole file.
@@ -53,6 +59,12 @@ class Tailor
       log "#current_line.  Line: #{self.lineno}"
 
       lexed_output.find_all { |token| token.first.first == lineno }
+    end
+
+    # @return [Fixnum] Number of the first non-space (:on_sp) token.
+    def current_line_indent(lexed_line_output)
+      first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
+      first_non_space_element.first.last
     end
 
     def on_ignored_nl(token)
@@ -71,11 +83,11 @@ class Tailor
       if KEYWORDS_TO_INDENT.include?(token.to_sym)
         log "indent keyword found: #{token}"
 
-        if token.to_sym == (:elsif || :else)
-          @proper_indentation[:this_line] -= 1
-          #@proper_indentation[:next_line] -= 1
+        #if token.to_sym == (:elsif || :else || :when)
+        if CONTINUATION_KEYWORDS.include? token.to_sym
+          @proper_indentation[:this_line] -= INDENTATION_SPACE_COUNT
         else
-          @proper_indentation[:next_line] += 1
+          @proper_indentation[:next_line] += INDENTATION_SPACE_COUNT
         end
 
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -83,12 +95,11 @@ class Tailor
 
       if token == "end"
         log "outdent keyword found: end"
-        @proper_indentation[:this_line] -= 1
-        @proper_indentation[:next_line] -= 1
+        @proper_indentation[:this_line] -= INDENTATION_SPACE_COUNT
+        @proper_indentation[:next_line] -= INDENTATION_SPACE_COUNT
         log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       end
-
 
 =begin
       case token
@@ -110,6 +121,8 @@ class Tailor
 
       log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
+
+      super(token)
     end
 
     def actual_indentation
@@ -138,11 +151,11 @@ class Tailor
       log "  * column: #{column}"
       log "  * actual column level: #{actual_indentation}"
 
-      unless @proper_indentation_level == (actual_indentation / INDENTATION_SPACE_COUNT)
-        log "  * indentation doesn't match on:"
-        p @current_line_lexed
-        #raise "hell"
-      end
+      #unless @proper_indentation_level == (actual_indentation / INDENTATION_SPACE_COUNT)
+      #  log "  * indentation doesn't match on:"
+      #  p @current_line_lexed
+      #  #raise "hell"
+      #end
     end
   end
 end

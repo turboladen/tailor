@@ -34,24 +34,25 @@ class Tailor
       file_text = File.open(file, 'r').read
       lexer = Tailor::LineLexer.new(file_text)
       lexer.lex
-      puts "keywords:"
-      problems.merge(lexer.problems)
+       p lexer.problems
+      problems.concat(lexer.problems)
     end
 
     # @todo This could delegate to Ruport (or something similar) for allowing
     #   output of different types.
     def print_report
-      puts "#{problem_count} errors."
+      puts "Problems:"
+      problems.each { |problem| p problem }
     end
 
     # @return [Hash]
     def problems
-      @problems ||= {}
+      @problems ||= []
     end
 
     # @return [Fixnum] The number of problems found so far.
     def problem_count
-      problems.empty? ? 0 : problems.values.inject(:+)
+      problems.size
     end
 
     # Checks to see if +path_to_check+ is a real file or directory.
