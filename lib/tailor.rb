@@ -21,13 +21,14 @@ class Tailor
       end
     end
 
-    # @return [Hash] List of problem types and how many.
+    # Adds problems found from Lexing to the {problems} list.
+    #
+    # @param [String] file The file to open, read, and check.
     def check_file file
       file_text = File.open(file, 'r').read
       lexer = Tailor::LineLexer.new(file_text)
       lexer.lex
-
-      lexer.problems
+      problems.merge(lexer.problems)
     end
 
     # @todo This could delegate to Ruport (or something similar) for allowing

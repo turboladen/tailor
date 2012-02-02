@@ -64,6 +64,7 @@ describe Tailor do
       lexer.stub(:lex)
       lexer.stub(:problems)
       Tailor::LineLexer.stub(:new).and_return lexer
+      Tailor.stub_chain(:problems, :merge)
 
       Tailor.check_file("this_file.rb")
 
@@ -73,19 +74,21 @@ describe Tailor do
     it "lexes the file" do
       File.stub_chain(:open, :read).and_return file_contents
       lexer.should_receive(:lex)
-      Tailor::LineLexer.should_receive(:new).with(file_contents).and_return lexer
       lexer.stub(:problems)
+      Tailor::LineLexer.should_receive(:new).with(file_contents).and_return lexer
+      Tailor.stub_chain(:problems, :merge)
 
       Tailor.check_file("this_file.rb")
 
       File.unstub(:open)
     end
 
-    it "returns the problems as a Hash" do
+    it "adds problems for the file to the main list of problems" do
       File.stub_chain(:open, :read).and_return file_contents
       lexer.stub(:lex)
-      lexer.should_receive(:problems)
+      lexer.stub(:problems).and_return Hash.new
       Tailor::LineLexer.stub(:new).and_return lexer
+      Tailor.problems.should_receive(:merge).with({})
 
       Tailor.check_file("this_file.rb")
 
