@@ -108,6 +108,7 @@ class Tailor
 
     def on_lbracket(token)
       log "#on_lbracket"
+      @bracket_start_line = lineno
       @proper_indentation[:next_line] += @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
@@ -115,6 +116,11 @@ class Tailor
 
     def on_rbracket(token)
       log "#on_rbracket"
+
+      if multiline_brackets?
+        @proper_indentation[:this_line] -= @config[:spaces]
+      end
+
       @proper_indentation[:next_line] -= @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
@@ -130,10 +136,22 @@ class Tailor
 
     def on_rbrace(token)
       log "#on_rbrace"
-      @brace_end_line = lineno
+
+      if multiline_braces?
+        @proper_indentation[:this_line] -= @config[:spaces]
+      end
+
       @proper_indentation[:next_line] -= @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
+    end
+
+    def multiline_braces?
+      @brace_start_line < lineno
+    end
+
+    def multiline_brackets?
+      @bracket_start_line < lineno
     end
   end
 end
