@@ -30,7 +30,7 @@ class Tailor
       super file_text
     end
 
-    def log *args
+    def log(*args)
       args.first.insert(0, "#{lineno}: ")
       Tailor.log(*args)
     end
@@ -102,61 +102,10 @@ class Tailor
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       end
 
-=begin
-      case token
-      when "class"
-        log "#on_kw class.  @proper_indentation[:next_line] += 1"
-        @proper_indentation[:next_line] += 1
-        @indentation_tracker << { type: :class, inner_level: @proper_indentation[:next_line] }
-      when "def"
-        log "#on_kw def.  @proper_indentation[:next_line] += 1"
-        @proper_indentation[:next_line] += 1
-        @indentation_tracker << { type: :method, inner_level: @proper_indentation[:next_line] }
-      when "end"
-        log "#on_kw 'end'.  @proper_indentation[:next_line] -= 1"
-        @proper_indentation[:next_line] -= 1
-      else
-        log "no rule for keyword '#{token}'..."
-      end
-=end
-
       log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
       super(token)
-    end
-
-    def actual_indentation
-      log "#actual_indentation"
-      log "token type = #{token_type}"
-
-      if token_type == :on_sp
-        log "token size = #{token_size}"
-        @current_line_lexed.first.last.size
-      else
-        0
-      end
-    end
-
-    def token_type
-      @current_line_lexed.first[1]
-    end
-
-    def token_size
-      @current_line_lexed.first.last.size
-    end
-
-    def check_indentation
-      log "Checking indentation of line #{lineno}."
-      log "  * correct column level: #{@proper_indentation[:this_line]}"
-      log "  * column: #{column}"
-      log "  * actual column level: #{actual_indentation}"
-
-      #unless @proper_indentation_level == (actual_indentation / INDENTATION_SPACE_COUNT)
-      #  log "  * indentation doesn't match on:"
-      #  p @current_line_lexed
-      #  #raise "hell"
-      #end
     end
   end
 end
