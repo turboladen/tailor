@@ -1,3 +1,4 @@
+require 'yaml'
 require 'log_switch'
 require 'awesome_print'
 require_relative 'tailor/runtime_error'
@@ -33,7 +34,7 @@ class Tailor
     def check_file file
       lexer = Tailor::LineLexer.new(file)
       lexer.lex
-       p lexer.problems
+      p lexer.problems
       problems.concat(lexer.problems)
     end
 
@@ -61,6 +62,11 @@ class Tailor
     # @return [Boolean]
     def checkable? path_to_check
       File.file?(path_to_check) || File.directory?(path_to_check)
+    end
+
+    # Loads the YAML config file.
+    def config
+      @config ||= YAML.load_file 'tailor_config.yaml'
     end
   end
 end

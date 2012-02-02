@@ -1,8 +1,9 @@
 require 'ripper'
 
 class Tailor
+
+  # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   class LineLexer < Ripper::Lexer
-    INDENTATION_SPACE_COUNT = 2
     KEYWORDS_TO_INDENT = [
       :class, :module, :def, :if, :elsif, :else, :do, :when, :begin, :rescue,
       :ensure, :case, :while
@@ -11,7 +12,7 @@ class Tailor
       :elsif, :else, :when, :rescue, :ensure
     ]
 
-    attr_reader :indentation_tracker, :keywords
+    attr_reader :indentation_tracker
     attr_accessor :problems
 
 
@@ -19,14 +20,14 @@ class Tailor
     def initialize(file_name)
       @file_name = file_name
       file_text = File.open(@file_name, 'r').read
-      @indentation_tracker = []
+
       Tailor.log "Setting @proper_indentation[:this_line] to 0."
       @proper_indentation = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
-      @keywords = []
       @problems = []
 
+      @config = Tailor.config[:indentation]
       super file_text
     end
 
@@ -79,16 +80,13 @@ class Tailor
     def on_kw(token)
       log "#on_kw. token: #{token}.  token class: #{token.class}"
 
-      @keywords << { keyword: token, line: lineno, column: column }
-
       if KEYWORDS_TO_INDENT.include?(token.to_sym)
         log "indent keyword found: #{token}"
 
-        #if token.to_sym == (:elsif || :else || :when)
         if CONTINUATION_KEYWORDS.include? token.to_sym
-          @proper_indentation[:this_line] -= INDENTATION_SPACE_COUNT
+          @proper_indentation[:this_line] -= @config[:spaces]
         else
-          @proper_indentation[:next_line] += INDENTATION_SPACE_COUNT
+          @proper_indentation[:next_line] += @config[:spaces]
         end
 
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
@@ -96,8 +94,8 @@ class Tailor
 
       if token == "end"
         log "outdent keyword found: end"
-        @proper_indentation[:this_line] -= INDENTATION_SPACE_COUNT
-        @proper_indentation[:next_line] -= INDENTATION_SPACE_COUNT
+        @proper_indentation[:this_line] -= @config[:spaces]
+        @proper_indentation[:next_line] -= @config[:spaces]
         log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
         log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       end
@@ -105,6 +103,36 @@ class Tailor
       log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
+      super(token)
+    end
+
+    def on_lbracket(token)
+      log "#on_lbracket"
+      @proper_indentation[:next_line] += @config[:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    def on_rbracket(token)
+      log "#on_rbracket"
+      @proper_indentation[:next_line] -= @config[:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    def on_lbrace(token)
+      log "#on_lbrace"
+      @brace_start_line = lineno
+      @proper_indentation[:next_line] += @config[:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    def on_rbrace(token)
+      log "#on_rbrace"
+      @brace_end_line = lineno
+      @proper_indentation[:next_line] -= @config[:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
   end
