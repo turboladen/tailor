@@ -95,4 +95,57 @@ describe Tailor do
       File.unstub(:open)
     end
   end
+
+  describe "#print_report" do
+    pending
+  end
+
+  describe "#problems" do
+    specify { Tailor.problems.should be_a Hash }
+  end
+
+  describe "#problem_count" do
+    context "#problems is empty" do
+      it "returns 0" do
+        Tailor.instance_variable_set(:@problems, {})
+        Tailor.problem_count.should == 0
+      end
+    end
+
+    context "#problems contains valid values" do
+      it "adds the number of each problem together" do
+        probs = { "hunger" => 1, "thirst" => 2 }
+        Tailor.instance_variable_set(:@problems, probs)
+        Tailor.problem_count.should == 3
+      end
+    end
+  end
+
+  describe "#checkable?" do
+    context "parameter is a file" do
+      before { File.stub(:file?).and_return true }
+      after { File.unstub(:file?) }
+      specify { Tailor.checkable?("some_file.rb").should be_true }
+    end
+
+    context "parameter is a directory" do
+      before { File.stub(:directory?).and_return true }
+      after { File.unstub(:directory?) }
+      specify { Tailor.checkable?("some_directory").should be_true }
+    end
+
+    context "parameter is neither a file nor a directory" do
+      before do
+        File.stub(:file?).and_return false
+        File.stub(:directory?).and_return false
+      end
+
+      after do
+        File.unstub(:file?)
+        File.unstub(:directory?)
+      end
+
+      specify { Tailor.checkable?("some_other_thing").should be_false }
+    end
+  end
 end
