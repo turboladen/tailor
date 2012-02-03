@@ -64,9 +64,20 @@ class Tailor
       File.file?(path_to_check) || File.directory?(path_to_check)
     end
 
-    # Loads the YAML config file.
+    # Tries to load a config file from ~/.tailor, then fails back on default
+    # settings.
     def config
-      @config ||= YAML.load_file 'tailor_config.yaml'
+      user_config_file =
+        File.expand_path(Dir.home + '/.tailor')
+      puts "user config file: #{user_config_file}"
+      default_config_file =
+        File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml')
+
+      @config ||= if File.exists? user_config_file
+        YAML.load_file user_config_file
+                  else
+        YAML.load_file default_config_file
+      end
     end
   end
 end
