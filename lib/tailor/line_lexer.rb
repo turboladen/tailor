@@ -126,34 +126,38 @@ class Tailor
       log "kw. token: #{token}"
 
       if KEYWORDS_TO_INDENT.include?(token)
-        log "indent keyword found: #{token}"
-        @indent_keyword_line = lineno
-
-        if CONTINUATION_KEYWORDS.include? token
-          @proper_indentation[:this_line] -= @config[:spaces]
-        else
-          @proper_indentation[:next_line] += @config[:spaces]
-        end
-
-        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        update_indentation_expectations(token)
       end
 
       if token == "end"
-        log "outdent keyword found: end"
-
-        unless single_line_indent_statement?
-          @proper_indentation[:this_line] -= @config[:spaces]
-        end
-
-        @proper_indentation[:next_line] -= @config[:spaces]
-        log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
-        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        update_outdentation_expectations
       end
 
       log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
       super(token)
+    end
+
+    def update_outdentation_expectations
+      log "outdent keyword found: end"
+
+      unless single_line_indent_statement?
+        @proper_indentation[:this_line] -= @config[:spaces]
+      end
+
+      @proper_indentation[:next_line] -= @config[:spaces]
+    end
+
+    def update_indentation_expectations(token)
+      log "indent keyword found: #{token}"
+      @indent_keyword_line = lineno
+
+      if CONTINUATION_KEYWORDS.include? token
+        @proper_indentation[:this_line] -= @config[:spaces]
+      else
+        @proper_indentation[:next_line] += @config[:spaces]
+      end
     end
 
     def single_line_indent_statement?
