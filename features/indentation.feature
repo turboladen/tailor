@@ -15,7 +15,8 @@ Feature: Indentation check
       end
       """
     When I successfully run `tailor my_class.rb`
-    Then the output should contain "0 errors."
+    Then the output should contain "problem count: 0"
+    And the exit status should be 0
 
   @problems
   Scenario: Class keyword indented 1 space
@@ -27,6 +28,7 @@ Feature: Indentation check
         include SomeModule
       end
       """
-    When I successfully run `tailor my_class.rb`
-    Then the output should contain "1 error."
+    When I run `tailor my_class.rb`
+    Then the output should contain "problem count: 1"
+    And the exit status should be 1
 
