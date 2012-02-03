@@ -55,7 +55,7 @@ class MyClass
 end
 }
 
-INDENT_OK[:require_class_singelstatement_def] = %Q{
+INDENT_OK[:require_class_singlestatement_def] = %Q{
 require 'time'
 
 class MyClass
@@ -66,7 +66,7 @@ class MyClass
 end
 }
 
-INDENT_OK[:require_class_singelstatement_def_content] = %Q{
+INDENT_OK[:require_class_singlestatement_def_content] = %Q{
 require 'time'
 
 class MyClass

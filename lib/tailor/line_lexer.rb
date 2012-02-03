@@ -84,13 +84,17 @@ class Tailor
     end
 
      def line_of_only_spaces?(lexed_line_output)
-      first_space_element = lexed_line_output.find do |e|
-        e[1] == (:on_sp || :on_nl || :on_ignored_nl)
+      first_non_space_element = lexed_line_output.find do |e|
+        e[1] != (:on_sp && :on_nl && :on_ignored_nl)
       end
 
-      log "first non space element #{first_space_element}"
+      log "first non-space element '#{first_non_space_element}'"
 
-      first_space_element.nil? ? false : true
+     if first_non_space_element.nil? || first_non_space_element.empty?
+       true
+     else
+       false
+     end
     end
 
     def on_ignored_nl(token)
