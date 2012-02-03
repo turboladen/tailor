@@ -33,7 +33,7 @@ class Tailor
       file_text  = File.open(@file_name, 'r').read
 
       Tailor.log "Setting @proper_indentation[:this_line] to 0."
-      @proper_indentation             = {}
+      @proper_indentation             = { }
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
       @problems                       = []
@@ -51,7 +51,7 @@ class Tailor
     def on_nl(token)
       log "nl"
 
-      c = current_lex(super)
+      c           = current_lex(super)
 
       # check indentation
       indentation = current_line_indent(c)
@@ -83,25 +83,25 @@ class Tailor
       first_non_space_element.first.last
     end
 
-     def line_of_only_spaces?(lexed_line_output)
+    def line_of_only_spaces?(lexed_line_output)
       first_non_space_element = lexed_line_output.find do |e|
         e[1] != (:on_sp && :on_nl && :on_ignored_nl)
       end
 
       log "first non-space element '#{first_non_space_element}'"
 
-     if first_non_space_element.nil? || first_non_space_element.empty?
-       true
-     else
-       false
-     end
+      if first_non_space_element.nil? || first_non_space_element.empty?
+        true
+      else
+        false
+      end
     end
 
     def on_ignored_nl(token)
       log "ignored_nl."
 
       # check indentation
-      c           = current_lex(super)
+      c = current_lex(super)
       p c
 
       if not line_of_only_spaces?(c)
