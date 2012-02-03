@@ -4,31 +4,29 @@ Feature: Indentation check
   I want to check the indentation of my Ruby code
   So that I follow Ruby indentation conventions.
 
-  @no_problems
-  Scenario: File without problems, using require and class
-    Given a file named "my_class.rb" with:
-      """
-      require 'some_file'
+# Notice the newline after the end keyword--line checking only occurs when
+# we've hit the end of the line; since there's no signal for this, the
+# error doesn't get caught unless there's that newline there.
 
-      class MyClass
-        include SomeModule
-      end
-      """
-    When I successfully run `tailor my_class.rb`
+  Scenario Outline: new
+    Given <File> exists
+    When I successfully run `tailor <File>`
     Then the output should contain "problem count: 0"
     And the exit status should be 0
 
-  @problems
-  Scenario: Class keyword indented 1 space
-    Given a file named "my_class.rb" with:
-      """
-      require 'some_file'
+  Examples: Focus on class
+    | File                                        |
+    | indent/ok/class                             |
+    | indent/ok/nested_class                      |
+    | indent/ok/class_empty                       |
+    | indent/ok/class_include                     |
+    | indent/ok/require_class_include             |
+    | indent/ok/require_class_include_def         |
+    | indent/ok/require_class_include_def_content |
 
-       class MyClass
-        include SomeModule
-      end
-      """
-    When I run `tailor my_class.rb`
-    Then the output should contain "problem count: 1"
-    And the exit status should be 1
+  Examples: Focus on def
+    | File                 |
+    | indent/ok/def        |
+    | indent/ok/def_empty  |
+    | indent/ok/nested_def |
 

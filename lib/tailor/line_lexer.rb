@@ -4,8 +4,8 @@ class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   class LineLexer < Ripper::Lexer
-    KEYWORDS_TO_INDENT = [
-       'begin',
+    KEYWORDS_TO_INDENT    = [
+      'begin',
       'case',
       'class',
       'def',
@@ -21,24 +21,22 @@ class Tailor
       'while'
     ]
     CONTINUATION_KEYWORDS = [
-      #:elsif, :else, :when, :rescue, :ensure
       'elsif', 'else', 'when', 'rescue', 'ensure'
     ]
 
     attr_reader :indentation_tracker
     attr_accessor :problems
 
-
     # @param [String] file_name The name of the file to read and analyze.
     def initialize(file_name)
       @file_name = file_name
-      file_text = File.open(@file_name, 'r').read
+      file_text  = File.open(@file_name, 'r').read
 
       Tailor.log "Setting @proper_indentation[:this_line] to 0."
-      @proper_indentation = {}
+      @proper_indentation             = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
-      @problems = []
+      @problems                       = []
 
       @config = Tailor.config[:indentation]
       super file_text
@@ -53,8 +51,9 @@ class Tailor
     def on_nl(token)
       log "nl"
 
-      # check indentation
       c = current_lex(super)
+
+      # check indentation
       indentation = current_line_indent(c)
       if indentation != @proper_indentation[:this_line]
         message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
@@ -66,6 +65,8 @@ class Tailor
       log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
       log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+
+      super(token)
     end
 
     # @param [Array] lexed_output The lexed output for the whole file.
@@ -82,22 +83,39 @@ class Tailor
       first_non_space_element.first.last
     end
 
+     def line_of_only_spaces?(lexed_line_output)
+      first_space_element = lexed_line_output.find do |e|
+        e[1] == (:on_sp || :on_nl || :on_ignored_nl)
+      end
+
+      log "first non space element #{first_space_element}"
+
+      first_space_element.nil? ? false : true
+    end
+
     def on_ignored_nl(token)
       log "ignored_nl."
 
       # check indentation
-      c = current_lex(super)
-      indentation = current_line_indent(c)
-      if indentation != @proper_indentation[:this_line]
-        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
-        log message
-        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+      c           = current_lex(super)
+      p c
+
+      if not line_of_only_spaces?(c)
+        indentation = current_line_indent(c)
+        log "indentation: #{indentation}"
+        if indentation != @proper_indentation[:this_line]
+          message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
+          log message
+          @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+        end
       end
 
       # prep for next line
       log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
       log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+
+      super(token)
     end
 
     def on_kw(token)
@@ -140,7 +158,7 @@ class Tailor
 
     def on_lbracket(token)
       log "lbracket"
-      @bracket_start_line = lineno
+      @bracket_start_line             = lineno
       @proper_indentation[:next_line] += @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
@@ -162,7 +180,7 @@ class Tailor
 
     def on_lbrace(token)
       log "lbrace"
-      @brace_start_line = lineno
+      @brace_start_line               = lineno
       @proper_indentation[:next_line] += @config[:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
