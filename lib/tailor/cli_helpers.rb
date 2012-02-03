@@ -1,4 +1,6 @@
 require_relative 'version'
+require_relative '../tailor'
+require 'text-table'
 
 class Tailor
 
@@ -47,10 +49,27 @@ class Tailor
       USEAGE
     end
 
+    def config
+      table = Text::Table.new(horizontal_padding: 4)
+      table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
+
+      Tailor.config.each do |first_level,first_value|
+        table.rows << [{ value: first_level.capitalize, colspan: 2, align: :left }]
+        table.rows << :separator
+
+        first_value.each do |second_level,second_value|
+          table.rows << [second_level, second_value]
+        end
+      end
+
+      table
+    end
+
     module_function :banner
     module_function :version
     module_function :about
     module_function :usage
     module_function :ruler
+    module_function :config
   end
 end

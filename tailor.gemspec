@@ -40,7 +40,8 @@ MSG
 
   s.add_runtime_dependency(%q<log_switch>, [">= 0.2.0"])
   s.add_runtime_dependency(%q<term-ansicolor>, [">= 1.0.5"])
-  s.add_runtime_dependency(%q<trollop>, [">= 0"])
+  s.add_runtime_dependency(%q<text-table>, [">= 1.2.2"])
+  s.add_runtime_dependency(%q<trollop>, [">= 1.16.2"])
   s.add_development_dependency(%q<aruba>, [">=0"])
   s.add_development_dependency(%q<code_statistics>, ["~> 0.2.13"])
   s.add_development_dependency(%q<cucumber>, [">= 1.0.2"])
