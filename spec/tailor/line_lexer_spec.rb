@@ -65,6 +65,14 @@ describe Tailor::LineLexer do
     end
   end
 
+  describe "#current_line_indent" do
+    it "returns 1 when indented 1" do
+      file_text = " puts 'something'"
+      File.stub_chain(:open, :read).and_return file_text
+      subject.current_line_indent(Ripper.lex(file_text)).should == 1
+    end
+  end
+
   describe "#modifier_keyword?" do
     before do
       File.stub_chain(:open, :read).and_return file_text
