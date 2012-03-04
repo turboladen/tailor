@@ -177,6 +177,9 @@ class Tailor
       super(token)
     end
 
+    # Checks the current line to see if the given +token+ is being used as a
+    # modifier.
+    #
     # @return [Boolean] True if there's a modifier in the current line that
     #   is the same type as +token+.
     def modifier_keyword?(token)
