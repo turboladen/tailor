@@ -204,6 +204,8 @@ class Tailor
       result
     end
 
+    # Updates the values used for detecting the proper number of indentation
+    # spaces.  Should be called when reaching the end of a line.
     def update_outdentation_expectations
       log "outdent keyword found: end"
 
@@ -214,6 +216,11 @@ class Tailor
       @proper_indentation[:next_line] -= @config[:spaces]
     end
 
+    # Updates the values used for detecting the proper number of indentation
+    # spaces.  Should be called when reaching the end of a line.
+    # 
+    # @param [String] token The token that got matched in the line.  Used to
+    #   determine proper indentation levels.
     def update_indentation_expectations(token)
       log "indent keyword found: #{token}"
       @indent_keyword_line = lineno
@@ -225,6 +232,10 @@ class Tailor
       end
     end
 
+    # Checks if the statement is a single line statement that needs indenting.
+    #
+    # @return [Boolean] True if +@indent_keyword_line+ is equal to the
+    #   {lineno} (where lineno is the currenly parsed line).
     def single_line_indent_statement?
       @indent_keyword_line == lineno
     end
