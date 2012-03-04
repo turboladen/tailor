@@ -68,7 +68,7 @@ class Tailor
     # settings.
     def config
       user_config_file =
-        File.expand_path(Dir.home + '/.tailor')
+        File.expand_path(Dir.home + '/.tailorrc')
       default_config_file =
         File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml')
 
