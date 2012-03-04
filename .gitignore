@@ -8,3 +8,4 @@ tmp/
 ruby-style-checker.rb
 .bundle/
 .idea/
+coverage/
