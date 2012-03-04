@@ -79,6 +79,14 @@ describe Tailor::LineLexer do
     end
   end
 
+  describe "#line_of_only_spaces?" do
+    context '0 length line, no \n ending' do
+      file_text = ""
+      File.stub_chain(:open, :read).and_return file_text
+      subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_true
+    end
+  end
+
   describe "#modifier_keyword?" do
     before do
       File.stub_chain(:open, :read).and_return file_text
