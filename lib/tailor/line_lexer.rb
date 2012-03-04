@@ -302,7 +302,11 @@ class Tailor
     end
 
     def multiline_brackets?
-      @bracket_start_line < lineno
+      if @bracket_start_line.nil?
+        false
+      else
+        @bracket_start_line < lineno
+      end
     end
 
     def on_embexpr_beg(token)
