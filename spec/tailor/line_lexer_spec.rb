@@ -81,9 +81,43 @@ describe Tailor::LineLexer do
 
   describe "#line_of_only_spaces?" do
     context '0 length line, no \n ending' do
-      file_text = ""
-      File.stub_chain(:open, :read).and_return file_text
-      subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_true
+      let(:file_text) { "" }
+
+      it "should return true" do
+        subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_true
+      end
+    end
+
+    context '0 length line, with \n ending' do
+      let(:file_text) { "\n" }
+
+      it "should return true" do
+        subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_true
+      end
+    end
+
+    context 'comment line, starting at column 0' do
+      let(:file_text) { "# this is a comment" }
+
+      it "should return false" do
+        subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_false
+      end
+    end
+
+    context 'comment line, starting at column 2' do
+      let(:file_text) { "  # this is a comment" }
+
+      it "should return false" do
+        subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_false
+      end
+    end
+
+    context 'code line, starting at column 2' do
+      let(:file_text) { "  class << self" }
+
+      it "should return false" do
+        subject.line_of_only_spaces?(Ripper.lex(file_text)).should be_false
+      end
     end
   end
 
