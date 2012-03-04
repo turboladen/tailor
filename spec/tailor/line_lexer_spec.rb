@@ -158,4 +158,15 @@ describe Tailor::LineLexer do
       end
     end
   end
+
+  describe "#update_outdentation_expectations" do
+    context "#single_line_indent_statement? returns true" do
+      it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
+        subject.update_outdentation_expectations
+
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:this_line].should == -2
+      end
+    end
+  end
 end
