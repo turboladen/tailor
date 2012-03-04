@@ -3,7 +3,7 @@ require 'tailor'
 
 describe Tailor do
   describe "#problems" do
-    specify { Tailor.problems.should be_a Hash }
+    specify { Tailor.problems.should be_an Array }
     specify { Tailor.problems.should be_empty }
   end
 
@@ -55,16 +55,13 @@ describe Tailor do
   end
 
   describe "#check_file" do
-    let(:file_contents) { double "file contents" }
     let(:lexer) { double "LineLexer" }
 
     it "opens and reads the file" do
-      file_contents.should_receive(:read)
-      File.should_receive(:open).and_return file_contents
       lexer.stub(:lex)
       lexer.stub(:problems)
       Tailor::LineLexer.stub(:new).and_return lexer
-      Tailor.stub_chain(:problems, :merge)
+      Tailor.stub_chain(:problems, :concat)
 
       Tailor.check_file("this_file.rb")
 
@@ -72,27 +69,21 @@ describe Tailor do
     end
 
     it "lexes the file" do
-      File.stub_chain(:open, :read).and_return file_contents
       lexer.should_receive(:lex)
       lexer.stub(:problems)
       Tailor::LineLexer.should_receive(:new).with(file_contents).and_return lexer
-      Tailor.stub_chain(:problems, :merge)
+      Tailor.stub_chain(:problems, :concat)
 
       Tailor.check_file("this_file.rb")
-
-      File.unstub(:open)
     end
 
     it "adds problems for the file to the main list of problems" do
-      File.stub_chain(:open, :read).and_return file_contents
       lexer.stub(:lex)
-      lexer.stub(:problems).and_return Hash.new
+      lexer.stub(:problems).and_return Array.new
       Tailor::LineLexer.stub(:new).and_return lexer
       Tailor.problems.should_receive(:merge).with({})
 
       Tailor.check_file("this_file.rb")
-
-      File.unstub(:open)
     end
   end
 

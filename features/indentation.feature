@@ -34,6 +34,16 @@ Feature: Indentation check
     | indent/ok/require_class_singlestatement_def         |
     | indent/ok/require_class_singlestatement_def_content |
 
+  Scenarios: 'if' as modifier
+    | File                  |
+    | indent/ok/if_modifier |
+    | indent/ok/def_return_if_modifier |
+
+  Scenarios: 'unless' as modifier
+    | File                  |
+    | indent/ok/unless_modifier |
+    | indent/ok/def_return_unless_modifier |
+
   Scenario Outline: Detect singular problems on poorly indented files
     Given <File> exists
     When I run `tailor <File>`

@@ -78,6 +78,26 @@ class MyClass
 end
 }
 
+INDENT_OK[:if_modifier] = %Q{
+puts "hi" if nil.nil?
+}
+
+INDENT_OK[:def_return_if_modifier] = %Q{
+def a_method
+  return @something if @something
+end
+}
+
+INDENT_OK[:unless_modifier] = %Q{
+puts "hi" unless nil.nil?
+}
+
+INDENT_OK[:def_return_unless_modifier] = %Q{
+def a_method
+  return @something unless @something
+end
+}
+
 #-------------------------------------------------------------------------------
 # INDENT_1
 #-------------------------------------------------------------------------------

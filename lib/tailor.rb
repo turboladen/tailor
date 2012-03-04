@@ -7,7 +7,7 @@ require_relative 'tailor/line_lexer'
 class Tailor
   extend LogSwitch
 
-  self.log = true
+  #self.log = true
 
   class << self
     # Main entry-point method.
@@ -15,12 +15,12 @@ class Tailor
     # @param [String] path File or directory to check files in.
     def check_style(path)
       if File.file?(path)
-        Tailor.log "Checking style of a single file: #{path}."
+        Tailor.log "<#{self.name}> Checking style of a single file: #{path}."
         check_file(path)
       elsif File.directory?(path)
-        Tailor.log "Checking style of directory: #{path}"
+        Tailor.log "<#{self.name}> Checking style of directory: #{path}"
         Dir.glob("#{path}/**/*").each do |child|
-          Tailor.log "Checking style of file: #{child}."
+          Tailor.log "<#{self.name}> Checking style of file: #{child}."
           check_style(child)
         end
       else
