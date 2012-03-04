@@ -160,12 +160,45 @@ describe Tailor::LineLexer do
   end
 
   describe "#update_outdentation_expectations" do
-    context "#single_line_indent_statement? returns true" do
+    context "#single_line_indent_statement? returns false" do
+      before do
+        subject.stub(:single_line_indent_statement?).and_return false
+        subject.instance_variable_set(:@config, { spaces: 27 })
+      end
+
       it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
         subject.update_outdentation_expectations
 
         proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == -2
+        proper_indentation[:this_line].should == -27
+      end
+
+      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
+        subject.update_outdentation_expectations
+
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:next_line].should == -27
+      end
+    end
+
+    context "#single_line_indent_statement? returns true" do
+      before do
+        subject.stub(:single_line_indent_statement?).and_return true
+        subject.instance_variable_set(:@config, { spaces: 13 })
+      end
+
+      it "does not decrement @proper_indentation[:this_line]" do
+        subject.update_outdentation_expectations
+
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:this_line].should == 0
+      end
+
+      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
+        subject.update_outdentation_expectations
+
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:next_line].should == -13
       end
     end
   end
