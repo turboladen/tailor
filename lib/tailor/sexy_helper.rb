@@ -26,12 +26,11 @@ class Tailor
       # @param [Array] sexped_file Output from {sexp} for a whole file.
       # @return [Array] The sexped output that represents the +lexed_line_output+.
       def lexed_line_converter(lexed_line_output, sexped_file)
-        p lexed_line_output
-        puts
         sexped_file.each_with_index do |s, i|
           Tailor.log "<#{self}> #{i}: #{s} "
           Tailor.log ""
         end
+
         Tailor.log "<#{self}> sexped array size: #{sexped_file.size}"
         line_number = lexed_line_number(lexed_line_output)
         Tailor.log "<#{self}> line number: #{line_number}"

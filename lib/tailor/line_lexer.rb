@@ -1,5 +1,4 @@
 require 'ripper'
-require_relative 'sexy_helper'
 
 class Tailor
 
@@ -74,6 +73,7 @@ class Tailor
 
       # check indentation
       indentation = current_line_indent(c)
+
       if indentation != @proper_indentation[:this_line]
         message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
         log message
@@ -130,11 +130,11 @@ class Tailor
 
       # check indentation
       c = current_lex(super)
-      p c
 
       if not line_of_only_spaces?(c)
         indentation = current_line_indent(c)
         log "indentation: #{indentation}"
+
         if indentation != @proper_indentation[:this_line]
           message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
           log message
@@ -159,7 +159,6 @@ class Tailor
       if KEYWORDS_TO_INDENT.include?(token)
         c = current_lex(super)
 
-        #if modifier_keyword_in_line?(c)
         if modifier_keyword?(token)
           log "Found modifier in line"
         else
@@ -178,14 +177,9 @@ class Tailor
       super(token)
     end
 
-    # @return [Boolean] True if there's a modifier in the current line.
-    #def modifier_keyword_in_line?(current_lexed_line)
+    # @return [Boolean] True if there's a modifier in the current line that
+    #   is the same type as +token+.
     def modifier_keyword?(token)
-=begin
-      full_sexp_output = Tailor::SexyHelper.sexp_cleanup(Ripper.sexp(@file_text))
-      sexp_line = Tailor::SexyHelper.lexed_line_converter(current_lexed_line,
-                                                          full_sexp_output)
-=end
       line_of_text = @file_text.split("\n").at(lineno - 1)
       log "line of text: #{line_of_text}"
 
@@ -196,17 +190,15 @@ class Tailor
       if sexp_line.is_a? Array
         log "as string: #{sexp_line.flatten}"
         log "last first: #{sexp_line.last.first}"
-        puts
+
         begin
-          #result = sexp_line.last.first.any? { |s| puts "s: #{s}"; MODIFIERS.include? s }
-          puts "modifiers token: #{MODIFIERS[token]}"
-          puts "modifiers token: #{MODIFIERS[token].class}"
           result = sexp_line.last.first.any? { |s| s == MODIFIERS[token] }
           log "result = #{result}"
         rescue NoMethodError
-
         end
       end
+
+      result
     end
 
     def update_outdentation_expectations
