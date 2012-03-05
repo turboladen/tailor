@@ -5,23 +5,24 @@ Feature: Configurable
   So that tailor only detects the problems that I care about.
 
   Scenario: No config file exists
-    Given a file named ".tailor" should not exist
+    Given a file named ".tailorrc" should not exist
     When I successfully run `tailor --config`
     Then the output should contain:
       """
-      +-----------------------+---------------+
-      |             Configuration             |
-      +-----------------------+---------------+
-      |    Indentation                        |
-      +-----------------------+---------------+
-      |    spaces             |    2          |
-      |    allow_hard_tabs    |    false      |
-      +-----------------------+---------------+
+      +----------------------------------+---------------+
+      |                  Configuration                   |
+      +----------------------------------+---------------+
+      |    Indentation                                   |
+      +----------------------------------+---------------+
+      |    spaces                        |    2          |
+      |    allow_hard_tabs               |    false      |
+      |    continuation_indent_spaces    |    2          |
+      +----------------------------------+---------------+
       """
     And the exit status should be 0
 
-  Scenario: Configuration file at ~/.tailor is valid YAML
-    Given a file named ".tailor" with:
+  Scenario: Configuration file at ~/.tailorrc is valid YAML
+    Given a file named ".tailorrc" with:
       """
       ---
       :indentation:
