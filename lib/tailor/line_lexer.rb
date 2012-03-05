@@ -211,6 +211,10 @@ class Tailor
 
       unless single_line_indent_statement?
         @proper_indentation[:this_line] -= @config[:spaces]
+
+        if @proper_indentation[:this_line] < 0
+          @proper_indentation[:this_line] = 0
+        end
       end
 
       @proper_indentation[:next_line] -= @config[:spaces]
@@ -227,6 +231,10 @@ class Tailor
 
       if CONTINUATION_KEYWORDS.include? token
         @proper_indentation[:this_line] -= @config[:spaces]
+
+        if @proper_indentation[:this_line] < 0
+          @proper_indentation[:this_line] = 0
+        end
       else
         @proper_indentation[:next_line] += @config[:spaces]
       end

@@ -167,10 +167,13 @@ describe Tailor::LineLexer do
       end
 
       it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
+        subject.instance_variable_set(:@proper_indentation, {
+          this_line: 28, next_line: 28
+        })
         subject.update_outdentation_expectations
 
         proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == -27
+        proper_indentation[:this_line].should == 1
       end
 
       it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
@@ -178,6 +181,18 @@ describe Tailor::LineLexer do
 
         proper_indentation = subject.instance_variable_get(:@proper_indentation)
         proper_indentation[:next_line].should == -27
+      end
+
+      context "@proper_indentation[:this_line] gets decremented < 0" do
+        it "sets @proper_indentation[:this_line] to 0" do
+          subject.instance_variable_set(:@proper_indentation, {
+            this_line: 0, next_line: 0
+          })
+
+          subject.update_outdentation_expectations
+          proper_indentation = subject.instance_variable_get(:@proper_indentation)
+          proper_indentation[:this_line].should == 0
+        end
       end
     end
 
@@ -217,15 +232,31 @@ describe Tailor::LineLexer do
 
     context "token is a CONTINUATION_KEYWORDS" do
       it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
+        subject.instance_variable_set(:@proper_indentation, {
+          this_line: 8, next_line: 8
+        })
+
         subject.update_indentation_expectations("elsif")
         proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == -7
+        proper_indentation[:this_line].should == 1
       end
 
       it "does not increment @proper_indentation[:next_line]" do
         subject.update_indentation_expectations("elsif")
         proper_indentation = subject.instance_variable_get(:@proper_indentation)
         proper_indentation[:next_line].should == 0
+      end
+
+      context "@proper_indentation[:this_line] gets decremented < 0" do
+        it "sets @proper_indentation[:this_line] to 0" do
+          subject.instance_variable_set(:@proper_indentation, {
+            this_line: 0, next_line: 0
+          })
+
+          subject.update_indentation_expectations("elsif")
+          proper_indentation = subject.instance_variable_get(:@proper_indentation)
+          proper_indentation[:this_line].should == 0
+        end
       end
     end
 
