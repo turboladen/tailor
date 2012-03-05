@@ -5,6 +5,7 @@ require_relative '../lib/tailor'
 require_relative '../lib/tailor/cli_helpers'
 require_relative '../lib/tailor/runtime_error'
 
+Tailor.log = false
 
 opts = Trollop.options do
   banner Tailor::CLIHelpers.banner
@@ -13,7 +14,6 @@ opts = Trollop.options do
     short: "-c"
 end
 
-puts "ARGV: #{ARGV}"
 if opts[:config]
   puts Tailor::CLIHelpers.version
   puts Tailor::CLIHelpers.config
