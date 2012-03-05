@@ -1,6 +1,5 @@
 require 'yaml'
 require 'log_switch'
-require 'awesome_print'
 require_relative 'tailor/runtime_error'
 require_relative 'tailor/line_lexer'
 
@@ -19,6 +18,7 @@ class Tailor
         check_file(path)
       elsif File.directory?(path)
         Tailor.log "<#{self.name}> Checking style of directory: #{path}"
+
         Dir.glob("#{path}/**/*").each do |child|
           Tailor.log "<#{self.name}> Checking style of file: #{child}."
           check_style(child)
