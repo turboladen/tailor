@@ -1,5 +1,20 @@
----
-:indentation:
+#------------------------------------------------------------------------------
+# Indentation:    :indentation:
+#------------------------------------------------------------------------------
+# :spaces:              The number of accepted spaces per indent level.
+#                       Default:  2
+#
+# :allow_hard_tabs:     true to allow hard tabs; false to treat them as
+#                       problems.
+#                       Default:  false
+#
+# :continuation_spaces: The number of spaces to indent the next line of an
+#                       multi-line statement.
+#                       Default:  2
+<%= {
+indentation: {
   :spaces: 2
   :allow_hard_tabs: false
-  :continuation_indent_spaces: 2
+  :continuation_spaces: 2
+  }
+}.to_yaml %>
