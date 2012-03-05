@@ -202,4 +202,151 @@ describe Tailor::LineLexer do
       end
     end
   end
+
+  describe "#update_indentation_expectations" do
+    before do
+      subject.instance_variable_set(:@config, { spaces: 7 })
+    end
+
+    it "sets @indent_keyword_line to lineno" do
+      subject.stub(:lineno).and_return 10
+      subject.update_indentation_expectations ""
+
+      subject.instance_variable_get(:@indent_keyword_line).should == 10
+    end
+
+    context "token is a CONTINUATION_KEYWORDS" do
+      it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
+        subject.update_indentation_expectations("elsif")
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:this_line].should == -7
+      end
+
+      it "does not increment @proper_indentation[:next_line]" do
+        subject.update_indentation_expectations("elsif")
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:next_line].should == 0
+      end
+    end
+
+    context "token is not a CONTINUATION_KEYWORDS" do
+      it "does not decrement @proper_indentation[:this_line]" do
+        subject.update_indentation_expectations("pants")
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:this_line].should == 0
+      end
+
+      it "does not increment @proper_indentation[:next_line]" do
+        subject.update_indentation_expectations("pants")
+        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation[:next_line].should == 7
+      end
+    end
+  end
+
+  describe "#single_line_indent_statement?" do
+    context "@indent_keyword_line is nil and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, nil)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+
+    context "@indent_keyword_line is 1 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 1)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_true }
+    end
+
+    context "@indent_keyword_line is 2 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 2)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+
+    context "@indent_keyword_line is 1 and lineno is 2" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 1)
+        subject.stub(:lineno).and_return 2
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+  end
+
+  describe "#multiline_braces?" do
+    context "@brace_start_line is nil" do
+      before { subject.instance_variable_set(:@brace_start_line, nil) }
+      specify { subject.multiline_braces?.should be_false }
+    end
+
+    context "@brace_start_line is 0 and lineno is 0" do
+      before do
+        subject.instance_variable_set(:@brace_start_line, 0)
+        subject.stub(:lineno).and_return 0
+      end
+
+      specify { subject.multiline_braces?.should be_false }
+    end
+
+    context "@brace_start_line is 0 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@brace_start_line, 0)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.multiline_braces?.should be_true }
+    end
+
+    context "@brace_start_line is 1 and lineno is 0" do
+      before do
+        subject.instance_variable_set(:@brace_start_line, 1)
+        subject.stub(:lineno).and_return 0
+      end
+
+      specify { subject.multiline_braces?.should be_false }
+    end
+  end
+
+  describe "#multiline_brackets?" do
+    context "@bracket_start_line is nil" do
+      before { subject.instance_variable_set(:@bracket_start_line, nil) }
+      specify { subject.multiline_brackets?.should be_false }
+    end
+
+    context "@bracket_start_line is 0 and lineno is 0" do
+      before do
+        subject.instance_variable_set(:@bracket_start_line, 0)
+        subject.stub(:lineno).and_return 0
+      end
+
+      specify { subject.multiline_brackets?.should be_false }
+    end
+
+    context "@bracket_start_line is 0 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@bracket_start_line, 0)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.multiline_brackets?.should be_true }
+    end
+
+    context "@bracket_start_line is 1 and lineno is 0" do
+      before do
+        subject.instance_variable_set(:@bracket_start_line, 1)
+        subject.stub(:lineno).and_return 0
+      end
+
+      specify { subject.multiline_brackets?.should be_false }
+    end
+  end
 end
