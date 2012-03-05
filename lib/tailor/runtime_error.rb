@@ -1,5 +1,4 @@
 class Tailor
-  class RuntimeError < RuntimeError
-
-  end
+  class RuntimeError < RuntimeError; end
 end
+

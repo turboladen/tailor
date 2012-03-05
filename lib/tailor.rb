@@ -1,3 +1,4 @@
+require 'erb'
 require 'yaml'
 require 'log_switch'
 require_relative 'tailor/runtime_error'
@@ -67,16 +68,19 @@ class Tailor
     # Tries to load a config file from ~/.tailor, then fails back on default
     # settings.
     def config
-      user_config_file =
-        File.expand_path(Dir.home + '/.tailorrc')
-      default_config_file =
-        File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml')
+      #user_config_file = File.expand_path(Dir.home + '/.tailorrc')
 
-      @config ||= if File.exists? user_config_file
-        YAML.load_file user_config_file
-                  else
-        YAML.load_file default_config_file
-      end
+      #@config ||= if File.exists? user_config_file
+      #  YAML.load_file user_config_file
+      #  return
+      #end
+
+      erb_file = File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml.erb')
+
+      default_config_file =
+        ERB.new(File.read(erb_file)).result(binding)
+
+      @config = YAML.load_file default_config_file
     end
   end
 end
