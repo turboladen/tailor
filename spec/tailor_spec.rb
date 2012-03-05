@@ -1,7 +1,10 @@
 require_relative 'spec_helper'
 require 'tailor'
+require 'fakefs/spec_helpers'
 
 describe Tailor do
+  include FakeFS::SpecHelpers
+
   describe "#problems" do
     specify { Tailor.problems.should be_an Array }
     specify { Tailor.problems.should be_empty }
@@ -9,31 +12,28 @@ describe Tailor do
 
   describe "#check_style" do
     context "single file" do
-      before { File.stub(:file?).and_return true }
-      after { File.unstub(:file?) }
+      before do
+        File.open("file1.rb", 'w') { |f| f.write 'hi' }
+      end
 
       it "calls #check_file" do
         Tailor.should_receive(:check_file).once
-        Tailor.check_style("a_file.rb")
+        Tailor.check_style("file1.rb")
       end
     end
 
     context "directory" do
-      before do
-        File.stub(:file?).and_return false
-        File.stub(:directory?).and_return true
-        Dir.stub(:glob).and_return ['first_file.rb', 'second_file.rb']
-      end
+      let(:test_dir) { "test_dir" }
 
-      after do
-        File.unstub(:file?)
-        File.unstub(:directory?)
-        Dir.unstub(:glob)
+      before do
+        Dir.mkdir test_dir
+        File.open("#{test_dir}/file1.rb", 'w') { |f| f.write 'hi' }
+        File.open("#{test_dir}/file2.rb", 'w') { |f| f.write 'hello' }
       end
 
       it "calls #check_file for each file in the directory" do
         Tailor.should_receive(:check_file).twice
-        Tailor.check_style("a_directory")
+        Tailor.check_style("test_dir")
       end
     end
 
@@ -71,7 +71,7 @@ describe Tailor do
     it "lexes the file" do
       lexer.should_receive(:lex)
       lexer.stub(:problems)
-      Tailor::LineLexer.should_receive(:new).with(file_contents).and_return lexer
+      Tailor::LineLexer.should_receive(:new).and_return lexer
       Tailor.stub_chain(:problems, :concat)
 
       Tailor.check_file("this_file.rb")
@@ -81,7 +81,7 @@ describe Tailor do
       lexer.stub(:lex)
       lexer.stub(:problems).and_return Array.new
       Tailor::LineLexer.stub(:new).and_return lexer
-      Tailor.problems.should_receive(:merge).with({})
+      Tailor.problems.should_receive(:concat).with([])
 
       Tailor.check_file("this_file.rb")
     end
@@ -92,7 +92,7 @@ describe Tailor do
   end
 
   describe "#problems" do
-    specify { Tailor.problems.should be_a Hash }
+    specify { Tailor.problems.should be_an Array }
   end
 
   describe "#problem_count" do
@@ -105,7 +105,11 @@ describe Tailor do
 
     context "#problems contains valid values" do
       it "adds the number of each problem together" do
-        probs = { "hunger" => 1, "thirst" => 2 }
+        probs = [
+          { file_name: 'one', type: :indentation, line: 1, message: "" },
+          { file_name: 'two', type: :indentation, line: 2, message: "" },
+          { file_name: 'three', type: :indentation, line: 27, message: "" }
+        ]
         Tailor.instance_variable_set(:@problems, probs)
         Tailor.problem_count.should == 3
       end
