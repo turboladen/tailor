@@ -67,17 +67,19 @@ class Tailor
 
     # Tries to load a config file from ~/.tailor, then fails back on default
     # settings.
+    #
+    # @return [Hash] The configuration read from the config file or the default
+    #   config.
     def config
       user_config_file = File.expand_path(Dir.home + '/.tailorrc')
 
-      if File.exists? user_config_file
-        @config = YAML.load_file user_config_file
-        return
+      @config = if File.exists? user_config_file
+        YAML.load_file user_config_file
+      else
+        erb_file = File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml.erb')
+        default_config_file = ERB.new(File.read(erb_file)).result(binding)
+        YAML.load default_config_file
       end
-
-      erb_file = File.expand_path(File.dirname(__FILE__) + '/../tailor_config.yaml.erb')
-      default_config_file = ERB.new(File.read(erb_file)).result(binding)
-      @config = YAML.load default_config_file
     end
   end
 end

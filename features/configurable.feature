@@ -9,15 +9,15 @@ Feature: Configurable
     When I successfully run `tailor --config`
     Then the output should contain:
       """
-      +----------------------------------+---------------+
-      |                  Configuration                   |
-      +----------------------------------+---------------+
-      |    Indentation                                   |
-      +----------------------------------+---------------+
-      |    spaces                        |    2          |
-      |    allow_hard_tabs               |    false      |
-      |    continuation_indent_spaces    |    2          |
-      +----------------------------------+---------------+
+      +---------------------------+---------------+
+      |               Configuration               |
+      +---------------------------+---------------+
+      |    Indentation                            |
+      +---------------------------+---------------+
+      |    spaces                 |    2          |
+      |    allow_hard_tabs        |    false      |
+      |    continuation_spaces    |    2          |
+      +---------------------------+---------------+
       """
     And the exit status should be 0
 
