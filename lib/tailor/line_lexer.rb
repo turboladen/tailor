@@ -6,32 +6,32 @@ class Tailor
   class LineLexer < Ripper::Lexer
     KEYWORDS_TO_INDENT     = [
       'begin',
-        'case',
-        'class',
-        'def',
-        'do',
-        'else',
-        'elsif',
-        'ensure',
-        'if',
-        'module',
-        'rescue',
-        'unless',
-        'when',
-        'while'
+      'case',
+      'class',
+      'def',
+      'do',
+      'else',
+      'elsif',
+      'ensure',
+      'if',
+      'module',
+      'rescue',
+      'unless',
+      'when',
+      'while'
     ]
     CONTINUATION_KEYWORDS  = [
       'elsif',
-        'else',
-        'ensure',
-        'rescue',
-        'when'
+      'else',
+      'ensure',
+      'rescue',
+      'when'
     ]
     KEYWORDS_AND_MODIFIERS = [
       'if',
-        'unless',
-        'until',
-        'while'
+      'unless',
+      'until',
+      'while'
     ]
 
     MODIFIERS = {
