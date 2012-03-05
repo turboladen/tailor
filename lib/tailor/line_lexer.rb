@@ -218,7 +218,7 @@ class Tailor
 
     # Updates the values used for detecting the proper number of indentation
     # spaces.  Should be called when reaching the end of a line.
-    # 
+    #
     # @param [String] token The token that got matched in the line.  Used to
     #   determine proper indentation levels.
     def update_indentation_expectations(token)
