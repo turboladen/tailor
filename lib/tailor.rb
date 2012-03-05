@@ -35,7 +35,6 @@ class Tailor
     def check_file file
       lexer = Tailor::LineLexer.new(file)
       lexer.lex
-      p lexer.problems
       problems.concat(lexer.problems)
     end
 
