@@ -1,4 +1,5 @@
 require 'ripper'
+require_relative '../tailor'
 
 class Tailor
 
@@ -45,10 +46,15 @@ class Tailor
     attr_reader :indentation_tracker
     attr_accessor :problems
 
-    # @param [String] file_name The name of the file to read and analyze.
-    def initialize(file_name)
-      @file_name = file_name
-      @file_text = File.open(@file_name, 'r').read
+    # @param [String] file_name The string to lex, or name of the file to read
+    #   and analyze.
+    def initialize(file)
+      if File.exists? file
+        @file_name = file
+        @file_text = File.open(@file_name, 'r').read
+      else
+        @file_text = file
+      end
 
       Tailor.log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
       @proper_indentation             = {}
@@ -91,8 +97,6 @@ class Tailor
     # @param [Array] lexed_output The lexed output for the whole file.
     # @return [Array]
     def current_lex(lexed_output)
-      log "#current_line.  Line: #{self.lineno}"
-
       lexed_output.find_all { |token| token.first.first == lineno }
     end
 

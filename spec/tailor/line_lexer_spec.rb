@@ -1,37 +1,49 @@
+require 'fakefs/spec_helpers'
 require_relative '../spec_helper'
 require 'tailor/line_lexer'
 
 describe Tailor::LineLexer do
-  let(:file_text) do
-    ""
-  end
-
-  before do
-    File.stub_chain(:open, :read).and_return file_text
-    Tailor.stub :log
-    Tailor.stub_chain(:config, :[]).and_return({ spaces: 2,
-      allow_hard_tabs:                                   false })
-  end
-
-  after do
-    Tailor.unstub :log
-    File.unstub :open
-  end
-
+  let(:file_text) { "" }
   subject { Tailor::LineLexer.new(file_text) }
 
-  describe "#initialize" do
-    it "opens and reads the file by the name passed in" do
-      file_name = "test"
-      File.should_receive(:open).with("test", 'r')
-      Tailor::LineLexer.new(file_name)
-    end
+  before do
+    Tailor.stub :log
+    Tailor.stub_chain(:config, :[]).and_return({ spaces: 2,
+      allow_hard_tabs: false })
+  end
 
+  after { Tailor.unstub :log }
+
+  describe "#initialize" do
     it "sets @proper_indentation to an Hash with :this_line and :next_line keys = 0" do
       proper_indentation = subject.instance_variable_get(:@proper_indentation)
       proper_indentation.should be_a Hash
       proper_indentation[:this_line].should be_zero
       proper_indentation[:next_line].should be_zero
+    end
+
+    context "name of file is passed in" do
+      let(:file_name) { "test" }
+
+      before do
+        File.write(file_name, "some text")
+      end
+
+      it "opens and reads the file by the name passed in" do
+        file = double "File"
+        file.should_receive(:read).and_return file_text
+        File.should_receive(:open).with("test", 'r').and_return file
+        Tailor::LineLexer.new(file_name)
+      end
+    end
+
+    context "text to lex is passed in" do
+      let(:text) { "some text" }
+
+      it "doesn't try to open a file" do
+        File.should_not_receive(:open)
+        Tailor::LineLexer.new(text)
+      end
     end
   end
 
@@ -66,16 +78,22 @@ describe Tailor::LineLexer do
   end
 
   describe "#current_line_indent" do
-    it "returns 0 when indented 0" do
-      file_text = "puts 'something'"
-      File.stub_chain(:open, :read).and_return file_text
-      subject.current_line_indent(Ripper.lex(file_text)).should == 0
+    subject { Tailor::LineLexer.new file_text }
+
+    context "when indented 0" do
+      let(:file_text) { "puts 'something'" }
+
+      it "returns 0" do
+        subject.current_line_indent(Ripper.lex(file_text)).should == 0
+      end
     end
 
-    it "returns 1 when indented 1" do
-      file_text = " puts 'something'"
-      File.stub_chain(:open, :read).and_return file_text
-      subject.current_line_indent(Ripper.lex(file_text)).should == 1
+    context "when indented 1" do
+      let(:file_text) { " puts 'something'" }
+
+      it "returns 1" do
+        subject.current_line_indent(Ripper.lex(file_text)).should == 1
+      end
     end
   end
 
@@ -122,10 +140,6 @@ describe Tailor::LineLexer do
   end
 
   describe "#modifier_keyword?" do
-    before do
-      File.stub_chain(:open, :read).and_return file_text
-    end
-
     context "the current line has a keyword that is also a modifier" do
       context "the keyword is acting as a modifier" do
         let!(:file_text) { %q{puts "hi" if true == true} }
