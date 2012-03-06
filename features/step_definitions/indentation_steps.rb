@@ -20,11 +20,3 @@ Given /^(.+) exists with a newline at the end$/ do |file_name|
 
   write_file(file_name, file_contents)
 end
-
-def get_file_contents(file_name)
-  path_chunks = file_name.split('/')
-  const_name = path_chunks.first(2).each { |c| c.upcase! }.join("_")
-
-  const = Kernel.const_get(const_name)
-  const[path_chunks.last.to_sym]
-end
