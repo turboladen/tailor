@@ -8,11 +8,16 @@ describe Tailor::LineLexer do
 
   before do
     Tailor.stub :log
-    Tailor.stub_chain(:config, :[]).and_return({ spaces: 2,
-      allow_hard_tabs: false })
+    Tailor.stub(:config).and_return({
+      indentation: { spaces: 2 },
+      trailing_newlines: 1
+    })
   end
 
-  after { Tailor.unstub :log }
+  after do
+    Tailor.unstub :log
+    Tailor.unstub :config
+  end
 
   describe "#initialize" do
     it "sets @proper_indentation to an Hash with :this_line and :next_line keys = 0" do
@@ -43,6 +48,49 @@ describe Tailor::LineLexer do
       it "doesn't try to open a file" do
         File.should_not_receive(:open)
         Tailor::LineLexer.new(text)
+      end
+    end
+  end
+
+  describe "#ensure_trailing_newline" do
+    context "text contains a trailing newline already" do
+      let(:text) { "text\n" }
+
+      it "doesn't alter the text" do
+        subject.ensure_trailing_newline(text).should == text
+      end
+    end
+
+    context "text does not contain a trailing newline" do
+      let(:text) { "text" }
+
+      it "adds a newline at the end" do
+        subject.ensure_trailing_newline(text).should == text + "\n"
+      end
+
+      context "@config[:trailing_newlines] > 0" do
+        it "logs a problem" do
+          subject.instance_variable_set(:@problems, [])
+          subject.ensure_trailing_newline(text)
+
+          problems = subject.instance_variable_get(:@problems)
+          problems.size.should == 1
+          problems.first[:type].should == :trailing_newlines
+        end
+      end
+
+      context "@config[:trailing_newlines] == 0" do
+        before do
+          Tailor.stub(:config).and_return({ trailing_newlines: 0 })
+        end
+
+        it "doesn't log a problem" do
+          subject.instance_variable_set(:@problems, [])
+          subject.ensure_trailing_newline(text)
+
+          problems = subject.instance_variable_get(:@problems)
+          problems.size.should be_zero
+        end
       end
     end
   end
@@ -177,7 +225,7 @@ describe Tailor::LineLexer do
     context "#single_line_indent_statement? returns false" do
       before do
         subject.stub(:single_line_indent_statement?).and_return false
-        subject.instance_variable_set(:@config, { spaces: 27 })
+        subject.instance_variable_set(:@config, { indentation: { spaces: 27 } })
       end
 
       it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
@@ -213,7 +261,7 @@ describe Tailor::LineLexer do
     context "#single_line_indent_statement? returns true" do
       before do
         subject.stub(:single_line_indent_statement?).and_return true
-        subject.instance_variable_set(:@config, { spaces: 13 })
+        subject.instance_variable_set(:@config, { indentation: { spaces: 13 } })
       end
 
       it "does not decrement @proper_indentation[:this_line]" do
@@ -234,7 +282,7 @@ describe Tailor::LineLexer do
 
   describe "#update_indentation_expectations" do
     before do
-      subject.instance_variable_set(:@config, { spaces: 7 })
+      subject.instance_variable_set(:@config, { indentation: { spaces: 7 } })
     end
 
     it "sets @indent_keyword_line to lineno" do

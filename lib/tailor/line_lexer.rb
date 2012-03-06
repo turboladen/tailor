@@ -53,17 +53,46 @@ class Tailor
         @file_name = file
         @file_text = File.open(@file_name, 'r').read
       else
+        @file_name = "<notafile>"
         @file_text = file
       end
+
+      @problems = []
+      @config = Tailor.config
+      @file_text = ensure_trailing_newline(@file_text)
 
       Tailor.log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
       @proper_indentation             = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
-      @problems                       = []
 
-      @config = Tailor.config[:indentation]
       super @file_text
+    end
+
+    # Checks to see if the file's final character is a \n.  If it is, it just
+    # returns the text that was passed in.  If it's not, it adds a \n, since
+    # the current indentation-checking algorithm only checks indent levels when
+    # it parses a newline character (without this, indentation problems on the
+    # final line won't ever get caught).
+    #
+    # @param [String] text The file's text.
+    # @return [String] The file's text with a \n if there wasn't one there
+    #   already.
+    def ensure_trailing_newline(text)
+      if text[-1] == "\n"
+        text
+      else
+        if @config[:trailing_newlines] > 0
+          @problems << {
+            file_name: @file_name,
+            type: :trailing_newlines,
+            line: "<EOF>",
+            message: "File is missing trailing newline"
+          }
+        end
+
+        text + "\n"
+      end
     end
 
     def log(*args)
@@ -214,14 +243,14 @@ class Tailor
       log "outdent keyword found: end"
 
       unless single_line_indent_statement?
-        @proper_indentation[:this_line] -= @config[:spaces]
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
 
         if @proper_indentation[:this_line] < 0
           @proper_indentation[:this_line] = 0
         end
       end
 
-      @proper_indentation[:next_line] -= @config[:spaces]
+      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
     end
 
     # Updates the values used for detecting the proper number of indentation
@@ -234,13 +263,13 @@ class Tailor
       @indent_keyword_line = lineno
 
       if CONTINUATION_KEYWORDS.include? token
-        @proper_indentation[:this_line] -= @config[:spaces]
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
 
         if @proper_indentation[:this_line] < 0
           @proper_indentation[:this_line] = 0
         end
       else
-        @proper_indentation[:next_line] += @config[:spaces]
+        @proper_indentation[:next_line] += @config[:indentation][:spaces]
       end
     end
 
@@ -258,7 +287,7 @@ class Tailor
     def on_lbracket(token)
       log "lbracket"
       @bracket_start_line             = lineno
-      @proper_indentation[:next_line] += @config[:spaces]
+      @proper_indentation[:next_line] += @config[:indentation][:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
@@ -270,12 +299,12 @@ class Tailor
       log "rbracket"
 
       if multiline_brackets?
-        @proper_indentation[:this_line] -= @config[:spaces]
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
       end
 
       @bracket_start_line = nil
 
-      @proper_indentation[:next_line] -= @config[:spaces]
+      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
@@ -287,7 +316,7 @@ class Tailor
     def on_lbrace(token)
       log "lbrace"
       @brace_start_line               = lineno
-      @proper_indentation[:next_line] += @config[:spaces]
+      @proper_indentation[:next_line] += @config[:indentation][:spaces]
       log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
@@ -300,7 +329,7 @@ class Tailor
 
       if multiline_braces?
         log "multiline braces!"
-        @proper_indentation[:this_line] -= @config[:spaces]
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
       end
 
       @brace_start_line = nil
@@ -308,7 +337,7 @@ class Tailor
       # Ripper won't match a closing } in #{} so we have to track if we're
       # inside of one.  If we are, don't decrement then :next_line.
       unless @embexpr_beg
-        @proper_indentation[:next_line] -= @config[:spaces]
+        @proper_indentation[:next_line] -= @config[:indentation][:spaces]
       end
 
       @embexpr_beg = false
