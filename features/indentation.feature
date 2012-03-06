@@ -1,4 +1,3 @@
-@announce
 Feature: Indentation check
   As a Ruby developer
   I want to check the indentation of my Ruby code
@@ -25,6 +24,15 @@ Feature: Indentation check
     | File                                    |
     | indent/ok/class_singlestatement         |
     | indent/ok/require_class_singlestatement |
+
+  Scenarios: Good multi-line statement uses
+    | File                                              |
+    | indent/ok/assignment_addition_multistatement      |
+    | indent/ok/assignment_hash_multistatement          |
+    | indent/ok/assignment_array_multistatement         |
+    | indent/ok/assignment_twolevel_hash_multistatement |
+    | indent/ok/assignment_twolevel_array_multistatement |
+    | indent/ok/method_call_multistatement |
 
   Scenarios: Good def uses
     | File                                                |

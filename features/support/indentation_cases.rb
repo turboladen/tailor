@@ -17,6 +17,54 @@ INDENT_OK[:class_singlestatement] =
   include Stuff
 end}
 
+INDENT_OK[:assignment_addition_multistatement] =
+%Q{thing = 1 +
+  2 + 3 + 4 +
+  5
+end}
+
+INDENT_OK[:assignment_hash_multistatement] =
+%Q{thing = {
+  :one => 'one',
+  two: 'two'
+}
+end}
+
+INDENT_OK[:assignment_array_multistatement] =
+%Q{thing = [
+  :one,
+  :two
+]
+end}
+
+INDENT_OK[:assignment_twolevel_hash_multistatement] =
+%Q{thing = {
+  :one => {
+    :a => 'a',
+    b: => 'b'
+  },
+  two: {
+    x: 'x',
+    :y => 'y'
+  }
+}
+end}
+
+INDENT_OK[:assignment_twolevel_array_multistatement] =
+%Q{thing = [
+  [:one],
+  [
+    :two
+  ]
+]
+end}
+
+INDENT_OK[:method_call_multistatement] =
+%Q{my_method_with_many_params(one, two,
+  three,
+  four,
+  five)}
+
 INDENT_OK[:def] =
 %Q{def a_method
 end}

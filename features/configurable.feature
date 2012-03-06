@@ -1,4 +1,3 @@
-@announce
 Feature: Configurable
   As a Ruby developer
   I want to be able to configure tailor to my style likings
