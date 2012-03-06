@@ -38,17 +38,18 @@ MSG
   s.summary = "Utility for checking style of Ruby files."
   s.test_files = Dir.glob "{feature,spec}/**/*_spec.rb"
 
-  s.add_runtime_dependency(%q<log_switch>, [">= 0.2.0"])
-  s.add_runtime_dependency(%q<term-ansicolor>, [">= 1.0.5"])
-  s.add_runtime_dependency(%q<text-table>, [">= 1.2.2"])
-  s.add_runtime_dependency(%q<trollop>, [">= 1.16.2"])
+  s.add_runtime_dependency(%q<log_switch>, ">= 0.2.0")
+  s.add_runtime_dependency(%q<term-ansicolor>, ">= 1.0.5")
+  s.add_runtime_dependency(%q<text-table>, ">= 1.2.2")
+  s.add_runtime_dependency(%q<trollop>, ">= 1.16.2")
 
-  s.add_development_dependency(%q<aruba>, [">=0"])
-  s.add_development_dependency(%q<cucumber>, [">= 1.0.2"])
-  s.add_development_dependency(%q<fakefs>, [">= 0.4.0"])
-  s.add_development_dependency(%q<rspec>, [">= 2.5.0"])
-  s.add_development_dependency(%q<roodi>, [">= 2.1.0"])
-  s.add_development_dependency(%q<simplecov>, [">= 0.4.0"])
-  s.add_development_dependency(%q<yard>, [">= 0.6.8"])
+  s.add_development_dependency(%q<aruba>, ">=0")
+  s.add_development_dependency(%q<cucumber>, ">= 1.0.2")
+  s.add_development_dependency(%q<fakefs>, ">= 0.4.0")
+  s.add_development_dependency(%q<rspec>, ">= 2.5.0")
+  s.add_development_dependency(%q<roodi>, ">= 2.1.0")
+  s.add_development_dependency(%q<simplecov>, ">= 0.4.0")
+  s.add_development_dependency(%q<yard>, ">= 0.7.0")
+  s.add_development_dependency(%q<yard-cucumber>, ">= 2.1.7")
 end
 
