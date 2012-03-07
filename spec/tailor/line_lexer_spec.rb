@@ -10,7 +10,7 @@ describe Tailor::LineLexer do
     Tailor.stub :log
     Tailor.stub(:config).and_return({
       indentation: { spaces: 2 },
-      trailing_newlines: 1
+      vertical_whitespace: { trailing_newlines: 1 }
     })
   end
 
@@ -93,7 +93,9 @@ describe Tailor::LineLexer do
 
       context "@config[:trailing_newlines] == 0" do
         before do
-          Tailor.stub(:config).and_return({ trailing_newlines: 0 })
+          Tailor.stub(:config).and_return({
+            vertical_whitespace: { trailing_newlines: 0 }
+          })
         end
 
         it "doesn't log a problem" do
@@ -299,7 +301,7 @@ describe Tailor::LineLexer do
 
     it "sets @indent_keyword_line to lineno" do
       subject.stub(:lineno).and_return 10
-      subject.update_indentation_expectations ""
+      subject.update_indentation_expectations "def"
 
       subject.instance_variable_get(:@indent_keyword_line).should == 10
     end
@@ -389,13 +391,13 @@ describe Tailor::LineLexer do
 
   describe "#multiline_braces?" do
     context "@brace_start_line is nil" do
-      before { subject.instance_variable_set(:@brace_start_line, nil) }
+      before { subject.instance_variable_set(:@brace_nesting, []) }
       specify { subject.multiline_braces?.should be_false }
     end
 
     context "@brace_start_line is 0 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@brace_start_line, 0)
+        subject.instance_variable_set(:@brace_nesting, [0])
         subject.stub(:lineno).and_return 0
       end
 
@@ -404,16 +406,16 @@ describe Tailor::LineLexer do
 
     context "@brace_start_line is 0 and lineno is 1" do
       before do
-        subject.instance_variable_set(:@brace_start_line, 0)
+        subject.instance_variable_set(:@brace_nesting, [0])
         subject.stub(:lineno).and_return 1
       end
 
       specify { subject.multiline_braces?.should be_true }
     end
 
-    context "@brace_start_line is 1 and lineno is 0" do
+    context "@brace_nesting.first is 1 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@brace_start_line, 1)
+        subject.instance_variable_set(:@brace_nesting, [1])
         subject.stub(:lineno).and_return 0
       end
 
@@ -423,31 +425,31 @@ describe Tailor::LineLexer do
 
   describe "#multiline_brackets?" do
     context "@bracket_start_line is nil" do
-      before { subject.instance_variable_set(:@bracket_start_line, nil) }
+      before { subject.instance_variable_set(:@bracket_nesting, []) }
       specify { subject.multiline_brackets?.should be_false }
     end
 
-    context "@bracket_start_line is 0 and lineno is 0" do
+    context "@bracket_nesting.first is 0 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@bracket_start_line, 0)
+        subject.instance_variable_set(:@bracket_nesting, [0])
         subject.stub(:lineno).and_return 0
       end
 
       specify { subject.multiline_brackets?.should be_false }
     end
 
-    context "@bracket_start_line is 0 and lineno is 1" do
+    context "@bracket_nesting.first is 0 and lineno is 1" do
       before do
-        subject.instance_variable_set(:@bracket_start_line, 0)
+        subject.instance_variable_set(:@bracket_nesting, [0])
         subject.stub(:lineno).and_return 1
       end
 
       specify { subject.multiline_brackets?.should be_true }
     end
 
-    context "@bracket_start_line is 1 and lineno is 0" do
+    context "@bracket_nesting.first is 1 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@bracket_start_line, 1)
+        subject.instance_variable_set(:@bracket_nesting, [1])
         subject.stub(:lineno).and_return 0
       end
 
