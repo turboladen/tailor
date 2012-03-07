@@ -20,22 +20,25 @@ end}
 INDENT_OK[:assignment_addition_multistatement] =
 %Q{thing = 1 +
   2 + 3 + 4 +
-  5
-end}
+  5}
 
 INDENT_OK[:assignment_hash_multistatement] =
 %Q{thing = {
   :one => 'one',
   two: 'two'
-}
-end}
+}}
 
 INDENT_OK[:assignment_array_multistatement] =
 %Q{thing = [
   :one,
   :two
-]
-end}
+]}
+
+INDENT_OK[:assignment_paren_multistatement] =
+  %Q{eval('puts',
+  binding,
+  'my_file.rb',
+  5}
 
 INDENT_OK[:assignment_twolevel_hash_multistatement] =
 %Q{thing = {
@@ -47,8 +50,7 @@ INDENT_OK[:assignment_twolevel_hash_multistatement] =
     x: 'x',
     :y => 'y'
   }
-}
-end}
+}}
 
 INDENT_OK[:assignment_twolevel_array_multistatement] =
 %Q{thing = [
@@ -57,8 +59,15 @@ INDENT_OK[:assignment_twolevel_array_multistatement] =
     :two,
     :three
   ]
-]
-end}
+]}
+
+INDENT_OK[:assignment_twolevel_paren_multistatement] =
+%Q{result = Integer(
+  String.new(
+    "1"
+  ).to_i,
+  16
+)}
 
 INDENT_OK[:method_call_multistatement] =
 %Q{my_method_with_many_params(one, two,

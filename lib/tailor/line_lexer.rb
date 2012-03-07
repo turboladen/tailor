@@ -33,6 +33,7 @@ class Tailor
       @proper_indentation[:next_line] = 0
       @brace_nesting = []
       @bracket_nesting = []
+      @paren_nesting = []
 
       super @file_text
     end
@@ -188,7 +189,7 @@ class Tailor
         return
       end
 
-      if @brace_nesting.empty? && @bracket_nesting.empty?
+      if @brace_nesting.empty? && @bracket_nesting.empty? && @paren_nesting.empty?
         sexp = Ripper.sexp(current_line_of_text)
 
         @in_multiline_statement = if sexp.nil?
@@ -286,6 +287,9 @@ class Tailor
 
     def on_lparen(token)
       log "LPAREN: '#{token}'"
+      @paren_nesting << lineno
+      @proper_indentation[:next_line] += @config[:indentation][:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
 
@@ -303,13 +307,6 @@ class Tailor
         log message
         @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
       end
-
-      if multiline_statement?
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-      end
-
-      log "Setting @in_multiline_statement to nil"
-      @in_multiline_statement = nil
 
       # prep for next line
       log "Setting @proper_indentation[:this_line] = that of :next_line"
@@ -363,9 +360,10 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_rbracket(token)
-      log "rbracket"
+      log "RBRACKET: '#{token}'"
 
       if multiline_brackets?
+        log "multiline brackets!"
         @proper_indentation[:this_line] -= @config[:indentation][:spaces]
       end
 
@@ -388,6 +386,16 @@ class Tailor
 
     def on_rparen(token)
       log "RPAREN: '#{token}'"
+
+      if multiline_parens?
+        log "multiline parens!"
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+      end
+
+      @paren_nesting.pop
+
+      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
 
@@ -578,6 +586,14 @@ class Tailor
         false
       else
         @bracket_nesting.last < lineno
+      end
+    end
+
+    def multiline_parens?
+      if @paren_nesting.empty?
+        false
+      else
+        @paren_nesting.last < lineno
       end
     end
 

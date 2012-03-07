@@ -35,8 +35,10 @@ Feature: Indentation check
     | indent/ok/assignment_addition_multistatement       |
     | indent/ok/assignment_hash_multistatement           |
     | indent/ok/assignment_array_multistatement          |
+    | indent/ok/assignment_paren_multistatement          |
     | indent/ok/assignment_twolevel_hash_multistatement  |
     | indent/ok/assignment_twolevel_array_multistatement |
+    | indent/ok/assignment_twolevel_paren_multistatement |
     | indent/ok/method_call_multistatement               |
 
   Scenarios: Good def uses
