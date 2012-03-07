@@ -1,47 +1,13 @@
 require 'ripper'
 require_relative '../tailor'
+require_relative 'lexer_constants'
 
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
+  # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   class LineLexer < Ripper::Lexer
-    KEYWORDS_TO_INDENT     = [
-      'begin',
-      'case',
-      'class',
-      'def',
-      'do',
-      'else',
-      'elsif',
-      'ensure',
-      'if',
-      'module',
-      'rescue',
-      'unless',
-      'when',
-      'while'
-    ]
-    CONTINUATION_KEYWORDS  = [
-      'elsif',
-      'else',
-      'ensure',
-      'rescue',
-      'when'
-    ]
-    KEYWORDS_AND_MODIFIERS = [
-      'if',
-      'unless',
-      'until',
-      'while'
-    ]
-
-    MODIFIERS = {
-      'if'     => :if_mod,
-      'rescue' => :rescue_mod,
-      'unless' => :unless_mod,
-      'until'  => :until_mod,
-      'while'  => :while_mod
-    }
+    include Tailor::LexerConstants
 
     attr_reader :indentation_tracker
     attr_accessor :problems
@@ -119,65 +85,83 @@ class Tailor
       count > 0 ? text : (text + "\n")
     end
 
-    # This is the first thing that exists on a new line--NOT the last!
-    def on_nl(token)
-      log "nl"
-
-      c = current_lex(super)
-
-      # check indentation
-      indentation = current_line_indent(c)
-
-      if indentation != @proper_indentation[:this_line]
-        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
-        log message
-        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
-      end
-
-      if multiline_statement?
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-      end
-
-      log "Setting @in_multiline_statement to nil"
-      @in_multiline_statement = nil
-
-      # prep for next line
-      log "Setting @proper_indentation[:this_line] = that of :next_line"
-      @proper_indentation[:this_line] = @proper_indentation[:next_line]
-      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
-
+    def on_backref(token)
+      log "BACKREF: '#{token}'"
       super(token)
     end
 
-    # @param [Array] lexed_output The lexed output for the whole file.
-    # @return [Array]
-    def current_lex(lexed_output)
-      lexed_output.find_all { |token| token.first.first == lineno }
+    def on_backtick(token)
+      log "BACKTICK: '#{token}'"
+      super(token)
     end
 
-    # @return [Fixnum] Number of the first non-space (:on_sp) token.
-    def current_line_indent(lexed_line_output)
-      first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
-      first_non_space_element.first.last
+    def on_comma(token)
+      log "COMMA: #{token}"
+      super(token)
     end
 
-    # Looks at the +lexed_line_output+ and determines if it' s a line of just
-    # space characters: spaces, newlines.
-    #
-    # @param [Array] lexed_line_output
-    # @return [Boolean]
-    def line_of_only_spaces?(lexed_line_output)
-      first_non_space_element = lexed_line_output.find do |e|
-        e[1] != (:on_sp && :on_nl && :on_ignored_nl)
-      end
+    def on_comment(token)
+      log "COMMENT: '#{token}'"
+      super(token)
+    end
 
-      log "first non-space element '#{first_non_space_element}'"
+    def on_cvar(token)
+      log "CVAR: '#{token}'"
+      super(token)
+    end
 
-      if first_non_space_element.nil? || first_non_space_element.empty?
-        true
-      else
-        false
-      end
+    def on_embdoc(token)
+      log "EMBDOC: '#{token}'"
+      super(token)
+    end
+
+    def on_embdoc_beg(token)
+      log "EMBDOC_BEG: '#{token}'"
+      super(token)
+    end
+
+    def on_embdoc_end(token)
+      log "EMBDOC_BEG: '#{token}'"
+      super(token)
+    end
+
+    # Matches the { in an expression embedded in a string.
+    def on_embexpr_beg(token)
+      log "embexpr_beg, token '#{token}'"
+      @embexpr_beg = true
+      super(token)
+    end
+
+    def on_embexpr_end(token)
+      log "embexpr_end: token: '#{token}'"
+      @embexpr_beg = false
+      super(token)
+    end
+
+    def on_embvar(token)
+      log "EMBVAR: '#{token}'"
+      super(token)
+    end
+
+    # Global variable
+    def on_gvar(token)
+      log "GVAR: '#{token}'"
+      super(token)
+    end
+
+    def on_heredoc_beg(token)
+      log "HEREDOC_BEG: '#{token}'"
+      super(token)
+    end
+
+    def on_heredoc_end(token)
+      log "HEREDOC_END: '#{token}'"
+      super(token)
+    end
+
+    def on_ident(token)
+      log "IDENT: '#{token}'"
+      super(token)
     end
 
     # Called when the lexer matches a Ruby ignored newline (not sure how this
@@ -200,10 +184,10 @@ class Tailor
           @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
         end
       else
-        log "Line of only spaces."
+        log "Line of only spaces.  Moving on."
+        return
       end
 
-      #if @brace_start_line.nil? && @bracket_start_line.nil?
       if @brace_nesting.empty? && @bracket_nesting.empty?
         sexp = Ripper.sexp(current_line_of_text)
 
@@ -239,6 +223,12 @@ class Tailor
       super(token)
     end
 
+    # Instance variable
+    def on_ivar(token)
+      log "IVAR: '#{token}'"
+      super(token)
+    end
+
     # Called when the lexer matches a Ruby keyword
     #
     # @param [String] token The token that the lexer matched.
@@ -264,6 +254,232 @@ class Tailor
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
       super(token)
+    end
+
+    def on_label(token)
+      log "LABEL: '#{token}'"
+      super(token)
+    end
+
+    # Called when the lexer matches a {.  Note a #{ match calls
+    # {on_embexpr_beg}.
+    #
+    # @param [String] token The token that the lexer matched.
+    def on_lbrace(token)
+      log "lbrace"
+      @brace_nesting << lineno
+      @proper_indentation[:next_line] += @config[:indentation][:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    # Called when the lexer matches a [.
+    #
+    # @param [String] token The token that the lexer matched.
+    def on_lbracket(token)
+      log "lbracket"
+      @bracket_nesting << lineno
+      @proper_indentation[:next_line] += @config[:indentation][:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    def on_lparen(token)
+      log "LPAREN: '#{token}'"
+      super(token)
+    end
+
+    # This is the first thing that exists on a new line--NOT the last!
+    def on_nl(token)
+      log "nl"
+
+      c = current_lex(super)
+
+      # check indentation
+      indentation = current_line_indent(c)
+
+      if indentation != @proper_indentation[:this_line]
+        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
+        log message
+        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+      end
+
+      if multiline_statement?
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+      end
+
+      log "Setting @in_multiline_statement to nil"
+      @in_multiline_statement = nil
+
+      # prep for next line
+      log "Setting @proper_indentation[:this_line] = that of :next_line"
+      @proper_indentation[:this_line] = @proper_indentation[:next_line]
+      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+
+      super(token)
+    end
+
+    # Operators
+    def on_op(token)
+      log "OP: '#{token}'"
+      super(token)
+    end
+
+    def on_period(token)
+      log "PERIOD: '#{token}'"
+      super(token)
+    end
+
+    def on_qwords_beg(token)
+      log "QWORDS_BEG: '#{token}'"
+      super(token)
+    end
+
+    # Called when the lexer matches a }.
+    #
+    # @param [String] token The token that the lexer matched.
+    def on_rbrace(token)
+      log "rbrace"
+
+      if multiline_braces?
+        log "multiline braces!"
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+      end
+
+      @brace_nesting.pop
+
+      # Ripper won't match a closing } in #{} so we have to track if we're
+      # inside of one.  If we are, don't decrement then :next_line.
+      unless @embexpr_beg
+        @proper_indentation[:next_line] -= @config[:indentation][:spaces]
+      end
+
+      @embexpr_beg = false
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    # Called when the lexer matches a ].
+    #
+    # @param [String] token The token that the lexer matched.
+    def on_rbracket(token)
+      log "rbracket"
+
+      if multiline_brackets?
+        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+      end
+
+      @bracket_nesting.pop
+
+      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
+      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      super(token)
+    end
+
+    def on_regexp_beg(token)
+      log "REGEXP_BEG: '#{token}'"
+      super(token)
+    end
+
+    def on_regexp_end(token)
+      log "REGEXP_END: '#{token}'"
+      super(token)
+    end
+
+    def on_rparen(token)
+      log "RPAREN: '#{token}'"
+      super(token)
+    end
+
+    def on_semicolon(token)
+      log "SEMICOLON: '#{token}'"
+      super(token)
+    end
+
+    def on_sp(token)
+      log "SP: '#{token}'; size: #{token.size}; column: #{column}"
+      super(token)
+    end
+
+    def on_symbeg(token)
+      log "SYMBEG: '#{token}'"
+      super(token)
+    end
+
+    def on_tlambda(token)
+      log "TLAMBDA: '#{token}'"
+      super(token)
+    end
+
+    def on_tlambeg(token)
+      log "TLAMBEG: '#{token}'"
+      super(token)
+    end
+
+    def on_tstring_beg(token)
+      log "TSTRING_BEG: '#{token}'"
+      super(token)
+    end
+
+    def on_tstring_content(token)
+      log "TSTRING_CONTENT: '#{token}'"
+      super(token)
+    end
+
+    def on_tstring_end(token)
+      log "TSTRING_END: '#{token}'"
+      super(token)
+    end
+
+    def on_words_beg(token)
+      log "WORDS_BEG: '#{token}'"
+      super(token)
+    end
+
+    def on_words_sep(token)
+      log "WORDS_SEP: '#{token}'"
+      super(token)
+    end
+
+    def on___end__(token)
+      log "__END__: '#{token}'"
+      super(token)
+    end
+
+    def on_CHAR(token)
+      log "CHAR: '#{token}'"
+      super(token)
+    end
+
+    # @param [Array] lexed_output The lexed output for the whole file.
+    # @return [Array]
+    def current_lex(lexed_output)
+      lexed_output.find_all { |token| token.first.first == lineno }
+    end
+
+    # @return [Fixnum] Number of the first non-space (:on_sp) token.
+    def current_line_indent(lexed_line_output)
+      first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
+      first_non_space_element.first.last
+    end
+
+    # Looks at the +lexed_line_output+ and determines if it' s a line of just
+    # space characters: spaces, newlines.
+    #
+    # @param [Array] lexed_line_output
+    # @return [Boolean]
+    def line_of_only_spaces?(lexed_line_output)
+      first_non_space_element = lexed_line_output.find do |e|
+        e[1] != (:on_sp && :on_nl && :on_ignored_nl)
+      end
+
+      log "first non-space element '#{first_non_space_element}'"
+
+      if first_non_space_element.nil? || first_non_space_element.empty?
+        true
+      else
+        false
+      end
     end
 
     # Checks the current line to see if the given +token+ is being used as a
@@ -348,69 +564,6 @@ class Tailor
       @indent_keyword_line == lineno
     end
 
-    # Called when the lexer matches a [.
-    #
-    # @param [String] token The token that the lexer matched.
-    def on_lbracket(token)
-      log "lbracket"
-      @bracket_nesting << lineno
-      @proper_indentation[:next_line] += @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
-      super(token)
-    end
-
-    # Called when the lexer matches a ].
-    #
-    # @param [String] token The token that the lexer matched.
-    def on_rbracket(token)
-      log "rbracket"
-
-      if multiline_brackets?
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-      end
-
-      @bracket_nesting.pop
-
-      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
-      super(token)
-    end
-
-    # Called when the lexer matches a {.  Note a #{ match calls
-    # {on_embexpr_beg}.
-    #
-    # @param [String] token The token that the lexer matched.
-    def on_lbrace(token)
-      log "lbrace"
-      @brace_nesting << lineno
-      @proper_indentation[:next_line] += @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
-      super(token)
-    end
-
-    # Called when the lexer matches a }.
-    #
-    # @param [String] token The token that the lexer matched.
-    def on_rbrace(token)
-      log "rbrace"
-
-      if multiline_braces?
-        log "multiline braces!"
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-      end
-
-      @brace_nesting.pop
-
-      # Ripper won't match a closing } in #{} so we have to track if we're
-      # inside of one.  If we are, don't decrement then :next_line.
-      unless @embexpr_beg
-        @proper_indentation[:next_line] -= @config[:indentation][:spaces]
-      end
-
-      @embexpr_beg = false
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
-      super(token)
-    end
 
     def multiline_braces?
       if @brace_nesting.empty?
@@ -438,20 +591,15 @@ class Tailor
       end
     end
 
-    def on_embexpr_beg(token)
-      log "embexpr_beg"
-      @embexpr_beg = true
-      super(token)
-    end
-
-    def on_embexpr_end(token)
-      log "embexpr_end: token: '#{token}'"
-      super(token)
-    end
+    #---------------------------------------------------------------------------
+    # Privates!
+    #---------------------------------------------------------------------------
+    private
 
     def log(*args)
       args.first.insert(0, "<#{self.class}> #{lineno}[#{column}]: ")
       Tailor.log(*args)
     end
+
   end
 end
