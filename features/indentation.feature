@@ -3,12 +3,17 @@ Feature: Indentation check
   I want to check the indentation of my Ruby code
   So that I follow Ruby indentation conventions.
 
-  # Notice the newline after the end keyword--line checking only occurs when
-  # we've hit the end of the line; since there's no signal for this, the
-  # error doesn't get caught unless there's that newline there.
-
+  @good_files
   Scenario Outline: Don't detect problems on properly indented files with no newlines at the end
-    Given <File> exists
+    Given <File> exists with a newline at the end
+    And my configuration file "testfile.yml" looks like:
+      """
+      ---
+      :indentation:
+        :spaces: 2
+      :vertical_whitespace:
+        :trailing_newlines: 0
+      """
     When I successfully run `tailor <File>`
     Then the output should contain "problem count: 0"
     And the exit status should be 0
@@ -52,6 +57,7 @@ Feature: Indentation check
     | indent/ok/unless_modifier |
     | indent/ok/def_return_unless_modifier |
 
+  @trailing_newlines, @good_files
   Scenario Outline: Don't detect problems on properly indented files with newlines at the end
     Given <File> exists with a newline at the end
     When I successfully run `tailor <File>`
@@ -88,8 +94,9 @@ Feature: Indentation check
     | indent/ok/unless_modifier |
     | indent/ok/def_return_unless_modifier |
 
+  @bad_files
   Scenario Outline: Detect singular problems on poorly indented files
-    Given <File> exists
+    Given <File> exists with a newline at the end
     When I run `tailor <File>`
     Then the output should contain "problem count: 1"
     And the exit status should be 1
@@ -110,6 +117,7 @@ Feature: Indentation check
     | indent/1/def_content_indented_end        |
     | indent/1/class_def_content_outdented_end |
 
+  @trailing_newlines, @bad_files
   Scenario Outline: Detect singular problems on poorly indented files with newlines at the end
     Given <File> exists with a newline at the end
     When I run `tailor <File>`

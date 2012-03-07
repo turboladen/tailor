@@ -60,7 +60,6 @@ class Tailor
       @problems = []
       @config = Tailor.config
       @file_text = ensure_trailing_newline(@file_text)
-      p @file_text
 
       Tailor.log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
       @proper_indentation             = {}
@@ -103,7 +102,6 @@ class Tailor
     #   already.
     def ensure_trailing_newline(text)
       count = count_trailing_newlines(text)
-      puts "count: #{count}"
 
       if count != @config[:vertical_whitespace][:trailing_newlines]
         message = "File has #{count} trailing newlines, but should have #{@config[:vertical_whitespace][:trailing_newlines]}"
