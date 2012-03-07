@@ -74,7 +74,11 @@ class Tailor
     # @param [String] text The file's text.
     # @return [Fixnum] The number of \n at the end of the file.
     def count_trailing_newlines(text)
-      text.scan(/\n$/).size
+      if text.end_with? "\n"
+        text.split(/\b/).last.size
+      else
+        0
+      end
     end
 
     # Checks to see if the file's final character is a \n.  If it is, it just
