@@ -7,7 +7,7 @@ Feature: Indentation check
   Scenario Outline: Don't detect problems on properly indented files with no newlines at the end
     Given <File> exists with a newline at the end
     And my configuration file "testfile.yml" looks like:
-      """
+    """
       ---
       :indentation:
         :spaces: 2
@@ -19,11 +19,11 @@ Feature: Indentation check
     And the exit status should be 0
 
   Scenarios: Good class uses
-    | File                                |
-    | indent/ok/class                     |
-    | indent/ok/nested_class              |
-    | indent/ok/class_empty               |
-    | indent/ok/one_line_class            |
+    | File                     |
+    | indent/ok/class          |
+    | indent/ok/nested_class   |
+    | indent/ok/class_empty    |
+    | indent/ok/one_line_class |
 
   Scenarios: Good single-line statement uses
     | File                                    |
@@ -31,13 +31,13 @@ Feature: Indentation check
     | indent/ok/require_class_singlestatement |
 
   Scenarios: Good multi-line statement uses
-    | File                                              |
-    | indent/ok/assignment_addition_multistatement      |
-    | indent/ok/assignment_hash_multistatement          |
-    | indent/ok/assignment_array_multistatement         |
-    | indent/ok/assignment_twolevel_hash_multistatement |
+    | File                                               |
+    | indent/ok/assignment_addition_multistatement       |
+    | indent/ok/assignment_hash_multistatement           |
+    | indent/ok/assignment_array_multistatement          |
+    | indent/ok/assignment_twolevel_hash_multistatement  |
     | indent/ok/assignment_twolevel_array_multistatement |
-    | indent/ok/method_call_multistatement |
+    | indent/ok/method_call_multistatement               |
 
   Scenarios: Good def uses
     | File                                                |
@@ -48,13 +48,13 @@ Feature: Indentation check
     | indent/ok/require_class_singlestatement_def_content |
 
   Scenarios: 'if' as modifier
-    | File                  |
-    | indent/ok/if_modifier |
+    | File                             |
+    | indent/ok/if_modifier            |
     | indent/ok/def_return_if_modifier |
 
   Scenarios: 'unless' as modifier
-    | File                  |
-    | indent/ok/unless_modifier |
+    | File                                 |
+    | indent/ok/unless_modifier            |
     | indent/ok/def_return_unless_modifier |
 
   @trailing_newlines, @good_files
@@ -65,11 +65,11 @@ Feature: Indentation check
     And the exit status should be 0
 
   Scenarios: Good class uses
-    | File                                |
-    | indent/ok/class                     |
-    | indent/ok/nested_class              |
-    | indent/ok/class_empty               |
-    | indent/ok/one_line_class            |
+    | File                     |
+    | indent/ok/class          |
+    | indent/ok/nested_class   |
+    | indent/ok/class_empty    |
+    | indent/ok/one_line_class |
 
   Scenarios: Good single-line statement uses
     | File                                    |
@@ -85,13 +85,13 @@ Feature: Indentation check
     | indent/ok/require_class_singlestatement_def_content |
 
   Scenarios: 'if' as modifier
-    | File                  |
-    | indent/ok/if_modifier |
+    | File                             |
+    | indent/ok/if_modifier            |
     | indent/ok/def_return_if_modifier |
 
   Scenarios: 'unless' as modifier
-    | File                  |
-    | indent/ok/unless_modifier |
+    | File                                 |
+    | indent/ok/unless_modifier            |
     | indent/ok/def_return_unless_modifier |
 
   @bad_files

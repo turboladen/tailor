@@ -54,7 +54,8 @@ INDENT_OK[:assignment_twolevel_array_multistatement] =
 %Q{thing = [
   [:one],
   [
-    :two
+    :two,
+    :three
   ]
 ]
 end}
