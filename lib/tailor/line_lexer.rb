@@ -69,6 +69,16 @@ class Tailor
       super @file_text
     end
 
+    # Counts the number of newlines at the end of the file.
+    #
+    # @param [String] text The file's text.
+    # @return [Fixnum] The number of \n at the end of the file.
+    def count_trailing_newlines(text)
+      text =~ /(\n*)$/
+
+      $1.size
+    end
+
     # Checks to see if the file's final character is a \n.  If it is, it just
     # returns the text that was passed in.  If it's not, it adds a \n, since
     # the current indentation-checking algorithm only checks indent levels when
@@ -79,20 +89,20 @@ class Tailor
     # @return [String] The file's text with a \n if there wasn't one there
     #   already.
     def ensure_trailing_newline(text)
-      if text[-1] == "\n"
-        text
-      else
-        if @config[:trailing_newlines] > 0
-          @problems << {
-            file_name: @file_name,
-            type: :trailing_newlines,
-            line: "<EOF>",
-            message: "File is missing trailing newline"
-          }
-        end
+      count = count_trailing_newlines(text)
 
-        text + "\n"
+      if count != @config[:trailing_newlines]
+        message = "File has #{count}, but should have #{@config[:trailing_newlines]}"
+
+        @problems << {
+          file_name: @file_name,
+          type: :trailing_newlines,
+          line: "<EOF>",
+          message: message
+        }
       end
+
+      count > 0 ? text : (text + "\n")
     end
 
     def log(*args)

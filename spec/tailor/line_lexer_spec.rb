@@ -52,6 +52,18 @@ describe Tailor::LineLexer do
     end
   end
 
+  describe "#count_trailing_newlines" do
+    context "text contains 0 trailing \\n" do
+      let(:text) { "text" }
+      specify { subject.count_trailing_newlines(text).should be_zero }
+    end
+
+    context "text contains 1 trailing \\n" do
+      let(:text) { "text\n" }
+      specify { subject.count_trailing_newlines(text).should == 1 }
+    end
+  end
+
   describe "#ensure_trailing_newline" do
     context "text contains a trailing newline already" do
       let(:text) { "text\n" }
