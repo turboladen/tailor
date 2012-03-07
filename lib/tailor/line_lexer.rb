@@ -74,9 +74,7 @@ class Tailor
     # @param [String] text The file's text.
     # @return [Fixnum] The number of \n at the end of the file.
     def count_trailing_newlines(text)
-      text =~ /(\n*)$/
-
-      $1.size
+      text.scan(/\n$/).size
     end
 
     # Checks to see if the file's final character is a \n.  If it is, it just
@@ -92,7 +90,7 @@ class Tailor
       count = count_trailing_newlines(text)
 
       if count != @config[:trailing_newlines]
-        message = "File has #{count}, but should have #{@config[:trailing_newlines]}"
+        message = "File has #{count} trailing newlines, but should have #{@config[:trailing_newlines]}"
 
         @problems << {
           file_name: @file_name,
