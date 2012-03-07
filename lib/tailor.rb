@@ -13,6 +13,7 @@ class Tailor
     # Main entry-point method.
     #
     # @param [String] path File or directory to check files in.
+    # TODO: When checking a single nested file, it gets called extra times
     def check_style(path)
       if File.file?(path)
         Tailor.log "<#{self.name}> Checking style of a single file: #{path}."
@@ -70,6 +71,7 @@ class Tailor
     # @return [Hash] The configuration read from the config file or the default
     #   config.
     def config
+      return @config if @config
       user_config_file = File.expand_path(Dir.home + '/.tailorrc')
 
       @config = if File.exists? user_config_file
@@ -79,6 +81,13 @@ class Tailor
         default_config_file = ERB.new(File.read(erb_file)).result(binding)
         YAML.load default_config_file
       end
+    end
+
+    # Use a different config file.
+    #
+    # @param [String] new_config_file Path to the new config file.
+    def config=(new_config_file)
+      @config = YAML.load_file(new_config_file)
     end
   end
 end

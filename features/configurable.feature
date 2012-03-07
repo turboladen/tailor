@@ -29,11 +29,49 @@ Feature: Configurable
       """
       ---
       :indentation:
-        :spaces: 7
-        :special_param: false
+        :spaces: 5
+      :vertical_whitespace:
+        :trailing_newlines: 11
       """
     When I successfully run `tailor --config`
-    Then the output should match /spaces\s+|\s+7/
-    And the output should match /special_param\s+|\s+false/
-    And the exit status should be 0
+    Then the output should contain:
+      """
+      +-------------------------+------------------+
+      |               Configuration                |
+      +-------------------------+------------------+
+      |    Indentation                             |
+      +-------------------------+------------------+
+      |    spaces               |    5             |
+      +-------------------------+------------------+
+      |    Vertical whitespace                     |
+      +-------------------------+------------------+
+      |    trailing_newlines    |    11            |
+      +-------------------------+------------------+
+      """
+
+  Scenario: Pass in configuration file at runtime
+    Given a file named "some_config.yml" with:
+      """
+      ---
+      :indentation:
+        :spaces: 7
+      :vertical_whitespace:
+        :trailing_newlines: 13
+      """
+    When I successfully run `tailor --config some_config.yml`
+    Then the output should contain:
+      """
+      +-------------------------+------------------+
+      |               Configuration                |
+      +-------------------------+------------------+
+      |    Indentation                             |
+      +-------------------------+------------------+
+      |    spaces               |    7             |
+      +-------------------------+------------------+
+      |    Vertical whitespace                     |
+      +-------------------------+------------------+
+      |    trailing_newlines    |    13            |
+      +-------------------------+------------------+
+      """
+
 

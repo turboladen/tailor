@@ -15,9 +15,20 @@ opts = Trollop.options do
 end
 
 if opts[:config]
-  puts Tailor::CLIHelpers.version
-  puts Tailor::CLIHelpers.config
-  exit
+  if ARGV.size.zero?
+    puts Tailor::CLIHelpers.version
+    puts Tailor::CLIHelpers.config
+    exit
+  elsif ARGV.size == 1
+    Tailor.config = ARGV.shift
+    puts Tailor::CLIHelpers.version
+    puts Tailor::CLIHelpers.config
+    exit
+  elsif ARGV.size == 2
+    new_config_file = ARGV.shift
+    Tailor.config = new_config_file
+    Tailor.log "Using config file: #{File.expand_path(new_config_file)}"
+  end
 end
 
 stuff_to_check = ARGV[0]
