@@ -105,8 +105,8 @@ class Tailor
       count = count_trailing_newlines(text)
       puts "count: #{count}"
 
-      if count != @config[:trailing_newlines]
-        message = "File has #{count} trailing newlines, but should have #{@config[:trailing_newlines]}"
+      if count != @config[:vertical_whitespace][:trailing_newlines]
+        message = "File has #{count} trailing newlines, but should have #{@config[:vertical_whitespace][:trailing_newlines]}"
 
         @problems << {
           file_name: @file_name,

@@ -53,20 +53,23 @@ class Tailor
       table = Text::Table.new(horizontal_padding: 4)
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
 
+      i = 0
+
       Tailor.config.each do |first_level,first_value|
+        table.rows << [{ value: first_level.to_s.capitalize.gsub("_", " "),
+          colspan: 2, align: :left }]
+        table.rows << :separator
+
         if first_value.is_a? Hash
-          table.rows << [{ value: first_level.capitalize, colspan: 2, align: :left }]
-
-          table.rows << :separator
-
           first_value.each do |second_level,second_value|
             table.rows << [second_level, second_value]
           end
-
         else
-          table.rows << :separator
-          table.rows << [first_level.to_s.capitalize.gsub("_", " "), first_value]
+          table.rows << [first_level, first_value]
         end
+
+        i += 1
+        table.rows << :separator unless Tailor.config.size == i
       end
 
       table

@@ -8,17 +8,19 @@ Feature: Configurable
     When I successfully run `tailor --config`
     Then the output should contain:
       """
-      +---------------------------+---------------+
-      |               Configuration               |
-      +---------------------------+---------------+
-      |    Indentation                            |
-      +---------------------------+---------------+
-      |    spaces                 |    2          |
-      |    allow_hard_tabs        |    false      |
-      |    continuation_spaces    |    2          |
-      +---------------------------+---------------+
-      |    Trailing newlines      |    1          |
-      +---------------------------+---------------+
+      +---------------------------+------------------+
+      |                Configuration                 |
+      +---------------------------+------------------+
+      |    Indentation                               |
+      +---------------------------+------------------+
+      |    spaces                 |    2             |
+      |    allow_hard_tabs        |    false         |
+      |    continuation_spaces    |    2             |
+      +---------------------------+------------------+
+      |    Vertical whitespace                       |
+      +---------------------------+------------------+
+      |    trailing_newlines      |    1             |
+      +---------------------------+------------------+
       """
     And the exit status should be 0
 
