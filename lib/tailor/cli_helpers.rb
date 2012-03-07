@@ -54,11 +54,18 @@ class Tailor
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
 
       Tailor.config.each do |first_level,first_value|
-        table.rows << [{ value: first_level.capitalize, colspan: 2, align: :left }]
-        table.rows << :separator
+        if first_value.is_a? Hash
+          table.rows << [{ value: first_level.capitalize, colspan: 2, align: :left }]
 
-        first_value.each do |second_level,second_value|
-          table.rows << [second_level, second_value]
+          table.rows << :separator
+
+          first_value.each do |second_level,second_value|
+            table.rows << [second_level, second_value]
+          end
+
+        else
+          table.rows << :separator
+          table.rows << [first_level.to_s.capitalize.gsub("_", " "), first_value]
         end
       end
 

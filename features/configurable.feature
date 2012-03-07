@@ -17,6 +17,8 @@ Feature: Configurable
       |    allow_hard_tabs        |    false      |
       |    continuation_spaces    |    2          |
       +---------------------------+---------------+
+      |    Trailing newlines      |    1          |
+      +---------------------------+---------------+
       """
     And the exit status should be 0
 
