@@ -17,6 +17,7 @@ class Tailor
       'when',
       'while'
     ]
+
     CONTINUATION_KEYWORDS  = [
       'elsif',
       'else',
@@ -24,6 +25,7 @@ class Tailor
       'rescue',
       'when'
     ]
+
     KEYWORDS_AND_MODIFIERS = [
       'if',
       'unless',
@@ -38,5 +40,23 @@ class Tailor
       'until'  => :until_mod,
       'while'  => :while_mod
     }
+
+    MULTILINE_OPERATORS = [
+      '!',
+      '%',
+      '&',
+      '*',
+      '+',
+      '-',
+      '/',
+      '<',
+      '=',
+      '>',
+      '?',
+      '^',
+      #'|',
+      '~',
+      ':'
+    ]
   end
 end

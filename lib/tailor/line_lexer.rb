@@ -581,9 +581,15 @@ class Tailor
 
       until tokens_in_line.last != (:on_ignored_nl || :on_nl)
         tokens_in_line.pop
+        lexed_line_output.pop
       end
 
-      tokens_in_line.last == :on_op ? true : false
+      if MULTILINE_OPERATORS.include?(lexed_line_output.last.last) &&
+        tokens_in_line.last == :on_op
+        true
+      else
+        false
+      end
     end
 
 
