@@ -1,4 +1,4 @@
-Feature: Indentation check on bad fails without trailing newilnes
+Feature: Indentation check on bad fails without trailing newlines
 
   @bad_files
   Scenario Outline: Detect singular problems on poorly indented files
