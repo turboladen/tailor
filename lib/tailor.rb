@@ -69,6 +69,10 @@ class Tailor
           table.rows << problem.values
         end
 
+        table.rows << :separator
+        table.rows << [
+          { value: "TOTAL PROBLEMS", align: :right },
+          { value: problem_count, colspan: 3, align: :left }]
         puts table
       end
     end
