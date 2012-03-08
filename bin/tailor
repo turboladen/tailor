@@ -12,6 +12,7 @@ opts = Trollop.options do
   version Tailor::CLIHelpers.version
   opt :config, "Pass a config file; if no arg, show config.",
     short: "-c"
+  opt :debug, "Turn on debug logging.", short: "-d"
 end
 
 if opts[:config]
@@ -29,6 +30,10 @@ if opts[:config]
     Tailor.config = new_config_file
     Tailor.log "Using config file: #{File.expand_path(new_config_file)}"
   end
+end
+
+if opts[:debug]
+  Tailor.log = true
 end
 
 stuff_to_check = ARGV[0]
