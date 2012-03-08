@@ -389,6 +389,7 @@ class Tailor
       if multiline_parens?
         log "multiline parens!"
         @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+        log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
       end
 
       @paren_nesting.pop
@@ -591,7 +592,6 @@ class Tailor
         false
       end
     end
-
 
     def multiline_braces?
       if @brace_nesting.empty?

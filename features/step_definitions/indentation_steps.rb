@@ -1,14 +1,12 @@
-Given /^(.+) exists$/ do |file_name|
+Given /^(.+) exists with(\w*) a newline at the end$/ do |file_name, no_newline|
   file_contents = get_file_contents(file_name)
   file_contents.should_not be_nil
 
-  write_file(file_name, file_contents)
-end
-
-Given /^(.+) exists with a newline at the end$/ do |file_name|
-  file_contents = get_file_contents(file_name)
-  file_contents.should_not be_nil
-  file_contents << "\n" unless file_contents[-1] == "\n"
+  if no_newline.empty?
+    file_contents << "\n" unless file_contents[-1] == "\n"
+  else
+    file_contents[-1] = '' if file_contents[-1] == "\n"
+  end
 
   write_file(file_name, file_contents)
 end
