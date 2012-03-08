@@ -183,7 +183,13 @@ class Tailor
         if indentation != @proper_indentation[:this_line]
           message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
           log message
-          @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+
+          @problems << {
+            file_name: @file_name,
+            type: :indentation,
+            line: lineno,
+            message: message
+          }
         end
       else
         log "Line of only spaces.  Moving on."

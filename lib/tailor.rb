@@ -1,6 +1,8 @@
 require 'erb'
 require 'yaml'
 require 'log_switch'
+require 'text-table'
+require 'fileutils'
 require_relative 'tailor/runtime_error'
 require_relative 'tailor/line_lexer'
 
@@ -13,27 +15,42 @@ class Tailor
     # Main entry-point method.
     #
     # @param [String] path File or directory to check files in.
-    # TODO: When checking a single nested file, it gets called extra times
     def check_style(path)
-      if File.file?(path)
-        Tailor.log "<#{self.name}> Checking style of a single file: #{path}."
-        check_file(path)
-      elsif File.directory?(path)
-        Tailor.log "<#{self.name}> Checking style of directory: #{path}"
-
-        Dir.glob("#{path}/**/*").each do |child|
-          Tailor.log "<#{self.name}> Checking style of file: #{child}."
-          check_style(child)
-        end
-      else
-        raise Tailor::RuntimeError, "Not sure what this is: #{path}..."
+      file_list(path).each do |file|
+        check_file(file)
       end
+    end
+
+    # The list of the files in the project to check.
+    #
+    # @param [String] path Path to the file or directory to check.
+    # @return [Array] The list of files to check.
+    def file_list(path)
+      if File.directory? path
+        FileUtils.cd path
+      else
+        return [path]
+      end
+
+      files_in_project = Dir.glob(File.join('*', '**', '*'))
+      Dir.glob(File.join('*')).each { |file| files_in_project << file }
+
+      list_with_absolute_paths = []
+
+      files_in_project.each do |file|
+        if File.file? file
+          list_with_absolute_paths << File.expand_path(file)
+        end
+      end
+
+      list_with_absolute_paths.sort
     end
 
     # Adds problems found from Lexing to the {problems} list.
     #
     # @param [String] file The file to open, read, and check.
     def check_file file
+      Tailor.log "<#{self.name}> Checking style of a single file: #{file}."
       lexer = Tailor::LineLexer.new(file)
       lexer.lex
       problems.concat(lexer.problems)
@@ -42,9 +59,18 @@ class Tailor
     # @todo This could delegate to Ruport (or something similar) for allowing
     #   output of different types.
     def print_report
-      puts "Problems:"
-      problems.each { |problem| p problem }
-      puts "problem count: #{problem_count}"
+      if problems.empty?
+        puts "Your files are in style."
+      else
+        table = Text::Table.new
+        table.head = problems.first.keys
+
+        problems.each do |problem|
+          table.rows << problem.values
+        end
+
+        puts table
+      end
     end
 
     # @return [Hash]
