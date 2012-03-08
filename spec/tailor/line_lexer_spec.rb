@@ -456,4 +456,43 @@ describe Tailor::LineLexer do
       specify { subject.multiline_brackets?.should be_false }
     end
   end
+
+  describe "#line_ends_with_op?" do
+    context "line ends with a +, then \\n" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_ident, "thing"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_op, "="],
+          [[1, 7], :on_sp, " "],
+          [[1, 8], :on_int, "1"],
+          [[1, 9], :on_sp, " "],
+          [[1, 10], :on_op, "+"],
+          [[1, 11], :on_ignored_nl, "\n"],
+          [[1, 11], :on_ignored_nl, "\n"]
+        ]
+      end
+
+      it "returns true" do
+        subject.line_ends_with_op?(lexed_output).should be_true
+      end
+    end
+
+    context "line ends with not an operator, then \\n" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_ident, "thing"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_op, "="],
+          [[1, 7], :on_sp, " "],
+          [[1, 8], :on_int, "1"],
+          [[1, 11], :on_nl, "\n"]
+        ]
+      end
+
+      it "returns false" do
+        subject.line_ends_with_op?(lexed_output).should be_false
+      end
+    end
+  end
 end

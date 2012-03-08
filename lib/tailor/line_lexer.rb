@@ -34,6 +34,7 @@ class Tailor
       @brace_nesting = []
       @bracket_nesting = []
       @paren_nesting = []
+      @op_statement_nesting = []
 
       super @file_text
     end
@@ -189,30 +190,21 @@ class Tailor
         return
       end
 
-      if @brace_nesting.empty? && @bracket_nesting.empty? && @paren_nesting.empty?
-        sexp = Ripper.sexp(current_line_of_text)
+      if line_ends_with_op?(c)
+        # Are we nested in a multi-line operation yet?
+        if @op_statement_nesting.empty?
+          @op_statement_nesting << lineno
+        end
 
-        @in_multiline_statement = if sexp.nil?
-          if @in_multiline_statement
-            log "In continuation of multiline statement."
-          else
-            log "First part of multiline statement."
-            @multiline_start_line = lineno
-            update_indentation_expectations(token)
-          end
-
-          true
+        # If this line is a continuation of the last multi-line op statement
+        # then update the nesting line number with this line number.
+        if @op_statement_nesting.last + 1 == lineno
+          @op_statement_nesting.pop
+          @op_statement_nesting << lineno
         else
-          log "Sexp parse succeeded."
-
-          if multiline_statement?
-            @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-          end
-
-          log "Setting @in_multiline_statement to nil"
-          @in_multiline_statement = nil
-
-          false
+          log "Increasing :next_line expectation due to multi-line operator statement."
+          @proper_indentation[:next_line] += @config[:indentation][:spaces]
+          log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
         end
       end
 
@@ -295,7 +287,7 @@ class Tailor
 
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
-      log "nl"
+      log "NL"
 
       c = current_lex(super)
 
@@ -308,7 +300,14 @@ class Tailor
         @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
       end
 
-      # prep for next line
+      unless @op_statement_nesting.empty?
+        if @op_statement_nesting.last + 1 == lineno
+          log "End of multi-line op statement."
+          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+        end
+      end
+
+        # prep for next line
       log "Setting @proper_indentation[:this_line] = that of :next_line"
       @proper_indentation[:this_line] = @proper_indentation[:next_line]
       log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
@@ -318,7 +317,7 @@ class Tailor
 
     # Operators
     def on_op(token)
-      log "OP: '#{token}'"
+      log "OP: '#{token}'; column: #{column}"
       super(token)
     end
 
@@ -570,6 +569,21 @@ class Tailor
     #   {lineno} (where lineno is the currenly parsed line).
     def single_line_indent_statement?
       @indent_keyword_line == lineno
+    end
+
+    # Checks to see if the current line ends with an operator (not counting the
+    # newline that might come after it).
+    #
+    # @param [Array] lexed_line_output The lexed output of the current line.
+    # @return [Boolean] true if the line ends with an operator; false if not.
+    def line_ends_with_op?(lexed_line_output)
+      tokens_in_line = lexed_line_output.map { |e| e[1] }
+
+      until tokens_in_line.last != (:on_ignored_nl || :on_nl)
+        tokens_in_line.pop
+      end
+
+      tokens_in_line.last == :on_op ? true : false
     end
 
 
