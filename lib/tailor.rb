@@ -10,10 +10,6 @@ class String
   include Term::ANSIColor
 end
 
-class Symbol
-  include Term::ANSIColor
-end
-
 class Tailor
   extend LogSwitch
 
@@ -99,10 +95,10 @@ class Tailor
 # Problems:
       MSG
       problem_list.each_with_index do |problem, i|
-        message << %Q{#  #{i + 1}.
-#    * line: #{problem[:line]}
-#    * type: #{problem[:type]}
-#    * message: #{problem[:message]}
+        message << %Q{#  #{(i + 1).to_s.bold}.
+#    * line:    #{problem[:line].to_s.red.bold}
+#    * type:    #{problem[:type].to_s.red}
+#    * message: #{problem[:message].red}
 }
       end
       message << <<-MSG
