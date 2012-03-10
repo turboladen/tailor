@@ -1,10 +1,18 @@
 require 'erb'
 require 'yaml'
 require 'log_switch'
-require 'text-table'
+require 'term/ansicolor'
 require 'fileutils'
 require_relative 'tailor/runtime_error'
 require_relative 'tailor/line_lexer'
+
+class String
+  include Term::ANSIColor
+end
+
+class Symbol
+  include Term::ANSIColor
+end
 
 class Tailor
   extend LogSwitch
@@ -72,21 +80,8 @@ class Tailor
 
         problems.each do |file, problem_list|
           unless problem_list.empty?
-            table = Text::Table.new do |t|
-              t.head = ['File', { value: file, colspan: 2, align: :center }]
-              t.rows << %w(line type message)
-              t.rows << :separator
+            print_file_problems(file, problem_list)
 
-              problem_list.each do |problem|
-                t.rows << [problem[:line], problem[:type], problem[:message]]
-              end
-
-              t.rows << :separator
-              t.rows << [{ value: 'TOTAL', align: :right, colspan: 2 }, problem_list.size]
-            end
-
-            puts table
-            puts
           end
 
           summary_table.rows << [file, problem_list.size]
@@ -94,6 +89,28 @@ class Tailor
 
         puts summary_table
       end
+    end
+
+    def print_file_problems(file, problem_list)
+      message = <<-MSG
+#-------------------------------------------------------------------------------
+# File:\t#{file}
+#-------------------------------------------------------------------------------
+# Problems:
+      MSG
+      problem_list.each_with_index do |problem, i|
+        message << %Q{#  #{i + 1}.
+#    * line: #{problem[:line]}
+#    * type: #{problem[:type]}
+#    * message: #{problem[:message]}
+}
+      end
+      message << <<-MSG
+#
+#-------------------------------------------------------------------------------
+      MSG
+
+      puts message
     end
 
     # @return [Hash]
