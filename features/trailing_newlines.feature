@@ -12,7 +12,7 @@ Feature: Trailing newlines
       end
       """
     When I run `tailor .`
-    Then the output should contain "problem count: 1"
+    Then the output should match /Total Problems.*1/
     And the output should contain "0 trailing newlines, but should have 1"
 
   @bad_files
@@ -26,7 +26,7 @@ Feature: Trailing newlines
 
       """
     When I run `tailor .`
-    Then the output should contain "problem count: 1"
+    Then the output should match /Total Problems.*1/
     And the output should contain "2 trailing newlines, but should have 1"
 
   @good_files
@@ -39,4 +39,4 @@ Feature: Trailing newlines
 
       """
     When I run `tailor .`
-    Then the output should contain "problem count: 0"
+    Then the output should match /Total Problems.*0/

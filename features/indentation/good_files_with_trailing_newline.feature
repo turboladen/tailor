@@ -12,7 +12,7 @@ Feature: Indentation check on good files with trailing newlines
       :trailing_newlines: 1
     """
     When I successfully run `tailor --config testfile.yml <File>`
-    Then the output should contain "problem count: 0"
+    Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
   Scenarios: Good class uses

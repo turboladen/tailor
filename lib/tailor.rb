@@ -116,7 +116,7 @@ class Tailor
 
     # @return [Fixnum] The number of problems found so far.
     def problem_count
-      problems.size
+      problems.values.flatten.size
     end
 
     # Checks to see if +path_to_check+ is a real file or directory.
