@@ -77,7 +77,6 @@ class Tailor
         message = "File has #{count} trailing newlines, but should have #{@config[:vertical_whitespace][:trailing_newlines]}"
 
         @problems << {
-          file_name: @file_name,
           type: :trailing_newlines,
           line: "<EOF>",
           message: message
@@ -185,7 +184,6 @@ class Tailor
           log message
 
           @problems << {
-            file_name: @file_name,
             type: :indentation,
             line: lineno,
             message: message
@@ -303,7 +301,11 @@ class Tailor
       if indentation != @proper_indentation[:this_line]
         message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
         log message
-        @problems << { file_name: @file_name, type: :indentation, line: lineno, message: message }
+        @problems << {
+          type: :indentation,
+          line: lineno,
+          message: message
+        }
       end
 
       unless @op_statement_nesting.empty?

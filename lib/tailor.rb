@@ -25,7 +25,9 @@ class Tailor
     #
     # @param [String] path Path to the file or directory to check.
     # @return [Array] The list of files to check.
-    def file_list(path)
+    def file_list(path=nil)
+      return @file_list if @file_list
+
       if File.directory? path
         FileUtils.cd path
       else
@@ -43,7 +45,7 @@ class Tailor
         end
       end
 
-      list_with_absolute_paths.sort
+      @file_list = list_with_absolute_paths.sort
     end
 
     # Adds problems found from Lexing to the {problems} list.
@@ -53,7 +55,7 @@ class Tailor
       Tailor.log "<#{self.name}> Checking style of a single file: #{file}."
       lexer = Tailor::LineLexer.new(file)
       lexer.lex
-      problems.concat(lexer.problems)
+      problems[file] = lexer.problems
     end
 
     # @todo This could delegate to Ruport (or something similar) for allowing
@@ -62,24 +64,41 @@ class Tailor
       if problems.empty?
         puts "Your files are in style."
       else
-        table = Text::Table.new
-        table.head = problems.first.keys
+        summary_table = Text::Table.new
+        summary_table.head = [{ value: "Tailor Summary", colspan: 2 }]
+        summary_table.rows << [{ value: "File", align: :center},
+          { value: "Total Problems", align: :center }]
+        summary_table.rows << :separator
 
-        problems.each do |problem|
-          table.rows << problem.values
+        problems.each do |file, problem_list|
+          unless problem_list.empty?
+            table = Text::Table.new do |t|
+              t.head = ['File', { value: file, colspan: 2, align: :center }]
+              t.rows << %w(line type message)
+              t.rows << :separator
+
+              problem_list.each do |problem|
+                t.rows << [problem[:line], problem[:type], problem[:message]]
+              end
+
+              t.rows << :separator
+              t.rows << [{ value: 'TOTAL', align: :right, colspan: 2 }, problem_list.size]
+            end
+
+            puts table
+            puts
+          end
+
+          summary_table.rows << [file, problem_list.size]
         end
 
-        table.rows << :separator
-        table.rows << [
-          { value: "TOTAL PROBLEMS", align: :right },
-          { value: problem_count, colspan: 3, align: :left }]
-        puts table
+        puts summary_table
       end
     end
 
     # @return [Hash]
     def problems
-      @problems ||= []
+      @problems ||= {}
     end
 
     # @return [Fixnum] The number of problems found so far.
