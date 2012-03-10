@@ -141,6 +141,31 @@ INDENT_OK[:def_return_unless_modifier] =
   return @something unless @something
 end}
 
+INDENT_OK[:case_whens_level] =
+  %Q{def my_method
+  case true
+  when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_OK[:case_whens_in] =
+  %Q{def my_method
+  case true
+    when true
+      puts "stuff"
+    when false
+      puts "blah blah"
+  end
+end}
+
+INDENT_OK[:while_do_loop] =
+  %Q{while true do
+  puts "something"
+end}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------
@@ -187,6 +212,82 @@ INDENT_1[:class_method_def_using_self_outdented] =
 %Q{class A
  self.my_method
     puts 'stuff'
+  end
+end}
+
+INDENT_1[:case_indented_whens_level] =
+%Q{def my_method
+   case true
+  when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_1[:case_outdented_whens_level] =
+%Q{def my_method
+ case true
+  when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_1[:case_when_indented_whens_level] =
+  %Q{def my_method
+  case true
+   when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_1[:case_when_outdented_whens_level] =
+  %Q{def my_method
+  case true
+ when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_1[:case_indented_whens_in] =
+  %Q{def my_method
+   case true
+    when true
+      puts "stuff"
+    when false
+      puts "blah blah"
+  end
+end}
+
+INDENT_1[:while_do_indented] =
+  %Q{ while true do
+  puts "something"
+end}
+
+INDENT_1[:while_do_outdented] =
+  %Q{def my_method
+ while true do
+    puts "something"
+  end
+end}
+
+INDENT_1[:while_do_content_outdented] =
+  %Q{def my_method
+  while true do
+   puts "something"
+  end
+end}
+
+INDENT_1[:while_do_content_indented] =
+  %Q{def my_method
+  while true do
+     puts "something"
   end
 end}
 

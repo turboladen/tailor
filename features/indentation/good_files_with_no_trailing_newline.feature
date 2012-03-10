@@ -11,7 +11,7 @@ Feature: Indentation check on good files without trailing newlines
     :vertical_whitespace:
       :trailing_newlines: 0
     """
-    When I successfully run `tailor --config testfile.yml <File>`
+    When I successfully run `tailor -d --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -55,3 +55,12 @@ Feature: Indentation check on good files without trailing newlines
     | File                                 |
     | indent/ok/unless_modifier            |
     | indent/ok/def_return_unless_modifier |
+
+  Scenarios: Good case statements
+    | File                       |
+    | indent/ok/case_whens_level |
+    | indent/ok/case_whens_in    |
+
+  Scenarios: Good while/do loop
+    | File |
+    | indent/ok/while_do_loop |

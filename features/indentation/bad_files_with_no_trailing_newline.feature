@@ -30,3 +30,19 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/def_indented_end                |
     | indent/1/def_content_indented_end        |
     | indent/1/class_def_content_outdented_end |
+
+  Scenarios: 1 problem with case
+    | File                                     |
+    | indent/1/case_indented_whens_level       |
+    | indent/1/case_outdented_whens_level      |
+    | indent/1/case_when_indented_whens_level  |
+    | indent/1/case_when_outdented_whens_level |
+    | indent/1/case_indented_whens_in          |
+
+  Scenarios: 1 problem with while/do loop
+    | File                                |
+    | indent/1/while_do_indented          |
+    | indent/1/while_do_outdented         |
+    | indent/1/while_do_content_indented  |
+    | indent/1/while_do_content_outdented |
+
