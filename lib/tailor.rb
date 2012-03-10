@@ -1,19 +1,14 @@
 require 'erb'
 require 'yaml'
 require 'log_switch'
-require 'term/ansicolor'
 require 'fileutils'
 require_relative 'tailor/runtime_error'
 require_relative 'tailor/line_lexer'
+require_relative 'ext/string_ext'
 
-class String
-  include Term::ANSIColor
-end
 
 class Tailor
   extend LogSwitch
-
-  #self.log = true
 
   class << self
     # Main entry-point method.
@@ -90,15 +85,16 @@ class Tailor
     def print_file_problems(file, problem_list)
       message = <<-MSG
 #-------------------------------------------------------------------------------
-# File:\t#{file}
-#-------------------------------------------------------------------------------
-# Problems:
+# #{'File:'.underscore}
+#   #{file}
+#
+# #{'Problems:'.underscore}
       MSG
       problem_list.each_with_index do |problem, i|
         message << %Q{#  #{(i + 1).to_s.bold}.
-#    * line:    #{problem[:line].to_s.red.bold}
-#    * type:    #{problem[:type].to_s.red}
-#    * message: #{problem[:message].red}
+#    * position:  #{problem[:line].to_s.red.bold}:#{problem[:column].to_s.red.bold}
+#    * type:      #{problem[:type].to_s.red}
+#    * message:   #{problem[:message].red}
 }
       end
       message << <<-MSG

@@ -1,6 +1,8 @@
 require 'ripper'
 require_relative '../tailor'
 require_relative 'lexer_constants'
+require_relative '../ext/string_ext'
+
 
 class Tailor
 
@@ -12,7 +14,7 @@ class Tailor
     attr_reader :indentation_tracker
     attr_accessor :problems
 
-    # @param [String] file_name The string to lex, or name of the file to read
+    # @param [String] file The string to lex, or name of the file to read
     #   and analyze.
     def initialize(file)
       if File.exists? file
@@ -79,6 +81,7 @@ class Tailor
         @problems << {
           type: :trailing_newlines,
           line: "<EOF>",
+          column: column,
           message: message
         }
       end
@@ -180,14 +183,14 @@ class Tailor
         log "indentation: #{indentation}"
 
         if indentation != @proper_indentation[:this_line]
-          message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
-          log message
-
+          message = "Line is indented to #{indentation}, but should be at #{@proper_indentation[:this_line]}"
           @problems << {
             type: :indentation,
             line: lineno,
+            column: column,
             message: message
           }
+          log "Indent error.  #{message}"
         end
       else
         log "Line of only spaces.  Moving on."
@@ -299,13 +302,14 @@ class Tailor
       indentation = current_line_indent(c)
 
       if indentation != @proper_indentation[:this_line]
-        message = "ERRRRORRRROROROROR! column (#{indentation}) != proper indent (#{@proper_indentation[:this_line]})"
-        log message
+        message = "Line is indented to #{indentation}, but should be at #{@proper_indentation[:this_line]}"
         @problems << {
           type: :indentation,
           line: lineno,
+          column: column,
           message: message
         }
+        log "Indent error.  #{message}"
       end
 
       unless @op_statement_nesting.empty?
