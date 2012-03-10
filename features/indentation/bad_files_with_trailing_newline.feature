@@ -16,8 +16,9 @@ Feature: Indentation check on bad files with trailing newlines
     And the exit status should be 1
 
   Scenarios: 1 problem with classes
-    | File                        |
-    | indent/1/class_indented_end |
+    | File                                           |
+    | indent/1/class_indented_end                    |
+    | indent/1/class_method_def_using_self_outdented |
 
   Scenarios: 1 problem with single-line statement
     | File                                     |

@@ -54,6 +54,10 @@ rescue Tailor::RuntimeError => ex
   puts ex.message
   puts ex.backtrace.join("\n")
   puts
+rescue => ex
+  puts ex.message
+  puts ex.backtrace.join("\n") if opts[:debug]
+  puts
 ensure
   exit(1) if Tailor.problem_count > 0
 end

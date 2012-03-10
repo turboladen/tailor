@@ -183,3 +183,10 @@ INDENT_1[:class_def_outdented_content] =
   end
 end}
 
+INDENT_1[:class_method_def_using_self_outdented] =
+%Q{class A
+ self.my_method
+    puts 'stuff'
+  end
+end}
+
