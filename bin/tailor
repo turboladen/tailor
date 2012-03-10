@@ -50,14 +50,14 @@ begin
 
   Tailor.check_style(stuff_to_check)
   Tailor.print_report
-rescue Tailor::RuntimeError => ex
-  puts ex.message
-  puts ex.backtrace.join("\n")
-  puts
-rescue => ex
-  puts ex.message
-  puts ex.backtrace.join("\n") if opts[:debug]
-  puts
-ensure
   exit(1) if Tailor.problem_count > 0
+rescue Tailor::RuntimeError => ex
+  STDERR.puts ex.message
+  STDERR.puts ex.backtrace.join("\n")
+rescue SystemExit => ex
+  exit(ex.status)
+rescue Exception => ex
+  STDERR.puts("#{ex.message} (#{ex.class})")
+  STDERR.puts(ex.backtrace.join("\n"))
+  exit(1)
 end
