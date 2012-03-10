@@ -81,9 +81,11 @@ class Tailor
         @problems << {
           type: :trailing_newlines,
           line: "<EOF>",
-          column: column,
+          column: "<EOF>",
           message: message
         }
+
+        log "ERROR: Trailing Newlines.  #{message}"
       end
 
       count > 0 ? text : (text + "\n")
@@ -190,7 +192,7 @@ class Tailor
             column: column,
             message: message
           }
-          log "Indent error.  #{message}"
+          log "ERROR: Indentation.  #{message}"
         end
       else
         log "Line of only spaces.  Moving on."
@@ -309,7 +311,7 @@ class Tailor
           column: column,
           message: message
         }
-        log "Indent error.  #{message}"
+        log "ERROR. Indentation  #{message}"
       end
 
       unless @op_statement_nesting.empty?
@@ -606,37 +608,15 @@ class Tailor
     end
 
     def multiline_braces?
-      if @brace_nesting.empty?
-        false
-      else
-        @brace_nesting.last < lineno
-      end
+      @brace_nesting.empty? ? false : (@brace_nesting.last < lineno)
     end
 
     def multiline_brackets?
-      if @bracket_nesting.empty?
-        false
-      else
-        @bracket_nesting.last < lineno
-      end
+      @bracket_nesting.empty? ? false : (@bracket_nesting.last < lineno)
     end
 
     def multiline_parens?
-      if @paren_nesting.empty?
-        false
-      else
-        @paren_nesting.last < lineno
-      end
-    end
-
-    def multiline_statement?
-      if @in_multiline_statement.nil?
-        false
-      elsif @multiline_start_line.nil?
-        false
-      else
-        @multiline_start_line < lineno
-      end
+      @paren_nesting.empty? ? false : (@paren_nesting.last < lineno)
     end
 
     #---------------------------------------------------------------------------
@@ -645,9 +625,10 @@ class Tailor
     private
 
     def log(*args)
-      args.first.insert(0, "<#{self.class}> #{lineno}[#{column}]: ")
+      l = begin; lineno; rescue; "<EOF>"; end
+      c = begin; column; rescue; "<EOF>"; end
+      args.first.insert(0, "<#{self.class}> #{l}[#{c}]: ")
       Tailor.log(*args)
     end
-
   end
 end

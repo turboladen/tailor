@@ -90,13 +90,21 @@ class Tailor
 #
 # #{'Problems:'.underscore}
       MSG
+
       problem_list.each_with_index do |problem, i|
+        position = if problem[:line] == '<EOF>'
+          '<EOF>'
+        else
+          problem[:line].to_s.red.bold + ':' + problem[:column].to_s.red.bold
+        end
+
         message << %Q{#  #{(i + 1).to_s.bold}.
-#    * position:  #{problem[:line].to_s.red.bold}:#{problem[:column].to_s.red.bold}
+#    * position:  #{position}
 #    * type:      #{problem[:type].to_s.red}
 #    * message:   #{problem[:message].red}
 }
       end
+
       message << <<-MSG
 #
 #-------------------------------------------------------------------------------
