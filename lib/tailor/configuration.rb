@@ -49,6 +49,10 @@ class Tailor
     def file_list(path=nil)
       return @file_list if @file_list
 
+      if path.nil?
+        return ['']
+      end
+
       if File.directory? path
         FileUtils.cd path
       else
@@ -67,6 +71,18 @@ class Tailor
       end
 
       @file_list = list_with_absolute_paths.sort
+    end
+
+    def show
+      table = Text::Table.new(horizontal_padding: 4)
+      table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
+      table.rows << :separator
+      table.rows << ['Style', @style.inspect]
+      table.rows << :separator
+      table.rows << ['Formatters', @formatters]
+
+
+      puts table
     end
 
     private

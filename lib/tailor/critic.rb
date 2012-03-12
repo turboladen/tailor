@@ -5,7 +5,6 @@ require_relative 'runtime_error'
 require_relative 'logger'
 require_relative 'line_lexer'
 require_relative 'configuration'
-require_relative '../ext/string_ext'
 
 
 class Tailor

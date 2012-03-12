@@ -1,7 +1,6 @@
 require 'ripper'
 require_relative 'logger'
 require_relative 'lexer_constants'
-require_relative '../ext/string_ext'
 
 
 class Tailor

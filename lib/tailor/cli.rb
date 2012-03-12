@@ -17,8 +17,15 @@ class Tailor
     end
 
     def initialize(args)
+      Tailor::Logger.log = false
       options = Options.parse!(args)
       @configuration = Configuration.new(args.last, options)
+
+      if options[:show_config]
+        @configuration.show
+        exit
+      end
+
       @critic = Critic.new(@configuration.style)
       @reporter = Reporter.new(@configuration.formatters)
     end

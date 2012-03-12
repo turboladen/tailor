@@ -1,4 +1,5 @@
 require 'optparse'
+require 'text-table'
 require_relative '../version'
 
 class Tailor
@@ -11,12 +12,21 @@ class Tailor
           o.banner = self.banner
           o.separator ""
           o.separator "pants"
-          o.on('-c', '--config-file [FILE]', "Use a specific config file") do |config|
+
+          o.on('-c', '--color', "Output in color") do |color|
+            require_relative '../../ext/string_ext'
+          end
+
+          o.on('-f', '--config-file FILE', "Use a specific config file") do |config|
             options[:config_file] = config
           end
 
-          o.on('-d', '--debug', "Turn on debug logging") do |debug|
-            options[:debug] = debug
+          o.on('-s', '--show-config', 'Show your current config') do
+            options[:show_config] = true
+          end
+
+          o.on_tail('-d', '--debug', "Turn on debug logging") do
+            Tailor::Logger.log = true
           end
 
           o.on_tail('-h', '--help', 'Show this message') do |help|
@@ -76,6 +86,8 @@ class Tailor
     $ #{File.basename($0)} [single .rb file]"
         USEAGE
       end
+
+
     end
   end
 end

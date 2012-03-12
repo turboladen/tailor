@@ -11,26 +11,46 @@ class Tailor
       def print_file_report(problems)
         file = problems.keys.first
         problem_list = problems.values.first
-        message = <<-MSG
-#-------------------------------------------------------------------------------
-# #{'File:'.underscore}
-#   #{file}
-#
-# #{'Problems:'.underscore}
-        MSG
+
+        message = "#-------------------------------------------------------------------------------\n"
+        if defined? Term::ANSIColor
+          message << "# #{'File:'.underscore}\n"
+        else
+          message << "# File:\n"
+        end
+        message << "#   #{file}\n"
+        message << "#\n"
+        if defined? Term::ANSIColor
+          message << "# #{'Problems:'.underscore}\n"
+        else
+          message << "# Problems:\n"
+        end
 
         problem_list.each_with_index do |problem, i|
           position = if problem[:line] == '<EOF>'
             '<EOF>'
           else
-            problem[:line].to_s.red.bold + ':' + problem[:column].to_s.red.bold
+            if defined? Term::ANSIColor
+              "#{problem[:line].to_s.red.bold}:#{problem[:column].to_s.red.bold}"
+            else
+              "#{problem[:line]}:#{problem[:column]}"
+            end
           end
 
-          message << %Q{#  #{(i + 1).to_s.bold}.
+          if defined? Term::ANSIColor
+            message << %Q{#  #{(i + 1).to_s.bold}.
 #    * position:  #{position}
 #    * type:      #{problem[:type].to_s.red}
 #    * message:   #{problem[:message].red}
-          }
+}
+          else
+            message << %Q{#  #{(i + 1)}.
+#    * position:  #{position}
+#    * type:      #{problem[:type]}
+#    * message:   #{problem[:message]}
+}
+
+          end
         end
 
         message << <<-MSG
