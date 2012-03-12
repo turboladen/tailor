@@ -1,6 +1,7 @@
 require 'ripper'
 require_relative 'logger'
 require_relative 'lexer_constants'
+require_relative 'problem'
 
 
 class Tailor
@@ -74,22 +75,17 @@ class Tailor
     # @return [String] The file's text with a \n if there wasn't one there
     #   already.
     def ensure_trailing_newline(text)
-      count = count_trailing_newlines(text)
+      trailing_newline_count = count_trailing_newlines(text)
 
-      if count != @config[:vertical_whitespace][:trailing_newlines]
-        message = "File has #{count} trailing newlines, but should have #{@config[:vertical_whitespace][:trailing_newlines]}"
+      if trailing_newline_count != @config[:vertical_whitespace][:trailing_newlines]
+        lineno = "<EOF>"
+        column = "<EOF>"
+        @problems << Problem.new(:trailing_newlines, binding)
 
-        @problems << {
-          type: :trailing_newlines,
-          line: "<EOF>",
-          column: "<EOF>",
-          message: message
-        }
-
-        log "ERROR: Trailing Newlines.  #{message}"
+        log "ERROR: Trailing Newlines.  #{@problems.last[:message]}"
       end
 
-      count > 0 ? text : (text + "\n")
+      trailing_newline_count > 0 ? text : (text + "\n")
     end
 
     def on_backref(token)
@@ -186,14 +182,8 @@ class Tailor
         log "indentation: #{indentation}"
 
         if indentation != @proper_indentation[:this_line]
-          message = "Line is indented to #{indentation}, but should be at #{@proper_indentation[:this_line]}"
-          @problems << {
-            type: :indentation,
-            line: lineno,
-            column: column,
-            message: message
-          }
-          log "ERROR: Indentation.  #{message}"
+          @problems << Problem.new(:indentation, binding)
+          log "ERROR: Indentation.  #{@problems.last[:message]}"
         end
       else
         log "Line of only spaces.  Moving on."
@@ -305,14 +295,8 @@ class Tailor
       indentation = current_line_indent(c)
 
       if indentation != @proper_indentation[:this_line]
-        message = "Line is indented to #{indentation}, but should be at #{@proper_indentation[:this_line]}"
-        @problems << {
-          type: :indentation,
-          line: lineno,
-          column: column,
-          message: message
-        }
-        log "ERROR. Indentation  #{message}"
+        @problems << Problem.new(:indentation, binding)
+        log "ERROR: Indentation.  #{@problems.last[:message]}"
       end
 
       unless @op_statement_nesting.empty?
