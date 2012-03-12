@@ -1,3 +1,4 @@
+@wip
 Feature: Configurable
   As a Ruby developer
   I want to be able to configure tailor to my style likings
@@ -5,7 +6,7 @@ Feature: Configurable
 
   Scenario: No config file exists
     Given a file named ".tailorrc" should not exist
-    When I successfully run `tailor --config`
+    When I successfully run `tailor --show-config`
     Then the output should contain:
       """
       +---------------------------+------------------+
@@ -33,7 +34,7 @@ Feature: Configurable
       :vertical_whitespace:
         :trailing_newlines: 11
       """
-    When I successfully run `tailor --config`
+    When I successfully run `tailor --show-config`
     Then the output should contain:
       """
       +-------------------------+------------------+

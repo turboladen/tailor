@@ -6,10 +6,11 @@ Feature: Indentation check on good files with trailing newlines
     And my configuration file "testfile.yml" looks like:
     """
     ---
-    :indentation:
-      :spaces: 2
-    :vertical_whitespace:
-      :trailing_newlines: 1
+    :style:
+      :indentation:
+        :spaces: 2
+      :vertical_whitespace:
+        :trailing_newlines: 1
     """
     When I successfully run `tailor --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/

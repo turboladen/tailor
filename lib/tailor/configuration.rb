@@ -1,5 +1,6 @@
 require 'erb'
 require 'yaml'
+require_relative 'logger'
 
 class Tailor
 
@@ -8,6 +9,8 @@ class Tailor
   #   2. CLI options
   #   3. Default options
   class Configuration
+    include LogSwitch::Mixin
+
     DEFAULT_RC_FILE = Dir.home + '/.tailorrc'
 
     attr_reader :style
@@ -17,30 +20,31 @@ class Tailor
     def initialize(path_to_check, options={})
       @style = default_style
       @formatters = ['text']
-      @color = false
       @options = options
 
       config_file = options[:config_file] || DEFAULT_RC_FILE
-      #load_from_file(config_file)
+      load_from_file(config_file)
       @file_list = file_list(path_to_check)
     end
 
-=begin
     def load_from_file(config_file)
       user_config_file = File.expand_path(config_file)
 
       config = if File.exists? user_config_file
+        log "<#{self.class}> Loading configuration from file: #{user_config_file}"
         YAML.load_file user_config_file
-      else
-        erb_file = File.expand_path(File.dirname(__FILE__) + '/../../tailor_config.yaml.erb')
-        default_config_file = ERB.new(File.read(erb_file)).result(binding)
-        YAML.load default_config_file
+      #else
+      #  erb_file = File.expand_path(File.dirname(__FILE__) + '/../../tailor_config.yaml.erb')
+      #  default_config_file = ERB.new(File.read(erb_file)).result(binding)
+      #  YAML.load default_config_file
       end
 
-      @style = config[:style]
-      @formatters = config[:format]
+      if config
+        log "<#{self.class}> Got new config from file: #{config}"
+        @style.merge! config[:style] if config.has_key? :style
+        @formatters = config[:format] if config.has_key? :format
+      end
     end
-=end
 
     # The list of the files in the project to check.
     #
