@@ -1,4 +1,3 @@
-require 'erb'
 require 'yaml'
 require_relative 'logger'
 
@@ -33,10 +32,6 @@ class Tailor
       config = if File.exists? user_config_file
         log "<#{self.class}> Loading configuration from file: #{user_config_file}"
         YAML.load_file user_config_file
-      #else
-      #  erb_file = File.expand_path(File.dirname(__FILE__) + '/../../tailor_config.yaml.erb')
-      #  default_config_file = ERB.new(File.read(erb_file)).result(binding)
-      #  YAML.load default_config_file
       end
 
       if config

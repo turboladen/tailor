@@ -1,6 +1,8 @@
+require 'erb'
 require 'optparse'
 require 'text-table'
 require_relative '../version'
+require_relative '../configuration'
 
 class Tailor
   class CLI
@@ -23,6 +25,16 @@ class Tailor
 
           o.on('-s', '--show-config', 'Show your current config') do
             options[:show_config] = true
+          end
+
+          o.on('', '--create-config', 'Create a new ~/.tailorrc') do
+            if create_config
+              $stdout.puts "Your new tailorrc file was created at #{Tailor::Configuration::DEFAULT_RC_FILE}"
+              exit
+            else
+              $stderr.puts "Creation of ~/.tailorrc failed."
+              exit 1
+            end
           end
 
           o.on_tail('-d', '--debug', "Turn on debug logging") do
@@ -87,7 +99,16 @@ class Tailor
         USEAGE
       end
 
-
+      def self.create_config
+        if File.exists? Tailor::Configuration::DEFAULT_RC_FILE
+          $stderr.puts "Can't create new config; it already exists."
+          false
+        else
+          erb_file = File.expand_path(File.dirname(__FILE__) + '/../../../tailor_config.yaml.erb')
+          default_config_file = ERB.new(File.read(erb_file)).result(binding)
+          File.write(Tailor::Configuration::DEFAULT_RC_FILE, default_config_file)
+        end
+      end
     end
   end
 end
