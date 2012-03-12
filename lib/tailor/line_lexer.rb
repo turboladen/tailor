@@ -1,5 +1,5 @@
 require 'ripper'
-require_relative '../tailor'
+require_relative 'logger'
 require_relative 'lexer_constants'
 require_relative '../ext/string_ext'
 
@@ -10,13 +10,14 @@ class Tailor
   # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   class LineLexer < Ripper::Lexer
     include Tailor::LexerConstants
+    include LogSwitch::Mixin
 
     attr_reader :indentation_tracker
     attr_accessor :problems
 
     # @param [String] file The string to lex, or name of the file to read
     #   and analyze.
-    def initialize(file)
+    def initialize(file, style)
       if File.exists? file
         @file_name = file
         @file_text = File.open(@file_name, 'r').read
@@ -26,11 +27,12 @@ class Tailor
       end
 
       @problems = []
-      @config = Tailor.config
+      @config = style
+      log "@config: #{@config}"
       @file_text = ensure_trailing_newline(@file_text)
 
-      Tailor.log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
-      @proper_indentation             = {}
+      log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
+      @proper_indentation = {}
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
       @brace_nesting = []
@@ -628,7 +630,7 @@ class Tailor
       l = begin; lineno; rescue; "<EOF>"; end
       c = begin; column; rescue; "<EOF>"; end
       args.first.insert(0, "<#{self.class}> #{l}[#{c}]: ")
-      Tailor.log(*args)
+      Tailor::Logger.log(*args)
     end
   end
 end

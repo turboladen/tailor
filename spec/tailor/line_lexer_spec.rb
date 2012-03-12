@@ -3,20 +3,12 @@ require_relative '../spec_helper'
 require 'tailor/line_lexer'
 
 describe Tailor::LineLexer do
-  let(:file_text) { "" }
-  subject { Tailor::LineLexer.new(file_text) }
+  let!(:file_text) { "" }
+  let(:style) { {} }
+  subject { Tailor::LineLexer.new(file_text, style) }
 
   before do
-    Tailor.stub :log
-    Tailor.stub(:config).and_return({
-      indentation: { spaces: 2 },
-      vertical_whitespace: { trailing_newlines: 1 }
-    })
-  end
-
-  after do
-    Tailor.unstub :log
-    Tailor.unstub :config
+    Tailor::LineLexer.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
   end
 
   describe "#initialize" do
@@ -31,14 +23,14 @@ describe Tailor::LineLexer do
       let(:file_name) { "test" }
 
       before do
-        File.write(file_name, "some text")
+        File.open(file_name, 'w') { |f| f.write "some text" }
       end
 
       it "opens and reads the file by the name passed in" do
         file = double "File"
         file.should_receive(:read).and_return file_text
         File.should_receive(:open).with("test", 'r').and_return file
-        Tailor::LineLexer.new(file_name)
+        Tailor::LineLexer.new(file_name, style)
       end
     end
 
@@ -47,7 +39,7 @@ describe Tailor::LineLexer do
 
       it "doesn't try to open a file" do
         File.should_not_receive(:open)
-        Tailor::LineLexer.new(text)
+        Tailor::LineLexer.new(text, style)
       end
     end
   end
@@ -66,7 +58,7 @@ describe Tailor::LineLexer do
 
   describe "#ensure_trailing_newline" do
     context "text contains a trailing newline already" do
-      let(:text) { "text\n" }
+      let!(:text) { "text\n" }
 
       it "doesn't alter the text" do
         subject.ensure_trailing_newline(text).should == text
@@ -74,7 +66,7 @@ describe Tailor::LineLexer do
     end
 
     context "text does not contain a trailing newline" do
-      let(:text) { "text" }
+      let!(:text) { "text" }
 
       it "adds a newline at the end" do
         subject.ensure_trailing_newline(text).should == text + "\n"
@@ -140,7 +132,7 @@ describe Tailor::LineLexer do
   end
 
   describe "#current_line_indent" do
-    subject { Tailor::LineLexer.new file_text }
+    subject { Tailor::LineLexer.new(file_text, style) }
 
     context "when indented 0" do
       let(:file_text) { "puts 'something'" }
