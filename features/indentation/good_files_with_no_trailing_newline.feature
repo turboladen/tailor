@@ -12,7 +12,7 @@ Feature: Indentation check on good files without trailing newlines
       :vertical_whitespace:
         :trailing_newlines: 0
     """
-    When I successfully run `tailor -d --config testfile.yml <File>`
+    When I successfully run `tailor -d --config-file testfile.yml <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
