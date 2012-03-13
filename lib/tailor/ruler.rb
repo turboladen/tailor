@@ -1,6 +1,5 @@
 require 'ripper'
 require_relative 'logger'
-require_relative 'lexer_constants'
 require_relative 'problem'
 
 
@@ -9,7 +8,9 @@ class Tailor
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   class Ruler < Ripper::Lexer
-    include Tailor::LexerConstants
+    require_relative 'ruler/lexer_constants'
+
+    include LexerConstants
     include LogSwitch::Mixin
 
     attr_reader :indentation_tracker
