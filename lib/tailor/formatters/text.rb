@@ -9,6 +9,8 @@ class Tailor
       # @param [Hash] problems Value should be the file name; keys should be
       #   problems with the file.
       def print_file_report(problems)
+        return if problems.values.first.empty?
+
         file = problems.keys.first
         problem_list = problems.values.first
 
