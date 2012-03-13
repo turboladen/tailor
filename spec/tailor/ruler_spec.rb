@@ -493,34 +493,51 @@ describe Tailor::Ruler do
     end
   end
 
-  describe "#line_of_only_rparen?" do
-    context "line is '  )'" do
-      let(:lexed_output) do
-        [[[1, 0], :on_sp, "  "], [[1, 2], :on_rparen, ")"]]
+  describe "#r_event_with_content?" do
+    context ":on_rparen" do
+      context "line is '  )'" do
+        let(:lexed_output) do
+          [[[1, 0], :on_sp, "  "], [[1, 2], :on_rparen, ")"]]
+        end
+
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 2
+        end
+
+        it "returns true" do
+          subject.r_event_without_content?(lexed_output).should be_true
+        end
       end
 
-      it "returns true" do
-        subject.line_of_only_rparen?(lexed_output).should be_true
-      end
-    end
+      context "line is '  })'" do
+        let(:lexed_output) do
+          [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 3], :on_rparen, ")"]]
+        end
 
-    context "line is '  })'" do
-      let(:lexed_output) do
-        [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 2], :on_rparen, ")"]]
-      end
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 3
+        end
 
-      it "returns false" do
-        subject.line_of_only_rparen?(lexed_output).should be_false
-      end
-    end
-
-    context "line is '  def some_method'" do
-      let(:lexed_output) do
-        [[[1, 0], :on_kw, "def"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "some_method"], [[1, 15], :on_nl, "\n"]]
+        it "returns false" do
+          subject.r_event_without_content?(lexed_output).should be_false
+        end
       end
 
-      it "returns false" do
-        subject.line_of_only_rparen?(lexed_output).should be_false
+      context "line is '  def some_method'" do
+        let(:lexed_output) do
+          [[[1, 0], :on_kw, "def"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "some_method"], [[1, 15], :on_nl, "\n"]]
+        end
+
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 3
+        end
+
+        it "returns false" do
+          subject.r_event_without_content?(lexed_output).should be_false
+        end
       end
     end
   end

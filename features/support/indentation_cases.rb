@@ -250,6 +250,55 @@ INDENT_OK[:loop_with_braces] =
   puts 'stuff'
 }}
 
+INDENT_OK[:single_line_brackets] =
+  %Q{['one', 'two', 'three']}
+
+INDENT_OK[:multi_line_brackets] =
+  %Q{['one', 'two',
+  'three']}
+
+INDENT_OK[:multi_line_lonely_brackets] =
+  %Q{[
+  'one', 'two',
+  'three'
+]}
+
+INDENT_OK[:multi_line_brackets_embedded_hashes] =
+  %Q{summary_table.rows << [{ value: "File", align: :center },
+  { value: "Total Problems", align: :center }]}
+
+INDENT_OK[:single_line_braces] =
+  %Q{{ one: 1, two: 2 }}
+
+INDENT_OK[:multi_line_braces] =
+  %Q{{ one: 1,
+  two: 2 }}
+
+INDENT_OK[:multi_line_lonely_braces] =
+  %Q{{
+  :one => 'one', :two => 'two',
+  :three => 'three'
+}}
+
+INDENT_OK[:multi_line_braces_embedded_arrays] =
+  %Q{{
+  :one => ['one', 17, {}], :two => ['two'],
+  :three => 'three'
+}}
+
+INDENT_OK[:single_line_parens] =
+  %Q{(true || false)}
+
+INDENT_OK[:multi_line_parens] =
+  %Q{my_method(first_argument, second_arg,
+  third_arg)}
+
+INDENT_OK[:multi_line_lonely_parens] =
+  %Q{my_method(
+  first_argument, second_arg,
+  third_arg
+)}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------

@@ -292,8 +292,12 @@ class Tailor
       log "rbrace"
 
       if multiline_braces?
-        log "multiline braces!"
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+        log "end of multiline braces!"
+
+        if r_event_without_content?(current_lex(super))
+          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+        end
       end
 
       @brace_nesting.pop
@@ -316,8 +320,12 @@ class Tailor
       log "RBRACKET: '#{token}'"
 
       if multiline_brackets?
-        log "multiline brackets!"
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+        log "end of multiline brackets!"
+
+        if r_event_without_content?(current_lex(super))
+          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+        end
       end
 
       @bracket_nesting.pop
@@ -340,10 +348,13 @@ class Tailor
     def on_rparen(token)
       log "RPAREN: '#{token}'"
 
-      if multiline_parens? && line_of_only_rparen?(current_lex(super))
+      if multiline_parens?
         log "end of multiline parens!"
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-        log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+
+        if r_event_without_content?(current_lex(super))
+          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+        end
       end
 
       @paren_nesting.pop
@@ -446,18 +457,10 @@ class Tailor
       end
     end
 
-    # @return [Boolean] +true+ if a ')' is in the line and is the only thing in
-    #   line; +false+ if not.
-    def line_of_only_rparen?(lexed_line_output)
-      if lexed_line_output.last[1] == :on_nl ||
-        lexed_line_output.last[1] == :on_ignored_nl
-        lexed_line_output.pop
-      end
-
-      return false if lexed_line_output.last[1] != :on_rparen
-      lexed_line_output.pop
-
-      first_non_space_element(lexed_line_output) ? false : true
+    # @return [Boolean] +true+ if any non-space chars come before the current
+    #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
+    def r_event_without_content?(lexed_line_output)
+      first_non_space_element(lexed_line_output).first == [lineno, column]
     end
 
     # Checks the current line to see if the given +token+ is being used as a

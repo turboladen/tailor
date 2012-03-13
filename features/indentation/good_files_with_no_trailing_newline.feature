@@ -80,6 +80,20 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/for_with_retry_loop    |
     | indent/ok/loop_with_braces       |
 
+  Scenarios: Good brace/bracket/paren uses
+    | File                                          |
+    | indent/ok/single_line_braces                  |
+    | indent/ok/multi_line_braces                   |
+    | indent/ok/multi_line_lonely_braces            |
+    | indent/ok/multi_line_braces_embedded_arrays   |
+    | indent/ok/single_line_brackets                |
+    | indent/ok/multi_line_brackets                 |
+    | indent/ok/multi_line_lonely_brackets          |
+    | indent/ok/multi_line_brackets_embedded_hashes |
+    | indent/ok/single_line_parens                  |
+    | indent/ok/multi_line_parens                   |
+    | indent/ok/multi_line_lonely_parens            |
+
   @wip
   Scenarios: WIPs
     | File                    |
