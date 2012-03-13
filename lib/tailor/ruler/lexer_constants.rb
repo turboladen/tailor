@@ -2,36 +2,36 @@ class Tailor
   module Ruler::LexerConstants
     KEYWORDS_TO_INDENT = [
       'begin',
-        'case',
-        'class',
-        'def',
-        'do',
-        'else',
-        'elsif',
-        'ensure',
-        'for',
-        'if',
-        'module',
-        'rescue',
-        'unless',
-        'until',
-        'when',
-        'while'
+      'case',
+      'class',
+      'def',
+      'do',
+      'else',
+      'elsif',
+      'ensure',
+      'for',
+      'if',
+      'module',
+      'rescue',
+      'unless',
+      'until',
+      'when',
+      'while'
     ]
 
     CONTINUATION_KEYWORDS = [
       'elsif',
-        'else',
-        'ensure',
-        'rescue',
-        'when'
+      'else',
+      'ensure',
+      'rescue',
+      'when'
     ]
 
     KEYWORDS_AND_MODIFIERS = [
       'if',
-        'unless',
-        'until',
-        'while'
+      'unless',
+      'until',
+      'while'
     ]
 
     MODIFIERS = {
@@ -44,20 +44,20 @@ class Tailor
 
     MULTILINE_OPERATORS = [
       '!',
-        '%',
-        '&',
-        '*',
-        '+',
-        '-',
-        '/',
-        '<',
-        '=',
-        '>',
-        '?',
-        '^',
-        #'|',
-        '~',
-        ':'
+      '%',
+      '&',
+      '*',
+      '+',
+      '-',
+      '/',
+      '<',
+      '=',
+      '>',
+      '?',
+      '^',
+      #'|',
+      '~',
+      ':'
     ]
 
     LOOP_KEYWORDS = [
