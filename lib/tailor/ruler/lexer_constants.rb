@@ -9,6 +9,7 @@ class Tailor
         'else',
         'elsif',
         'ensure',
+        'for',
         'if',
         'module',
         'rescue',
@@ -57,6 +58,12 @@ class Tailor
         #'|',
         '~',
         ':'
+    ]
+
+    LOOP_KEYWORDS = [
+      'for',
+      'until',
+      'while'
     ]
   end
 end

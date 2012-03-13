@@ -62,11 +62,11 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/case_whens_level |
 
   Scenarios: Good while/do loop
-    | File |
+    | File                    |
+    | indent/ok/while_do_loop |
 
   @wip
   Scenarios: WIPs
-    | File |
-    | indent/ok/case_whens_in    |
-    | indent/ok/while_do_loop |
+    | File                    |
+    | indent/ok/case_whens_in |
 

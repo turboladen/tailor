@@ -431,6 +431,68 @@ describe Tailor::Ruler do
     end
   end
 
+  describe "#loop_with_do?" do
+    context "line is 'while true do\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "while"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_kw, "do"], [[1, 13], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.loop_with_do?(lexed_output).should be_true
+      end
+    end
+
+    context "line is 'while true\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "while"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns false" do
+        subject.loop_with_do?(lexed_output).should be_false
+      end
+    end
+
+    context "line is 'until true do\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "until"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_kw, "do"], [[1, 13], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.loop_with_do?(lexed_output).should be_true
+      end
+    end
+
+    context "line is 'until true\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "until"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns false" do
+        subject.loop_with_do?(lexed_output).should be_false
+      end
+    end
+
+    context "line is 'for i in 1..5 do\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "for"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "i"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "in"], [[1, 8], :on_sp, " "], [[1, 9], :on_int, "1"], [[1, 10], :on_op, ".."], [[1, 12], :on_int, "5"], [[1, 13], :on_sp, " "], [[1, 14], :on_kw, "do"], [[1, 16], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.loop_with_do?(lexed_output).should be_true
+      end
+    end
+
+    context "line is 'for i in 1..5\\n'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "for"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "i"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "in"], [[1, 8], :on_sp, " "], [[1, 9], :on_int, "1"], [[1, 10], :on_op, ".."], [[1, 12], :on_int, "5"], [[1, 13], :on_sp, " "], [[1, 14], :on_ignored_nl, "\n"]]
+      end
+
+      it "returns false" do
+        subject.loop_with_do?(lexed_output).should be_false
+      end
+    end
+  end
+
   describe "#line_of_only_rparen?" do
     context "line is '  )'" do
       let(:lexed_output) do

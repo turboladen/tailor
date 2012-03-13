@@ -187,20 +187,17 @@ class Tailor
       log "kw. token: #{token}"
 
       if KEYWORDS_TO_INDENT.include?(token)
-        c = current_lex(super)
-
         if modifier_keyword?(token)
           log "Found modifier in line"
+        elsif token == "do" && loop_with_do?(current_lex(super))
+          log "Found keyword loop using optional 'do'"
         else
           log "Modifier NOT in line"
           update_indentation_expectations(token)
         end
       end
 
-      if token == "end"
-        update_outdentation_expectations
-      end
-
+      update_outdentation_expectations if token == "end"
       log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
       log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
@@ -564,6 +561,20 @@ class Tailor
       else
         false
       end
+    end
+
+    # Checks to see if the current line is a keyword loop (for, while, until)
+    # that uses the optional 'do' at the end of the statement.
+    #
+    # @param [Array] lexed_line_output The lexed output of the current line.
+    # @return [Boolean]
+    def loop_with_do?(lexed_line_output)
+      keyword_elements = lexed_line_output.find_all { |e| e[1] == :on_kw }
+      keyword_tokens = keyword_elements.map { |e| e.last }
+      loop_start = keyword_tokens.any? { |t| LOOP_KEYWORDS.include? t }
+      with_do = keyword_tokens.any? { |t| t == 'do' }
+
+      loop_start && with_do
     end
 
     def multiline_braces?
