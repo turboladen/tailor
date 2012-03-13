@@ -343,7 +343,7 @@ class Tailor
     def on_rparen(token)
       log "RPAREN: '#{token}'"
 
-      if multiline_parens?
+      if multiline_parens? && line_of_only_rparen?(current_lex(super))
         log "end of multiline parens!"
         @proper_indentation[:this_line] -= @config[:indentation][:spaces]
         log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"

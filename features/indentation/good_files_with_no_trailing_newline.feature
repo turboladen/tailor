@@ -60,8 +60,13 @@ Feature: Indentation check on good files without trailing newlines
   Scenarios: Good case statements
     | File                       |
     | indent/ok/case_whens_level |
-    | indent/ok/case_whens_in    |
 
   Scenarios: Good while/do loop
     | File |
+
+  @wip
+  Scenarios: WIPs
+    | File |
+    | indent/ok/case_whens_in    |
     | indent/ok/while_do_loop |
+
