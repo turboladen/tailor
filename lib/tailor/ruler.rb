@@ -8,7 +8,7 @@ class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
-  class LineLexer < Ripper::Lexer
+  class Ruler < Ripper::Lexer
     include Tailor::LexerConstants
     include LogSwitch::Mixin
 
@@ -81,7 +81,6 @@ class Tailor
         lineno = "<EOF>"
         column = "<EOF>"
         @problems << Problem.new(:trailing_newlines, binding)
-
         log "ERROR: Trailing Newlines.  #{@problems.last[:message]}"
       end
 
@@ -386,7 +385,7 @@ class Tailor
       log "RPAREN: '#{token}'"
 
       if multiline_parens?
-        log "multiline parens!"
+        log "end of multiline parens!"
         @proper_indentation[:this_line] -= @config[:indentation][:spaces]
         log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
       end

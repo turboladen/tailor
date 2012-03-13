@@ -1,14 +1,14 @@
 require 'fakefs/spec_helpers'
 require_relative '../spec_helper'
-require 'tailor/line_lexer'
+require 'tailor/ruler'
 
-describe Tailor::LineLexer do
+describe Tailor::Ruler do
   let!(:file_text) { "" }
   let(:style) { {} }
-  subject { Tailor::LineLexer.new(file_text, style) }
+  subject { Tailor::Ruler.new(file_text, style) }
 
   before do
-    Tailor::LineLexer.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
+    Tailor::Ruler.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
   end
 
   describe "#initialize" do
@@ -30,7 +30,7 @@ describe Tailor::LineLexer do
         file = double "File"
         file.should_receive(:read).and_return file_text
         File.should_receive(:open).with("test", 'r').and_return file
-        Tailor::LineLexer.new(file_name, style)
+        Tailor::Ruler.new(file_name, style)
       end
     end
 
@@ -39,7 +39,7 @@ describe Tailor::LineLexer do
 
       it "doesn't try to open a file" do
         File.should_not_receive(:open)
-        Tailor::LineLexer.new(text, style)
+        Tailor::Ruler.new(text, style)
       end
     end
   end
@@ -132,7 +132,7 @@ describe Tailor::LineLexer do
   end
 
   describe "#current_line_indent" do
-    subject { Tailor::LineLexer.new(file_text, style) }
+    subject { Tailor::Ruler.new(file_text, style) }
 
     context "when indented 0" do
       let(:file_text) { "puts 'something'" }
