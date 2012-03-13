@@ -166,6 +166,90 @@ INDENT_OK[:while_do_loop] =
   puts "something"
 end}
 
+INDENT_OK[:while_do_loop2] =
+  %Q{i = 0;
+num = 5;
+
+while i < num do
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end}
+
+INDENT_OK[:until_do_loop] =
+  %Q{until true do
+  puts "something"
+end}
+
+INDENT_OK[:until_do_loop2] =
+  %Q{i = 0;
+num = 5;
+
+until i > num  do
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end}
+
+INDENT_OK[:for_do_loop] =
+  %Q{for i in 1..100 do
+  puts i
+end}
+
+INDENT_OK[:loop_do_loop] =
+  %Q{loop do
+  puts 'looping'
+end}
+
+INDENT_OK[:while_as_modifier_loop] =
+  %Q{i = 0;
+num = 5;
+begin
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end while i < num}
+
+INDENT_OK[:until_as_modifier_loop] =
+  %Q{i = 0;
+num = 5;
+begin
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end until i > num}
+
+INDENT_OK[:for_with_break_loop] =
+  %Q{for i in 0..5
+  if i > 2 then
+    break
+  end
+  puts "Value of local variable is \#{i}"
+end}
+
+INDENT_OK[:for_with_next_loop] =
+  %Q{for i in 0..5
+  if i < 2 then
+    next
+  end
+  puts "Value of local variable is \#{i}"
+end}
+
+INDENT_OK[:for_with_redo_loop] =
+  %Q{for i in 0..5
+  if i < 2 then
+    puts "Value of local variable is \#{i}"
+    redo
+  end
+end}
+
+INDENT_OK[:for_with_retry_loop] =
+  %Q{for i in 1..5
+  retry if  i > 2
+  puts "Value of local variable is \#{i}"
+end}
+
+INDENT_OK[:loop_with_braces] =
+  %Q{loop {
+  puts 'stuff'
+}}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------

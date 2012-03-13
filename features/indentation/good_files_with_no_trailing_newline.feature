@@ -61,9 +61,24 @@ Feature: Indentation check on good files without trailing newlines
     | File                       |
     | indent/ok/case_whens_level |
 
-  Scenarios: Good while/do loop
-    | File                    |
-    | indent/ok/while_do_loop |
+  Scenarios: Good 'do' loops
+    | File                     |
+    | indent/ok/while_do_loop  |
+    | indent/ok/while_do_loop2 |
+    | indent/ok/until_do_loop  |
+    | indent/ok/until_do_loop2 |
+    | indent/ok/for_do_loop    |
+    | indent/ok/loop_do_loop   |
+
+  Scenarios: Good non-'do' loops
+    | File                             |
+    | indent/ok/while_as_modifier_loop |
+    | indent/ok/until_as_modifier_loop |
+    | indent/ok/for_with_break_loop    |
+    | indent/ok/for_with_next_loop     |
+    | indent/ok/for_with_redo_loop     |
+    | indent/ok/for_with_retry_loop    |
+    | indent/ok/loop_with_braces       |
 
   @wip
   Scenarios: WIPs
