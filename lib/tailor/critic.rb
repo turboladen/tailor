@@ -21,9 +21,9 @@ class Tailor
     # @return [Hash] The Problems for that file.
     def check_file file
       log "<#{self.class}> Checking style of a single file: #{file}."
-      lexer = Tailor::Ruler.new(file, @configuration)
-      lexer.lex
-      problems[file] = lexer.problems
+      ruler = Tailor::Ruler.new(file, @configuration)
+      ruler.lex
+      problems[file] = ruler.problems
 
       { file => problems[file] }
     end
