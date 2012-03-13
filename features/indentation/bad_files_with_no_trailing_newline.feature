@@ -40,10 +40,14 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/case_when_outdented_whens_level |
     | indent/1/case_indented_whens_in          |
 
-  Scenarios: 1 problem with while/do loop
+  Scenarios: 1 problem with 'do' loop
     | File                                |
     | indent/1/while_do_indented          |
+    | indent/1/while_do_indented2         |
     | indent/1/while_do_outdented         |
     | indent/1/while_do_content_indented  |
     | indent/1/while_do_content_outdented |
+    | indent/1/until_do_indented          |
+    | indent/1/for_do_indented            |
+    | indent/1/loop_do_indented           |
 

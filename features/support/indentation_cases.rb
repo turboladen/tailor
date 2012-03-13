@@ -375,3 +375,32 @@ INDENT_1[:while_do_content_indented] =
   end
 end}
 
+INDENT_1[:while_do_indented2] =
+  %Q{i = 0;
+num = 5;
+
+ while i < num do
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end}
+
+INDENT_1[:until_do_indented] =
+  %Q{i = 0;
+num = 5;
+
+ until i > num  do
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end}
+
+INDENT_1[:for_do_indented] =
+  %Q{ for i in 1..100 do
+  puts i
+end}
+
+INDENT_1[:loop_do_indented] =
+  %Q{ loop do
+  puts 'looping'
+end}
+
+
