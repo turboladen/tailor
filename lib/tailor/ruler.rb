@@ -434,17 +434,33 @@ class Tailor
     # @param [Array] lexed_line_output
     # @return [Boolean]
     def line_of_only_spaces?(lexed_line_output)
-      first_non_space_element = lexed_line_output.find do |e|
-        e[1] != (:on_sp && :on_nl && :on_ignored_nl)
+      element = first_non_space_element(lexed_line_output)
+      log "first non-space element '#{element}'"
+      element.nil? || element.empty?
+    end
+
+    # Gets the first non-space element from a line of lexed output.
+    #
+    # @param [Array] lexed_line_output The line of lexed output to parse.
+    # @return [Array] The element; +nil+ if none is found.
+    def first_non_space_element(lexed_line_output)
+      lexed_line_output.find do |e|
+        e[1] != :on_sp && e[1] != :on_nl && e[1] != :on_ignored_nl
+      end
+    end
+
+    # @return [Boolean] +true+ if a ')' is in the line and is the only thing in
+    #   line; +false+ if not.
+    def line_of_only_rparen?(lexed_line_output)
+      if lexed_line_output.last[1] == :on_nl ||
+        lexed_line_output.last[1] == :on_ignored_nl
+        lexed_line_output.pop
       end
 
-      log "first non-space element '#{first_non_space_element}'"
+      return false if lexed_line_output.last[1] != :on_rparen
+      lexed_line_output.pop
 
-      if first_non_space_element.nil? || first_non_space_element.empty?
-        true
-      else
-        false
-      end
+      first_non_space_element(lexed_line_output) ? false : true
     end
 
     # Checks the current line to see if the given +token+ is being used as a

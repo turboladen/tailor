@@ -44,7 +44,6 @@ describe Tailor::Ruler do
     end
   end
 
-
   describe "#current_lex" do
     let(:lexed_output) do
       [
@@ -428,6 +427,65 @@ describe Tailor::Ruler do
 
       it "returns false" do
         subject.line_ends_with_op?(lexed_output).should be_false
+      end
+    end
+  end
+
+  describe "#line_of_only_rparen?" do
+    context "line is '  )'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_sp, "  "], [[1, 2], :on_rparen, ")"]]
+      end
+
+      it "returns true" do
+        subject.line_of_only_rparen?(lexed_output).should be_true
+      end
+    end
+
+    context "line is '  })'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 2], :on_rparen, ")"]]
+      end
+
+      it "returns false" do
+        subject.line_of_only_rparen?(lexed_output).should be_false
+      end
+    end
+
+    context "line is '  def some_method'" do
+      let(:lexed_output) do
+        [[[1, 0], :on_kw, "def"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "some_method"], [[1, 15], :on_nl, "\n"]]
+      end
+
+      it "returns false" do
+        subject.line_of_only_rparen?(lexed_output).should be_false
+      end
+    end
+  end
+
+  describe "#first_non_space_element" do
+    context "lexed line contains only spaces" do
+      let(:lexed_output) { [[[1, 0], :on_sp, "     "]] }
+
+      it "returns nil" do
+        subject.first_non_space_element(lexed_output).should be_nil
+      end
+    end
+
+    context "lexed line contains only \\n" do
+      let(:lexed_output) { [[[1, 0], :on_ignored_nl, "\n"]] }
+
+      it "returns nil" do
+        subject.first_non_space_element(lexed_output).should be_nil
+      end
+    end
+
+    context "lexed line contains '  }\\n'" do
+      let(:lexed_output) { [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 3], :on_nl, "\n"]] }
+
+      it "returns nil" do
+        subject.first_non_space_element(lexed_output).should ==
+          [[1,2], :on_rbrace, "}"]
       end
     end
   end
