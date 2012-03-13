@@ -50,7 +50,9 @@ describe Tailor::Problem do
     context "type is :indentation" do
       it "builds a successful message" do
         indentation = 10
-        @proper_indentation = { this_line: 97 }
+        @indentation_ruler = double "IndentationRuler"
+        @indentation_ruler.stub(:should_be_at).and_return 97
+        @indentation_ruler
         problem = Tailor::Problem.new(:test, binding)
         problem.message(:indentation).should match /10.*97/
       end

@@ -5,6 +5,8 @@ require 'tailor/ruler'
 describe Tailor::Ruler do
   let!(:file_text) { "" }
   let(:style) { {} }
+  let(:indentation_ruler) { double "IndentationRuler" }
+
   subject { Tailor::Ruler.new(file_text, style) }
 
   before do
@@ -12,13 +14,6 @@ describe Tailor::Ruler do
   end
 
   describe "#initialize" do
-    it "sets @proper_indentation to an Hash with :this_line and :next_line keys = 0" do
-      proper_indentation = subject.instance_variable_get(:@proper_indentation)
-      proper_indentation.should be_a Hash
-      proper_indentation[:this_line].should be_zero
-      proper_indentation[:next_line].should be_zero
-    end
-
     context "name of file is passed in" do
       let(:file_name) { "test" }
 
@@ -174,114 +169,72 @@ describe Tailor::Ruler do
     context "#single_line_indent_statement? returns false" do
       before do
         subject.stub(:single_line_indent_statement?).and_return false
-        subject.instance_variable_set(:@config, { indentation: { spaces: 27 } })
       end
 
-      it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
-        subject.instance_variable_set(:@proper_indentation, {
-          this_line: 28, next_line: 28
-        })
+      it "calls #decrease_this_line" do
+        indentation_ruler.should_receive(:decrease_this_line)
+        indentation_ruler.stub(:decrease_next_line)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.update_outdentation_expectations
-
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == 1
-      end
-
-      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
-        subject.update_outdentation_expectations
-
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:next_line].should == -27
-      end
-
-      context "@proper_indentation[:this_line] gets decremented < 0" do
-        it "sets @proper_indentation[:this_line] to 0" do
-          subject.instance_variable_set(:@proper_indentation, {
-            this_line: 0, next_line: 0
-          })
-
-          subject.update_outdentation_expectations
-          proper_indentation = subject.instance_variable_get(:@proper_indentation)
-          proper_indentation[:this_line].should == 0
-        end
+        indentation_ruler.unstub(:decrease_next_line)
       end
     end
 
     context "#single_line_indent_statement? returns true" do
       before do
         subject.stub(:single_line_indent_statement?).and_return true
-        subject.instance_variable_set(:@config, { indentation: { spaces: 13 } })
       end
 
-      it "does not decrement @proper_indentation[:this_line]" do
+      it "does not call #decrease_this_line" do
+        indentation_ruler.should_not_receive(:decrease_this_line)
+        indentation_ruler.stub(:decrease_next_line)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.update_outdentation_expectations
-
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == 0
+        indentation_ruler.unstub(:decrease_next_line)
       end
 
-      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
+      it "calls #decrease_this_line" do
+        indentation_ruler.stub(:decrease_this_line)
+        indentation_ruler.should_receive(:decrease_next_line)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.update_outdentation_expectations
-
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:next_line].should == -13
+        indentation_ruler.unstub(:decrease_this_line)
       end
     end
   end
 
   describe "#update_indentation_expectations" do
-    before do
-      subject.instance_variable_set(:@config, { indentation: { spaces: 7 } })
-    end
-
     it "sets @indent_keyword_line to lineno" do
+      indentation_ruler.stub(:increase_next_line)
+      subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
       subject.stub(:lineno).and_return 10
       subject.update_indentation_expectations "def"
 
       subject.instance_variable_get(:@indent_keyword_line).should == 10
+      indentation_ruler.unstub(:increase_next_line)
     end
 
     context "token is a CONTINUATION_KEYWORDS" do
-      it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
-        subject.instance_variable_set(:@proper_indentation, {
-          this_line: 8, next_line: 8
-        })
-
-        subject.update_indentation_expectations("elsif")
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == 1
+      before do
+        Tailor::Ruler::CONTINUATION_KEYWORDS.stub(:include?).and_return true
       end
 
-      it "does not increment @proper_indentation[:next_line]" do
-        subject.update_indentation_expectations("elsif")
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:next_line].should == 0
-      end
-
-      context "@proper_indentation[:this_line] gets decremented < 0" do
-        it "sets @proper_indentation[:this_line] to 0" do
-          subject.instance_variable_set(:@proper_indentation, {
-            this_line: 0, next_line: 0
-          })
-
-          subject.update_indentation_expectations("elsif")
-          proper_indentation = subject.instance_variable_get(:@proper_indentation)
-          proper_indentation[:this_line].should == 0
-        end
+      it "calls #decrease_this_line" do
+        indentation_ruler.should_receive(:decrease_this_line)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
+        subject.update_indentation_expectations "when"
       end
     end
 
     context "token is not a CONTINUATION_KEYWORDS" do
-      it "does not decrement @proper_indentation[:this_line]" do
-        subject.update_indentation_expectations("pants")
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:this_line].should == 0
+      before do
+        Tailor::Ruler::CONTINUATION_KEYWORDS.stub(:include?).and_return false
       end
 
-      it "does not increment @proper_indentation[:next_line]" do
-        subject.update_indentation_expectations("pants")
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
-        proper_indentation[:next_line].should == 7
+      it "calls #increase_this_line" do
+        indentation_ruler.should_receive(:increase_next_line)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
+        subject.update_indentation_expectations "def"
       end
     end
   end
@@ -325,32 +278,42 @@ describe Tailor::Ruler do
   end
 
   describe "#multiline_braces?" do
-    context "@brace_start_line is nil" do
-      before { subject.instance_variable_set(:@brace_nesting, []) }
+    context "@indentation_ruler.brace_nesting is empty" do
+      before do
+        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(true)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
+      end
+
       specify { subject.multiline_braces?.should be_false }
     end
 
-    context "@brace_start_line is 0 and lineno is 0" do
+    context "@indentation_ruler.brace_nesting is 0 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@brace_nesting, [0])
+        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(0)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 0
       end
 
       specify { subject.multiline_braces?.should be_false }
     end
 
-    context "@brace_start_line is 0 and lineno is 1" do
+    context "@indentation_ruler.brace_nesting is 0 and lineno is 1" do
       before do
-        subject.instance_variable_set(:@brace_nesting, [0])
+        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(0)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 1
       end
 
       specify { subject.multiline_braces?.should be_true }
     end
 
-    context "@brace_nesting.first is 1 and lineno is 0" do
+    context "@indentation_ruler.brace_nesting.last is 1 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@brace_nesting, [1])
+        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(1)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 0
       end
 
@@ -359,32 +322,42 @@ describe Tailor::Ruler do
   end
 
   describe "#multiline_brackets?" do
-    context "@bracket_start_line is nil" do
-      before { subject.instance_variable_set(:@bracket_nesting, []) }
+    context "@indentation_ruler.bracket_nesting is empty" do
+      before do
+        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(true)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
+      end
+
       specify { subject.multiline_brackets?.should be_false }
     end
 
-    context "@bracket_nesting.first is 0 and lineno is 0" do
+    context "@indentation_ruler.bracket_nesting.last is 0 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@bracket_nesting, [0])
+        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(0)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 0
       end
 
       specify { subject.multiline_brackets?.should be_false }
     end
 
-    context "@bracket_nesting.first is 0 and lineno is 1" do
+    context "@indentation_ruler.bracket_nesting.last is 0 and lineno is 1" do
       before do
-        subject.instance_variable_set(:@bracket_nesting, [0])
+        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(0)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 1
       end
 
       specify { subject.multiline_brackets?.should be_true }
     end
 
-    context "@bracket_nesting.first is 1 and lineno is 0" do
+    context "@indentation_ruler.bracket_nesting.last is 1 and lineno is 0" do
       before do
-        subject.instance_variable_set(:@bracket_nesting, [1])
+        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
+        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(1)
+        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
         subject.stub(:lineno).and_return 0
       end
 

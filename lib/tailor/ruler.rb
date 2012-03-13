@@ -1,6 +1,7 @@
 require 'ripper'
 require_relative 'logger'
 require_relative 'problem'
+require_relative 'ruler/indentation_ruler'
 
 
 class Tailor
@@ -34,14 +35,11 @@ class Tailor
       log "@config: #{@config}"
       @file_text = ensure_trailing_newline(@file_text)
 
-      log "<#{self.class}> Setting @proper_indentation[:this_line] to 0."
-      @proper_indentation = {}
-      @proper_indentation[:this_line] = 0
-      @proper_indentation[:next_line] = 0
-      @brace_nesting = []
-      @bracket_nesting = []
-      @paren_nesting = []
-      @op_statement_nesting = []
+
+=begin
+      @check_indentation = true
+=end
+      @indentation_ruler = IndentationRuler.new(@config[:indentation])
 
       super @file_text
     end
@@ -132,6 +130,13 @@ class Tailor
     def on_ignored_nl(token)
       log "ignored_nl."
 
+=begin
+      if not @check_indentation
+        log "Skipping indentation checks due to being in a tstring"
+        return
+      end
+=end
+
       # check indentation
       c = current_lex(super)
 
@@ -139,7 +144,7 @@ class Tailor
         indentation = current_line_indent(c)
         log "indentation: #{indentation}"
 
-        if indentation != @proper_indentation[:this_line]
+        if indentation != @indentation_ruler.should_be_at
           @problems << Problem.new(:indentation, binding)
           log "ERROR: Indentation.  #{@problems.last[:message]}"
         end
@@ -150,26 +155,23 @@ class Tailor
 
       if line_ends_with_op?(c)
         # Are we nested in a multi-line operation yet?
-        if @op_statement_nesting.empty?
-          @op_statement_nesting << lineno
+        if @indentation_ruler.op_statement_nesting.empty?
+          @indentation_ruler.op_statement_nesting << lineno
         end
 
         # If this line is a continuation of the last multi-line op statement
         # then update the nesting line number with this line number.
-        if @op_statement_nesting.last + 1 == lineno
-          @op_statement_nesting.pop
-          @op_statement_nesting << lineno
+        if @indentation_ruler.op_statement_nesting.last + 1 == lineno
+          @indentation_ruler.op_statement_nesting.pop
+          @indentation_ruler.op_statement_nesting << lineno
         else
           log "Increasing :next_line expectation due to multi-line operator statement."
-          @proper_indentation[:next_line] += @config[:indentation][:spaces]
-          log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+          @indentation_ruler.increase_next_line
         end
       end
 
       # prep for next line
-      log "Setting @proper_indentation[:this_line] = that of :next_line"
-      @proper_indentation[:this_line] = @proper_indentation[:next_line]
-      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+      @indentation_ruler.transition_lines
 
       super(token)
     end
@@ -198,8 +200,6 @@ class Tailor
       end
 
       update_outdentation_expectations if token == "end"
-      log "@proper_indentation[:this_line]: #{@proper_indentation[:this_line]}"
-      log "@proper_indentation[:next_line]: #{@proper_indentation[:next_line]}"
 
       super(token)
     end
@@ -215,9 +215,8 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbrace(token)
       log "lbrace"
-      @brace_nesting << lineno
-      @proper_indentation[:next_line] += @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      @indentation_ruler.brace_nesting << lineno
+      @indentation_ruler.increase_next_line
       super(token)
     end
 
@@ -226,17 +225,15 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbracket(token)
       log "lbracket"
-      @bracket_nesting << lineno
-      @proper_indentation[:next_line] += @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      @indentation_ruler.bracket_nesting << lineno
+      @indentation_ruler.increase_next_line
       super(token)
     end
 
     def on_lparen(token)
       log "LPAREN: '#{token}'"
-      @paren_nesting << lineno
-      @proper_indentation[:next_line] += @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      @indentation_ruler.paren_nesting << lineno
+      @indentation_ruler.increase_next_line
       super(token)
     end
 
@@ -244,27 +241,30 @@ class Tailor
     def on_nl(token)
       log "NL"
 
+      #if not @check_indentation
+      #  log "Skipping indentation checks due to being in a tstring"
+      #  return
+      #end
+
       c = current_lex(super)
 
       # check indentation
       indentation = current_line_indent(c)
 
-      if indentation != @proper_indentation[:this_line]
+      if indentation != @indentation_ruler.should_be_at
         @problems << Problem.new(:indentation, binding)
         log "ERROR: Indentation.  #{@problems.last[:message]}"
       end
 
-      unless @op_statement_nesting.empty?
-        if @op_statement_nesting.last + 1 == lineno
+      unless @indentation_ruler.op_statement_nesting.empty?
+        if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
-          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
+          @indentation_ruler.decrease_this_line
         end
       end
 
-        # prep for next line
-      log "Setting @proper_indentation[:this_line] = that of :next_line"
-      @proper_indentation[:this_line] = @proper_indentation[:next_line]
-      log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+      # prep for next line
+      @indentation_ruler.transition_lines
 
       super(token)
     end
@@ -295,21 +295,19 @@ class Tailor
         log "end of multiline braces!"
 
         if r_event_without_content?(current_lex(super))
-          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+          @indentation_ruler.decrease_this_line
         end
       end
 
-      @brace_nesting.pop
+      @indentation_ruler.brace_nesting.pop
 
       # Ripper won't match a closing } in #{} so we have to track if we're
       # inside of one.  If we are, don't decrement then :next_line.
       unless @embexpr_beg
-        @proper_indentation[:next_line] -= @config[:indentation][:spaces]
+        @indentation_ruler.decrease_next_line
       end
 
       @embexpr_beg = false
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
 
@@ -323,15 +321,12 @@ class Tailor
         log "end of multiline brackets!"
 
         if r_event_without_content?(current_lex(super))
-          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+          @indentation_ruler.decrease_this_line
         end
       end
 
-      @bracket_nesting.pop
-
-      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+      @indentation_ruler.bracket_nesting.pop
+      @indentation_ruler.decrease_next_line
       super(token)
     end
 
@@ -352,15 +347,13 @@ class Tailor
         log "end of multiline parens!"
 
         if r_event_without_content?(current_lex(super))
-          @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+          @indentation_ruler.decrease_this_line
         end
       end
 
-      @paren_nesting.pop
+      @indentation_ruler.paren_nesting.pop
+      @indentation_ruler.decrease_next_line
 
-      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
-      log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
       super(token)
     end
 
@@ -391,6 +384,7 @@ class Tailor
 
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
+      #@check_indentation = false
       super(token)
     end
 
@@ -401,6 +395,7 @@ class Tailor
 
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
+      #@check_indentation = true
       super(token)
     end
 
@@ -500,17 +495,11 @@ class Tailor
     # Updates the values used for detecting the proper number of indentation
     # spaces.  Should be called when reaching the end of a line.
     def update_outdentation_expectations
-      log "outdent keyword found: end"
-
       unless single_line_indent_statement?
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-
-        if @proper_indentation[:this_line] < 0
-          @proper_indentation[:this_line] = 0
-        end
+        @indentation_ruler.decrease_this_line
       end
 
-      @proper_indentation[:next_line] -= @config[:indentation][:spaces]
+      @indentation_ruler.decrease_next_line
     end
 
     # Updates the values used for detecting the proper number of indentation
@@ -523,17 +512,13 @@ class Tailor
         log "Updating indent expectation due to keyword found: '#{token}'."
         @indent_keyword_line = lineno
       else
-        log "Not sure why updating indentation expectation..."
+        log "Not sure why updating indentation expectation... Got token '#{token}'"
       end
 
       if CONTINUATION_KEYWORDS.include? token
-        @proper_indentation[:this_line] -= @config[:indentation][:spaces]
-
-        if @proper_indentation[:this_line] < 0
-          @proper_indentation[:this_line] = 0
-        end
+        @indentation_ruler.decrease_this_line
       else
-        @proper_indentation[:next_line] += @config[:indentation][:spaces]
+        @indentation_ruler.increase_next_line
       end
     end
 
@@ -581,15 +566,19 @@ class Tailor
     end
 
     def multiline_braces?
-      @brace_nesting.empty? ? false : (@brace_nesting.last < lineno)
+      if @indentation_ruler.brace_nesting.empty?
+        false
+      else
+        @indentation_ruler.brace_nesting.last < lineno
+      end
     end
 
     def multiline_brackets?
-      @bracket_nesting.empty? ? false : (@bracket_nesting.last < lineno)
+      @indentation_ruler.bracket_nesting.empty? ? false : (@indentation_ruler.bracket_nesting.last < lineno)
     end
 
     def multiline_parens?
-      @paren_nesting.empty? ? false : (@paren_nesting.last < lineno)
+      @indentation_ruler.paren_nesting.empty? ? false : (@indentation_ruler.paren_nesting.last < lineno)
     end
 
     #---------------------------------------------------------------------------
