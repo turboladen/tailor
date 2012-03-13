@@ -2,6 +2,10 @@ require_relative '../spec_helper'
 require 'tailor/configuration'
 
 describe Tailor::Configuration do
+  subject do
+    Tailor::Configuration.new('.')
+  end
+
   describe "#load_from_file" do
     let!(:config_file_contents) do
       <<-CONFIG
@@ -27,17 +31,15 @@ describe Tailor::Configuration do
       end
 
       it "loads that file" do
-        YAML.should_receive(:load_file).with(tailorrc_path).and_return(
-          YAML.load(config_file_contents)
-        )
-        subject.load_from_file
+        YAML.should_receive(:load_file).with(tailorrc_path).at_least(:once).
+          and_return(YAML.load(config_file_contents))
+        subject.load_from_file(tailorrc_path)
       end
 
       it "sets @style to the the :style section of the config file" do
-        YAML.stub(:load_file).with(tailorrc_path).and_return(
-          YAML.load(config_file_contents)
-        )
-        subject.load_from_file
+        YAML.should_receive(:load_file).with(tailorrc_path).at_least(:once).
+          and_return(YAML.load(config_file_contents))
+        subject.load_from_file(tailorrc_path)
         subject.instance_variable_get(:@style).should == {
           indentation: {
             spaces: 2,
@@ -54,33 +56,28 @@ describe Tailor::Configuration do
         YAML.stub(:load_file).with(tailorrc_path).and_return(
           YAML.load(config_file_contents)
         )
-        subject.load_from_file
+        subject.load_from_file(tailorrc_path)
 
         subject.instance_variable_get(:@formatters).should == "text"
       end
     end
 
     context "~/.tailorrc does not exist" do
-      let(:default_config_path) do
-        File.expand_path(File.dirname(__FILE__) + '/../../tailor_config.yaml.erb')
-      end
-
-      before { FakeFS.deactivate! }
-      after { FakeFS.activate! }
-
       it "does not try loading that file" do
         YAML.should_not_receive(:load_file).with(tailorrc_path)
-        subject.load_from_file
+        subject.load_from_file('.')
       end
 
-      it "loads the ERB template file as the config" do
-        fake_file = double "File"
-        erb = double "ERB", result: "---"
-        config = double "config", :[] => true
-        File.should_receive(:read).with(default_config_path).and_return fake_file
-        ERB.should_receive(:new).and_return(erb)
-        YAML.should_receive(:load).and_return(config)
-        subject.load_from_file
+      it "does not alter @style" do
+        style = double "@style"
+        subject.instance_variable_set(:@style, style)
+        expect { subject.load_from_file('.') }.to_not change{subject.style}
+      end
+
+      it "does not alter @formatters" do
+        formatters = double "@formatters"
+        subject.instance_variable_set(:@formatters, formatters)
+        expect { subject.load_from_file('.') }.to_not change{subject.formatters}
       end
     end
   end

@@ -23,7 +23,7 @@ describe Tailor::CLI do
       Tailor::Configuration.stub(:new).and_return config
       Tailor::Critic.stub(:new)
       Tailor::Reporter.stub(:new)
-      Tailor::CLI::Options.should_receive(:parse!).with args
+      Tailor::CLI::Options.should_receive(:parse!).with(args).and_return({})
 
       Tailor::CLI.new(args)
     end
