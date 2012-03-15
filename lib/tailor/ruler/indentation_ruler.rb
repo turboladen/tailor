@@ -19,6 +19,7 @@ class Tailor
         @bracket_nesting = []
         @paren_nesting = []
         @op_statement_nesting = []
+        @started = false
       end
 
       # @return [Fixnum] The indent level the file should currently be at.
@@ -33,36 +34,71 @@ class Tailor
       # Decreases the indentation expectation for the current line by
       # +@config[:spaces]+.
       def decrease_this_line
-        @proper_indentation[:this_line] -= @config[:spaces]
+        if started?
+          @proper_indentation[:this_line] -= @config[:spaces]
 
-        if @proper_indentation[:this_line] < 0
-          @proper_indentation[:this_line] = 0
+          if @proper_indentation[:this_line] < 0
+            @proper_indentation[:this_line] = 0
+          end
+
+          log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
+        else
+          log "#decrease_this_line called, but checking is stopped."
         end
-
-        log "@proper_indentation[:this_line] = #{@proper_indentation[:this_line]}"
       end
 
       # Increases the indentation expectation for the next line by
       # +@config[:spaces]+.
       def increase_next_line
-        @proper_indentation[:next_line] += @config[:spaces]
-        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        if started?
+          @proper_indentation[:next_line] += @config[:spaces]
+          log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        else
+          log "#increase_this_line called, but checking is stopped."
+        end
       end
 
       # Decreases the indentation expectation for the next line by
       # +@config[:spaces]+.
       def decrease_next_line
-        @proper_indentation[:next_line] -= @config[:spaces]
-        log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        if started?
+          @proper_indentation[:next_line] -= @config[:spaces]
+          log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
+        else
+          log "#decrease_next_line called, but checking is stopped."
+        end
       end
 
       # Should be called just before moving to the next line.  This sets the
       # expectation set in +@proper_indentation[:next_line]+ to
       # +@proper_indentation[:this_line]+.
       def transition_lines
-        log "Setting @proper_indentation[:this_line] = that of :next_line"
-        @proper_indentation[:this_line] = @proper_indentation[:next_line]
-        log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+        if started?
+          log "Setting @proper_indentation[:this_line] = that of :next_line"
+          @proper_indentation[:this_line] = @proper_indentation[:next_line]
+          log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+        else
+          log "skipping #transition_lines; checking is stopped." and return if started?
+        end
+      end
+
+      # Starts the process of increasing/decreasing line indentation
+      # expectations.
+      def start
+        @started = true
+      end
+
+      # Tells if the indentation checking process is on.
+      #
+      # @return [Boolean] +true+ if it's started; +false+ if not.
+      def started?
+        @started
+      end
+
+      # Stops the process of increasing/decreasing line indentation
+      # exepctations.
+      def stop
+        @started = false
       end
 
       #---------------------------------------------------------------------------
