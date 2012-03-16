@@ -170,4 +170,34 @@ describe Tailor::Ruler::IndentationRuler do
       specify { subject.started?.should be_false }
     end
   end
+
+  describe "#current_line_indent" do
+    context "when indented 0" do
+      let(:file_text) { "puts 'something'" }
+
+      it "returns 0" do
+        subject.current_line_indent(Ripper.lex(file_text)).should == 0
+      end
+    end
+
+    context "when indented 1" do
+      let(:file_text) { " puts 'something'" }
+
+      it "returns 1" do
+        subject.current_line_indent(Ripper.lex(file_text)).should == 1
+      end
+    end
+
+    context "thing" do
+      let(:file_text) do
+        %Q{%Q{this is a t string!
+suckaaaaaa!}}
+      end
+
+      it "thign" do
+        lexed_output = Ripper.lex(file_text)
+        subject.current_line_indent(lexed_output).should == 0
+      end
+    end
+  end
 end

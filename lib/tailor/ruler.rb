@@ -35,11 +35,8 @@ class Tailor
       log "@config: #{@config}"
       @file_text = ensure_trailing_newline(@file_text)
 
-
-=begin
-      @check_indentation = true
-=end
       @indentation_ruler = IndentationRuler.new(@config[:indentation])
+      @indentation_ruler.start
 
       super @file_text
     end
@@ -130,18 +127,11 @@ class Tailor
     def on_ignored_nl(token)
       log "ignored_nl."
 
-=begin
-      if not @check_indentation
-        log "Skipping indentation checks due to being in a tstring"
-        return
-      end
-=end
-
       # check indentation
       c = current_lex(super)
 
       if not line_of_only_spaces?(c)
-        indentation = current_line_indent(c)
+        indentation = @indentation_ruler.current_line_indent(c)
         log "indentation: #{indentation}"
 
         if indentation != @indentation_ruler.should_be_at
@@ -153,6 +143,7 @@ class Tailor
         return
       end
 
+      # TODO: move the contents of this to indentation_ruler
       if line_ends_with_op?(c)
         # Are we nested in a multi-line operation yet?
         if @indentation_ruler.op_statement_nesting.empty?
@@ -240,18 +231,13 @@ class Tailor
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
       log "NL"
-
-      #if not @check_indentation
-      #  log "Skipping indentation checks due to being in a tstring"
-      #  return
-      #end
-
       c = current_lex(super)
 
       # check indentation
-      indentation = current_line_indent(c)
+      indentation = @indentation_ruler.current_line_indent(c)
 
       if indentation != @indentation_ruler.should_be_at
+        log "indentation: #{indentation}"
         @problems << Problem.new(:indentation, binding)
         log "ERROR: Indentation.  #{@problems.last[:message]}"
       end
@@ -384,7 +370,7 @@ class Tailor
 
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
-      #@check_indentation = false
+      @indentation_ruler.stop
       super(token)
     end
 
@@ -395,7 +381,7 @@ class Tailor
 
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
-      #@check_indentation = true
+      @indentation_ruler.start
       super(token)
     end
 
@@ -423,12 +409,6 @@ class Tailor
     # @return [Array]
     def current_lex(lexed_output)
       lexed_output.find_all { |token| token.first.first == lineno }
-    end
-
-    # @return [Fixnum] Number of the first non-space (:on_sp) token.
-    def current_line_indent(lexed_line_output)
-      first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
-      first_non_space_element.first.last
     end
 
     # Looks at the +lexed_line_output+ and determines if it' s a line of just

@@ -69,26 +69,6 @@ describe Tailor::Ruler do
     end
   end
 
-  describe "#current_line_indent" do
-    subject { Tailor::Ruler.new(file_text, style) }
-
-    context "when indented 0" do
-      let(:file_text) { "puts 'something'" }
-
-      it "returns 0" do
-        subject.current_line_indent(Ripper.lex(file_text)).should == 0
-      end
-    end
-
-    context "when indented 1" do
-      let(:file_text) { " puts 'something'" }
-
-      it "returns 1" do
-        subject.current_line_indent(Ripper.lex(file_text)).should == 1
-      end
-    end
-  end
-
   describe "#line_of_only_spaces?" do
     context '0 length line, no \n ending' do
       let(:file_text) { "" }
