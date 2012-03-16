@@ -129,6 +129,11 @@ Feature: Indentation check on good files without trailing newlines
     | File                                  |
     | indent/ok/multi_line_andop_in_method |
 
+  @multi_line
+  Scenarios: Good multi-line method calls
+    | File |
+    | indent/ok/multi_line_method_call |
+
   @wip
   Scenarios: WIPs
     | File                    |

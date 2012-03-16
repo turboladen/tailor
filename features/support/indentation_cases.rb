@@ -358,6 +358,21 @@ INDENT_OK[:multi_line_andop_in_method] =
     lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
 end}
 
+INDENT_OK[:multi_line_method_call] =
+  %Q{def initialize(raw_response)
+  if raw_response.nil? || raw_response.empty?
+    raise RTSP::Error,
+      "#{self.class} received nil string--this shouldn't happen."
+  end
+
+  @raw_response = raw_response
+
+  head, body = split_head_and_body_from @raw_response
+  parse_head(head)
+  @body = parse_body(body)
+end
+}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------

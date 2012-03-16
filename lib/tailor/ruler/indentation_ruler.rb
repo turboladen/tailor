@@ -4,12 +4,15 @@ require_relative '../logger'
 class Tailor
   class Ruler < Ripper::Lexer
     class IndentationRuler
-      attr_reader :op_statement_nesting
-      attr_reader :paren_nesting
+      attr_reader :actual_indentation
+
       attr_reader :brace_nesting
       attr_reader :bracket_nesting
+      attr_reader :op_statement_nesting
+      attr_reader :paren_nesting
       attr_reader :tstring_nesting
-      attr_reader :actual_indentation
+
+      attr_accessor :last_comma_statement_line
 
       def initialize(indentation_config)
         @config = indentation_config
@@ -26,6 +29,7 @@ class Tailor
         @paren_nesting = []
         @op_statement_nesting = []
         @tstring_nesting = []
+        @last_comma_statement_line = nil
       end
 
       # @return [Fixnum] The indent level the file should currently be at.

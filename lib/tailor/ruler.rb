@@ -52,6 +52,12 @@ class Tailor
 
     def on_comma(token)
       log "COMMA: #{token}"
+      log "Line length: #{current_line_of_text.length}"
+
+      if column == current_line_of_text.length
+        @indentation_ruler.last_comma_statement_line = lineno
+      end
+
       super(token)
     end
 
@@ -161,6 +167,22 @@ class Tailor
         end
       end
 
+      if @indentation_ruler.op_statement_nesting.empty? &&
+        @indentation_ruler.tstring_nesting.empty? &&
+        @indentation_ruler.paren_nesting.empty? &&
+        @indentation_ruler.brace_nesting.empty? &&
+        @indentation_ruler.bracket_nesting.empty?
+        if line_ends_with_comma?(c)
+          if @indentation_ruler.last_comma_statement_line.nil?
+            @indentation_ruler.increase_next_line
+          end
+
+          @indentation_ruler.last_comma_statement_line = lineno
+          log "last_comma_statement_line: #{@indentation_ruler.last_comma_statement_line}"
+        end
+
+      end
+
       # prep for next line
       @indentation_ruler.transition_lines
 
@@ -250,6 +272,20 @@ class Tailor
           @indentation_ruler.decrease_next_line
         end
       end
+
+      if !multiline_braces? && !multiline_brackets? && !multiline_parens?
+        # Last line of multi-line comma statement?
+        if @indentation_ruler.last_comma_statement_line == (lineno - 1)
+          log "Last line of multi-line comma statement"
+
+          unless line_ends_with_comma?(c)
+            log "line doesn't end with comma"
+            @indentation_ruler.last_comma_statement_line = nil
+            @indentation_ruler.decrease_next_line
+          end
+        end
+      end
+
 
       # prep for next line
       @indentation_ruler.transition_lines
@@ -531,6 +567,21 @@ class Tailor
 
       if MULTILINE_OPERATORS.include?(lexed_line_output.last.last) &&
           tokens_in_line.last == :on_op
+        true
+      else
+        false
+      end
+    end
+
+    def line_ends_with_comma?(lexed_line_output)
+      tokens_in_line = lexed_line_output.map { |e| e[1] }
+
+      until tokens_in_line.last != (:on_ignored_nl || :on_nl)
+        tokens_in_line.pop
+        lexed_line_output.pop
+      end
+
+      if tokens_in_line.last == :on_comma
         true
       else
         false
