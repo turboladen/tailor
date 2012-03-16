@@ -175,8 +175,9 @@ describe Tailor::Ruler::IndentationRuler do
     context "when indented 0" do
       let(:file_text) { "puts 'something'" }
 
-      it "returns 0" do
-        subject.update_actual_indentation(Ripper.lex(file_text)).should == 0
+      it "sets @actual_indentation to 0" do
+        subject.update_actual_indentation(Ripper.lex(file_text))
+        subject.instance_variable_get(:@actual_indentation).should be_zero
       end
     end
 
@@ -184,19 +185,56 @@ describe Tailor::Ruler::IndentationRuler do
       let(:file_text) { " puts 'something'" }
 
       it "returns 1" do
-        subject.update_actual_indentation(Ripper.lex(file_text)).should == 1
+        subject.update_actual_indentation(Ripper.lex(file_text))
+        subject.instance_variable_get(:@actual_indentation).should == 1
       end
     end
 
-    context "thing" do
-      let(:file_text) do
-        %Q{%Q{this is a t string!
-suckaaaaaa!}}
+    context "when end of a multiline string" do
+      let(:lexed_output) do
+        [[[2, 11], :on_tstring_end, "}"], [[2, 12], :on_nl, "\n"]]
       end
 
-      it "thign" do
-        lexed_output = Ripper.lex(file_text)
-        subject.update_actual_indentation(lexed_output).should == 0
+      it "returns @actual_indentation from the first line" do
+        subject.instance_variable_set(:@actual_indentation, 123)
+        subject.update_actual_indentation(lexed_output)
+        subject.instance_variable_get(:@actual_indentation).should == 123
+      end
+    end
+  end
+
+  describe "#end_of_multiline_string?" do
+    context "lexed output is from the end of a multiline % statement" do
+      let(:lexed_output) do
+        [[[2, 11], :on_tstring_end, "}"], [[2, 12], :on_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.end_of_multiline_string?(lexed_output).should be_true
+      end
+    end
+
+    context "lexed output is not from the end of a multiline % statement" do
+      let(:lexed_output) do
+        [[[2, 11], :on_comma, ","], [[2, 12], :on_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.end_of_multiline_string?(lexed_output).should be_false
+      end
+    end
+
+    context "lexed output contains start AND end of a multiline % statement" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_tstring_beg, "%Q{"],
+          [[1, 3], :on_tstring_content, "this is a t string! suckaaaaaa!"],
+          [[1, 32], :on_tstring_end, "}"]
+        ]
+      end
+
+      it "returns true" do
+        subject.end_of_multiline_string?(lexed_output).should be_false
       end
     end
   end

@@ -83,13 +83,13 @@ class Tailor
 
     # Matches the { in an expression embedded in a string.
     def on_embexpr_beg(token)
-      log "embexpr_beg, token '#{token}'"
+      log "EMBEXPR_BEG: '#{token}'"
       @embexpr_beg = true
       super(token)
     end
 
     def on_embexpr_end(token)
-      log "embexpr_end: token: '#{token}'"
+      log "EMBEXPR_END: '#{token}'"
       @embexpr_beg = false
       super(token)
     end
@@ -125,7 +125,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
-      log "ignored_nl."
+      log "IGNORED_NL"
 
       # check indentation
       c = current_lex(super)
@@ -177,7 +177,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_kw(token)
-      log "kw. token: #{token}"
+      log "KW: #{token}"
 
       if KEYWORDS_TO_INDENT.include?(token)
         if modifier_keyword?(token)
@@ -205,7 +205,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_lbrace(token)
-      log "lbrace"
+      log "LBRACE: '#{token}'"
       @indentation_ruler.brace_nesting << lineno
       @indentation_ruler.increase_next_line
       super(token)
@@ -215,7 +215,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_lbracket(token)
-      log "lbracket"
+      log "LBRACKET: '#{token}'"
       @indentation_ruler.bracket_nesting << lineno
       @indentation_ruler.increase_next_line
       super(token)
@@ -257,7 +257,7 @@ class Tailor
 
     # Operators
     def on_op(token)
-      log "OP: '#{token}'; column: #{column}"
+      log "OP: '#{token}'"
       super(token)
     end
 
@@ -275,7 +275,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_rbrace(token)
-      log "rbrace"
+      log "RBRACE: '#{token}'"
 
       if multiline_braces?
         log "end of multiline braces!"
@@ -349,7 +349,7 @@ class Tailor
     end
 
     def on_sp(token)
-      log "SP: '#{token}'; size: #{token.size}; column: #{column}"
+      log "SP: '#{token}'; size: #{token.size}"
       super(token)
     end
 

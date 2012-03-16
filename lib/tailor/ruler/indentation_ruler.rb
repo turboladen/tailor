@@ -8,6 +8,7 @@ class Tailor
       attr_reader :paren_nesting
       attr_reader :brace_nesting
       attr_reader :bracket_nesting
+      attr_reader :actual_indentation
 
       def initialize(indentation_config)
         @config = indentation_config
@@ -20,6 +21,7 @@ class Tailor
         @paren_nesting = []
         @op_statement_nesting = []
         @started = false
+        @actual_indentation = 0
       end
 
       # @return [Fixnum] The indent level the file should currently be at.
@@ -101,10 +103,23 @@ class Tailor
         @started = false
       end
 
-      # @return [Fixnum] Number of the first non-space (:on_sp) token.
+      # Updates +@actual_indentation+ based on the given lexed_line_output.
+      #
+      # @param [Array] lexed_line_output The lexed output for the current line.
       def update_actual_indentation(lexed_line_output)
+        return if end_of_multiline_string?(lexed_line_output)
         first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
-        first_non_space_element.first.last
+        @actual_indentation = first_non_space_element.first.last
+      end
+
+      # Determines if the current lexed line is just the end of a tstring.
+      #
+      # @param [Array] lexed_line_output The lexed output for the current line.
+      # @return [Boolean] +true+ if the line contains a +:on_tstring_end+ and
+      #   not a +:on_tstring_beg+.
+      def end_of_multiline_string?(lexed_line_output)
+        lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
+          lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
       end
 
       #---------------------------------------------------------------------------
