@@ -243,10 +243,11 @@ class Tailor
         end
       end
 
-      unless @indentation_ruler.op_statement_nesting.empty?
+      if not @indentation_ruler.op_statement_nesting.empty?
         if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
           @indentation_ruler.decrease_this_line
+          @indentation_ruler.decrease_next_line
         end
       end
 
@@ -477,7 +478,8 @@ class Tailor
     # Updates the values used for detecting the proper number of indentation
     # spaces.  Should be called when reaching the end of a line.
     def update_outdentation_expectations
-      unless single_line_indent_statement?
+      if not single_line_indent_statement?
+        log "Not a single-line statement that needs indenting.  Decrease this line"
         @indentation_ruler.decrease_this_line
       end
 

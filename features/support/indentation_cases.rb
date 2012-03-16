@@ -352,6 +352,12 @@ and i'm not going
 anywhere!'
 )}
 
+INDENT_OK[:multi_line_andop_in_method] =
+  %Q{def end_of_multiline_string?(lexed_line_output)
+  lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
+    lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
+end}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------
@@ -520,5 +526,17 @@ INDENT_1[:multi_line_string_first_line_indented] =
 #    * message:   \#{problem[:message]}
 }
   end
+end}
+
+INDENT_1[:multi_line_andop_first_line_indented] =
+  %Q{def end_of_multiline_string?(lexed_line_output)
+   lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
+    lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
+end}
+
+INDENT_1[:multi_line_andop_second_line_indented] =
+  %Q{def end_of_multiline_string?(lexed_line_output)
+  lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
+     lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
 end}
 
