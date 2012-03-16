@@ -98,7 +98,7 @@ class Tailor
       end
 
       # Stops the process of increasing/decreasing line indentation
-      # exepctations.
+      # expectations.
       def stop
         @started = false
       end
