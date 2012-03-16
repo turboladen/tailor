@@ -28,6 +28,7 @@ class Tailor
     def message(type)
       case type
       when :indentation
+        self[:column] = @binding.eval('@indentation_ruler.actual_indentation')
         "Line is indented to #{@binding.eval('@indentation_ruler.actual_indentation')}, but should be at #{@binding.eval('@indentation_ruler.should_be_at')}"
       when :trailing_newlines
         "File has #{@binding.eval('trailing_newline_count')} trailing newlines, but should have #{@binding.eval('@config[:vertical_whitespace][:trailing_newlines]')}"

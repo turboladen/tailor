@@ -505,4 +505,20 @@ INDENT_1[:loop_do_indented] =
   puts 'looping'
 end}
 
+INDENT_1[:multi_line_string_first_line_indented] =
+  %Q{def a_method
+   if defined? Term::ANSIColor
+    message << %Q{#  \#{(i + 1).to_s.bold}.
+#    * position:  \#{position}
+#    * type:      \#{problem[:type].to_s.red}
+#    * message:   \#{problem[:message].red}
+}
+  else
+    message << %Q{#  \#{(i + 1)}.
+#    * position:  \#{position}
+#    * type:      \#{problem[:type]}
+#    * message:   \#{problem[:message]}
+}
+  end
+end}
 
