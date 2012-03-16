@@ -250,34 +250,31 @@ INDENT_OK[:loop_with_braces] =
   puts 'stuff'
 }}
 
-INDENT_OK[:single_line_brackets] =
-  %Q{['one', 'two', 'three']}
-
-INDENT_OK[:multi_line_brackets] =
-  %Q{['one', 'two',
-  'three']}
-
-INDENT_OK[:multi_line_lonely_brackets] =
-  %Q{[
-  'one', 'two',
-  'three'
-]}
-
-INDENT_OK[:multi_line_brackets_embedded_hashes] =
-  %Q{summary_table.rows << [{ value: "File", align: :center },
-  { value: "Total Problems", align: :center }]}
-
+#----------- Braces ----------#
 INDENT_OK[:single_line_braces] =
   %Q{{ one: 1, two: 2 }}
+
+INDENT_OK[:single_line_braces_as_t_string] =
+  %Q{%Q{this is a t string!}}
 
 INDENT_OK[:multi_line_braces] =
   %Q{{ one: 1,
   two: 2 }}
 
+INDENT_OK[:multi_line_braces_as_t_string] =
+  %Q{%Q{this is a t string!
+suckaaaaaa!}}
+
 INDENT_OK[:multi_line_lonely_braces] =
   %Q{{
   :one => 'one', :two => 'two',
   :three => 'three'
+}}
+
+INDENT_OK[:multi_line_lonely_braces_as_t_string] =
+  %Q{%Q{
+this is a t string!
+suckaaaaaa!
 }}
 
 INDENT_OK[:multi_line_braces_embedded_arrays] =
@@ -286,17 +283,65 @@ INDENT_OK[:multi_line_braces_embedded_arrays] =
   :three => 'three'
 }}
 
+#----------- Brackets ----------#
+INDENT_OK[:single_line_brackets] =
+  %Q{['one', 'two', 'three']}
+
+INDENT_OK[:single_line_brackets_as_t_string] =
+  %Q{%Q[this is a t string!]}
+
+INDENT_OK[:multi_line_brackets] =
+  %Q{['one', 'two',
+  'three']}
+
+INDENT_OK[:multi_line_brackets_as_t_string] =
+  %Q{%Q[this is a t string!
+suckaaaaaa!]}
+
+INDENT_OK[:multi_line_lonely_brackets] =
+  %Q{[
+  'one', 'two',
+  'three'
+]}
+
+INDENT_OK[:multi_line_lonely_brackets_as_t_string] =
+  %Q{%Q[
+this is a t string!
+suckaaaaaa!
+]}
+
+INDENT_OK[:multi_line_brackets_embedded_hashes] =
+  %Q{summary_table.rows << [{ value: "File", align: :center },
+  { value: "Total Problems", align: :center }]}
+
+#----------- Parens ----------#
+
 INDENT_OK[:single_line_parens] =
   %Q{(true || false)}
+
+INDENT_OK[:single_line_parens_as_t_string] =
+  %Q{%Q(this is a t string!)}
 
 INDENT_OK[:multi_line_parens] =
   %Q{my_method(first_argument, second_arg,
   third_arg)}
 
+INDENT_OK[:multi_line_parens_as_t_string] =
+  %Q{%Q(this is a t string!
+and i'm not going
+anywhere!')}
+
 INDENT_OK[:multi_line_lonely_parens] =
   %Q{my_method(
   first_argument, second_arg,
   third_arg
+)}
+
+INDENT_OK[:multi_line_lonely_parens_as_t_string] =
+  %Q{%Q(
+this is a t string!
+and i'm not going
+anywhere!'
 )}
 
 #-------------------------------------------------------------------------------
