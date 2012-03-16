@@ -129,9 +129,7 @@ class Tailor
       private
 
       def log(*args)
-        l = begin; lineno; rescue; "<EOF>"; end
-        c = begin; column; rescue; "<EOF>"; end
-        args.first.insert(0, "<#{self.class}> #{l}[#{c}]: ")
+        args.first.insert(0, "<#{self.class}> ")
         Tailor::Logger.log(*args)
       end
     end
