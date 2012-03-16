@@ -126,15 +126,12 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
       log "IGNORED_NL"
-
-      # check indentation
       c = current_lex(super)
 
       if not line_of_only_spaces?(c)
-        indentation = @indentation_ruler.update_actual_indentation(c)
-        log "indentation: #{indentation}"
+        @indentation_ruler.update_actual_indentation(c)
 
-        if indentation != @indentation_ruler.should_be_at
+        if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
           @problems << Problem.new(:indentation, binding)
           log "ERROR: Indentation.  #{@problems.last[:message]}"
         end
@@ -234,10 +231,9 @@ class Tailor
       c = current_lex(super)
 
       # check indentation
-      indentation = @indentation_ruler.update_actual_indentation(c)
+      @indentation_ruler.update_actual_indentation(c)
 
-      if indentation != @indentation_ruler.should_be_at
-        log "indentation: #{indentation}"
+      if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
         @problems << Problem.new(:indentation, binding)
         log "ERROR: Indentation.  #{@problems.last[:message]}"
       end

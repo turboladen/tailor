@@ -110,6 +110,7 @@ class Tailor
         return if end_of_multiline_string?(lexed_line_output)
         first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
         @actual_indentation = first_non_space_element.first.last
+        log "actual indentation: #{@actual_indentation}"
       end
 
       # Determines if the current lexed line is just the end of a tstring.
