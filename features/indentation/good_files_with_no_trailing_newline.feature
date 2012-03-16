@@ -28,6 +28,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/class_singlestatement         |
     | indent/ok/require_class_singlestatement |
 
+  @multi_line
   Scenarios: Good multi-line statement uses
     | File                                               |
     | indent/ok/assignment_addition_multistatement       |
@@ -57,7 +58,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/unless_modifier            |
     | indent/ok/def_return_unless_modifier |
 
-    @case
+  @case
   Scenarios: Good case statements
     | File                              |
     | indent/ok/case_whens_level        |
@@ -82,30 +83,42 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/for_with_retry_loop    |
     | indent/ok/loop_with_braces       |
 
-  Scenarios: Good brace uses
+  Scenarios: Good single-line brace uses
+    | File                                     |
+    | indent/ok/single_line_braces             |
+    | indent/ok/single_line_braces_as_t_string |
+
+  @multi_line
+  Scenarios: Good multi-line brace uses
     | File                                           |
-    | indent/ok/single_line_braces                   |
-    | indent/ok/single_line_braces_as_t_string       |
     | indent/ok/multi_line_braces                    |
     | indent/ok/multi_line_braces_as_t_string        |
     | indent/ok/multi_line_lonely_braces             |
     | indent/ok/multi_line_lonely_braces_as_t_string |
     | indent/ok/multi_line_braces_embedded_arrays    |
 
-  Scenarios: Good bracket uses
+  Scenarios: Good single-line bracket uses
+    | File                                       |
+    | indent/ok/single_line_brackets             |
+    | indent/ok/single_line_brackets_as_t_string |
+
+  @multi_line
+  Scenarios: Good multi-line bracket uses
     | File                                             |
-    | indent/ok/single_line_brackets                   |
-    | indent/ok/single_line_brackets_as_t_string       |
     | indent/ok/multi_line_brackets                    |
     | indent/ok/multi_line_brackets_as_t_string        |
     | indent/ok/multi_line_lonely_brackets             |
     | indent/ok/multi_line_lonely_brackets_as_t_string |
     | indent/ok/multi_line_brackets_embedded_hashes    |
 
-  Scenarios: Good paren uses
+  Scenarios: Good single-line paren uses
+    | File                                     |
+    | indent/ok/single_line_parens             |
+    | indent/ok/single_line_parens_as_t_string |
+
+  @multi_line
+  Scenarios: Good multi-line paren uses
     | File                                           |
-    | indent/ok/single_line_parens                   |
-    | indent/ok/single_line_parens_as_t_string       |
     | indent/ok/multi_line_parens                    |
     | indent/ok/multi_line_parens_as_t_string        |
     | indent/ok/multi_line_lonely_parens             |
