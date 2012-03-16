@@ -7,7 +7,6 @@ require_relative 'ruler/indentation_ruler'
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
-  # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   class Ruler < Ripper::Lexer
     require_relative 'ruler/lexer_constants'
     require_relative 'ruler/vertical_whitespace_helpers'
