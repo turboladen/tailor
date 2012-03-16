@@ -171,12 +171,12 @@ describe Tailor::Ruler::IndentationRuler do
     end
   end
 
-  describe "#current_line_indent" do
+  describe "#update_actual_indentation" do
     context "when indented 0" do
       let(:file_text) { "puts 'something'" }
 
       it "returns 0" do
-        subject.current_line_indent(Ripper.lex(file_text)).should == 0
+        subject.update_actual_indentation(Ripper.lex(file_text)).should == 0
       end
     end
 
@@ -184,7 +184,7 @@ describe Tailor::Ruler::IndentationRuler do
       let(:file_text) { " puts 'something'" }
 
       it "returns 1" do
-        subject.current_line_indent(Ripper.lex(file_text)).should == 1
+        subject.update_actual_indentation(Ripper.lex(file_text)).should == 1
       end
     end
 
@@ -196,7 +196,7 @@ suckaaaaaa!}}
 
       it "thign" do
         lexed_output = Ripper.lex(file_text)
-        subject.current_line_indent(lexed_output).should == 0
+        subject.update_actual_indentation(lexed_output).should == 0
       end
     end
   end

@@ -131,7 +131,7 @@ class Tailor
       c = current_lex(super)
 
       if not line_of_only_spaces?(c)
-        indentation = @indentation_ruler.current_line_indent(c)
+        indentation = @indentation_ruler.update_actual_indentation(c)
         log "indentation: #{indentation}"
 
         if indentation != @indentation_ruler.should_be_at
@@ -234,7 +234,7 @@ class Tailor
       c = current_lex(super)
 
       # check indentation
-      indentation = @indentation_ruler.current_line_indent(c)
+      indentation = @indentation_ruler.update_actual_indentation(c)
 
       if indentation != @indentation_ruler.should_be_at
         log "indentation: #{indentation}"

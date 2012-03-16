@@ -102,7 +102,7 @@ class Tailor
       end
 
       # @return [Fixnum] Number of the first non-space (:on_sp) token.
-      def current_line_indent(lexed_line_output)
+      def update_actual_indentation(lexed_line_output)
         first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
         first_non_space_element.first.last
       end
