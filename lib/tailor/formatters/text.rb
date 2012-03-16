@@ -51,7 +51,6 @@ class Tailor
 #    * type:      #{problem[:type]}
 #    * message:   #{problem[:message]}
 }
-
           end
         end
 

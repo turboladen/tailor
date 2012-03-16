@@ -232,15 +232,15 @@ class Tailor
     def on_nl(token)
       log "NL"
       c = current_lex(super)
-
-      # check indentation
       @indentation_ruler.update_actual_indentation(c)
 
-      if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
-        @problems << Problem.new(:indentation, binding)
-        log "ERROR: Indentation.  #{@problems.last[:message]}"
-      else
-        log "Line is properly indented."
+      unless @indentation_ruler.end_of_multiline_string?(c)
+        if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
+          @problems << Problem.new(:indentation, binding)
+          log "ERROR: Indentation.  #{@problems.last[:message]}"
+        else
+          log "Line is properly indented."
+        end
       end
 
       unless @indentation_ruler.op_statement_nesting.empty?
