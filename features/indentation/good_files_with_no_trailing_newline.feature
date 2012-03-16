@@ -57,9 +57,11 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/unless_modifier            |
     | indent/ok/def_return_unless_modifier |
 
+    @case
   Scenarios: Good case statements
-    | File                       |
-    | indent/ok/case_whens_level |
+    | File                              |
+    | indent/ok/case_whens_level        |
+    | indent/ok/case_strings_in_strings |
 
   Scenarios: Good 'do' loops
     | File                     |

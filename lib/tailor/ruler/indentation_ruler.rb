@@ -8,20 +8,24 @@ class Tailor
       attr_reader :paren_nesting
       attr_reader :brace_nesting
       attr_reader :bracket_nesting
+      attr_reader :tstring_nesting
       attr_reader :actual_indentation
 
       def initialize(indentation_config)
         @config = indentation_config
+
         @proper_indentation = {}
         log "Setting @proper_indentation[:this_line] to 0."
         @proper_indentation[:this_line] = 0
         @proper_indentation[:next_line] = 0
+        @actual_indentation = 0
+        @started = false
+
         @brace_nesting = []
         @bracket_nesting = []
         @paren_nesting = []
         @op_statement_nesting = []
-        @started = false
-        @actual_indentation = 0
+        @tstring_nesting = []
       end
 
       # @return [Fixnum] The indent level the file should currently be at.
@@ -87,6 +91,7 @@ class Tailor
       # Starts the process of increasing/decreasing line indentation
       # expectations.
       def start
+        log "Starting indentation ruling."
         @started = true
       end
 
@@ -100,6 +105,7 @@ class Tailor
       # Stops the process of increasing/decreasing line indentation
       # expectations.
       def stop
+        log "Stopping indentation ruling."
         @started = false
       end
 
@@ -107,7 +113,11 @@ class Tailor
       #
       # @param [Array] lexed_line_output The lexed output for the current line.
       def update_actual_indentation(lexed_line_output)
-        return if end_of_multiline_string?(lexed_line_output)
+        if end_of_multiline_string?(lexed_line_output)
+          log "Found end of multiline string."
+          return
+        end
+
         first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
         @actual_indentation = first_non_space_element.first.last
         log "actual indentation: #{@actual_indentation}"

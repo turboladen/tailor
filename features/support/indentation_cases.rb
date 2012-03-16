@@ -151,6 +151,14 @@ INDENT_OK[:case_whens_level] =
   end
 end}
 
+INDENT_OK[:case_strings_in_strings] =
+  %Q{case type
+when :output
+  "I like to \#{eval('puts')}, but should be \#{eval('print')}"
+when :input
+  "Gimme \#{eval('gets')}!"
+end}
+
 INDENT_OK[:case_whens_in] =
   %Q{def my_method
   case true

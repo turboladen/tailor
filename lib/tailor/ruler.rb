@@ -366,6 +366,7 @@ class Tailor
 
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
+      @indentation_ruler.tstring_nesting << lineno
       @indentation_ruler.stop
       super(token)
     end
@@ -377,7 +378,8 @@ class Tailor
 
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
-      @indentation_ruler.start
+      @indentation_ruler.tstring_nesting.pop
+      @indentation_ruler.start unless in_tstring?
       super(token)
     end
 
@@ -492,8 +494,10 @@ class Tailor
       end
 
       if CONTINUATION_KEYWORDS.include? token
+        log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
         @indentation_ruler.decrease_this_line
       else
+        log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
         @indentation_ruler.increase_next_line
       end
     end
@@ -555,6 +559,10 @@ class Tailor
 
     def multiline_parens?
       @indentation_ruler.paren_nesting.empty? ? false : (@indentation_ruler.paren_nesting.last < lineno)
+    end
+
+    def in_tstring?
+      !@indentation_ruler.tstring_nesting.empty?
     end
 
     #---------------------------------------------------------------------------
