@@ -1,4 +1,9 @@
 class Tailor
+
+  # These are important tokens that key certain styling events.  They are taken
+  # from:
+  # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
+  # https://github.com/ruby/ruby/blob/trunk/parse.y
   module Ruler::LexerConstants
     KEYWORDS_TO_INDENT = [
       'begin',
@@ -43,21 +48,22 @@ class Tailor
     }
 
     MULTILINE_OPERATORS = [
-      '!',
-      '%',
-      '&',
-      '*',
-      '+',
-      '-',
-      '/',
-      '<',
-      '=',
-      '>',
-      '?',
-      '^',
+      '+', '-', '*', '**', '/', '%',    # +, -, tSTAR, tPOW, /, %
+      '<', '>', '<=', '>=',             # <, >, tLEQ, tGEQ
+      '=', '+=', '-=', '*=', '**=', '/=', '%=',
+      '&&=', '||=', '<<=',              # ...tOP_ASGN...
+      '>>', '<<',                       # tRSHFT, tLSHFT
+      '!', '&', '?', ':', '^', '~',     # !, tAMPER, ?, :, ^, ~
       #'|',
-      '~',
-      ':'
+      '&&', '||',                       # tANDOP, tOROP
+      '==', '===', '<=>', '!=',         # tEQ, tEQQ, tCMP, tNEQ
+      '=~', '!~',                       # tMATCH, tNMATCH
+      '..', '...',                      # tDOT2, tDOT3
+      '::',                             # tCOLON2 (not sure about tCOLON3)
+      #'[]', '[]=',                      # tAREF, tASET (not sure about these)
+      '=>',                             # tASSOC
+      '->',                             # tLAMBDA
+      '~>'                              # gem_version op
     ]
 
     LOOP_KEYWORDS = [
