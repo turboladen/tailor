@@ -133,11 +133,15 @@ class Tailor
         if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
           @problems << Problem.new(:indentation, binding)
           log "ERROR: Indentation.  #{@problems.last[:message]}"
+        else
+          log "Line is properly indented."
         end
       else
         log "Line of only spaces.  Moving on."
         return
       end
+
+      @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
 
       # TODO: move the contents of this to indentation_ruler
       if line_ends_with_op?(c)
@@ -235,6 +239,8 @@ class Tailor
       if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
         @problems << Problem.new(:indentation, binding)
         log "ERROR: Indentation.  #{@problems.last[:message]}"
+      else
+        log "Line is properly indented."
       end
 
       unless @indentation_ruler.op_statement_nesting.empty?
@@ -366,7 +372,6 @@ class Tailor
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
       @indentation_ruler.tstring_nesting << lineno
-      @indentation_ruler.stop
       super(token)
     end
 
@@ -523,7 +528,7 @@ class Tailor
       end
 
       if MULTILINE_OPERATORS.include?(lexed_line_output.last.last) &&
-        tokens_in_line.last == :on_op
+          tokens_in_line.last == :on_op
         true
       else
         false

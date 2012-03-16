@@ -91,7 +91,7 @@ class Tailor
       # Starts the process of increasing/decreasing line indentation
       # expectations.
       def start
-        log "Starting indentation ruling."
+        log "Starting indentation ruling.  Next check should be at #{should_be_at}"
         @started = true
       end
 
@@ -105,7 +105,10 @@ class Tailor
       # Stops the process of increasing/decreasing line indentation
       # expectations.
       def stop
-        log "Stopping indentation ruling." if started?
+        if started?
+          log "Stopping indentation ruling.  Should be: #{should_be_at}; actual: #{actual_indentation}"
+        end
+
         @started = false
       end
 
