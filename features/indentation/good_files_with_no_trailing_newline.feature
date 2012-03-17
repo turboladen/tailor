@@ -39,6 +39,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/assignment_twolevel_array_multistatement |
     | indent/ok/assignment_twolevel_paren_multistatement |
     | indent/ok/method_call_multistatement               |
+    | indent/ok/method_call_multistatement_lonely_paren  |
 
   Scenarios: Good def uses
     | File                                                |
@@ -127,11 +128,12 @@ Feature: Indentation check on good files without trailing newlines
   @multi_line
   Scenarios: Good multi-line operator uses
     | File                                  |
-    | indent/ok/multi_line_andop_in_method |
+    | indent/ok/multi_line_andop_in_method  |
+    | indent/ok/multi_line_rshift_in_method |
 
   @multi_line
   Scenarios: Good multi-line method calls
-    | File |
+    | File                             |
     | indent/ok/multi_line_method_call |
 
   @wip

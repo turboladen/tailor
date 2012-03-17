@@ -75,6 +75,13 @@ INDENT_OK[:method_call_multistatement] =
   four,
   five)}
 
+INDENT_OK[:method_call_multistatement_lonely_paren] =
+  %Q{my_method_with_many_params(one, two,
+  three,
+  four,
+  five
+)}
+
 INDENT_OK[:def] =
 %Q{def a_method
 end}
@@ -299,22 +306,26 @@ INDENT_OK[:single_line_brackets_as_t_string] =
   %Q{%Q[this is a t string!]}
 
 INDENT_OK[:multi_line_brackets] =
-  %Q{['one', 'two',
+  %Q{['one',
+  'two',
   'three']}
 
 INDENT_OK[:multi_line_brackets_as_t_string] =
   %Q{%Q[this is a t string!
+                                it doesn't matter that this is way over here.
 suckaaaaaa!]}
 
 INDENT_OK[:multi_line_lonely_brackets] =
   %Q{[
-  'one', 'two',
+  'one',
+  'two',
   'three'
 ]}
 
 INDENT_OK[:multi_line_lonely_brackets_as_t_string] =
   %Q{%Q[
 this is a t string!
+                                it doesn't matter that this is way over here.
 suckaaaaaa!
 ]}
 
@@ -356,6 +367,22 @@ INDENT_OK[:multi_line_andop_in_method] =
   %Q{def end_of_multiline_string?(lexed_line_output)
   lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
     lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
+end}
+
+INDENT_OK[:multi_line_rshift_in_method] =
+  %Q{rule(:transport_specifier) do
+  match('[A-Za-z]').repeat(3).as(:streaming_protocol) >> forward_slash >>
+    match('[A-Za-z]').repeat(3).as(:profile) >>
+    (forward_slash >> match('[A-Za-z]').repeat(3).as(:transport_protocol)).maybe
+end
+
+rule(:interleaved) do
+  str('interleaved=') >> number.as(:rtp_channel) >> dash >>
+    number.as(:rtcp_channel)
+end
+
+rule(:ttl) do
+  str('ttl=') >> match('[\d]').repeat(1,3).as(:ttl)
 end}
 
 INDENT_OK[:multi_line_method_call] =
