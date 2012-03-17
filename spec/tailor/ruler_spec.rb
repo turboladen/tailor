@@ -79,6 +79,23 @@ describe Tailor::Ruler do
     end
   end
 
+  describe "#on_embexpr_beg" do
+    it "sets @embexpr_beg to true" do
+      subject.instance_variable_set(:@embexpr_beg, false)
+      subject.on_embexpr_beg('#{')
+      subject.instance_variable_get(:@embexpr_beg).should be_true
+    end
+  end
+
+
+  describe "#on_embexpr_end" do
+    it "sets @embexpr_beg to false" do
+      subject.instance_variable_set(:@embexpr_beg, true)
+      subject.on_embexpr_end('}')
+      subject.instance_variable_get(:@embexpr_beg).should be_false
+    end
+  end
+
   describe "#current_lex" do
     let(:lexed_output) do
       [
