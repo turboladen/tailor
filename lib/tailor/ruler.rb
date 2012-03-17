@@ -131,7 +131,7 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
       log "IGNORED_NL"
-      c = current_lex(super)
+      c = current_line_lex(super)
 
       if not line_of_only_spaces?(c)
         @indentation_ruler.update_actual_indentation(c)
@@ -201,7 +201,7 @@ class Tailor
       if KEYWORDS_TO_INDENT.include?(token)
         if modifier_keyword?(token)
           log "Found modifier in line"
-        elsif token == "do" && loop_with_do?(current_lex(super))
+        elsif token == "do" && loop_with_do?(current_line_lex(super))
           log "Found keyword loop using optional 'do'"
         else
           log "Modifier NOT in line"
@@ -257,7 +257,7 @@ class Tailor
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
       log "NL"
-      c = current_lex(super)
+      c = current_line_lex(super)
       @indentation_ruler.update_actual_indentation(c)
 
       unless @indentation_ruler.end_of_multiline_string?(c)
@@ -319,7 +319,7 @@ class Tailor
       if multiline_braces?
         log "end of multiline braces!"
 
-        if r_event_without_content?(current_lex(super))
+        if r_event_without_content?(current_line_lex(super))
           @indentation_ruler.decrease_this_line
         end
       end
@@ -345,7 +345,7 @@ class Tailor
       if multiline_brackets?
         log "end of multiline brackets!"
 
-        if r_event_without_content?(current_lex(super))
+        if r_event_without_content?(current_line_lex(super))
           @indentation_ruler.decrease_this_line
         end
       end
@@ -371,7 +371,7 @@ class Tailor
       if multiline_parens?
         log "end of multiline parens!"
 
-        if r_event_without_content?(current_lex(super))
+        if r_event_without_content?(current_line_lex(super))
           @indentation_ruler.decrease_this_line
         end
       end
@@ -447,7 +447,7 @@ class Tailor
 
     # @param [Array] lexed_output The lexed output for the whole file.
     # @return [Array]
-    def current_lex(lexed_output)
+    def current_line_lex(lexed_output)
       lexed_output.find_all { |token| token.first.first == lineno }
     end
 

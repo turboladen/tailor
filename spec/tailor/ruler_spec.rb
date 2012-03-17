@@ -96,7 +96,23 @@ describe Tailor::Ruler do
     end
   end
 
-  describe "#current_lex" do
+  describe "#on_ignored_nl" do
+    it "calls #current_line_lex" do
+      subject.stub(:line_of_only_spaces?).and_return true
+      subject.should_receive(:current_line_lex)
+      subject.on_ignored_nl("\n")
+    end
+
+    context "#line_of_only_spaces? is true" do
+      before { subject.stub(:line_of_only_spaces?).and_return true }
+
+      it "does not call #update_actual_indentation" do
+        pending
+      end
+    end
+  end
+
+  describe "#current_line_lex" do
     let(:lexed_output) do
       [
         [[1, 0], :on_ident, "require"],
@@ -116,7 +132,7 @@ describe Tailor::Ruler do
 
     it "returns all lexed output from line 1 when self.lineno is 1" do
       subject.stub(:lineno).and_return(1)
-      subject.current_lex(lexed_output).should == [[[1, 0], :on_ident, "require"],
+      subject.current_line_lex(lexed_output).should == [[[1, 0], :on_ident, "require"],
         [[1, 7], :on_sp, " "],
         [[1, 8], :on_tstring_beg, "'"],
         [[1, 9], :on_tstring_content, "log_switch"],
@@ -198,44 +214,6 @@ describe Tailor::Ruler do
         subject.stub(:lineno).and_return 1
         subject.instance_variable_set(:@file_text, file_text)
         subject.modifier_keyword?("puts").should be_false
-      end
-    end
-  end
-
-  describe "#update_outdentation_expectations" do
-    context "#single_line_indent_statement? returns false" do
-      before do
-        subject.stub(:single_line_indent_statement?).and_return false
-      end
-
-      it "calls #decrease_this_line" do
-        indentation_ruler.should_receive(:decrease_this_line)
-        indentation_ruler.stub(:decrease_next_line)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.update_outdentation_expectations
-        indentation_ruler.unstub(:decrease_next_line)
-      end
-    end
-
-    context "#single_line_indent_statement? returns true" do
-      before do
-        subject.stub(:single_line_indent_statement?).and_return true
-      end
-
-      it "does not call #decrease_this_line" do
-        indentation_ruler.should_not_receive(:decrease_this_line)
-        indentation_ruler.stub(:decrease_next_line)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.update_outdentation_expectations
-        indentation_ruler.unstub(:decrease_next_line)
-      end
-
-      it "calls #decrease_this_line" do
-        indentation_ruler.stub(:decrease_this_line)
-        indentation_ruler.should_receive(:decrease_next_line)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.update_outdentation_expectations
-        indentation_ruler.unstub(:decrease_this_line)
       end
     end
   end
