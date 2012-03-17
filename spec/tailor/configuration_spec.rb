@@ -14,9 +14,9 @@ describe Tailor::Configuration do
   :indentation:
     :spaces: 2
     :continuation_spaces: 2
-  :vertical_whitespace:
+  :vertical_spacing:
     :trailing_newlines: 1
-  :horizontal_whitespace:
+  :horizontal_spacing:
     :allow_hard_tabs: false
 :format:
   text
@@ -46,10 +46,10 @@ describe Tailor::Configuration do
             spaces: 2,
             continuation_spaces: 2
           },
-          vertical_whitespace: {
+          vertical_spacing: {
             trailing_newlines: 1
           },
-          horizontal_whitespace: {
+          horizontal_spacing: {
             allow_hard_tabs: false
           }
         }

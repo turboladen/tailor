@@ -92,10 +92,10 @@ class Tailor
           spaces: 2,
           continuation_spaces: 2
         },
-        vertical_whitespace: {
+        vertical_spacing: {
           trailing_newlines: 1
         },
-        horizontal_whitespace: {
+        horizontal_spacing: {
           allow_hard_tabs: false
         }
       }

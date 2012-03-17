@@ -115,7 +115,7 @@ describe Tailor::Ruler do
   describe "#on_sp" do
     context "@config says to disallow hard tabs" do
       before do
-        config = { horizontal_whitespace: { allow_hard_tabs: false } }
+        config = { horizontal_spacing: { allow_hard_tabs: false } }
         subject.instance_variable_set(:@config, config)
       end
 
@@ -142,7 +142,7 @@ describe Tailor::Ruler do
 
     context "@config says to allow hard tabs" do
       before do
-        config = { horizontal_whitespace: { allow_hard_tabs: true } }
+        config = { horizontal_spacing: { allow_hard_tabs: true } }
         subject.instance_variable_set(:@config, config)
       end
 

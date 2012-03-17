@@ -1,5 +1,5 @@
-Feature: Horizontal whitespace detection
-  As a Ruby developer, I want to be able to detect horizontal whitespace
+Feature: Horizontal spacing detection
+  As a Ruby developer, I want to be able to detect horizontal spacing
   problems so that I can fix them.
 
   @bad_files
@@ -11,9 +11,9 @@ Feature: Horizontal whitespace detection
     :style:
       :indentation:
         :spaces: 2
-      :vertical_whitespace:
+      :vertical_spacing:
         :trailing_newlines: 0
-      :horizontal_whitespace:
+      :horizontal_spacing:
         :allow_hard_tabs: false
     """
     When I run `tailor --debug --config testfile.yml <File>`
@@ -24,8 +24,8 @@ Feature: Horizontal whitespace detection
 
     @hard_tabs
     Scenarios: Hard tab
-      | File                                           | Position | Position 2  | Count |
-      | h_whitespace/1/hard_tab                        | 2:0      |             | 1     |
-      | h_whitespace/1/hard_tab_with_spaces            | 3:0      |             | 1     |
-      | h_whitespace/1/hard_tab_with_1_indented_space  | 3:0      |             | 1     |
-      | h_whitespace/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5         | 2     |
+      | File                                        | Position | Position 2  | Count |
+      | h_spacing/1/hard_tab                        | 2:0      |             | 1     |
+      | h_spacing/1/hard_tab_with_spaces            | 3:0      |             | 1     |
+      | h_spacing/1/hard_tab_with_1_indented_space  | 3:0      |             | 1     |
+      | h_spacing/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5         | 2     |

@@ -8,7 +8,7 @@ Feature: Indentation check on bad files with trailing newlines
     ---
     :indentation:
       :spaces: 2
-    :vertical_whitespace:
+    :vertical_spacing:
       :trailing_newlines: 1
     """
     When I run `tailor --config testfile.yml <File>`

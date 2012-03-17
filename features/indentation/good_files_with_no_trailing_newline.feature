@@ -9,7 +9,7 @@ Feature: Indentation check on good files without trailing newlines
     :style:
       :indentation:
         :spaces: 2
-      :vertical_whitespace:
+      :vertical_spacing:
         :trailing_newlines: 0
     """
     When I successfully run `tailor -d --config-file testfile.yml <File>`

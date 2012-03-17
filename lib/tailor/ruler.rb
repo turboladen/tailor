@@ -390,7 +390,7 @@ class Tailor
     def on_sp(token)
       log "SP: '#{token}'; size: #{token.size}"
 
-      unless @config[:horizontal_whitespace][:allow_hard_tabs]
+      unless @config[:horizontal_spacing][:allow_hard_tabs]
         if token =~ /\t/
           @problems << Problem.new(:hard_tab, binding)
           log "ERROR. hard tab. #{@problems.last[:message]}"

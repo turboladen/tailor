@@ -10,7 +10,7 @@ Feature: Indentation check
     ---
     :indentation:
       :spaces: 2
-    :vertical_whitespace:
+    :vertical_spacing:
       :trailing_newlines: 1
     """
     When I successfully run `tailor --config testfile.yml ../../lib`

@@ -1,12 +1,12 @@
-H_WHITESPACE_1 = {}
-H_WHITESPACE_2 = {}
+H_SPACING_1 = {}
+H_SPACING_2 = {}
 
-H_WHITESPACE_1[:hard_tab] =
+H_SPACING_1[:hard_tab] =
   %Q{def something
 \tputs "something"
 end}
 
-H_WHITESPACE_1[:hard_tab_with_spaces] =
+H_SPACING_1[:hard_tab_with_spaces] =
   %Q{class Thing
   def something
 \t  puts "something"
@@ -18,14 +18,14 @@ end}
 # looks correct to the parser.  I'm leaving this behavior, as detecting the
 # hard tab should signal the problem.  If you fix the hard tab and don't
 # fix indentation, tailor will flag you on the indentation on the next run.
-H_WHITESPACE_1[:hard_tab_with_1_indented_space] =
+H_SPACING_1[:hard_tab_with_1_indented_space] =
   %Q{class Thing
   def something
 \t   puts "something"
   end
 end}
 
-H_WHITESPACE_2[:hard_tab_with_2_indented_spaces] =
+H_SPACING_2[:hard_tab_with_2_indented_spaces] =
   %Q{class Thing
   def something
 \t    puts "something"

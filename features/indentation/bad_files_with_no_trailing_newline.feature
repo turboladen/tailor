@@ -9,7 +9,7 @@ Feature: Indentation check on bad fails without trailing newlines
     :style:
       :indentation:
         :spaces: 2
-      :vertical_whitespace:
+      :vertical_spacing:
         :trailing_newlines: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
