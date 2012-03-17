@@ -17,11 +17,15 @@ Feature: Horizontal whitespace detection
         :allow_hard_tabs: false
     """
     When I run `tailor --debug --config testfile.yml <File>`
-    Then the output should match /Total Problems.*1/
+    Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
+    And the output should match /position:  <Position 2>/
     And the exit status should be 1
 
     @hard_tabs
     Scenarios: Hard tab
-      | File                             | Position |
-      | horizontal_whitespace/1/hard_tab | 2:0      |
+      | File                                           | Position | Position 2  | Count |
+      | h_whitespace/1/hard_tab                        | 2:0      |             | 1     |
+      | h_whitespace/1/hard_tab_with_spaces            | 3:0      |             | 1     |
+      | h_whitespace/1/hard_tab_with_1_indented_space  | 3:0      |             | 1     |
+      | h_whitespace/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5         | 2     |
