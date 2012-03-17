@@ -40,7 +40,7 @@ class Tailor
       def ensure_trailing_newline(text)
         trailing_newline_count = count_trailing_newlines(text)
 
-        if trailing_newline_count != @config[:vertical_whitespace][:trailing_newlines]
+        if trailing_newline_count != @config[:vertical_spacing][:trailing_newlines]
           lineno = "<EOF>"
           column = "<EOF>"
           @problems << Problem.new(:trailing_newlines, binding)
