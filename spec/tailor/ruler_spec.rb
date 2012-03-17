@@ -112,6 +112,23 @@ describe Tailor::Ruler do
     end
   end
 
+  describe "#on_sp" do
+    context "@config says to disallow hard tabs" do
+      before do
+        config = { horizontal_whitespace: { allow_hard_tabs: false } }
+        subject.instance_variable_set(:@config, config)
+      end
+
+      context "token contains a hard tab" do
+        it "adds a new problem to @problems" do
+          subject.instance_variable_set(:@problems, [])
+          subject.on_sp("\t")
+          subject.instance_variable_get(:@problems).size.should == 1
+        end
+      end
+    end
+  end
+
   describe "#current_line_lex" do
     let(:lexed_output) do
       [
