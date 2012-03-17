@@ -136,11 +136,8 @@ class Tailor
       if not line_of_only_spaces?(c)
         @indentation_ruler.update_actual_indentation(c)
 
-        if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
+        unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
-          log "ERROR: Indentation.  #{@problems.last[:message]}"
-        else
-          log "Line is properly indented."
         end
       else
         log "Line of only spaces.  Moving on."
@@ -212,7 +209,14 @@ class Tailor
         end
       end
 
-      update_outdentation_expectations if token == "end"
+      if token == "end"
+        if not single_line_indent_statement?
+          log "Not a single-line statement that needs indenting.  Decrease this line"
+          @indentation_ruler.decrease_this_line
+        end
+
+        @indentation_ruler.decrease_next_line
+      end
 
       super(token)
     end
@@ -257,11 +261,8 @@ class Tailor
       @indentation_ruler.update_actual_indentation(c)
 
       unless @indentation_ruler.end_of_multiline_string?(c)
-        if @indentation_ruler.actual_indentation != @indentation_ruler.should_be_at
+        unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
-          log "ERROR: Indentation.  #{@problems.last[:message]}"
-        else
-          log "Line is properly indented."
         end
       end
 
@@ -509,17 +510,6 @@ class Tailor
     # @return [String] The current line of text.
     def current_line_of_text
       @file_text.split("\n").at(lineno - 1)
-    end
-
-    # Updates the values used for detecting the proper number of indentation
-    # spaces.  Should be called when reaching the end of a line.
-    def update_outdentation_expectations
-      if not single_line_indent_statement?
-        log "Not a single-line statement that needs indenting.  Decrease this line"
-        @indentation_ruler.decrease_this_line
-      end
-
-      @indentation_ruler.decrease_next_line
     end
 
     # Updates the values used for detecting the proper number of indentation

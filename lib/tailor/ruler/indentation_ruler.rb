@@ -140,6 +140,17 @@ class Tailor
           lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
       end
 
+      # @return [Boolean]
+      def valid_line?
+        if actual_indentation != should_be_at
+          log "Error[:indentation]: actual: #{actual_indentation}. should be: #{should_be_at}"
+          false
+        else
+          log "Line is properly indented."
+          true
+        end
+      end
+
       #---------------------------------------------------------------------------
       # Privates!
       #---------------------------------------------------------------------------
