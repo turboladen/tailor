@@ -122,9 +122,35 @@ describe Tailor::Ruler do
       context "token contains a hard tab" do
         it "adds a new problem to @problems" do
           subject.instance_variable_set(:@problems, [])
-          subject.on_sp("\t")
-          subject.instance_variable_get(:@problems).size.should == 1
+
+          expect { subject.on_sp("\t") }.
+            to change{subject.instance_variable_get(:@problems).size}.
+            from(0).to 1
         end
+      end
+
+      context "token does not contain a hard tab" do
+        it "does not add a new problem to @problems" do
+          subject.instance_variable_set(:@problems, [])
+
+          expect { subject.on_sp("\x20") }.
+            to_not change{subject.instance_variable_get(:@problems).size}.
+            from(0).to 1
+        end
+      end
+    end
+
+    context "@config says to allow hard tabs" do
+      before do
+        config = { horizontal_whitespace: { allow_hard_tabs: true } }
+        subject.instance_variable_set(:@config, config)
+      end
+
+      it "does not check the token" do
+        token = double "token"
+        token.stub(:size)
+        token.should_not_receive(:=~)
+        subject.on_sp(token)
       end
     end
   end
