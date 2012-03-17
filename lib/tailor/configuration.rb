@@ -90,11 +90,13 @@ class Tailor
       {
         indentation: {
           spaces: 2,
-          allow_hard_tabs: false,
           continuation_spaces: 2
         },
         vertical_whitespace: {
           trailing_newlines: 1
+        },
+        horizontal_whitespace: {
+          allow_hard_tabs: false
         }
       }
     end
