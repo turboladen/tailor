@@ -1,8 +1,11 @@
+require_relative 'logger'
+
 class Tailor
 
   # A Hashed data structure that abstracts out data (especially the error
   # message) to build reports from.
   class Problem < Hash
+    include LogSwitch::Mixin
 
     # @param [Symbol] type The problem type.
     # @param [Binding] binding The context that the problem was discovered in.
@@ -10,6 +13,7 @@ class Tailor
       @type = type
       @binding = binding
       set_values
+      log "<#{self.class}> #{self[:line]}[#{self[:column]}]: ERROR[:#{self[:type]}] #{self[:message]}"
     end
 
     # Sets the standard values for the problem based on the type and binding.
@@ -34,6 +38,8 @@ class Tailor
         "File has #{@binding.eval('trailing_newline_count')} trailing newlines, but should have #{@binding.eval('@config[:vertical_spacing][:trailing_newlines]')}"
       when :hard_tab
         "Hard tab found."
+      when :line_length
+        "Line is #{@binding.eval('current_line_of_text.length')} chars long, but should be #{@binding.eval('@config[:horizontal_spacing][:line_length]')}"
       end
     end
   end

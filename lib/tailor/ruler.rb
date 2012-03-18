@@ -136,21 +136,17 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
       log "IGNORED_NL"
-      #c = current_line_lex(super)
       current_line = LexedLine.new(super, lineno)
 
       if @config[:horizontal_spacing]
         if @config[:horizontal_spacing][:line_length]
           if line_too_long?
             @problems << Problem.new(:line_length, binding)
-            log "Error. Line length. #{@problems.last[:message]}"
           end
         end
       end
 
-      #if not line_of_only_spaces?(c)
       if not current_line.line_of_only_spaces?
-        #@indentation_ruler.update_actual_indentation(c)
         @indentation_ruler.update_actual_indentation(current_line)
 
         unless @indentation_ruler.valid_line?
@@ -163,8 +159,6 @@ class Tailor
 
       @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
 
-      # TODO: move the contents of this to indentation_ruler
-      #if line_ends_with_op?(c)
       if current_line.line_ends_with_op?
         # Are we nested in a multi-line operation yet?
         if @indentation_ruler.op_statement_nesting.empty?
@@ -187,7 +181,6 @@ class Tailor
         @indentation_ruler.paren_nesting.empty? &&
         @indentation_ruler.brace_nesting.empty? &&
         @indentation_ruler.bracket_nesting.empty?
-        #if line_ends_with_comma?(c)
         if current_line.line_ends_with_comma?
           if @indentation_ruler.last_comma_statement_line.nil?
             @indentation_ruler.increase_next_line
@@ -196,7 +189,6 @@ class Tailor
           @indentation_ruler.last_comma_statement_line = lineno
           log "last_comma_statement_line: #{@indentation_ruler.last_comma_statement_line}"
         end
-
       end
 
       # prep for next line
@@ -419,7 +411,6 @@ class Tailor
       unless @config[:horizontal_spacing][:allow_hard_tabs]
         if token =~ /\t/
           @problems << Problem.new(:hard_tab, binding)
-          log "ERROR. hard tab. #{@problems.last[:message]}"
         end
       end
 
