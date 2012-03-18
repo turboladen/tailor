@@ -39,6 +39,8 @@ class Tailor
         lexed_line.pop
       end
 
+      return false if lexed_line.empty?
+
       if MULTILINE_OPERATORS.include?(lexed_line.last.last) &&
           tokens_in_line.last == :on_op
         true
