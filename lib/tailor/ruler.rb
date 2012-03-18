@@ -277,12 +277,9 @@ class Tailor
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
       log "NL"
-      #c = current_line_lex(super)
       current_line = LexedLine.new(super, lineno)
-      #@indentation_ruler.update_actual_indentation(c)
       @indentation_ruler.update_actual_indentation(current_line)
 
-      #unless @indentation_ruler.end_of_multiline_string?(c)
       unless @indentation_ruler.end_of_multiline_string?(current_line)
         unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
@@ -290,10 +287,13 @@ class Tailor
       end
 
       if not @indentation_ruler.op_statement_nesting.empty?
+        log "op nesting not empty: #{@indentation_ruler.op_statement_nesting}"
+
         if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
           @indentation_ruler.decrease_this_line
           @indentation_ruler.decrease_next_line
+          @indentation_ruler.op_statement_nesting.clear
         end
       end
 
@@ -302,7 +302,6 @@ class Tailor
         if @indentation_ruler.last_comma_statement_line == (lineno - 1)
           log "Last line of multi-line comma statement"
 
-          #unless line_ends_with_comma?(c)
           unless current_line.line_ends_with_comma?
             log "line doesn't end with comma"
             @indentation_ruler.last_comma_statement_line = nil
