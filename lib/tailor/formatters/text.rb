@@ -1,5 +1,4 @@
 require 'text-table'
-require_relative '../../ext/string_ext'
 
 class Tailor
   module Formatter
