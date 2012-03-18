@@ -86,9 +86,9 @@ class Tailor
         if started?
           log "Setting @proper_indentation[:this_line] = that of :next_line"
           @proper_indentation[:this_line] = @proper_indentation[:next_line]
-          log "transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
+          log "Transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
         else
-          log "skipping #transition_lines; checking is stopped." and return if started?
+          log "Skipping #transition_lines; checking is stopped." and return if started?
         end
       end
 
@@ -127,7 +127,7 @@ class Tailor
 
         first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
         @actual_indentation = first_non_space_element.first.last
-        log "actual indentation: #{@actual_indentation}"
+        log "Actual indentation: #{@actual_indentation}"
       end
 
       # Determines if the current lexed line is just the end of a tstring.
@@ -143,7 +143,6 @@ class Tailor
       # @return [Boolean]
       def valid_line?
         if actual_indentation != should_be_at
-          log "Error[:indentation]: actual: #{actual_indentation}. should be: #{should_be_at}"
           false
         else
           log "Line is properly indented."

@@ -211,12 +211,11 @@ class Tailor
 
       if KEYWORDS_TO_INDENT.include?(token)
         if modifier_keyword?(token)
-          log "Found modifier in line"
-        #elsif token == "do" && loop_with_do?(current_line_lex(super))
+          log "Found modifier in line: '#{token}'"
         elsif token == "do" && LexedLine.new(super, lineno).loop_with_do?
           log "Found keyword loop using optional 'do'"
         else
-          log "Modifier NOT in line"
+          log "Modifier NOT in line: '#{token}'"
           update_indentation_expectations(token)
         end
       end
@@ -295,7 +294,7 @@ class Tailor
           log "Last line of multi-line comma statement"
 
           unless current_line.line_ends_with_comma?
-            log "line doesn't end with comma"
+            log "Line doesn't end with comma"
             @indentation_ruler.last_comma_statement_line = nil
             @indentation_ruler.decrease_next_line
           end
@@ -332,7 +331,7 @@ class Tailor
       log "RBRACE: '#{token}'"
 
       if multiline_braces?
-        log "end of multiline braces!"
+        log "End of multiline braces!"
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
@@ -359,7 +358,7 @@ class Tailor
       log "RBRACKET: '#{token}'"
 
       if multiline_brackets?
-        log "end of multiline brackets!"
+        log "End of multiline brackets!"
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
@@ -386,7 +385,7 @@ class Tailor
       log "RPAREN: '#{token}'"
 
       if multiline_parens?
-        log "end of multiline parens!"
+        log "End of multiline parens!"
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
@@ -476,15 +475,15 @@ class Tailor
     #   is the same type as +token+.
     def modifier_keyword?(token)
       line_of_text = current_line_of_text
-      log "line of text: #{line_of_text}"
+      log "Line of text: #{line_of_text}"
 
       sexp_line = Ripper.sexp(line_of_text)
       log "sexp line: #{sexp_line}"
       log "sexp line[1]: #{sexp_line[1]}" unless sexp_line.nil?
 
       if sexp_line.is_a? Array
-        log "as string: #{sexp_line.flatten}"
-        log "last first: #{sexp_line.last.first}"
+        log "As string: #{sexp_line.flatten}"
+        log "Last first: #{sexp_line.last.first}"
 
         begin
           result = sexp_line.last.first.any? { |s| s == MODIFIERS[token] }
