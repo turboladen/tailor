@@ -400,6 +400,22 @@ INDENT_OK[:multi_line_method_call] =
 end
 }
 
+INDENT_OK[:multi_line_if_logical_and] =
+  %Q{if @indentation_ruler.op_statement_nesting.empty? &&
+  @indentation_ruler.tstring_nesting.empty? &&
+  @indentation_ruler.paren_nesting.empty? &&
+  @indentation_ruler.brace_nesting.empty? &&
+  @indentation_ruler.bracket_nesting.empty?
+  if current_line.line_ends_with_comma?
+    if @indentation_ruler.last_comma_statement_line.nil?
+      @indentation_ruler.increase_next_line
+    end
+
+    @indentation_ruler.last_comma_statement_line = lineno
+    log "last_comma_statement_line: \#{@indentation_ruler.last_comma_statement_line}"
+  end
+end}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------

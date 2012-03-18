@@ -136,6 +136,11 @@ Feature: Indentation check on good files without trailing newlines
     | File                             |
     | indent/ok/multi_line_method_call |
 
+  @multi_line
+  Scenarios: Good multi-line if + logical operators
+    | File                                |
+    | indent/ok/multi_line_if_logical_and |
+
   @wip
   Scenarios: WIPs
     | File                    |
