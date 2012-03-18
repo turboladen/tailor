@@ -410,4 +410,35 @@ describe Tailor::Ruler do
       end
     end
   end
+
+  describe "#current_line_of_text" do
+    before do
+      subject.instance_variable_set(:@file_text, file_text)
+      subject.stub(:lineno).and_return 1
+    end
+
+    context "@file_text is 1 line with 0 \\ns" do
+      let(:file_text) { "puts 'code'" }
+
+      it "returns the line" do
+        subject.current_line_of_text.should == file_text
+      end
+    end
+
+    context "@file_text is 1 empty line with 0 \\ns" do
+      let(:file_text) { "" }
+
+      it "returns the an empty string" do
+        subject.current_line_of_text.should == file_text
+      end
+    end
+
+    context "@file_text is 1 empty line with 1 \\n" do
+      let(:file_text) { "\n" }
+
+      it "returns an empty string" do
+        subject.current_line_of_text.should == ""
+      end
+    end
+  end
 end

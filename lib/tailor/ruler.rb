@@ -141,8 +141,9 @@ class Tailor
 
       if @config[:horizontal_spacing]
         if @config[:horizontal_spacing][:line_length]
-          unless line_too_long?
+          if line_too_long?
             @problems << Problem.new(:line_length, binding)
+            log "Error. Line length. #{@problems.last[:message]}"
           end
         end
       end
@@ -509,7 +510,7 @@ class Tailor
     #
     # @return [String] The current line of text.
     def current_line_of_text
-      @file_text.split("\n").at(lineno - 1)
+      @file_text.split("\n").at(lineno - 1) || ''
     end
 
     # Updates the values used for detecting the proper number of indentation
