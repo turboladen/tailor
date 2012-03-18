@@ -2,13 +2,14 @@ require 'ripper'
 require_relative 'logger'
 require_relative 'problem'
 require_relative 'ruler/indentation_ruler'
+require_relative 'lexed_line'
+require_relative 'lexer_constants'
 
 
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   class Ruler < Ripper::Lexer
-    require_relative 'ruler/lexer_constants'
     require_relative 'ruler/vertical_whitespace_helpers'
 
     include LexerConstants
@@ -125,16 +126,31 @@ class Tailor
       super(token)
     end
 
+    def line_too_long?
+      current_line_of_text.length > @config[:horizontal_spacing][:line_length]
+    end
+
     # Called when the lexer matches a Ruby ignored newline (not sure how this
     # differs from a regular newline).
     #
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
       log "IGNORED_NL"
-      c = current_line_lex(super)
+      #c = current_line_lex(super)
+      current_line = LexedLine.new(super, lineno)
 
-      if not line_of_only_spaces?(c)
-        @indentation_ruler.update_actual_indentation(c)
+      if @config[:horizontal_spacing]
+        if @config[:horizontal_spacing][:line_length]
+          unless line_too_long?
+            @problems << Problem.new(:line_length, binding)
+          end
+        end
+      end
+
+      #if not line_of_only_spaces?(c)
+      if not current_line.line_of_only_spaces?
+        #@indentation_ruler.update_actual_indentation(c)
+        @indentation_ruler.update_actual_indentation(current_line)
 
         unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
@@ -147,7 +163,8 @@ class Tailor
       @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
 
       # TODO: move the contents of this to indentation_ruler
-      if line_ends_with_op?(c)
+      #if line_ends_with_op?(c)
+      if current_line.line_ends_with_op?
         # Are we nested in a multi-line operation yet?
         if @indentation_ruler.op_statement_nesting.empty?
           @indentation_ruler.op_statement_nesting << lineno
@@ -169,7 +186,8 @@ class Tailor
         @indentation_ruler.paren_nesting.empty? &&
         @indentation_ruler.brace_nesting.empty? &&
         @indentation_ruler.bracket_nesting.empty?
-        if line_ends_with_comma?(c)
+        #if line_ends_with_comma?(c)
+        if current_line.line_ends_with_comma?
           if @indentation_ruler.last_comma_statement_line.nil?
             @indentation_ruler.increase_next_line
           end
@@ -201,7 +219,8 @@ class Tailor
       if KEYWORDS_TO_INDENT.include?(token)
         if modifier_keyword?(token)
           log "Found modifier in line"
-        elsif token == "do" && loop_with_do?(current_line_lex(super))
+        #elsif token == "do" && loop_with_do?(current_line_lex(super))
+        elsif token == "do" && LexedLine.new(super, lineno).loop_with_do?
           log "Found keyword loop using optional 'do'"
         else
           log "Modifier NOT in line"
@@ -257,10 +276,13 @@ class Tailor
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
       log "NL"
-      c = current_line_lex(super)
-      @indentation_ruler.update_actual_indentation(c)
+      #c = current_line_lex(super)
+      current_line = LexedLine.new(super, lineno)
+      #@indentation_ruler.update_actual_indentation(c)
+      @indentation_ruler.update_actual_indentation(current_line)
 
-      unless @indentation_ruler.end_of_multiline_string?(c)
+      #unless @indentation_ruler.end_of_multiline_string?(c)
+      unless @indentation_ruler.end_of_multiline_string?(current_line)
         unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
         end
@@ -279,7 +301,8 @@ class Tailor
         if @indentation_ruler.last_comma_statement_line == (lineno - 1)
           log "Last line of multi-line comma statement"
 
-          unless line_ends_with_comma?(c)
+          #unless line_ends_with_comma?(c)
+          unless current_line.line_ends_with_comma?
             log "line doesn't end with comma"
             @indentation_ruler.last_comma_statement_line = nil
             @indentation_ruler.decrease_next_line
@@ -318,8 +341,9 @@ class Tailor
 
       if multiline_braces?
         log "end of multiline braces!"
+        current_line = LexedLine.new(super, lineno)
 
-        if r_event_without_content?(current_line_lex(super))
+        if r_event_without_content?(current_line)
           @indentation_ruler.decrease_this_line
         end
       end
@@ -344,8 +368,9 @@ class Tailor
 
       if multiline_brackets?
         log "end of multiline brackets!"
+        current_line = LexedLine.new(super, lineno)
 
-        if r_event_without_content?(current_line_lex(super))
+        if r_event_without_content?(current_line)
           @indentation_ruler.decrease_this_line
         end
       end
@@ -370,8 +395,9 @@ class Tailor
 
       if multiline_parens?
         log "end of multiline parens!"
+        current_line = LexedLine.new(super, lineno)
 
-        if r_event_without_content?(current_line_lex(super))
+        if r_event_without_content?(current_line)
           @indentation_ruler.decrease_this_line
         end
       end
@@ -452,40 +478,6 @@ class Tailor
       log "CHAR: '#{token}'"
       super(token)
     end
-
-    # @param [Array] lexed_output The lexed output for the whole file.
-    # @return [Array]
-    def current_line_lex(lexed_output)
-      lexed_output.find_all { |token| token.first.first == lineno }
-    end
-
-    # Looks at the +lexed_line_output+ and determines if it' s a line of just
-    # space characters: spaces, newlines.
-    #
-    # @param [Array] lexed_line_output
-    # @return [Boolean]
-    def line_of_only_spaces?(lexed_line_output)
-      element = first_non_space_element(lexed_line_output)
-      log "first non-space element '#{element}'"
-      element.nil? || element.empty?
-    end
-
-    # Gets the first non-space element from a line of lexed output.
-    #
-    # @param [Array] lexed_line_output The line of lexed output to parse.
-    # @return [Array] The element; +nil+ if none is found.
-    def first_non_space_element(lexed_line_output)
-      lexed_line_output.find do |e|
-        e[1] != :on_sp && e[1] != :on_nl && e[1] != :on_ignored_nl
-      end
-    end
-
-    # @return [Boolean] +true+ if any non-space chars come before the current
-    #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
-    def r_event_without_content?(lexed_line_output)
-      first_non_space_element(lexed_line_output).first == [lineno, column]
-    end
-
     # Checks the current line to see if the given +token+ is being used as a
     # modifier.
     #
@@ -550,54 +542,10 @@ class Tailor
       @indent_keyword_line == lineno
     end
 
-    # Checks to see if the current line ends with an operator (not counting the
-    # newline that might come after it).
-    #
-    # @param [Array] lexed_line_output The lexed output of the current line.
-    # @return [Boolean] true if the line ends with an operator; false if not.
-    def line_ends_with_op?(lexed_line_output)
-      tokens_in_line = lexed_line_output.map { |e| e[1] }
-
-      until tokens_in_line.last != (:on_ignored_nl || :on_nl)
-        tokens_in_line.pop
-        lexed_line_output.pop
-      end
-
-      if MULTILINE_OPERATORS.include?(lexed_line_output.last.last) &&
-          tokens_in_line.last == :on_op
-        true
-      else
-        false
-      end
-    end
-
-    def line_ends_with_comma?(lexed_line_output)
-      tokens_in_line = lexed_line_output.map { |e| e[1] }
-
-      until tokens_in_line.last != (:on_ignored_nl || :on_nl)
-        tokens_in_line.pop
-        lexed_line_output.pop
-      end
-
-      if tokens_in_line.last == :on_comma
-        true
-      else
-        false
-      end
-    end
-
-    # Checks to see if the current line is a keyword loop (for, while, until)
-    # that uses the optional 'do' at the end of the statement.
-    #
-    # @param [Array] lexed_line_output The lexed output of the current line.
-    # @return [Boolean]
-    def loop_with_do?(lexed_line_output)
-      keyword_elements = lexed_line_output.find_all { |e| e[1] == :on_kw }
-      keyword_tokens = keyword_elements.map { |e| e.last }
-      loop_start = keyword_tokens.any? { |t| LOOP_KEYWORDS.include? t }
-      with_do = keyword_tokens.any? { |t| t == 'do' }
-
-      loop_start && with_do
+    # @return [Boolean] +true+ if any non-space chars come before the current
+    #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
+    def r_event_without_content?(current_line)
+      current_line.first_non_space_element.first == [lineno, column]
     end
 
     def multiline_braces?

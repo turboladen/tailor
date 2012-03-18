@@ -4,7 +4,7 @@ class Tailor
   # from:
   # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   # https://github.com/ruby/ruby/blob/trunk/parse.y
-  module Ruler::LexerConstants
+  module LexerConstants
     KEYWORDS_TO_INDENT = [
       'begin',
       'case',

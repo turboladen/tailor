@@ -60,7 +60,7 @@ describe Tailor::Problem do
     context "type is :trailing_newlines" do
       it "builds a successful message" do
         trailing_newline_count = 123
-        @config = { vertical_whitespace: { trailing_newlines: 777 } }
+        @config = { vertical_spacing: { trailing_newlines: 777 } }
         problem = Tailor::Problem.new(:test, binding)
         problem.message(:trailing_newlines).should match /123.*777/
       end

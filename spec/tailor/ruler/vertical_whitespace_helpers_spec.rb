@@ -4,7 +4,7 @@ require 'tailor/ruler/vertical_whitespace_helpers'
 class Thing
   include Tailor::Ruler::VerticalWhitespaceHelpers
   def initialize
-    @config = { vertical_whitespace: { trailing_newlines: 10 } }
+    @config = { vertical_spacing: { trailing_newlines: 10 } }
     @problems = []
   end
 end
@@ -59,7 +59,7 @@ describe Tailor::Ruler::VerticalWhitespaceHelpers do
       context "@config[:trailing_newlines] == 0" do
         before do
           subject.instance_variable_set(:@config,
-            { vertical_whitespace: { trailing_newlines: 0 } }
+            { vertical_spacing: { trailing_newlines: 0 } }
           )
         end
 

@@ -96,7 +96,8 @@ class Tailor
           trailing_newlines: 1
         },
         horizontal_spacing: {
-          allow_hard_tabs: false
+          allow_hard_tabs: false,
+          line_length: 80
         }
       }
     end
