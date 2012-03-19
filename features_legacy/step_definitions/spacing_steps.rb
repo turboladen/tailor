@@ -33,10 +33,12 @@ Given /^that file contains lines with hard tabs$/ do
 
   check_file do |line|
     source_line = Tailor::FileLine.new(line, file_path, line_number)
+
     if source_line.hard_tabbed?
       contains_hard_tabs = true
       break
     end
+
     line_number += 1
   end
 

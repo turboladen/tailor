@@ -1,72 +1,19 @@
 #!/usr/bin/env ruby
 
-$:.unshift(File.dirname(__FILE__) + '/../lib/') unless
-  $:.include?(File.dirname(__FILE__) + '/../lib/') ||
-  $:.include?(File.expand_path(File.dirname(__FILE__) + '/../lib/'))
+require_relative '../lib/tailor/cli'
+require_relative '../lib/tailor/runtime_error'
 
-require 'tailor'
 
-def usage
-  <<USEAGE
-  Usage:
-    $ #{File.basename(__FILE__)} [directory with .rb files]"
-      -OR-
-    $ #{File.basename(__FILE__)} [single .rb file]"
-
-USEAGE
-end
-
-def version
-  <<VERSION
-tailor (v#{Tailor::VERSION})
-  A Ruby style checker by @turboladen.
-  http://github.com/turboladen/tailor
-VERSION
-
-end
-
-if ARGV[0].nil?
-  puts version
-  puts
-  puts usage
-elsif ARGV[0] =~ /^--version|-v$/
-  puts <<-VERSION
-#{version}
-  _________________________________________________________________________
-  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-  |     |     |     |     |     |     |     |     |     |     |     |     |
-  |           |           |           |           |           |           |
-  |           1           2           3           4           5           |
-  |                                                                       |
-  -------------------------------------------------------------------------
-
-  VERSION
-
-else
-  begin
-    path_to_check = ARGV[0]
-
-    # Check to make sure we got a file or directory
-    unless File.file?(path_to_check) or File.directory?(path_to_check)
-      raise "Invalid file or directory: #{path_to_check}"
-    end
-
-    files_and_problems = if File.file?(path_to_check)
-      Tailor.check_file path_to_check
-    elsif File.directory?(path_to_check)
-      # Check the requested files/dirs for problems
-      Tailor.check path_to_check
-    end
-
-    problem_count = files_and_problems.values.inject(:+)
-
-    # Print summary of the problems we found
-    Tailor.print_report files_and_problems
-  rescue RuntimeError => ex
-    puts ex.message
-    puts ex.backtrace
-    puts
-  ensure
-    exit(1) if problem_count > 0
-  end
+begin
+  failure = Tailor::CLI.run(ARGV.dup)
+  exit(1) if failure
+rescue Tailor::RuntimeError => ex
+  STDERR.puts ex.message
+  STDERR.puts ex.backtrace.join("\n")
+rescue SystemExit => ex
+  exit(ex.status)
+rescue Exception => ex
+  STDERR.puts("#{ex.message} (#{ex.class})")
+  STDERR.puts(ex.backtrace.join("\n"))
+  exit(1)
 end

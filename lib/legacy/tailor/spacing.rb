@@ -1,5 +1,5 @@
-require 'tailor'
-require 'tailor/file_line'
+require_relative '../tailor'
+require_relative 'file_line'
 
 module Tailor
 
@@ -40,11 +40,11 @@ module Tailor
         /\t+/,
         "[Spacing]  Line contains hard tabs"
         ],
-      :trailing_whitespace => [
-        /(\x20+|\x09+)$/,
-        #"[Spacing]  Line contains #{trailing_whitespace_count} " +
-        "[Spacing]  Line contains trailing whitespaces"
-        ],
+      #:trailing_whitespace => [
+      #  /(\x20+|\x09+)$/,
+      #  #"[Spacing]  Line contains #{trailing_whitespace_count} " +
+      #  "[Spacing]  Line contains trailing whitespaces"
+      #  ],
       :no_space_around_open_curly_brace => [
         /^\s*((?:(?!def).)*)(=|\w)\x20{0}\{|\{\x20{0}(\||:|"|')/,
         "[Spacing]  Line contains 0 spaces on at least one side of a '{'"

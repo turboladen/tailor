@@ -1,0 +1,33 @@
+#------------------------------------------------------------------------------
+# Indentation             :indentation:
+#------------------------------------------------------------------------------
+# :spaces:                The number of spaces to consider a proper indent.
+#                         Default:      2
+#
+# :allow_hard_tabs:       True to let hard tabs be considered a single space.
+#                         Default:      false
+#
+# :continuation_spaces:   The number of spaces to expect all lines after the
+#                         1st line of a multi-line statement to be indented
+#                         further than the 1st line.  Use an * to allow for any
+#                         amount.
+#                         Default:      2
+#------------------------------------------------------------------------------
+# Vertical Whitespace     :vertical_whitespace:
+#------------------------------------------------------------------------------
+# :trailing_newlines:     The number of newlines that should be at the end of
+#                         the file.
+#                         Default:      1
+#
+<%= {
+  style: {
+    indentation: {
+      spaces: 2,
+      allow_hard_tabs: false,
+      continuation_spaces: 2
+      },
+    vertical_whitespace: {
+      trailing_newlines: 1
+    }
+  }
+}.to_yaml %>

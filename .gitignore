@@ -1,8 +1,14 @@
 .autotest
+.DS_Store
 .loadpath
 .project
 .yardoc/
 logic.txt
 output.txt
+
 tmp/
-ruby-style-checker.rb
+.bundle/
+.idea/
+coverage/
+
+*/.DS_Store

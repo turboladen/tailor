@@ -1,7 +1,11 @@
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-require 'tailor'
-require 'rspec'
+require 'fakefs/spec_helpers'
+require 'simplecov'
 
-def create_file_line(string, line_number)
-  FileLine.new(string, Pathname.new(__FILE__), line_number)
+SimpleCov.start
+
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+
+RSpec.configure do |conf|
+  conf.include FakeFS::SpecHelpers
 end
+
