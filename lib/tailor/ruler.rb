@@ -126,10 +126,6 @@ class Tailor
       super(token)
     end
 
-    def line_too_long?
-      current_line_of_text.length > @config[:horizontal_spacing][:line_length]
-    end
-
     # Called when the lexer matches a Ruby ignored newline (not sure how this
     # differs from a regular newline).
     #
@@ -146,17 +142,6 @@ class Tailor
         end
       end
 
-      if not current_line.line_of_only_spaces?
-        @indentation_ruler.update_actual_indentation(current_line)
-
-        unless @indentation_ruler.valid_line?
-          @problems << Problem.new(:indentation, binding)
-        end
-      else
-        log "Line of only spaces.  Moving on."
-        return
-      end
-
       @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
 
       if current_line.line_ends_with_op?
@@ -167,7 +152,7 @@ class Tailor
 
         # If this line is a continuation of the last multi-line op statement
         # then update the nesting line number with this line number.
-        if @indentation_ruler.op_statement_nesting.last + 1 == lineno
+        if @indentation_ruler.op_statement_continued?(lineno)
           @indentation_ruler.op_statement_nesting.pop
           @indentation_ruler.op_statement_nesting << lineno
         else
@@ -191,6 +176,17 @@ class Tailor
         end
       end
 
+      if not current_line.line_of_only_spaces?
+        @indentation_ruler.update_actual_indentation(current_line)
+
+        unless @indentation_ruler.valid_line?
+          @problems << Problem.new(:indentation, binding)
+        end
+      else
+        log "Line of only spaces.  Moving on."
+        return
+      end
+
       # prep for next line
       @indentation_ruler.transition_lines
 
@@ -210,19 +206,29 @@ class Tailor
       log "KW: #{token}"
 
       if KEYWORDS_TO_INDENT.include?(token)
+        log "Indent keyword found: '#{token}'."
+        @indent_keyword_line = lineno
+
         if modifier_keyword?(token)
           log "Found modifier in line: '#{token}'"
         elsif token == "do" && LexedLine.new(super, lineno).loop_with_do?
           log "Found keyword loop using optional 'do'"
         else
-          log "Modifier NOT in line: '#{token}'"
-          update_indentation_expectations(token)
+          log "Keyword '#{token}' not used as a modifier."
+
+          if CONTINUATION_KEYWORDS.include? token
+            log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
+            @indentation_ruler.decrease_this_line
+          else
+            log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
+            @indentation_ruler.increase_next_line
+          end
         end
       end
 
       if token == "end"
         if not single_line_indent_statement?
-          log "Not a single-line statement that needs indenting.  Decrease this line"
+          log "End of not a single-line statement that needs indenting.  Decrease this line"
           @indentation_ruler.decrease_this_line
         end
 
@@ -502,28 +508,6 @@ class Tailor
       @file_text.split("\n").at(lineno - 1) || ''
     end
 
-    # Updates the values used for detecting the proper number of indentation
-    # spaces.  Should be called when reaching the end of a line.
-    #
-    # @param [String] token The token that got matched in the line.  Used to
-    #   determine proper indentation levels.
-    def update_indentation_expectations(token)
-      if KEYWORDS_TO_INDENT.include? token
-        log "Updating indent expectation due to keyword found: '#{token}'."
-        @indent_keyword_line = lineno
-      else
-        log "Not sure why updating indentation expectation... Got token '#{token}'"
-      end
-
-      if CONTINUATION_KEYWORDS.include? token
-        log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
-        @indentation_ruler.decrease_this_line
-      else
-        log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
-        @indentation_ruler.increase_next_line
-      end
-    end
-
     # Checks if the statement is a single line statement that needs indenting.
     #
     # @return [Boolean] True if +@indent_keyword_line+ is equal to the
@@ -556,6 +540,10 @@ class Tailor
 
     def in_tstring?
       !@indentation_ruler.tstring_nesting.empty?
+    end
+
+    def line_too_long?
+      current_line_of_text.length > @config[:horizontal_spacing][:line_length]
     end
 
     #---------------------------------------------------------------------------
