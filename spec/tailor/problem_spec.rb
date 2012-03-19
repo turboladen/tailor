@@ -65,5 +65,21 @@ describe Tailor::Problem do
         problem.message(:trailing_newlines).should match /123.*777/
       end
     end
+
+    context "type is :hard_tab" do
+      it "builds a successful message" do
+        problem = Tailor::Problem.new(:test, binding)
+        problem.message(:hard_tab).should match /Hard tab found./
+      end
+    end
+
+    context "type is :line_length" do
+      it "builds a successful message" do
+        current_line_of_text = double "line of text", length: 88
+        @config = { horizontal_spacing: { line_length: 77 } }
+        problem = Tailor::Problem.new(:test, binding)
+        problem.message(:line_length).should match /88.*77/
+      end
+    end
   end
 end
