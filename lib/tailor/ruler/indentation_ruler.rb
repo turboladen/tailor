@@ -150,10 +150,6 @@ class Tailor
         end
       end
 
-      def op_statement_continued?(lineno)
-        @op_statement_nesting.last + 1 == lineno
-      end
-
       #---------------------------------------------------------------------------
       # Privates!
       #---------------------------------------------------------------------------
