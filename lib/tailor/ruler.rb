@@ -280,6 +280,14 @@ class Tailor
       current_line = LexedLine.new(super, lineno)
       @indentation_ruler.update_actual_indentation(current_line)
 
+      if @config[:horizontal_spacing]
+        if @config[:horizontal_spacing][:line_length]
+          if line_too_long?
+            @problems << Problem.new(:line_length, binding)
+          end
+        end
+      end
+
       unless @indentation_ruler.end_of_multiline_string?(current_line)
         unless @indentation_ruler.valid_line?
           @problems << Problem.new(:indentation, binding)
