@@ -191,42 +191,6 @@ describe Tailor::Ruler do
     end
   end
 
-  describe "#update_indentation_expectations" do
-    it "sets @indent_keyword_line to lineno" do
-      indentation_ruler.stub(:increase_next_line)
-      subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-      subject.stub(:lineno).and_return 10
-      subject.update_indentation_expectations "def"
-
-      subject.instance_variable_get(:@indent_keyword_line).should == 10
-      indentation_ruler.unstub(:increase_next_line)
-    end
-
-    context "token is a CONTINUATION_KEYWORDS" do
-      before do
-        Tailor::Ruler::CONTINUATION_KEYWORDS.stub(:include?).and_return true
-      end
-
-      it "calls #decrease_this_line" do
-        indentation_ruler.should_receive(:decrease_this_line)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.update_indentation_expectations "when"
-      end
-    end
-
-    context "token is not a CONTINUATION_KEYWORDS" do
-      before do
-        Tailor::Ruler::CONTINUATION_KEYWORDS.stub(:include?).and_return false
-      end
-
-      it "calls #increase_this_line" do
-        indentation_ruler.should_receive(:increase_next_line)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.update_indentation_expectations "def"
-      end
-    end
-  end
-
   describe "#single_line_indent_statement?" do
     context "@indent_keyword_line is nil and lineno is 1" do
       before do
