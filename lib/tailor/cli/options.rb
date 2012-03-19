@@ -37,6 +37,11 @@ class Tailor
             end
           end
 
+          o.on_tail('-v', '--version', "Show the version") do
+            puts version
+            exit
+          end
+
           o.on_tail('-d', '--debug', "Turn on debug logging") do
             Tailor::Logger.log = true
           end
