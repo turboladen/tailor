@@ -149,9 +149,12 @@ class Tailor
         if @indentation_ruler.op_statement_nesting.empty?
           @indentation_ruler.op_statement_nesting << lineno
 
-          # if kw && op in line, decrease next line
-          log "Increasing :next_line expectation due to multi-line operator statement."
-          @indentation_ruler.increase_next_line
+          if current_line.contains_keyword?
+            @in_keyword_plus_op = true
+          else
+            log "Increasing :next_line expectation due to multi-line operator statement."
+            @indentation_ruler.increase_next_line
+          end
 
         # If this line is a continuation of the last multi-line op statement
         # then update the nesting line number with this line number.
@@ -289,7 +292,7 @@ class Tailor
         if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
           @indentation_ruler.decrease_this_line
-          @indentation_ruler.decrease_next_line
+          @indentation_ruler.decrease_next_line unless @in_keyword_plus_op
           @indentation_ruler.op_statement_nesting.clear
         end
       end
