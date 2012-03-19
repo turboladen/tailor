@@ -20,7 +20,7 @@ class Tailor
     # space characters: spaces, newlines.
     #
     # @return [Boolean]
-    def line_of_only_spaces?
+    def only_spaces?
       element = first_non_space_element
       log "first non-space element '#{element}'"
       element.nil? || element.empty?

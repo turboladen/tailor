@@ -99,14 +99,14 @@ describe Tailor::Ruler do
   describe "#on_ignored_nl" do
     it "calls #current_line_lex" do
       pending
-      subject.stub(:line_of_only_spaces?).and_return true
+      subject.stub(:only_spaces?).and_return true
       subject.should_receive(:current_line_lex)
       subject.on_ignored_nl("\n")
     end
 
-    context "#line_of_only_spaces? is true" do
+    context "#only_spaces? is true" do
       pending
-      before { subject.stub(:line_of_only_spaces?).and_return true }
+      before { subject.stub(:only_spaces?).and_return true }
 
       it "does not call #update_actual_indentation" do
         pending

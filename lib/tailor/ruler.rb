@@ -176,7 +176,7 @@ class Tailor
         end
       end
 
-      if not current_line.line_of_only_spaces?
+      if not current_line.only_spaces?
         @indentation_ruler.update_actual_indentation(current_line)
 
         unless @indentation_ruler.valid_line?

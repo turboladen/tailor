@@ -36,12 +36,12 @@ describe Tailor::LexedLine do
     end
   end
 
-  describe "#line_of_only_spaces?" do
+  describe "#only_spaces?" do
     context '0 length line, no \n ending' do
       let(:lexed_output) { [[[1, 0], :on_sp, "  "]] }
 
       it "should return true" do
-        subject.line_of_only_spaces?.should be_true
+        subject.only_spaces?.should be_true
       end
     end
 
@@ -49,7 +49,7 @@ describe Tailor::LexedLine do
       let(:lexed_output) { [[[1, 0], :on_nl, "\n"]] }
 
       it "should return true" do
-        subject.line_of_only_spaces?.should be_true
+        subject.only_spaces?.should be_true
       end
     end
 
@@ -57,7 +57,7 @@ describe Tailor::LexedLine do
       let(:lexed_output) { [[[1, 0], :on_comment, "# comment"]] }
 
       it "should return false" do
-        subject.line_of_only_spaces?.should be_false
+        subject.only_spaces?.should be_false
       end
     end
 
@@ -70,7 +70,7 @@ describe Tailor::LexedLine do
       end
 
       it "should return false" do
-        subject.line_of_only_spaces?.should be_false
+        subject.only_spaces?.should be_false
       end
     end
 
@@ -87,7 +87,7 @@ describe Tailor::LexedLine do
       end
 
       it "should return false" do
-        subject.line_of_only_spaces?.should be_false
+        subject.only_spaces?.should be_false
       end
     end
   end
