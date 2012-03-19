@@ -1,6 +1,15 @@
+H_SPACING_OK = {}
 H_SPACING_1 = {}
 H_SPACING_2 = {}
 
+H_SPACING_OK[:short_line_no_newline] =
+  %Q{'#{'#' * 78}'}
+
+H_SPACING_OK[:short_line_newline_at_81] =
+  %Q{'#{'#' * 78}'
+}
+
+#-------------------------------------------------------------------------------
 H_SPACING_1[:hard_tab] =
   %Q{def something
 \tputs "something"
@@ -31,3 +40,12 @@ H_SPACING_2[:hard_tab_with_2_indented_spaces] =
 \t    puts "something"
   end
 end}
+
+H_SPACING_1[:long_line_no_newline] =
+  %Q{'#{'#' * 79}'}
+
+H_SPACING_1[:long_line_newline_at_82] =
+  %Q{'#{'#' * 79}'
+}
+
+
