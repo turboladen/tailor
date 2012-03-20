@@ -486,6 +486,16 @@ INDENT_OK[:multi_line_if_logical_and] =
   end
 end}
 
+INDENT_OK[:combo1] =
+  %Q{def set_default_smtp
+  Mail.defaults do
+    @config = Tim::Runner.configuration
+    delivery_method(:smtp,
+      { :address => @config[:smtp_server],
+        :port => @config[:smtp_server_port] })
+  end
+end}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------

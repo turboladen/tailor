@@ -155,6 +155,11 @@ Feature: Indentation check on good files without trailing newlines
     | File                                |
     | indent/ok/multi_line_if_logical_and |
 
+  @multi_line
+  Scenarios: Good combinations of many things
+    | File             |
+    | indent/ok/combo1 |
+
   @wip
   Scenarios: WIPs
     | File                    |
