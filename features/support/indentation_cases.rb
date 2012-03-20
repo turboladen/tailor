@@ -160,6 +160,12 @@ INDENT_OK[:def_return_unless_modifier] =
   return @something unless @something
 end}
 
+INDENT_OK[:multi_line_if_with_trailing_andop] =
+  %Q{unless Tim::Runner.configuration[:scp_hostname].nil?
+  @reporter.secure_copy if Tim::Runner.configuration[:scp_username] &&
+    Tim::Runner.configuration[:scp_password]
+end}
+
 INDENT_OK[:while_within_single_line_block] =
   %Q{Timeout::timeout(DEVICE_TIMEOUT) { sleep(0.5) while @device_server.urls.nil? }}
 

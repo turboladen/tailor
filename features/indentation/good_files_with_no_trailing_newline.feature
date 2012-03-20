@@ -51,7 +51,8 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/require_class_singlestatement_def         |
     | indent/ok/require_class_singlestatement_def_content |
 
-  Scenarios: Good modifiers
+  @single_line
+  Scenarios: Good single-line modifiers
     | File                                     |
     | indent/ok/if_modifier                    |
     | indent/ok/if_modifier2                   |
@@ -59,6 +60,11 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/unless_modifier                |
     | indent/ok/def_return_unless_modifier     |
     | indent/ok/while_within_single_line_block |
+
+  @multi_line
+  Scenarios: Good multi-line modifiers
+    | File                                        |
+    | indent/ok/multi_line_if_with_trailing_andop |
 
   @case
   Scenarios: Good case statements

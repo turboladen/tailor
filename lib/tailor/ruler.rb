@@ -152,7 +152,7 @@ class Tailor
         if @indentation_ruler.op_statement_nesting.empty?
           @indentation_ruler.op_statement_nesting << lineno
 
-          if current_line.contains_keyword_to_indent?
+          if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
             @in_keyword_plus_op = true
           else
             log "Increasing :next_line expectation due to multi-line operator statement."
@@ -214,6 +214,7 @@ class Tailor
         return
       end
 
+      @modifier_in_line = nil
       # prep for next line
       @indentation_ruler.transition_lines
 
@@ -238,6 +239,7 @@ class Tailor
 
         if modifier_keyword?(token)
           log "Found modifier in line: '#{token}'"
+          @modifier_in_line = token
         elsif token == "do" && LexedLine.new(super, lineno).loop_with_do?
           log "Found keyword loop using optional 'do'"
         else
@@ -369,6 +371,7 @@ class Tailor
       end
 
       # prep for next line
+      @modifier_in_line = nil
       @indentation_ruler.transition_lines
 
       super(token)
@@ -556,6 +559,13 @@ class Tailor
         if sexp_line.nil?
           log "sexp line was nil.  Perhaps that line is part of a multi-line statement?"
           log "Trying again with the last char removed from the line..."
+          line_of_text.chop!
+          sexp_line = Ripper.sexp(line_of_text)
+        end
+
+        if sexp_line.nil?
+          log "sexp line was nil again."
+          log "Trying one more time with the last char removed from the line..."
           line_of_text.chop!
           sexp_line = Ripper.sexp(line_of_text)
         end
