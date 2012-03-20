@@ -91,6 +91,23 @@ INDENT_OK[:method_call_multistatement_lonely_paren] =
   five
 )}
 
+INDENT_OK[:rescue_ending_with_comma] =
+  %Q{begin
+  ssh.upload source, dest
+  @logger.info "Successfully copied the file \#{source} to " +
+    "\#{@config[:scp_hostname]}:\#{dest}."
+rescue SocketError, ArgumentError, SystemCallError,
+  Net::SCP::Exception, Timeout::Error => ex
+  @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
+    "\#{ex.message}"
+end}
+
+INDENT_OK[:keyword_ending_with_period] =
+  %Q{if [].
+  empty?
+  puts 'hi'
+end}
+
 INDENT_OK[:def] =
 %Q{def a_method
 end}

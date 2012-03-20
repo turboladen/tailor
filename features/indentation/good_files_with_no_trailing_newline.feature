@@ -42,6 +42,8 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/assignment_twolevel_paren_multistatement |
     | indent/ok/method_call_multistatement               |
     | indent/ok/method_call_multistatement_lonely_paren  |
+    | indent/ok/rescue_ending_with_comma                 |
+    | indent/ok/keyword_ending_with_period               |
 
   Scenarios: Good def uses
     | File                                                |

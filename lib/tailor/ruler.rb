@@ -173,7 +173,10 @@ class Tailor
         @indentation_ruler.brace_nesting.empty? &&
         @indentation_ruler.bracket_nesting.empty?
         if current_line.line_ends_with_comma?
-          if @indentation_ruler.last_comma_statement_line.nil?
+          if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            @in_keyword_plus_comma = true
+          elsif @indentation_ruler.last_comma_statement_line.nil?
+            log "Increasing :next_line expectation due to multi-line comma statement."
             @indentation_ruler.amount_to_change_next += 1
           end
 
@@ -183,7 +186,10 @@ class Tailor
       end
 
       if current_line.line_ends_with_period?
-        if @indentation_ruler.last_period_statement_line.nil?
+        if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+          @in_keyword_plus_period = true
+        elsif @indentation_ruler.last_period_statement_line.nil?
+          log "Increasing :next_line expectation due to multi-line period statement."
           @indentation_ruler.amount_to_change_next += 1
         end
 
@@ -331,13 +337,13 @@ class Tailor
       end
 
       if !multiline_braces? && !multiline_brackets? && !multiline_parens?
-        # Last line of multi-line comma statement?
         if @indentation_ruler.last_comma_statement_line == (lineno - 1)
           log "Last line of multi-line comma statement"
+          @indentation_ruler.last_comma_statement_line = nil
 
-          unless current_line.line_ends_with_comma?
-            log "Line doesn't end with comma"
-            @indentation_ruler.last_comma_statement_line = nil
+          if @in_keyword_plus_comma
+            log "@in_keyword_plus_comma: #{@in_keyword_plus_comma}"
+          else
             @indentation_ruler.amount_to_change_next -= 1
           end
         end
@@ -345,10 +351,11 @@ class Tailor
 
       if @indentation_ruler.last_period_statement_line == (lineno - 1)
         log "Last line of multi-line period statement"
+        @indentation_ruler.last_period_statement_line = nil
 
-        unless current_line.line_ends_with_period?
-          log "Line doesn't end with period"
-          @indentation_ruler.last_period_statement_line = nil
+        if @in_keyword_plus_period
+          log "@in_keyword_plus_period: #{@in_keyword_plus_period}"
+        else
           @indentation_ruler.amount_to_change_next -= 1
         end
       end
@@ -375,6 +382,8 @@ class Tailor
       # prep for next line
       @modifier_in_line = nil
       @in_keyword_plus_op = false
+      @in_keyword_plus_comma = false
+      @in_keyword_plus_period = false
       @indentation_ruler.transition_lines
 
       super(token)
