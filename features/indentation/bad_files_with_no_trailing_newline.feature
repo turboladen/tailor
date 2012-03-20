@@ -63,5 +63,12 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/multi_line_andop_first_line_indented  | 2:3      |
     | indent/1/multi_line_andop_second_line_indented | 3:5      |
 
+  @multi_line
+  Scenarios: 1 problem with multi-line method ending with period
+    | File                                                           | Position |
+    | indent/1/multi_line_method_call_end_in                         | 5:3      |
+    | indent/1/multi_line_method_call_ends_with_period_2nd_line_in   | 4:5      |
+    | indent/1/multi_line_method_call_ends_with_many_periods_last_in | 3:4      |
+
 
 

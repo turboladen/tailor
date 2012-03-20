@@ -397,8 +397,7 @@ INDENT_OK[:multi_line_method_call] =
   head, body = split_head_and_body_from @raw_response
   parse_head(head)
   @body = parse_body(body)
-end
-}
+end}
 
 INDENT_OK[:multi_line_method_call_ends_with_period] =
   %Q{unless streamer == MulticastStreamer.instance
@@ -406,6 +405,11 @@ INDENT_OK[:multi_line_method_call_ends_with_period] =
   UnicastStreamer.pool << streamer unless UnicastStreamer.pool.
     member? streamer
 end}
+
+INDENT_OK[:multi_line_method_call_ends_with_many_periods] =
+  %Q{my_hashie.first_level.
+  second_level.
+  third_level}
 
 INDENT_OK[:multi_line_if_logical_and] =
   %Q{if @indentation_ruler.op_statement_nesting.empty? &&
@@ -605,3 +609,22 @@ INDENT_1[:multi_line_andop_second_line_indented] =
      lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
 end}
 
+INDENT_1[:multi_line_method_call_end_in] =
+  %Q{def initialize(raw_response)
+  if raw_response.nil? || raw_response.empty?
+    raise RTSP::Error,
+      "#{self.class} received nil string--this shouldn't happen."
+   end
+end}
+
+INDENT_1[:multi_line_method_call_ends_with_period_2nd_line_in] =
+  %Q{unless streamer == MulticastStreamer.instance
+  streamer.state = :DISCONNECTED
+  UnicastStreamer.pool << streamer unless UnicastStreamer.pool.
+     member? streamer
+end}
+
+INDENT_1[:multi_line_method_call_ends_with_many_periods_last_in] =
+  %Q{my_hashie.first_level.
+  second_level.
+    third_level}
