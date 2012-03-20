@@ -145,11 +145,13 @@ class Tailor
       @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
 
       if current_line.line_ends_with_op?
+        log "Line ends with op."
+
         # Are we nested in a multi-line operation yet?
         if @indentation_ruler.op_statement_nesting.empty?
           @indentation_ruler.op_statement_nesting << lineno
 
-          if current_line.contains_keyword?
+          if current_line.contains_keyword_to_indent?
             @in_keyword_plus_op = true
           else
             log "Increasing :next_line expectation due to multi-line operator statement."

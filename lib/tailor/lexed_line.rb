@@ -96,8 +96,12 @@ class Tailor
       loop_start && with_do
     end
 
-    def contains_keyword?
-      self.any? { |e| e[1] == :on_kw }
+    # @return [Boolean] +true+ if the line contains an keyword and it is in
+    #   +KEYWORDS_TO_INDENT.
+    def contains_keyword_to_indent?
+      self.any? do |e|
+        e[1] == :on_kw && KEYWORDS_TO_INDENT.include?(e[2])
+      end
     end
 
     #---------------------------------------------------------------------------

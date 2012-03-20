@@ -385,6 +385,10 @@ rule(:ttl) do
   str('ttl=') >> match('[\d]').repeat(1,3).as(:ttl)
 end}
 
+INDENT_OK[:multi_line_string_concat_with_plus] =
+  %Q{DVR_SSDP_NOTIFICATION_TEMPLATE = File.dirname(__FILE__) +
+  '/profiles/DVR5000/ssdp_notification.erb'}
+
 INDENT_OK[:multi_line_method_call] =
   %Q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
@@ -608,6 +612,10 @@ INDENT_1[:multi_line_andop_second_line_indented] =
   lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
      lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
 end}
+
+INDENT_1[:multi_line_string_concat_with_plus_out] =
+  %Q{DVR_SSDP_NOTIFICATION_TEMPLATE = File.dirname(__FILE__) +
+ '/profiles/DVR5000/ssdp_notification.erb'}
 
 INDENT_1[:multi_line_method_call_end_in] =
   %Q{def initialize(raw_response)
