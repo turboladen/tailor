@@ -135,6 +135,9 @@ end}
 INDENT_OK[:if_modifier] =
 %Q{puts "hi" if nil.nil?}
 
+INDENT_OK[:if_modifier2] =
+  %Q{start_key_registration_server if @profiles.values.include? :SM5000}
+
 INDENT_OK[:def_return_if_modifier] =
 %Q{def a_method
   return @something if @something
@@ -147,6 +150,9 @@ INDENT_OK[:def_return_unless_modifier] =
 %Q{def a_method
   return @something unless @something
 end}
+
+INDENT_OK[:while_within_single_line_block] =
+  %Q{Timeout::timeout(DEVICE_TIMEOUT) { sleep(0.5) while @device_server.urls.nil? }}
 
 INDENT_OK[:case_whens_level] =
   %Q{def my_method

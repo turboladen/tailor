@@ -49,15 +49,14 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/require_class_singlestatement_def         |
     | indent/ok/require_class_singlestatement_def_content |
 
-  Scenarios: 'if' as modifier
-    | File                             |
-    | indent/ok/if_modifier            |
-    | indent/ok/def_return_if_modifier |
-
-  Scenarios: 'unless' as modifier
-    | File                                 |
-    | indent/ok/unless_modifier            |
-    | indent/ok/def_return_unless_modifier |
+  Scenarios: Good modifiers
+    | File                                     |
+    | indent/ok/if_modifier                    |
+    | indent/ok/if_modifier2                   |
+    | indent/ok/def_return_if_modifier         |
+    | indent/ok/unless_modifier                |
+    | indent/ok/def_return_unless_modifier     |
+    | indent/ok/while_within_single_line_block |
 
   @case
   Scenarios: Good case statements

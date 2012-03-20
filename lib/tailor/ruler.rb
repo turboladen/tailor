@@ -532,18 +532,15 @@ class Tailor
         end
 
         if sexp_line.is_a? Array
-          log "sexp line: #{sexp_line}"
-          log "sexp line[1]: #{sexp_line[1]}"
-          log "As string: #{sexp_line.flatten}"
-          log "Last first: #{sexp_line.last.first}"
+          log "sexp_line.flatten: #{sexp_line.flatten}"
+          log "sexp_line.last.first: #{sexp_line.last.first}"
 
           begin
-            throw(:result, sexp_line.last.first.any? { |s| s == MODIFIERS[token] })
+            throw(:result, sexp_line.flatten.any? { |s| s == MODIFIERS[token] })
           rescue NoMethodError
           end
         end
       end
-      log "result = #{result}"
 
       result
     end
