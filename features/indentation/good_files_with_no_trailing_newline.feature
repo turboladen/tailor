@@ -139,6 +139,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_rshift_in_method                  |
     | indent/ok/multi_line_string_concat_with_plus           |
     | indent/ok/multi_line_string_concat_with_plus_in_parens |
+    | indent/ok/multi_line_string_concat_twice               |
 
   @multi_line
   Scenarios: Good multi-line method calls

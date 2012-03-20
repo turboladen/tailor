@@ -414,6 +414,19 @@ INDENT_OK[:multi_line_string_concat_with_plus_in_parens] =
   %Q{DVR_CONFIG_RENDERER = Erubis::Eruby.new(File.read File.dirname(__FILE__) +
   '/profiles/DVR5000/device_config.xml.erb')}
 
+INDENT_OK[:multi_line_string_concat_twice] =
+  %Q{unless Tim::Runner.configuration[:email].nil? ||
+  Tim::Runner.configuration[:email].empty?
+  Tim::EmailReporter.subject_status ||= subject_status
+  @email_reporter.send_email
+end
+
+def print_iteration_start iteration_number
+  iteration_message = "Running Iteration \#{iteration_number} of " +
+    @config[:suite_iterations].to_s
+  @logger.info bar(iteration_message)
+end}
+
 INDENT_OK[:multi_line_method_call] =
   %Q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?

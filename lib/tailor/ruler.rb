@@ -320,7 +320,9 @@ class Tailor
         if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
 
-          unless @in_keyword_plus_op
+          if @in_keyword_plus_op
+            log "@in_keyword_plus_op: #{@in_keyword_plus_op}"
+          else
             @indentation_ruler.amount_to_change_next -= 1
           end
 
@@ -372,6 +374,7 @@ class Tailor
 
       # prep for next line
       @modifier_in_line = nil
+      @in_keyword_plus_op = false
       @indentation_ruler.transition_lines
 
       super(token)

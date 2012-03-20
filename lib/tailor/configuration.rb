@@ -90,7 +90,6 @@ class Tailor
       {
         indentation: {
           spaces: 2,
-          continuation_spaces: 2
         },
         vertical_spacing: {
           trailing_newlines: 1
