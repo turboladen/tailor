@@ -13,6 +13,7 @@ class Tailor
       attr_reader :tstring_nesting
 
       attr_accessor :last_comma_statement_line
+      attr_accessor :last_period_statement_line
 
       def initialize(indentation_config)
         @config = indentation_config
@@ -30,6 +31,7 @@ class Tailor
         @op_statement_nesting = []
         @tstring_nesting = []
         @last_comma_statement_line = nil
+        @last_period_statement_line = nil
       end
 
       # @return [Fixnum] The indent level the file should currently be at.

@@ -133,8 +133,9 @@ Feature: Indentation check on good files without trailing newlines
 
   @multi_line
   Scenarios: Good multi-line method calls
-    | File                             |
-    | indent/ok/multi_line_method_call |
+    | File                                              |
+    | indent/ok/multi_line_method_call                  |
+    | indent/ok/multi_line_method_call_ends_with_period |
 
   @multi_line
   Scenarios: Good multi-line if + logical operators

@@ -179,6 +179,15 @@ class Tailor
         end
       end
 
+      if current_line.line_ends_with_period?
+        if @indentation_ruler.last_period_statement_line.nil?
+          @indentation_ruler.increase_next_line
+        end
+
+        @indentation_ruler.last_period_statement_line = lineno
+        log "last_period_statement_line: #{@indentation_ruler.last_period_statement_line}"
+      end
+
       if not current_line.only_spaces?
         @indentation_ruler.update_actual_indentation(current_line)
 
@@ -318,6 +327,15 @@ class Tailor
         end
       end
 
+      if @indentation_ruler.last_period_statement_line == (lineno - 1)
+        log "Last line of multi-line period statement"
+
+        unless current_line.line_ends_with_period?
+          log "Line doesn't end with period"
+          @indentation_ruler.last_period_statement_line = nil
+          @indentation_ruler.decrease_next_line
+        end
+      end
 
       # prep for next line
       @indentation_ruler.transition_lines
@@ -333,6 +351,12 @@ class Tailor
 
     def on_period(token)
       log "PERIOD: '#{token}'"
+
+      if column == current_line_of_text.length
+        log "Line length: #{current_line_of_text.length}"
+        @indentation_ruler.last_period_statement_line = lineno
+      end
+
       super(token)
     end
 
@@ -485,6 +509,7 @@ class Tailor
       log "CHAR: '#{token}'"
       super(token)
     end
+
     # Checks the current line to see if the given +token+ is being used as a
     # modifier.
     #
@@ -494,20 +519,29 @@ class Tailor
       line_of_text = current_line_of_text
       log "Line of text: #{line_of_text}"
 
-      sexp_line = Ripper.sexp(line_of_text)
-      log "sexp line: #{sexp_line}"
-      log "sexp line[1]: #{sexp_line[1]}" unless sexp_line.nil?
+      result = catch(:result) do
+        sexp_line = Ripper.sexp(line_of_text)
 
-      if sexp_line.is_a? Array
-        log "As string: #{sexp_line.flatten}"
-        log "Last first: #{sexp_line.last.first}"
+        if sexp_line.nil?
+          log "sexp line was nil.  Perhaps that line is part of a multi-line statement?"
+          log "Trying again with the last char removed from the line..."
+          line_of_text.chop!
+          sexp_line = Ripper.sexp(line_of_text)
+        end
 
-        begin
-          result = sexp_line.last.first.any? { |s| s == MODIFIERS[token] }
-          log "result = #{result}"
-        rescue NoMethodError
+        if sexp_line.is_a? Array
+          log "sexp line: #{sexp_line}"
+          log "sexp line[1]: #{sexp_line[1]}"
+          log "As string: #{sexp_line.flatten}"
+          log "Last first: #{sexp_line.last.first}"
+
+          begin
+            throw(:result, sexp_line.last.first.any? { |s| s == MODIFIERS[token] })
+          rescue NoMethodError
+          end
         end
       end
+      log "result = #{result}"
 
       result
     end

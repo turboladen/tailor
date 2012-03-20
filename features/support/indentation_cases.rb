@@ -400,6 +400,13 @@ INDENT_OK[:multi_line_method_call] =
 end
 }
 
+INDENT_OK[:multi_line_method_call_ends_with_period] =
+  %Q{unless streamer == MulticastStreamer.instance
+  streamer.state = :DISCONNECTED
+  UnicastStreamer.pool << streamer unless UnicastStreamer.pool.
+    member? streamer
+end}
+
 INDENT_OK[:multi_line_if_logical_and] =
   %Q{if @indentation_ruler.op_statement_nesting.empty? &&
   @indentation_ruler.tstring_nesting.empty? &&
@@ -412,7 +419,7 @@ INDENT_OK[:multi_line_if_logical_and] =
     end
 
     @indentation_ruler.last_comma_statement_line = lineno
-    log "last_comma_statement_line: \#{@indentation_ruler.last_comma_statement_line}"
+    log "last: \#{@indentation_ruler.last_comma_statement_line}"
   end
 end}
 

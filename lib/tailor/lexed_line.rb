@@ -49,7 +49,7 @@ class Tailor
       end
     end
 
-    def line_ends_with_comma?
+    def does_line_ends_with(event)
       lexed_line = self.dup
       tokens_in_line = lexed_line.map { |e| e[1] }
 
@@ -58,10 +58,19 @@ class Tailor
         lexed_line.pop
       end
 
-      if tokens_in_line.last == :on_comma
+      if tokens_in_line.last == event
         true
       else
         false
+      end
+    end
+
+    def method_missing(meth)
+      if meth.to_s =~ /^line_ends_with_(.+)\?$/
+        event = "on_#{$1}".to_sym
+        does_line_ends_with(event)
+      else
+        super
       end
     end
 
