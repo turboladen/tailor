@@ -128,10 +128,11 @@ Feature: Indentation check on good files without trailing newlines
 
   @multi_line
   Scenarios: Good multi-line operator uses
-    | File                                         |
-    | indent/ok/multi_line_andop_in_method         |
-    | indent/ok/multi_line_rshift_in_method        |
-    | indent/ok/multi_line_string_concat_with_plus |
+    | File                                                   |
+    | indent/ok/multi_line_andop_in_method                   |
+    | indent/ok/multi_line_rshift_in_method                  |
+    | indent/ok/multi_line_string_concat_with_plus           |
+    | indent/ok/multi_line_string_concat_with_plus_in_parens |
 
   @multi_line
   Scenarios: Good multi-line method calls

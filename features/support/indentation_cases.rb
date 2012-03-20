@@ -404,6 +404,10 @@ INDENT_OK[:multi_line_string_concat_with_plus] =
   %Q{DVR_SSDP_NOTIFICATION_TEMPLATE = File.dirname(__FILE__) +
   '/profiles/DVR5000/ssdp_notification.erb'}
 
+INDENT_OK[:multi_line_string_concat_with_plus_in_parens] =
+  %Q{DVR_CONFIG_RENDERER = Erubis::Eruby.new(File.read File.dirname(__FILE__) +
+  '/profiles/DVR5000/device_config.xml.erb')}
+
 INDENT_OK[:multi_line_method_call] =
   %Q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
