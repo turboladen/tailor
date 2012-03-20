@@ -126,8 +126,9 @@ class Tailor
       super(token)
     end
 
-    # Called when the lexer matches a Ruby ignored newline (not sure how this
-    # differs from a regular newline).
+    # Called when the lexer matches a Ruby ignored newline.  Ignored newlines
+    # occur when a newline is encountered, but the statement that was expressed
+    # on that line was not completed on that line.
     #
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
@@ -155,7 +156,7 @@ class Tailor
             @in_keyword_plus_op = true
           else
             log "Increasing :next_line expectation due to multi-line operator statement."
-            @indentation_ruler.increase_next_line
+            @indentation_ruler.amount_to_change_next += 1
           end
 
         # If this line is a continuation of the last multi-line op statement
@@ -173,7 +174,7 @@ class Tailor
         @indentation_ruler.bracket_nesting.empty?
         if current_line.line_ends_with_comma?
           if @indentation_ruler.last_comma_statement_line.nil?
-            @indentation_ruler.increase_next_line
+            @indentation_ruler.amount_to_change_next += 1
           end
 
           @indentation_ruler.last_comma_statement_line = lineno
@@ -183,11 +184,23 @@ class Tailor
 
       if current_line.line_ends_with_period?
         if @indentation_ruler.last_period_statement_line.nil?
-          @indentation_ruler.increase_next_line
+          @indentation_ruler.amount_to_change_next += 1
         end
 
         @indentation_ruler.last_period_statement_line = lineno
         log "last_period_statement_line: #{@indentation_ruler.last_period_statement_line}"
+      end
+
+      log "Amount to change next line: #{@indentation_ruler.amount_to_change_next}"
+      log "Amount to change this line: #{@indentation_ruler.amount_to_change_this}"
+      if @indentation_ruler.amount_to_change_next > 0
+        @indentation_ruler.increase_next_line
+      elsif @indentation_ruler.amount_to_change_next < 0
+        @indentation_ruler.decrease_next_line
+      end
+
+      if @indentation_ruler.amount_to_change_this < 0
+        @indentation_ruler.decrease_this_line
       end
 
       if not current_line.only_spaces?
@@ -232,10 +245,10 @@ class Tailor
 
           if CONTINUATION_KEYWORDS.include? token
             log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
-            @indentation_ruler.decrease_this_line
+            @indentation_ruler.amount_to_change_this -= 1
           else
             log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
-            @indentation_ruler.increase_next_line
+            @indentation_ruler.amount_to_change_next += 1
           end
         end
       end
@@ -243,10 +256,10 @@ class Tailor
       if token == "end"
         if not single_line_indent_statement?
           log "End of not a single-line statement that needs indenting.  Decrease this line"
-          @indentation_ruler.decrease_this_line
+          @indentation_ruler.amount_to_change_this -= 1
         end
 
-        @indentation_ruler.decrease_next_line
+        @indentation_ruler.amount_to_change_next -= 1
       end
 
       super(token)
@@ -264,7 +277,7 @@ class Tailor
     def on_lbrace(token)
       log "LBRACE: '#{token}'"
       @indentation_ruler.brace_nesting << lineno
-      @indentation_ruler.increase_next_line
+      @indentation_ruler.amount_to_change_next += 1
       super(token)
     end
 
@@ -274,14 +287,14 @@ class Tailor
     def on_lbracket(token)
       log "LBRACKET: '#{token}'"
       @indentation_ruler.bracket_nesting << lineno
-      @indentation_ruler.increase_next_line
+      @indentation_ruler.amount_to_change_next += 1
       super(token)
     end
 
     def on_lparen(token)
       log "LPAREN: '#{token}'"
       @indentation_ruler.paren_nesting << lineno
-      @indentation_ruler.increase_next_line
+      @indentation_ruler.amount_to_change_next += 1
       super(token)
     end
 
@@ -299,19 +312,16 @@ class Tailor
         end
       end
 
-      unless @indentation_ruler.end_of_multiline_string?(current_line)
-        unless @indentation_ruler.valid_line?
-          @problems << Problem.new(:indentation, binding)
-        end
-      end
-
       if not @indentation_ruler.op_statement_nesting.empty?
         log "op nesting not empty: #{@indentation_ruler.op_statement_nesting}"
 
         if @indentation_ruler.op_statement_nesting.last + 1 == lineno
           log "End of multi-line op statement."
-          @indentation_ruler.decrease_this_line
-          @indentation_ruler.decrease_next_line unless @in_keyword_plus_op
+
+          unless @in_keyword_plus_op
+            @indentation_ruler.amount_to_change_next -= 1
+          end
+
           @indentation_ruler.op_statement_nesting.clear
         end
       end
@@ -324,7 +334,7 @@ class Tailor
           unless current_line.line_ends_with_comma?
             log "Line doesn't end with comma"
             @indentation_ruler.last_comma_statement_line = nil
-            @indentation_ruler.decrease_next_line
+            @indentation_ruler.amount_to_change_next -= 1
           end
         end
       end
@@ -335,7 +345,26 @@ class Tailor
         unless current_line.line_ends_with_period?
           log "Line doesn't end with period"
           @indentation_ruler.last_period_statement_line = nil
-          @indentation_ruler.decrease_next_line
+          @indentation_ruler.amount_to_change_next -= 1
+        end
+      end
+
+      log "Amount to change next line: #{@indentation_ruler.amount_to_change_next}"
+      log "Amount to change this line: #{@indentation_ruler.amount_to_change_this}"
+      if @indentation_ruler.amount_to_change_next > 0
+        @indentation_ruler.increase_next_line
+      elsif @indentation_ruler.amount_to_change_next < 0
+        @indentation_ruler.decrease_next_line
+      end
+
+      if @indentation_ruler.amount_to_change_this < 0
+        @indentation_ruler.decrease_this_line
+      end
+
+      # Check for problems
+      unless @indentation_ruler.end_of_multiline_string?(current_line)
+        unless @indentation_ruler.valid_line?
+          @problems << Problem.new(:indentation, binding)
         end
       end
 
@@ -378,7 +407,7 @@ class Tailor
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
-          @indentation_ruler.decrease_this_line
+          @indentation_ruler.amount_to_change_this -= 1
         end
       end
 
@@ -387,7 +416,7 @@ class Tailor
       # Ripper won't match a closing } in #{} so we have to track if we're
       # inside of one.  If we are, don't decrement then :next_line.
       unless @embexpr_beg
-        @indentation_ruler.decrease_next_line
+        @indentation_ruler.amount_to_change_next -= 1
       end
 
       @embexpr_beg = false
@@ -405,12 +434,12 @@ class Tailor
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
-          @indentation_ruler.decrease_this_line
+          @indentation_ruler.amount_to_change_this -= 1
         end
       end
 
       @indentation_ruler.bracket_nesting.pop
-      @indentation_ruler.decrease_next_line
+      @indentation_ruler.amount_to_change_next -= 1
       super(token)
     end
 
@@ -432,12 +461,12 @@ class Tailor
         current_line = LexedLine.new(super, lineno)
 
         if r_event_without_content?(current_line)
-          @indentation_ruler.decrease_this_line
+          @indentation_ruler.amount_to_change_this -= 1
         end
       end
 
       @indentation_ruler.paren_nesting.pop
-      @indentation_ruler.decrease_next_line
+      @indentation_ruler.amount_to_change_next -= 1
 
       super(token)
     end

@@ -15,6 +15,9 @@ class Tailor
       attr_accessor :last_comma_statement_line
       attr_accessor :last_period_statement_line
 
+      attr_accessor :amount_to_change_next
+      attr_accessor :amount_to_change_this
+
       def initialize(indentation_config)
         @config = indentation_config
 
@@ -32,6 +35,9 @@ class Tailor
         @tstring_nesting = []
         @last_comma_statement_line = nil
         @last_period_statement_line = nil
+
+        @amount_to_change_next = 0
+        @amount_to_change_this = 0
       end
 
       # @return [Fixnum] The indent level the file should currently be at.
@@ -86,6 +92,8 @@ class Tailor
       # +@proper_indentation[:this_line]+.
       def transition_lines
         if started?
+          @amount_to_change_this = 0
+          @amount_to_change_next = 0
           log "Setting @proper_indentation[:this_line] = that of :next_line"
           @proper_indentation[:this_line] = @proper_indentation[:next_line]
           log "Transitioning @proper_indentation[:this_line] to #{@proper_indentation[:this_line]}"
