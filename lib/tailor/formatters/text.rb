@@ -80,6 +80,10 @@ class Tailor
             summary_table.rows << [file, problem_list.size]
           end
 
+          summary_table.rows << :separator
+          summary_table.rows << ['TOTAL', problems.values.
+            map { |v| v.size }.inject(:+)]
+
           puts summary_table
         end
       end
