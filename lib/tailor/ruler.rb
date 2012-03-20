@@ -365,9 +365,7 @@ class Tailor
       if @indentation_ruler.amount_to_change_next > 0
         @indentation_ruler.increase_next_line
       elsif @indentation_ruler.amount_to_change_next < 0
-        @indentation_ruler.amount_to_change_next.abs.times do
-          @indentation_ruler.decrease_next_line
-        end
+        @indentation_ruler.decrease_next_line
       end
 
       if @indentation_ruler.amount_to_change_this < 0
