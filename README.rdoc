@@ -5,17 +5,22 @@
 == DESCRIPTION:
 
 tailor recursively parses Ruby files in a directory and checks them for bad 
-style.  Rules for judging style are based on a number of style guides that are popular in the Ruby community.  More on this
-here http://wiki.github.com/turboladen/tailor.
+style.  Rules for judging style are based on a number of style guides that are
+popular in the Ruby community.  More on this here
+http://wiki.github.com/turboladen/tailor.
 
 == FEATURES/PROBLEMS:
 
-* Checks for bad style in .rb and .erb files
+* Checks for bad style in Ruby files
   * Recursively in a directory, or...
   * A given file
 * Checks for:
+  * Horizontal spacing
+    * Use of hard-tabs
+    * Line length
+  * Vertical spacing
+    * Trailing newlines (at the end of the file)
   * Indentation
-    * Hard-tabs in indentation
   * Name cases
     * Snake case class & module names
     * Camel case method names
@@ -27,8 +32,6 @@ here http://wiki.github.com/turboladen/tailor.
     * Around open/closed square brackets
     * Around open/closed curly braces
     * Around colons in ternary statements
-  * Line length
-    * Should be <= 80 characters
 
 == SYNOPSIS:
 
@@ -39,17 +42,22 @@ Run tailor like:
   $ tail file_to_check.rb
 
 There are a number of false-positives and false-negatives in detection of the
-above rules, so please don't expect perfection in this detection.  :)  I'm
-working on solving this.
+above rules, so please don't expect perfection in this detection.  :)
+
+=== Configurable:
+
+FIX ME!
 
 == REQUIREMENTS:
 
 * Rubies (tested)
  * 1.8.7
  * 1.9.2
- * 1.9.3-preview1
+ * 1.9.3
 * Gems
+  * log_switch
   * term-ansicolor
+  * text-table
 
 == INSTALL:
 
