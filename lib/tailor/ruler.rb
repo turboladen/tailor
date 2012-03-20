@@ -536,7 +536,7 @@ class Tailor
           log "sexp_line.last.first: #{sexp_line.last.first}"
 
           begin
-            throw(:result, sexp_line.flatten.any? { |s| s == MODIFIERS[token] })
+            throw(:result, sexp_line.flatten.compact.any? { |s| s == MODIFIERS[token] })
           rescue NoMethodError
           end
         end

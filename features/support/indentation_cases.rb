@@ -7,6 +7,15 @@ end}
 INDENT_OK[:one_line_class] =
 %Q{class MyClass; end}
 
+INDENT_OK[:one_line_subclass] =
+  %Q{class MyClass < RuntimeError; end}
+
+INDENT_OK[:one_line_subclass_with_inheritance] =
+  %Q{class MyClass < Array
+  class MyError < RuntimeError; end
+  include AnotherThing
+end}
+
 INDENT_OK[:class_empty] =
 %Q{class MyClass
 

@@ -17,11 +17,13 @@ Feature: Indentation check on good files without trailing newlines
     And the exit status should be 0
 
   Scenarios: Good class uses
-    | File                     |
-    | indent/ok/class          |
-    | indent/ok/nested_class   |
-    | indent/ok/class_empty    |
-    | indent/ok/one_line_class |
+    | File                                         |
+    | indent/ok/class                              |
+    | indent/ok/nested_class                       |
+    | indent/ok/class_empty                        |
+    | indent/ok/one_line_class                     |
+    | indent/ok/one_line_subclass                  |
+    | indent/ok/one_line_subclass_with_inheritance |
 
   Scenarios: Good single-line statement uses
     | File                                    |
