@@ -159,6 +159,7 @@ Feature: Indentation check on good files without trailing newlines
   Scenarios: Good combinations of many things
     | File             |
     | indent/ok/combo1 |
+    | indent/ok/combo2 |
 
   @wip
   Scenarios: WIPs

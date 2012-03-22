@@ -448,7 +448,7 @@ INDENT_OK[:multi_line_method_call] =
   %Q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
     raise RTSP::Error,
-      "#{self.class} received nil string--this shouldn't happen."
+      "\#{self.class} received nil string--this shouldn't happen."
   end
 
   @raw_response = raw_response
@@ -494,6 +494,16 @@ INDENT_OK[:combo1] =
       { :address => @config[:smtp_server],
         :port => @config[:smtp_server_port] })
   end
+end}
+
+INDENT_OK[:combo2] =
+%Q{class C
+
+  send :each do
+    def foo
+    end 
+  end
+
 end}
 
 #-------------------------------------------------------------------------------

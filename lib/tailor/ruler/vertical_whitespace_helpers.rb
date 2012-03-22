@@ -3,7 +3,7 @@ require_relative '../problem'
 
 
 class Tailor
-  class Rulers
+  class Ruler
     module VerticalWhitespaceHelpers
 
       # Counts the number of newlines at the end of the file.
