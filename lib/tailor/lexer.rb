@@ -1,9 +1,11 @@
 require 'ripper'
 require_relative 'logger'
 require_relative 'problem'
-require_relative 'lexer/indentation_ruler'
+require_relative 'indentation_ruler'
+require_relative 'horizontal_spacing_ruler'
 require_relative 'lexed_line'
 require_relative 'lexer_constants'
+require_relative 'composite_observable'
 
 
 class Tailor
@@ -15,6 +17,7 @@ class Tailor
     include LexerConstants
     include VerticalWhitespaceHelpers
     include LogSwitch::Mixin
+    include CompositeObservable
 
     attr_reader :indentation_tracker
     attr_accessor :problems
@@ -37,6 +40,8 @@ class Tailor
 
       @indentation_ruler = IndentationRuler.new(@config[:indentation])
       @indentation_ruler.start
+      add_kw_observer(@indentation_ruler, :kw_update)
+      add_nl_observer(@indentation_ruler, :nl_update)
 
       super @file_text
     end
@@ -239,6 +244,13 @@ class Tailor
     def on_kw(token)
       log "KW: #{token}"
 
+      kw_changed
+      notify_kw_observers(token,
+        modifier_keyword?(token),
+        LexedLine.new(super, lineno).loop_with_do?,
+        lineno)
+
+=begin
       if KEYWORDS_TO_INDENT.include?(token)
         log "Indent keyword found: '#{token}'."
         @indent_keyword_line = lineno
@@ -269,6 +281,7 @@ class Tailor
 
         @indentation_ruler.amount_to_change_next -= 1
       end
+=end
 
       super(token)
     end
@@ -380,7 +393,7 @@ class Tailor
       end
 
       # prep for next line
-      @modifier_in_line = nil
+      #@modifier_in_line = nil
       @in_keyword_plus_op = false
       @in_keyword_plus_comma = false
       @in_keyword_plus_period = false
@@ -603,6 +616,7 @@ class Tailor
       @file_text.split("\n").at(lineno - 1) || ''
     end
 
+=begin
     # Checks if the statement is a single line statement that needs indenting.
     #
     # @return [Boolean] True if +@indent_keyword_line+ is equal to the
@@ -610,6 +624,7 @@ class Tailor
     def single_line_indent_statement?
       @indent_keyword_line == lineno
     end
+=end
 
     # @return [Boolean] +true+ if any non-space chars come before the current
     #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
