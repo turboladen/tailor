@@ -6,21 +6,7 @@ class Tailor
   class IndentationRuler
     include LexerConstants
 
-    attr_reader :actual_indentation
-
-    attr_reader :brace_nesting
-    attr_reader :bracket_nesting
-    attr_reader :op_statement_nesting
-    attr_reader :paren_nesting
-    attr_reader :tstring_nesting
-
     attr_reader :problems
-
-    attr_accessor :last_comma_statement_line
-    attr_accessor :last_period_statement_line
-
-    attr_accessor :amount_to_change_next
-    attr_accessor :amount_to_change_this
 
     def initialize(indentation_config)
       @config = indentation_config
@@ -158,7 +144,7 @@ class Tailor
 
     # @return [Boolean]
     def valid_line?
-      if actual_indentation != should_be_at
+      if @actual_indentation != should_be_at
         false
       else
         log "Line is properly indented."
@@ -238,13 +224,13 @@ class Tailor
       log "Amount to change next line: #{@amount_to_change_next}"
       log "Amount to change this line: #{@amount_to_change_this}"
       if @amount_to_change_next > 0
-        @increase_next_line
+        increase_next_line
       elsif @amount_to_change_next < 0
-        @decrease_next_line
+        decrease_next_line
       end
 
       if @amount_to_change_this < 0
-        @decrease_this_line
+        decrease_this_line
       end
 
       # prep for next line
