@@ -14,6 +14,8 @@ class Tailor
     attr_reader :paren_nesting
     attr_reader :tstring_nesting
 
+    attr_reader :problems
+
     attr_accessor :last_comma_statement_line
     attr_accessor :last_period_statement_line
 
@@ -23,7 +25,7 @@ class Tailor
     def initialize(indentation_config)
       @config = indentation_config
 
-      @proper_indentation = { }
+      @proper_indentation = {}
       log "Setting @proper_indentation[:this_line] to 0."
       @proper_indentation[:this_line] = 0
       @proper_indentation[:next_line] = 0
@@ -40,6 +42,8 @@ class Tailor
 
       @amount_to_change_next = 0
       @amount_to_change_this = 0
+
+      @problems = []
     end
 
     # @return [Fixnum] The indent level the file should currently be at.
@@ -162,14 +166,93 @@ class Tailor
       end
     end
 
-    def on_comma(current_line_of_text, lineno, column)
+    def comma_update(current_line_of_text, lineno, column)
       if column == current_line_of_text.length
-        last_comma_statement_line = lineno
+        @last_comma_statement_line = lineno
       end
     end
 
+    def embexpr_beg_update
+      @embexpr_beg = true
+    end
+
+    def embexpr_end_update
+      @embexpr_beg = false
+    end
+
+    def ignored_nl_update(current_lexed_line, lineno, column)
+      stop if @tstring_nesting.size > 0
+
+      if current_lexed_line.line_ends_with_op?
+        log "Line ends with op."
+
+        # Are we nested in a multi-line operation yet?
+        if @op_statement_nesting.empty?
+          @op_statement_nesting << lineno
+
+          if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            @in_keyword_plus_op = true
+          else
+            log "Increasing :next_line expectation due to multi-line operator statement."
+            @amount_to_change_next += 1
+          end
+
+          # If this line is a continuation of the last multi-line op statement
+          # then update the nesting line number with this line number.
+        else
+          @op_statement_nesting.pop
+          @op_statement_nesting << lineno
+        end
+      end
+
+      if @op_statement_nesting.empty? &&
+        @tstring_nesting.empty? &&
+        @paren_nesting.empty? &&
+        @brace_nesting.empty? &&
+        @bracket_nesting.empty?
+        if current_lexed_line.line_ends_with_comma?
+          if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            @in_keyword_plus_comma = true
+          elsif @last_comma_statement_line.nil?
+            log "Increasing :next_line expectation due to multi-line comma statement."
+            @amount_to_change_next += 1
+          end
+
+          @last_comma_statement_line = lineno
+          log "last_comma_statement_line: #{@last_comma_statement_line}"
+        end
+      end
+
+      if current_lexed_line.line_ends_with_period?
+        if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+          @in_keyword_plus_period = true
+        elsif @last_period_statement_line.nil?
+          log "Increasing :next_line expectation due to multi-line period statement."
+          @amount_to_change_next += 1
+        end
+
+        @last_period_statement_line = lineno
+        log "last_period_statement_line: #{@last_period_statement_line}"
+      end
+
+      log "Amount to change next line: #{@amount_to_change_next}"
+      log "Amount to change this line: #{@amount_to_change_this}"
+      if @amount_to_change_next > 0
+        @increase_next_line
+      elsif @amount_to_change_next < 0
+        @decrease_next_line
+      end
+
+      if @amount_to_change_this < 0
+        @decrease_this_line
+      end
+
+      # prep for next line
+      @modifier_in_line = nil
+      transition_lines
+    end
+
     def kw_update(token, modifier, loop_with_do, lineno)
-      puts "HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"
       if KEYWORDS_TO_INDENT.include?(token)
         log "Indent keyword found: '#{token}'."
         @indent_keyword_line = lineno
@@ -202,8 +285,151 @@ class Tailor
       end
     end
 
-    def nl_update
+    def lbrace_update(lineno)
+      @brace_nesting << lineno
+      @amount_to_change_next += 1
+    end
+
+    def lbracket_update(lineno)
+      @bracket_nesting << lineno
+      @amount_to_change_next += 1
+    end
+
+    def lparen_update(lineno)
+      @paren_nesting << lineno
+      @amount_to_change_next += 1
+    end
+
+    def nl_update(current_lexed_line, lineno, column)
+      update_actual_indentation(current_lexed_line)
+
+      if not @op_statement_nesting.empty?
+        log "op nesting not empty: #{@op_statement_nesting}"
+
+        if @op_statement_nesting.last + 1 == lineno
+          log "End of multi-line op statement."
+
+          if @in_keyword_plus_op
+            log "@in_keyword_plus_op: #{@in_keyword_plus_op}"
+          else
+            @amount_to_change_next -= 1
+          end
+
+          @op_statement_nesting.clear
+        end
+      end
+
+      if !multiline_braces?(lineno) &&
+        !multiline_brackets?(lineno) &&
+        !multiline_parens?(lineno)
+        if @last_comma_statement_line == (lineno - 1)
+          log "Last line of multi-line comma statement"
+          @last_comma_statement_line = nil
+
+          if @in_keyword_plus_comma
+            log "@in_keyword_plus_comma: #{@in_keyword_plus_comma}"
+          else
+            @amount_to_change_next -= 1
+          end
+        end
+      end
+
+      if @last_period_statement_line == (lineno - 1)
+        log "Last line of multi-line period statement"
+        @last_period_statement_line = nil
+
+        if @in_keyword_plus_period
+          log "@in_keyword_plus_period: #{@in_keyword_plus_period}"
+        else
+          @amount_to_change_next -= 1
+        end
+      end
+
+      log "Amount to change next line: #{@amount_to_change_next}"
+      log "Amount to change this line: #{@amount_to_change_this}"
+      if @amount_to_change_next > 0
+        increase_next_line
+      elsif @amount_to_change_next < 0
+        decrease_next_line
+      end
+
+      if @amount_to_change_this < 0
+        decrease_this_line
+      end
+
+      unless end_of_multiline_string?(current_lexed_line)
+        unless valid_line?
+          @problems << Problem.new(:indentation, binding)
+        end
+      end
+
       @modifier_in_line = nil
+      @in_keyword_plus_op = false
+      @in_keyword_plus_comma = false
+      @in_keyword_plus_period = false
+      transition_lines
+    end
+
+    def period_update(current_line_length, lineno, column)
+      if column == current_line_length
+        log "Line length: #{current_line_length}"
+        @last_period_statement_line = lineno
+      end
+    end
+
+    def rparen_update(current_lexed_line, lineno, column)
+      if multiline_parens?(lineno)
+        log "End of multiline parens!"
+
+        if r_event_without_content?(current_lexed_line, lineno, column)
+          @amount_to_change_this -= 1
+        end
+      end
+
+      @paren_nesting.pop
+      @amount_to_change_next -= 1
+    end
+
+    def rbrace_update(current_lexed_line, lineno, column)
+      if multiline_braces?(lineno)
+        log "End of multiline braces!"
+
+        if r_event_without_content?(current_lexed_line, lineno, column)
+          @amount_to_change_this -= 1
+        end
+      end
+
+      @brace_nesting.pop
+
+      # Ripper won't match a closing } in #{} so we have to track if we're
+      # inside of one.  If we are, don't decrement then :next_line.
+      unless @embexpr_beg
+        @amount_to_change_next -= 1
+      end
+
+      @embexpr_beg = false
+    end
+
+    def rbracket_update(current_lexed_line, lineno, column)
+      if multiline_brackets?(lineno)
+        log "End of multiline brackets!"
+
+        if r_event_without_content?(current_lexed_line, lineno, column)
+          @amount_to_change_this -= 1
+        end
+      end
+
+      @bracket_nesting.pop
+      @amount_to_change_next -= 1
+    end
+
+    def tstring_beg_update(lineno)
+      @tstring_nesting << lineno
+    end
+
+    def tstring_end_update
+      @tstring_nesting.pop
+      start unless in_tstring?
     end
 
     # Checks if the statement is a single line statement that needs indenting.
@@ -212,6 +438,32 @@ class Tailor
     #   {lineno} (where lineno is the currenly parsed line).
     def single_line_indent_statement?(lineno)
       @indent_keyword_line == lineno
+    end
+
+    def multiline_braces?(lineno)
+      if @brace_nesting.empty?
+        false
+      else
+        @brace_nesting.last < lineno
+      end
+    end
+
+    def multiline_brackets?(lineno)
+      @bracket_nesting.empty? ? false : (@bracket_nesting.last < lineno)
+    end
+
+    def multiline_parens?(lineno)
+      @paren_nesting.empty? ? false : (@paren_nesting.last < lineno)
+    end
+
+    def in_tstring?
+      !@tstring_nesting.empty?
+    end
+
+    # @return [Boolean] +true+ if any non-space chars come before the current
+    #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
+    def r_event_without_content?(current_line, lineno, column)
+      current_line.first_non_space_element.first == [lineno, column]
     end
 
     #---------------------------------------------------------------------------

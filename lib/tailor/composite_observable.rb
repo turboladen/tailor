@@ -1,13 +1,13 @@
 class Tailor
   module CompositeObservable
     def self.define_observer(name)
-      define_method("add_#{name}_observer") do |observer, func|
+      define_method("add_#{name}_observer") do |observer|
         @notifiers = {} unless defined? @notifiers
         @notifiers[name] = {} unless @notifiers[name]
 
-        call_back = func || :update
+        call_back = "#{name}_update".to_sym
 
-        unless observer.respond_to? func
+        unless observer.respond_to? call_back
           raise NoMethodError, "observer does not respond to '#{call_back}'"
         end
 
@@ -32,8 +32,21 @@ class Tailor
       end
     end
 
+    define_observer :comma
+    define_observer :embexpr_beg
+    define_observer :embexpr_end
+    define_observer :ignored_nl
     define_observer :kw
+    define_observer :lbrace
+    define_observer :lbracket
+    define_observer :lparen
     define_observer :nl
+    define_observer :period
+    define_observer :rbrace
+    define_observer :rbracket
+    define_observer :rparen
+    define_observer :tstring_beg
+    define_observer :tstring_end
   end
 end
 

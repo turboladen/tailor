@@ -20,7 +20,7 @@ class Tailor
     include CompositeObservable
 
     attr_reader :indentation_tracker
-    attr_accessor :problems
+    attr_reader :problems
 
     # @param [String] file The string to lex, or name of the file to read
     #   and analyze.
@@ -40,10 +40,29 @@ class Tailor
 
       @indentation_ruler = IndentationRuler.new(@config[:indentation])
       @indentation_ruler.start
-      add_kw_observer(@indentation_ruler, :kw_update)
-      add_nl_observer(@indentation_ruler, :nl_update)
+      add_comma_observer @indentation_ruler
+      add_embexpr_beg_observer @indentation_ruler
+      add_embexpr_end_observer @indentation_ruler
+      add_ignored_nl_observer @indentation_ruler
+      add_kw_observer @indentation_ruler
+      add_lbrace_observer @indentation_ruler
+      add_lbracket_observer @indentation_ruler
+      add_lparen_observer @indentation_ruler
+      add_nl_observer @indentation_ruler
+      add_period_observer @indentation_ruler
+      add_rbrace_observer @indentation_ruler
+      add_rbracket_observer @indentation_ruler
+      add_rparen_observer @indentation_ruler
+      add_tstring_beg_observer @indentation_ruler
+      add_tstring_end_observer @indentation_ruler
 
       super @file_text
+    end
+
+    def problems
+      @problems += @indentation_ruler.problems
+
+      @problems
     end
 
     def on_backref(token)
@@ -60,9 +79,8 @@ class Tailor
       log "COMMA: #{token}"
       log "Line length: #{current_line_of_text.length}"
 
-      if column == current_line_of_text.length
-        @indentation_ruler.last_comma_statement_line = lineno
-      end
+      comma_changed
+      notify_comma_observers(current_line_of_text, lineno, column)
 
       super(token)
     end
@@ -95,13 +113,15 @@ class Tailor
     # Matches the { in an expression embedded in a string.
     def on_embexpr_beg(token)
       log "EMBEXPR_BEG: '#{token}'"
-      @embexpr_beg = true
+      embexpr_beg_changed
+      notify_embexpr_beg_observers
       super(token)
     end
 
     def on_embexpr_end(token)
       log "EMBEXPR_END: '#{token}'"
-      @embexpr_beg = false
+      embexpr_end_changed
+      notify_embexpr_end_observers
       super(token)
     end
 
@@ -138,7 +158,6 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
       log "IGNORED_NL"
-      current_line = LexedLine.new(super, lineno)
 
       if @config[:horizontal_spacing]
         if @config[:horizontal_spacing][:line_length]
@@ -148,86 +167,9 @@ class Tailor
         end
       end
 
-      @indentation_ruler.stop if @indentation_ruler.tstring_nesting.size > 0
-
-      if current_line.line_ends_with_op?
-        log "Line ends with op."
-
-        # Are we nested in a multi-line operation yet?
-        if @indentation_ruler.op_statement_nesting.empty?
-          @indentation_ruler.op_statement_nesting << lineno
-
-          if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
-            @in_keyword_plus_op = true
-          else
-            log "Increasing :next_line expectation due to multi-line operator statement."
-            @indentation_ruler.amount_to_change_next += 1
-          end
-
-        # If this line is a continuation of the last multi-line op statement
-        # then update the nesting line number with this line number.
-        else
-          @indentation_ruler.op_statement_nesting.pop
-          @indentation_ruler.op_statement_nesting << lineno
-        end
-      end
-
-      if @indentation_ruler.op_statement_nesting.empty? &&
-        @indentation_ruler.tstring_nesting.empty? &&
-        @indentation_ruler.paren_nesting.empty? &&
-        @indentation_ruler.brace_nesting.empty? &&
-        @indentation_ruler.bracket_nesting.empty?
-        if current_line.line_ends_with_comma?
-          if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
-            @in_keyword_plus_comma = true
-          elsif @indentation_ruler.last_comma_statement_line.nil?
-            log "Increasing :next_line expectation due to multi-line comma statement."
-            @indentation_ruler.amount_to_change_next += 1
-          end
-
-          @indentation_ruler.last_comma_statement_line = lineno
-          log "last_comma_statement_line: #{@indentation_ruler.last_comma_statement_line}"
-        end
-      end
-
-      if current_line.line_ends_with_period?
-        if current_line.contains_keyword_to_indent? && @modifier_in_line.nil?
-          @in_keyword_plus_period = true
-        elsif @indentation_ruler.last_period_statement_line.nil?
-          log "Increasing :next_line expectation due to multi-line period statement."
-          @indentation_ruler.amount_to_change_next += 1
-        end
-
-        @indentation_ruler.last_period_statement_line = lineno
-        log "last_period_statement_line: #{@indentation_ruler.last_period_statement_line}"
-      end
-
-      log "Amount to change next line: #{@indentation_ruler.amount_to_change_next}"
-      log "Amount to change this line: #{@indentation_ruler.amount_to_change_this}"
-      if @indentation_ruler.amount_to_change_next > 0
-        @indentation_ruler.increase_next_line
-      elsif @indentation_ruler.amount_to_change_next < 0
-        @indentation_ruler.decrease_next_line
-      end
-
-      if @indentation_ruler.amount_to_change_this < 0
-        @indentation_ruler.decrease_this_line
-      end
-
-      if not current_line.only_spaces?
-        @indentation_ruler.update_actual_indentation(current_line)
-
-        unless @indentation_ruler.valid_line?
-          @problems << Problem.new(:indentation, binding)
-        end
-      else
-        log "Line of only spaces.  Moving on."
-        return
-      end
-
-      @modifier_in_line = nil
-      # prep for next line
-      @indentation_ruler.transition_lines
+      current_line = LexedLine.new(super, lineno)
+      ignored_nl_changed
+      notify_ignored_nl_observers(current_line, lineno, column)
 
       super(token)
     end
@@ -250,39 +192,6 @@ class Tailor
         LexedLine.new(super, lineno).loop_with_do?,
         lineno)
 
-=begin
-      if KEYWORDS_TO_INDENT.include?(token)
-        log "Indent keyword found: '#{token}'."
-        @indent_keyword_line = lineno
-
-        if modifier_keyword?(token)
-          log "Found modifier in line: '#{token}'"
-          @modifier_in_line = token
-        elsif token == "do" && LexedLine.new(super, lineno).loop_with_do?
-          log "Found keyword loop using optional 'do'"
-        else
-          log "Keyword '#{token}' not used as a modifier."
-
-          if CONTINUATION_KEYWORDS.include? token
-            log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
-            @indentation_ruler.amount_to_change_this -= 1
-          else
-            log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
-            @indentation_ruler.amount_to_change_next += 1
-          end
-        end
-      end
-
-      if token == "end"
-        if not single_line_indent_statement?
-          log "End of not a single-line statement that needs indenting.  Decrease this line"
-          @indentation_ruler.amount_to_change_this -= 1
-        end
-
-        @indentation_ruler.amount_to_change_next -= 1
-      end
-=end
-
       super(token)
     end
 
@@ -297,8 +206,8 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbrace(token)
       log "LBRACE: '#{token}'"
-      @indentation_ruler.brace_nesting << lineno
-      @indentation_ruler.amount_to_change_next += 1
+      lbrace_changed
+      notify_lbrace_observers(lineno)
       super(token)
     end
 
@@ -307,15 +216,15 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbracket(token)
       log "LBRACKET: '#{token}'"
-      @indentation_ruler.bracket_nesting << lineno
-      @indentation_ruler.amount_to_change_next += 1
+      lbracket_changed
+      notify_lbracket_observers(lineno)
       super(token)
     end
 
     def on_lparen(token)
       log "LPAREN: '#{token}'"
-      @indentation_ruler.paren_nesting << lineno
-      @indentation_ruler.amount_to_change_next += 1
+      lparen_changed
+      notify_lparen_observers(lineno)
       super(token)
     end
 
@@ -323,7 +232,6 @@ class Tailor
     def on_nl(token)
       log "NL"
       current_line = LexedLine.new(super, lineno)
-      @indentation_ruler.update_actual_indentation(current_line)
 
       if @config[:horizontal_spacing]
         if @config[:horizontal_spacing][:line_length]
@@ -333,71 +241,8 @@ class Tailor
         end
       end
 
-      if not @indentation_ruler.op_statement_nesting.empty?
-        log "op nesting not empty: #{@indentation_ruler.op_statement_nesting}"
-
-        if @indentation_ruler.op_statement_nesting.last + 1 == lineno
-          log "End of multi-line op statement."
-
-          if @in_keyword_plus_op
-            log "@in_keyword_plus_op: #{@in_keyword_plus_op}"
-          else
-            @indentation_ruler.amount_to_change_next -= 1
-          end
-
-          @indentation_ruler.op_statement_nesting.clear
-        end
-      end
-
-      if !multiline_braces? && !multiline_brackets? && !multiline_parens?
-        if @indentation_ruler.last_comma_statement_line == (lineno - 1)
-          log "Last line of multi-line comma statement"
-          @indentation_ruler.last_comma_statement_line = nil
-
-          if @in_keyword_plus_comma
-            log "@in_keyword_plus_comma: #{@in_keyword_plus_comma}"
-          else
-            @indentation_ruler.amount_to_change_next -= 1
-          end
-        end
-      end
-
-      if @indentation_ruler.last_period_statement_line == (lineno - 1)
-        log "Last line of multi-line period statement"
-        @indentation_ruler.last_period_statement_line = nil
-
-        if @in_keyword_plus_period
-          log "@in_keyword_plus_period: #{@in_keyword_plus_period}"
-        else
-          @indentation_ruler.amount_to_change_next -= 1
-        end
-      end
-
-      log "Amount to change next line: #{@indentation_ruler.amount_to_change_next}"
-      log "Amount to change this line: #{@indentation_ruler.amount_to_change_this}"
-      if @indentation_ruler.amount_to_change_next > 0
-        @indentation_ruler.increase_next_line
-      elsif @indentation_ruler.amount_to_change_next < 0
-        @indentation_ruler.decrease_next_line
-      end
-
-      if @indentation_ruler.amount_to_change_this < 0
-        @indentation_ruler.decrease_this_line
-      end
-
-      # Check for problems
-      unless @indentation_ruler.end_of_multiline_string?(current_line)
-        unless @indentation_ruler.valid_line?
-          @problems << Problem.new(:indentation, binding)
-        end
-      end
-
-      # prep for next line
-      #@modifier_in_line = nil
-      @in_keyword_plus_op = false
-      @in_keyword_plus_comma = false
-      @in_keyword_plus_period = false
-      @indentation_ruler.transition_lines
+      nl_changed
+      notify_nl_observers(current_line, lineno, column)
 
       super(token)
     end
@@ -411,10 +256,8 @@ class Tailor
     def on_period(token)
       log "PERIOD: '#{token}'"
 
-      if column == current_line_of_text.length
-        log "Line length: #{current_line_of_text.length}"
-        @indentation_ruler.last_period_statement_line = lineno
-      end
+      period_changed
+      notify_period_observers(current_line_of_text.length, lineno, column)
 
       super(token)
     end
@@ -430,24 +273,10 @@ class Tailor
     def on_rbrace(token)
       log "RBRACE: '#{token}'"
 
-      if multiline_braces?
-        log "End of multiline braces!"
-        current_line = LexedLine.new(super, lineno)
+      current_line = LexedLine.new(super, lineno)
+      rbrace_changed
+      notify_rbrace_observers(current_line, lineno, column)
 
-        if r_event_without_content?(current_line)
-          @indentation_ruler.amount_to_change_this -= 1
-        end
-      end
-
-      @indentation_ruler.brace_nesting.pop
-
-      # Ripper won't match a closing } in #{} so we have to track if we're
-      # inside of one.  If we are, don't decrement then :next_line.
-      unless @embexpr_beg
-        @indentation_ruler.amount_to_change_next -= 1
-      end
-
-      @embexpr_beg = false
       super(token)
     end
 
@@ -457,17 +286,10 @@ class Tailor
     def on_rbracket(token)
       log "RBRACKET: '#{token}'"
 
-      if multiline_brackets?
-        log "End of multiline brackets!"
-        current_line = LexedLine.new(super, lineno)
+      current_line = LexedLine.new(super, lineno)
+      rbracket_changed
+      notify_rbracket_observers(current_line, lineno, column)
 
-        if r_event_without_content?(current_line)
-          @indentation_ruler.amount_to_change_this -= 1
-        end
-      end
-
-      @indentation_ruler.bracket_nesting.pop
-      @indentation_ruler.amount_to_change_next -= 1
       super(token)
     end
 
@@ -484,17 +306,9 @@ class Tailor
     def on_rparen(token)
       log "RPAREN: '#{token}'"
 
-      if multiline_parens?
-        log "End of multiline parens!"
-        current_line = LexedLine.new(super, lineno)
-
-        if r_event_without_content?(current_line)
-          @indentation_ruler.amount_to_change_this -= 1
-        end
-      end
-
-      @indentation_ruler.paren_nesting.pop
-      @indentation_ruler.amount_to_change_next -= 1
+      current_line = LexedLine.new(super, lineno)
+      rparen_changed
+      notify_rparen_observers(current_line, lineno, column)
 
       super(token)
     end
@@ -533,7 +347,8 @@ class Tailor
 
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
-      @indentation_ruler.tstring_nesting << lineno
+      tstring_beg_changed
+      notify_tstring_beg_observers(lineno)
       super(token)
     end
 
@@ -544,8 +359,8 @@ class Tailor
 
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
-      @indentation_ruler.tstring_nesting.pop
-      @indentation_ruler.start unless in_tstring?
+      tstring_end_changed
+      notify_tstring_end_observers
       super(token)
     end
 
@@ -614,42 +429,6 @@ class Tailor
     # @return [String] The current line of text.
     def current_line_of_text
       @file_text.split("\n").at(lineno - 1) || ''
-    end
-
-=begin
-    # Checks if the statement is a single line statement that needs indenting.
-    #
-    # @return [Boolean] True if +@indent_keyword_line+ is equal to the
-    #   {lineno} (where lineno is the currenly parsed line).
-    def single_line_indent_statement?
-      @indent_keyword_line == lineno
-    end
-=end
-
-    # @return [Boolean] +true+ if any non-space chars come before the current
-    #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
-    def r_event_without_content?(current_line)
-      current_line.first_non_space_element.first == [lineno, column]
-    end
-
-    def multiline_braces?
-      if @indentation_ruler.brace_nesting.empty?
-        false
-      else
-        @indentation_ruler.brace_nesting.last < lineno
-      end
-    end
-
-    def multiline_brackets?
-      @indentation_ruler.bracket_nesting.empty? ? false : (@indentation_ruler.bracket_nesting.last < lineno)
-    end
-
-    def multiline_parens?
-      @indentation_ruler.paren_nesting.empty? ? false : (@indentation_ruler.paren_nesting.last < lineno)
-    end
-
-    def in_tstring?
-      !@indentation_ruler.tstring_nesting.empty?
     end
 
     def line_too_long?
