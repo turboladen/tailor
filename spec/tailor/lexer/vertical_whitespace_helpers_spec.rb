@@ -1,15 +1,15 @@
 require_relative '../../spec_helper'
-require 'tailor/ruler/vertical_whitespace_helpers'
+require 'tailor/lexer/vertical_whitespace_helpers'
 
 class Thing
-  include Tailor::Ruler::VerticalWhitespaceHelpers
+  include Tailor::Lexer::VerticalWhitespaceHelpers
   def initialize
     @config = { vertical_spacing: { trailing_newlines: 10 } }
     @problems = []
   end
 end
 
-describe Tailor::Ruler::VerticalWhitespaceHelpers do
+describe Tailor::Lexer::VerticalWhitespaceHelpers do
   subject do
     t = Thing.new
     t.stub(:log)

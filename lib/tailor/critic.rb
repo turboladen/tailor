@@ -3,7 +3,7 @@ require 'yaml'
 require 'fileutils'
 require_relative 'runtime_error'
 require_relative 'logger'
-require_relative 'ruler'
+require_relative 'lexer'
 require_relative 'configuration'
 
 
@@ -21,9 +21,9 @@ class Tailor
     # @return [Hash] The Problems for that file.
     def check_file file
       log "<#{self.class}> Checking style of a single file: #{file}."
-      ruler = Tailor::Ruler.new(file, @configuration)
-      ruler.lex
-      problems[file] = ruler.problems
+      lexer = Tailor::Lexer.new(file, @configuration)
+      lexer.lex
+      problems[file] = lexer.problems
 
       { file => problems[file] }
     end

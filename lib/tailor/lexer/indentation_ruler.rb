@@ -2,7 +2,7 @@ require 'ripper'
 require_relative '../logger'
 
 class Tailor
-  class Ruler < Ripper::Lexer
+  class Lexer < Ripper::Lexer
     class IndentationRuler
       attr_reader :actual_indentation
 

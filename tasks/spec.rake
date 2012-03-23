@@ -8,9 +8,9 @@ namespace :spec do
     t.ruby_opts = %w(-w)
   end
 
-  desc "Run specs for Tailor::Ruler"
+  desc "Run specs for Tailor::Lexer"
   RSpec::Core::RakeTask.new(:lexer) do |t|
-    t.pattern = "./spec/tailor/ruler_spec.rb"
+    t.pattern = "./spec/tailor/lexer_spec.rb"
   end
 end
 

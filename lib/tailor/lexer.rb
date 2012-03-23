@@ -1,7 +1,7 @@
 require 'ripper'
 require_relative 'logger'
 require_relative 'problem'
-require_relative 'ruler/indentation_ruler'
+require_relative 'lexer/indentation_ruler'
 require_relative 'lexed_line'
 require_relative 'lexer_constants'
 
@@ -9,8 +9,8 @@ require_relative 'lexer_constants'
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
-  class Ruler < Ripper::Lexer
-    require_relative 'ruler/vertical_whitespace_helpers'
+  class Lexer < Ripper::Lexer
+    require_relative 'lexer/vertical_whitespace_helpers'
 
     include LexerConstants
     include VerticalWhitespaceHelpers

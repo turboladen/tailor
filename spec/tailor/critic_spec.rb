@@ -9,12 +9,12 @@ describe Tailor::Critic do
   subject { Tailor::Critic.new(configuration) }
 
   describe "#check_file" do
-    let(:lexer) { double "Ruler" }
+    let(:lexer) { double "Lexer" }
 
     it "lexes the file" do
       lexer.should_receive(:lex)
       lexer.stub(:problems)
-      Tailor::Ruler.should_receive(:new).and_return lexer
+      Tailor::Lexer.should_receive(:new).and_return lexer
       subject.stub_chain(:problems, :[]=)
       subject.stub_chain(:problems, :[])
 
@@ -25,7 +25,7 @@ describe Tailor::Critic do
       file_name = 'this_file.rb'
       lexer.stub(:lex)
       lexer.stub(:problems).and_return Array.new
-      Tailor::Ruler.stub(:new).and_return lexer
+      Tailor::Lexer.stub(:new).and_return lexer
       subject.problems.should_receive(:[]=).with(file_name, [])
 
       subject.check_file file_name

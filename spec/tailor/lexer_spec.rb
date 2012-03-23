@@ -1,21 +1,21 @@
 require 'fakefs/spec_helpers'
 require_relative '../spec_helper'
-require 'tailor/ruler'
+require 'tailor/lexer'
 
-describe Tailor::Ruler do
+describe Tailor::Lexer do
   let!(:file_text) { "" }
   let(:style) { {} }
   let(:indentation_ruler) { double "IndentationRuler" }
 
   subject do
-    r = Tailor::Ruler.new(file_text, style)
+    r = Tailor::Lexer.new(file_text, style)
     r.instance_variable_set(:@buf, [])
 
     r
   end
 
   before do
-    Tailor::Ruler.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
+    Tailor::Lexer.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
   end
 
   describe "#initialize" do
@@ -30,7 +30,7 @@ describe Tailor::Ruler do
         file = double "File"
         file.should_receive(:read).and_return file_text
         File.should_receive(:open).with("test", 'r').and_return file
-        Tailor::Ruler.new(file_name, style)
+        Tailor::Lexer.new(file_name, style)
       end
     end
 
@@ -39,7 +39,7 @@ describe Tailor::Ruler do
 
       it "doesn't try to open a file" do
         File.should_not_receive(:open)
-        Tailor::Ruler.new(text, style)
+        Tailor::Lexer.new(text, style)
       end
     end
   end

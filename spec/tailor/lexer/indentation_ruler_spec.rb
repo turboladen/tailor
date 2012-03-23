@@ -1,11 +1,11 @@
 require_relative '../../spec_helper'
-require 'tailor/ruler/indentation_ruler'
+require 'tailor/lexer/indentation_ruler'
 
-describe Tailor::Ruler::IndentationRuler do
+describe Tailor::Lexer::IndentationRuler do
   let!(:spaces) { 5 }
 
   subject do
-    Tailor::Ruler::IndentationRuler.new({ spaces: spaces })
+    Tailor::Lexer::IndentationRuler.new({ spaces: spaces })
   end
 
   describe "#initialize" do
