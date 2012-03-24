@@ -18,6 +18,7 @@ http://wiki.github.com/turboladen/tailor.
   * Horizontal spacing
     * Use of hard-tabs
     * Line length
+    * Trailing spaces at the end of lines
   * Vertical spacing
     * Trailing newlines (at the end of the file)
   * Indentation
@@ -25,8 +26,6 @@ http://wiki.github.com/turboladen/tailor.
     * Snake case class & module names
     * Camel case method names
   * Extra whitespace
-    * At the end of lines
-    * On empty lines
     * Around commas
     * Around open/closed parentheses
     * Around open/closed square brackets
