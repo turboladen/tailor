@@ -121,7 +121,9 @@ class Tailor
     # expectations.
     def stop
       if started?
-        log "Stopping indentation ruling.  Should be: #{should_be_at}; actual: #{@actual_indentation}"
+        msg = "Stopping indentation ruling.  Should be: #{should_be_at}; "
+        msg << "actual: #{@actual_indentation}"
+        log msg
       end
 
       @started = false
