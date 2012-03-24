@@ -130,6 +130,30 @@ describe Tailor::LexedLine do
       end
     end
   end
+  
+  describe "#does_line_end_with" do
+    let(:lexed_output) do
+      [
+        [[1, 0], :on_kw, "def"],
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "thing"],
+          [[1, 9], :on_sp, " "],
+          [[1, 10], :on_nl, "\n"]
+      ]
+    end
+
+    context "line ends with the event" do
+      it "returns true" do
+        subject.does_line_end_with(:on_sp).should be_true
+      end
+    end
+    
+    context "line does not even with event" do
+      it "returns false" do
+        subject.does_line_end_with(:on_kw).should be_false
+      end
+    end
+  end
 
   describe "#loop_with_do?" do
     context "line is 'while true do\\n'" do

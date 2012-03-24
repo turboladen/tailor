@@ -49,28 +49,20 @@ class Tailor
       end
     end
 
-    def does_line_ends_with(event)
-      lexed_line = self.dup
-      tokens_in_line = lexed_line.map { |e| e[1] }
-
-      until tokens_in_line.last != (:on_ignored_nl || :on_nl)
-        tokens_in_line.pop
-        lexed_line.pop
-      end
-
-      if tokens_in_line.last == event
-        true
-      else
+    def does_line_end_with(event)
+      if last_non_line_feed_event.first.empty?
         false
+      else
+        last_non_line_feed_event[1] == event
       end
     end
 
     def method_missing(meth)
       if meth.to_s =~ /^line_ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
-        does_line_ends_with(event)
+        does_line_end_with event
       else
-        super
+        super(meth)
       end
     end
 
@@ -107,13 +99,13 @@ class Tailor
     # @return [Array] The lexed event that represents the last event in the
     #   line that's not a +\n+.
     def last_non_line_feed_event
-      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last || []
+      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last || [[]]
     end
 
     # @return [Fixnum] The length of the line minus the +\n+.
     def line_length
       event = last_non_line_feed_event
-      return 0 if event.empty?
+      return 0 if event.first.empty?
 
       event.first.last + event.last.size
     end
