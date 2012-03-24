@@ -10,8 +10,10 @@ Feature: Indentation check on bad files with trailing newlines
       :spaces: 2
     :vertical_spacing:
       :trailing_newlines: 1
+    :horizontal_spacing:
+      :allow_trailing_spaces: true
     """
-    When I run `tailor --config testfile.yml <File>`
+    When I run `tailor -d --config testfile.yml <File>`
     Then the output should match /Total Problems.*1/
     And the exit status should be 1
 

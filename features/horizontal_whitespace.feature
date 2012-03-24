@@ -31,6 +31,7 @@ Feature: Horizontal spacing detection
     | h_spacing/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5        | 2     |
 
   @bad_files @long_lines
+
   Scenario Outline: Detect long lines
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:
@@ -53,6 +54,7 @@ Feature: Horizontal spacing detection
     | h_spacing/1/long_line_newline_at_82 | 1:81     | 1     |
 
   @good_files @long_lines
+
   Scenario Outline: Lines under long-line threshold
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:
@@ -62,6 +64,7 @@ Feature: Horizontal spacing detection
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
+        :allow_trailing_spaces: true
         :line_length: 80
     """
     When I run `tailor --debug --config testfile.yml <File>`
@@ -72,4 +75,28 @@ Feature: Horizontal spacing detection
     | File                                  |
     | h_spacing/ok/short_line_no_newline    |
     | h_spacing/ok/short_line_newline_at_81 |
+
+  @bad_files @trailing_spaces
+
+  Scenario Outline: Lines with trailing spaces
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*<Count>/
+    And the output should match /position:  <Position>/
+    And the exit status should be 1
+
+  Scenarios:
+    | File                                         | Count | Position |
+    | h_spacing/1/empty_line_with_spaces           | 1     | 1:2      |
+    | h_spacing/1/empty_line_with_spaces_in_method | 1     | 2:2      |
+    | h_spacing/1/trailing_spaces_on_def           | 1     | 1:10     |
 

@@ -96,6 +96,7 @@ class Tailor
         },
         horizontal_spacing: {
           allow_hard_tabs: false,
+          allow_trailing_spaces: false,
           line_length: 80
         }
       }

@@ -41,11 +41,27 @@ H_SPACING_2[:hard_tab_with_2_indented_spaces] =
   end
 end}
 
+#-------------------------------------------------------------------------------
 H_SPACING_1[:long_line_no_newline] =
   %Q{'#{'#' * 79}'}
 
 H_SPACING_1[:long_line_newline_at_82] =
   %Q{'#{'#' * 79}'
 }
+
+#-------------------------------------------------------------------------------
+H_SPACING_1[:empty_line_with_spaces] =
+  %Q{  }
+
+H_SPACING_1[:empty_line_with_spaces_in_method] =
+  %Q{def thing
+  
+  puts 'something'
+end}
+
+H_SPACING_1[:trailing_spaces_on_def] =
+  %Q{def thing 
+  puts 'something'
+end}
 
 

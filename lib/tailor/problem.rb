@@ -33,18 +33,20 @@ class Tailor
     # @return [String] The error message.
     def message(type)
       case type
+      when :hard_tab
+        "Hard tab found."
       when :indentation
         self[:column] = @options[:actual_indentation]
         msg = "Line is indented to #{@options[:actual_indentation]}, "
         msg << "but should be at #{@options[:should_be_at]}."
-      when :trailing_newlines
-        msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"
-        msg << " but should have #{@options[:should_have]}."
-      when :hard_tab
-        "Hard tab found."
       when :line_length
         msg = "Line is #{@options[:actual_length]} chars long, "
         msg << "but should be #{@options[:line_length]}."
+      when :trailing_newlines
+        msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"
+        msg << " but should have #{@options[:should_have]}."
+      when :trailing_spaces
+        "Line has #{@options[:actual_trailing_spaces]} trailing spaces."
       end
     end
   end
