@@ -44,58 +44,6 @@ describe Tailor::Lexer do
     end
   end
 
-  describe "#on_comma" do
-    context "column is the last in the line" do
-      let(:lineno) { 5 }
-      let(:column) { 10 }
-
-      before do
-        subject.stub(:column).and_return(column)
-        subject.stub(:lineno).and_return(lineno)
-        subject.stub_chain(:current_line_of_text, :length).and_return(column)
-      end
-
-      it "sets @indentation_ruler.last_comma_statement_line to lineno" do
-        indentation_ruler.should_receive(:last_comma_statement_line=).with lineno
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.on_comma(',')
-      end
-    end
-
-    context "column is NOT the last in the line" do
-      let(:lineno) { 5 }
-      let(:column) { 10 }
-
-      before do
-        subject.stub(:column).and_return(column)
-        subject.stub(:lineno).and_return(lineno)
-        subject.stub_chain(:current_line_of_text, :length).and_return(column - 1)
-      end
-
-      it "sets @indentation_ruler.last_comma_statement_line to lineno" do
-        indentation_ruler.should_not_receive(:last_comma_statement_line=)
-        subject.on_comma(',')
-      end
-    end
-  end
-
-  describe "#on_embexpr_beg" do
-    it "sets @embexpr_beg to true" do
-      subject.instance_variable_set(:@embexpr_beg, false)
-      subject.on_embexpr_beg('#{')
-      subject.instance_variable_get(:@embexpr_beg).should be_true
-    end
-  end
-
-
-  describe "#on_embexpr_end" do
-    it "sets @embexpr_beg to false" do
-      subject.instance_variable_set(:@embexpr_beg, true)
-      subject.on_embexpr_end('}')
-      subject.instance_variable_get(:@embexpr_beg).should be_false
-    end
-  end
-
   describe "#on_ignored_nl" do
     it "calls #current_line_lex" do
       pending

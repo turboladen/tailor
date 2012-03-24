@@ -1,11 +1,12 @@
-require_relative '../../spec_helper'
-require 'tailor/lexer/indentation_ruler'
+require_relative '../spec_helper'
+require 'tailor/indentation_ruler'
+require 'ripper'
 
-describe Tailor::Lexer::IndentationRuler do
+describe Tailor::IndentationRuler do
   let!(:spaces) { 5 }
 
   subject do
-    Tailor::Lexer::IndentationRuler.new({ spaces: spaces })
+    Tailor::IndentationRuler.new({ spaces: spaces })
   end
 
   describe "#initialize" do
@@ -236,6 +237,41 @@ describe Tailor::Lexer::IndentationRuler do
       it "returns true" do
         subject.end_of_multiline_string?(lexed_output).should be_false
       end
+    end
+  end
+
+  describe "#comma_update" do
+    context "column is the last in the line" do
+      it "sets @last_comma_statement_line to lineno" do
+        subject.comma_update(",", 100, 1)
+        subject.instance_variable_get(:@last_comma_statement_line).
+          should == 100
+      end
+    end
+
+    context "column is NOT the last in the line" do
+      it "does not set @last_comma_statement_line to lineno" do
+        subject.comma_update("text,", 100, 1)
+        subject.instance_variable_get(:@last_comma_statement_line).
+          should be_nil
+      end
+    end
+  end
+
+  describe "#embexpr_beg_update" do
+    it "sets @embexpr_beg to true" do
+      subject.instance_variable_set(:@embexpr_beg, false)
+      subject.embexpr_beg_update
+      subject.instance_variable_get(:@embexpr_beg).should be_true
+    end
+  end
+
+
+  describe "#embexpr_end_update" do
+    it "sets @embexpr_beg to false" do
+      subject.instance_variable_set(:@embexpr_beg, true)
+      subject.embexpr_end_update
+      subject.instance_variable_get(:@embexpr_beg).should be_false
     end
   end
 end
