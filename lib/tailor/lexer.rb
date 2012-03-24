@@ -4,7 +4,6 @@ require_relative 'problem'
 require_relative 'indentation_ruler'
 require_relative 'horizontal_spacing_ruler'
 require_relative 'lexed_line'
-require_relative 'lexer_constants'
 require_relative 'composite_observable'
 
 
@@ -19,7 +18,6 @@ class Tailor
     include LogSwitch::Mixin
     include CompositeObservable
 
-    attr_reader :indentation_tracker
     attr_reader :problems
 
     # @param [String] file The string to lex, or name of the file to read
