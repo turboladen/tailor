@@ -79,6 +79,20 @@ class Tailor
       end
     end
 
+    def set_up_line_transition
+      log "Amount to change next line: #{@amount_to_change_next}"
+      log "Amount to change this line: #{@amount_to_change_this}"
+      if @amount_to_change_next > 0
+        increase_next_line
+      elsif @amount_to_change_next < 0
+        decrease_next_line
+      end
+
+      if @amount_to_change_this < 0
+        decrease_this_line
+      end
+    end
+
     # Should be called just before moving to the next line.  This sets the
     # expectation set in +@proper_indentation[:next_line]+ to
     # +@proper_indentation[:this_line]+.
@@ -221,16 +235,17 @@ class Tailor
         log "last_period_statement_line: #{@last_period_statement_line}"
       end
 
-      log "Amount to change next line: #{@amount_to_change_next}"
-      log "Amount to change this line: #{@amount_to_change_this}"
-      if @amount_to_change_next > 0
-        increase_next_line
-      elsif @amount_to_change_next < 0
-        decrease_next_line
-      end
+      set_up_line_transition
 
-      if @amount_to_change_this < 0
-        decrease_this_line
+      if not current_lexed_line.only_spaces?
+        update_actual_indentation(current_lexed_line)
+
+        unless valid_line?
+          @problems << Problem.new(:indentation, binding)
+        end
+      else
+        log "Line of only spaces.  Moving on."
+        return
       end
 
       # prep for next line
@@ -255,7 +270,7 @@ class Tailor
             log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
             @amount_to_change_this -= 1
           else
-            log "Continuation keyword not found: '#{token}'.  Increasing indent expectation for next line."
+            log "Keyword '#{token}' is not a continuation keyword.  Increasing indent expectation for next line."
             @amount_to_change_next += 1
           end
         end
@@ -263,10 +278,11 @@ class Tailor
 
       if token == "end"
         if not single_line_indent_statement?(lineno)
-          log "End of not a single-line statement that needs indenting.  Decrease this line"
+          log "End of not a single-line statement that needs indenting.  Decrease this line."
           @amount_to_change_this -= 1
         end
 
+        log "Decreasing next due to keyword 'end'."
         @amount_to_change_next -= 1
       end
     end
@@ -331,17 +347,7 @@ class Tailor
         end
       end
 
-      log "Amount to change next line: #{@amount_to_change_next}"
-      log "Amount to change this line: #{@amount_to_change_this}"
-      if @amount_to_change_next > 0
-        increase_next_line
-      elsif @amount_to_change_next < 0
-        decrease_next_line
-      end
-
-      if @amount_to_change_this < 0
-        decrease_this_line
-      end
+      set_up_line_transition
 
       unless end_of_multiline_string?(current_lexed_line)
         unless valid_line?
