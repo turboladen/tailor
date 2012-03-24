@@ -46,6 +46,7 @@ class Tailor
     define_observer :rbrace
     define_observer :rbracket
     define_observer :rparen
+    define_observer :sp
     define_observer :tstring_beg
     define_observer :tstring_end
   end

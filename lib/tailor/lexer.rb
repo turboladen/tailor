@@ -56,6 +56,7 @@ class Tailor
       add_rbrace_observer @indentation_ruler
       add_rbracket_observer @indentation_ruler
       add_rparen_observer @indentation_ruler
+      add_sp_observer @h_spacing_ruler
       add_tstring_beg_observer @indentation_ruler
       add_tstring_end_observer @indentation_ruler
 
@@ -313,13 +314,8 @@ class Tailor
 
     def on_sp(token)
       log "SP: '#{token}'; size: #{token.size}"
-
-      unless @config[:horizontal_spacing][:allow_hard_tabs]
-        if token =~ /\t/
-          @problems << Problem.new(:hard_tab, lineno, column)
-        end
-      end
-
+      sp_changed
+      notify_sp_observers(token, lineno, column)
       super(token)
     end
 

@@ -21,6 +21,14 @@ class Tailor
       ignored_nl_update(current_lexed_line, lineno, column)
     end
 
+    def sp_update(token, lineno, column)
+      unless @config[:allow_hard_tabs]
+        if token =~ /\t/
+          @problems << Problem.new(:hard_tab, lineno, column)
+        end
+      end
+    end
+
     def line_too_long?(current_lexed_line)
       current_lexed_line.line_length > @config[:line_length]
     end
