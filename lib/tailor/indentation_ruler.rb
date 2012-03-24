@@ -136,8 +136,8 @@ class Tailor
     #
     # @param [Array] lexed_line_output The lexed output for the current line.
     def update_actual_indentation(lexed_line_output)
-      if end_of_multiline_string?(lexed_line_output)
-        log "Found end of multiline string."
+      if end_of_multi_line_string?(lexed_line_output)
+        log "Found end of multi-line string."
         return
       end
 
@@ -151,7 +151,7 @@ class Tailor
     # @param [Array] lexed_line_output The lexed output for the current line.
     # @return [Boolean] +true+ if the line contains a +:on_tstring_end+ and
     #   not a +:on_tstring_beg+.
-    def end_of_multiline_string?(lexed_line_output)
+    def end_of_multi_line_string?(lexed_line_output)
       lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
         lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
     end
@@ -321,9 +321,9 @@ class Tailor
         end
       end
 
-      if !multiline_braces?(lineno) &&
-        !multiline_brackets?(lineno) &&
-        !multiline_parens?(lineno)
+      if !multi_line_braces?(lineno) &&
+        !multi_line_brackets?(lineno) &&
+        !multi_line_parens?(lineno)
         if @last_comma_statement_line == (lineno - 1)
           log "Last line of multi-line comma statement"
           @last_comma_statement_line = nil
@@ -349,7 +349,7 @@ class Tailor
 
       set_up_line_transition
 
-      unless end_of_multiline_string?(current_lexed_line)
+      unless end_of_multi_line_string?(current_lexed_line)
         unless valid_line?
           @problems << Problem.new(:indentation, binding)
         end
@@ -369,22 +369,9 @@ class Tailor
       end
     end
 
-    def rparen_update(current_lexed_line, lineno, column)
-      if multiline_parens?(lineno)
-        log "End of multiline parens!"
-
-        if r_event_without_content?(current_lexed_line, lineno, column)
-          @amount_to_change_this -= 1
-        end
-      end
-
-      @paren_nesting.pop
-      @amount_to_change_next -= 1
-    end
-
     def rbrace_update(current_lexed_line, lineno, column)
-      if multiline_braces?(lineno)
-        log "End of multiline braces!"
+      if multi_line_braces?(lineno)
+        log "End of multi-line braces!"
 
         if r_event_without_content?(current_lexed_line, lineno, column)
           @amount_to_change_this -= 1
@@ -403,8 +390,8 @@ class Tailor
     end
 
     def rbracket_update(current_lexed_line, lineno, column)
-      if multiline_brackets?(lineno)
-        log "End of multiline brackets!"
+      if multi_line_brackets?(lineno)
+        log "End of multi-line brackets!"
 
         if r_event_without_content?(current_lexed_line, lineno, column)
           @amount_to_change_this -= 1
@@ -412,6 +399,19 @@ class Tailor
       end
 
       @bracket_nesting.pop
+      @amount_to_change_next -= 1
+    end
+
+    def rparen_update(current_lexed_line, lineno, column)
+      if multi_line_parens?(lineno)
+        log "End of multi-line parens!"
+
+        if r_event_without_content?(current_lexed_line, lineno, column)
+          @amount_to_change_this -= 1
+        end
+      end
+
+      @paren_nesting.pop
       @amount_to_change_next -= 1
     end
 
@@ -432,7 +432,7 @@ class Tailor
       @indent_keyword_line == lineno
     end
 
-    def multiline_braces?(lineno)
+    def multi_line_braces?(lineno)
       if @brace_nesting.empty?
         false
       else
@@ -440,11 +440,11 @@ class Tailor
       end
     end
 
-    def multiline_brackets?(lineno)
+    def multi_line_brackets?(lineno)
       @bracket_nesting.empty? ? false : (@bracket_nesting.last < lineno)
     end
 
-    def multiline_parens?(lineno)
+    def multi_line_parens?(lineno)
       @paren_nesting.empty? ? false : (@paren_nesting.last < lineno)
     end
 

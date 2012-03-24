@@ -120,6 +120,10 @@ describe Tailor::IndentationRuler do
     end
   end
 
+  describe "#set_up_line_transition" do
+    pending
+  end
+
   describe "#transition_lines" do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
@@ -191,7 +195,7 @@ describe Tailor::IndentationRuler do
       end
     end
 
-    context "when end of a multiline string" do
+    context "when end of a multi-line string" do
       let(:lexed_output) do
         [[[2, 11], :on_tstring_end, "}"], [[2, 12], :on_nl, "\n"]]
       end
@@ -204,28 +208,28 @@ describe Tailor::IndentationRuler do
     end
   end
 
-  describe "#end_of_multiline_string?" do
-    context "lexed output is from the end of a multiline % statement" do
+  describe "#end_of_multi-line_string?" do
+    context "lexed output is from the end of a multi-line % statement" do
       let(:lexed_output) do
         [[[2, 11], :on_tstring_end, "}"], [[2, 12], :on_nl, "\n"]]
       end
 
       it "returns true" do
-        subject.end_of_multiline_string?(lexed_output).should be_true
+        subject.end_of_multi_line_string?(lexed_output).should be_true
       end
     end
 
-    context "lexed output is not from the end of a multiline % statement" do
+    context "lexed output is not from the end of a multi-line % statement" do
       let(:lexed_output) do
         [[[2, 11], :on_comma, ","], [[2, 12], :on_nl, "\n"]]
       end
 
       it "returns true" do
-        subject.end_of_multiline_string?(lexed_output).should be_false
+        subject.end_of_multi_line_string?(lexed_output).should be_false
       end
     end
 
-    context "lexed output contains start AND end of a multiline % statement" do
+    context "lexed output contains start AND end of a multi-line % statement" do
       let(:lexed_output) do
         [
           [[1, 0], :on_tstring_beg, "%Q{"],
@@ -235,9 +239,13 @@ describe Tailor::IndentationRuler do
       end
 
       it "returns true" do
-        subject.end_of_multiline_string?(lexed_output).should be_false
+        subject.end_of_multi_line_string?(lexed_output).should be_false
       end
     end
+  end
+
+  describe "#valid_line?" do
+    pending
   end
 
   describe "#comma_update" do
@@ -273,5 +281,77 @@ describe Tailor::IndentationRuler do
       subject.embexpr_end_update
       subject.instance_variable_get(:@embexpr_beg).should be_false
     end
+  end
+
+  describe "#ignored_nl_update" do
+    pending
+  end
+
+  describe "#kw_update" do
+    pending
+  end
+
+  describe "#lbrace_update" do
+    pending
+  end
+
+  describe "#lbracket_update" do
+    pending
+  end
+
+  describe "#lparen_update" do
+    pending
+  end
+
+  describe "#nl_update" do
+    pending
+  end
+
+  describe "#period_update" do
+    pending
+  end
+
+  describe "#rbrace_update" do
+    pending
+  end
+
+  describe "#rbracket_update" do
+    pending
+  end
+
+  describe "#rparen_update" do
+    pending
+  end
+
+  describe "#tstring_beg_update" do
+    pending
+  end
+
+  describe "#tstring_end_update" do
+    pending
+  end
+
+  describe "#single_line_indent_statement?" do
+    pending
+  end
+
+  describe "#multi_line_braces?" do
+    pending
+  end
+
+  describe "#multi_line_brackets?" do
+    pending
+  end
+
+  describe "#multi_line_parens?" do
+    pending
+  end
+
+  describe "#in_tstring?" do
+    pending
+  end
+
+  describe "#r_event_without_content?" do
+    pending
   end
 end
