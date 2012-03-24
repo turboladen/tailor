@@ -1,5 +1,5 @@
 require_relative '../spec_helper'
-require 'tailor/indentation_ruler'
+require 'tailor/ruler/indentation_ruler'
 require 'ripper'
 
 describe Tailor::IndentationRuler do
