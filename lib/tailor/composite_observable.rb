@@ -35,6 +35,7 @@ class Tailor
     define_observer :comma
     define_observer :embexpr_beg
     define_observer :embexpr_end
+    define_observer :file
     define_observer :ignored_nl
     define_observer :kw
     define_observer :lbrace

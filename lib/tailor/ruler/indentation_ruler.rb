@@ -1,16 +1,13 @@
-require_relative 'logger'
-require_relative 'lexer_constants'
-require_relative 'lexed_line'
+require_relative '../ruler'
+require_relative '../lexer_constants'
+require_relative '../lexed_line'
 
 class Tailor
-  class IndentationRuler
+  class IndentationRuler < Tailor::Ruler
     include LexerConstants
 
-    attr_reader :problems
-
-    def initialize(indentation_config)
-      @config = indentation_config
-
+    def initialize(config)
+      super(config)
       @proper_indentation = {}
       log "Setting @proper_indentation[:this_line] to 0."
       @proper_indentation[:this_line] = 0
@@ -28,8 +25,6 @@ class Tailor
 
       @amount_to_change_next = 0
       @amount_to_change_this = 0
-
-      @problems = []
     end
 
     # @return [Fixnum] The indent level the file should currently be at.
@@ -241,7 +236,10 @@ class Tailor
         update_actual_indentation(current_lexed_line)
 
         unless valid_line?
-          @problems << Problem.new(:indentation, binding)
+          @problems << Problem.new(:indentation, lineno, column,
+            { actual_indentation: @actual_indentation,
+              should_be_at: should_be_at }
+          )
         end
       else
         log "Line of only spaces.  Moving on."
@@ -351,7 +349,10 @@ class Tailor
 
       unless end_of_multi_line_string?(current_lexed_line)
         unless valid_line?
-          @problems << Problem.new(:indentation, binding)
+          @problems << Problem.new(:indentation, lineno, column,
+            { actual_indentation: @actual_indentation,
+              should_be_at: should_be_at }
+          )
         end
       end
 

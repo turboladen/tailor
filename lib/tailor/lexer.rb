@@ -1,22 +1,21 @@
 require 'ripper'
+require_relative 'composite_observable'
+require_relative 'lexed_line'
+require_relative 'lexer_constants'
 require_relative 'logger'
 require_relative 'problem'
-require_relative 'indentation_ruler'
-require_relative 'horizontal_spacing_ruler'
-require_relative 'lexed_line'
-require_relative 'composite_observable'
+require_relative 'ruler/indentation_ruler'
+require_relative 'ruler/horizontal_spacing_ruler'
+require_relative 'ruler/vertical_spacing_ruler'
 
 
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
   class Lexer < Ripper::Lexer
-    require_relative 'lexer/vertical_whitespace_helpers'
-
-    include LexerConstants
-    include VerticalWhitespaceHelpers
-    include LogSwitch::Mixin
     include CompositeObservable
+    include LexerConstants
+    include LogSwitch::Mixin
 
     attr_reader :problems
 
@@ -34,19 +33,25 @@ class Tailor
       @problems = []
       @config = style
       log "@config: #{@config}"
-      @file_text = ensure_trailing_newline(@file_text)
 
+      @h_spacing_ruler = HorizontalSpacingRuler.
+        new(@config[:horizontal_spacing])
+      @v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
       @indentation_ruler = IndentationRuler.new(@config[:indentation])
       @indentation_ruler.start
+
+      add_file_observer @v_spacing_ruler
       add_comma_observer @indentation_ruler
       add_embexpr_beg_observer @indentation_ruler
       add_embexpr_end_observer @indentation_ruler
       add_ignored_nl_observer @indentation_ruler
+      add_ignored_nl_observer @h_spacing_ruler
       add_kw_observer @indentation_ruler
       add_lbrace_observer @indentation_ruler
       add_lbracket_observer @indentation_ruler
       add_lparen_observer @indentation_ruler
       add_nl_observer @indentation_ruler
+      add_nl_observer @h_spacing_ruler
       add_period_observer @indentation_ruler
       add_rbrace_observer @indentation_ruler
       add_rbracket_observer @indentation_ruler
@@ -54,11 +59,17 @@ class Tailor
       add_tstring_beg_observer @indentation_ruler
       add_tstring_end_observer @indentation_ruler
 
+      file_changed
+      notify_file_observers(count_trailing_newlines(@file_text))
+
+      @file_text = ensure_trailing_newline(@file_text)
       super @file_text
     end
 
     def problems
       @problems += @indentation_ruler.problems
+      @problems += @h_spacing_ruler.problems
+      @problems += @v_spacing_ruler.problems
 
       @problems
     end
@@ -157,14 +168,6 @@ class Tailor
     def on_ignored_nl(token)
       log "IGNORED_NL"
 
-      if @config[:horizontal_spacing]
-        if @config[:horizontal_spacing][:line_length]
-          if line_too_long?
-            @problems << Problem.new(:line_length, binding)
-          end
-        end
-      end
-
       current_line = LexedLine.new(super, lineno)
       ignored_nl_changed
       notify_ignored_nl_observers(current_line, lineno, column)
@@ -230,14 +233,6 @@ class Tailor
     def on_nl(token)
       log "NL"
       current_line = LexedLine.new(super, lineno)
-
-      if @config[:horizontal_spacing]
-        if @config[:horizontal_spacing][:line_length]
-          if line_too_long?
-            @problems << Problem.new(:line_length, binding)
-          end
-        end
-      end
 
       nl_changed
       notify_nl_observers(current_line, lineno, column)
@@ -321,7 +316,7 @@ class Tailor
 
       unless @config[:horizontal_spacing][:allow_hard_tabs]
         if token =~ /\t/
-          @problems << Problem.new(:hard_tab, binding)
+          @problems << Problem.new(:hard_tab, lineno, column)
         end
       end
 
@@ -429,8 +424,30 @@ class Tailor
       @file_text.split("\n").at(lineno - 1) || ''
     end
 
-    def line_too_long?
-      current_line_of_text.length > @config[:horizontal_spacing][:line_length]
+    # Counts the number of newlines at the end of the file.
+    #
+    # @param [String] text The file's text.
+    # @return [Fixnum] The number of \n at the end of the file.
+    def count_trailing_newlines(text)
+      if text.end_with? "\n"
+        count = 0
+
+        text.reverse.chars do |c|
+          if c == "\n"
+            count += 1
+          else
+            break
+          end
+        end
+
+        count
+      else
+        0
+      end
+    end
+
+    def ensure_trailing_newline(file_text)
+      count_trailing_newlines(file_text) > 0 ? file_text : (file_text + "\n")
     end
 
     #---------------------------------------------------------------------------

@@ -104,6 +104,20 @@ class Tailor
       end
     end
 
+    # @return [Array] The lexed event that represents the last event in the
+    #   line that's not a +\n+.
+    def last_non_line_feed_event
+      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last || []
+    end
+
+    # @return [Fixnum] The length of the line minus the +\n+.
+    def line_length
+      event = last_non_line_feed_event
+      return 0 if event.empty?
+
+      event.first.last + event.last.size
+    end
+
     #---------------------------------------------------------------------------
     # Privates!
     #---------------------------------------------------------------------------

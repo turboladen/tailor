@@ -9,9 +9,11 @@ class Tailor
 
     # @param [Symbol] type The problem type.
     # @param [Binding] binding The context that the problem was discovered in.
-    def initialize(type, binding)
+    def initialize(type, line, column, options={})
       @type = type
-      @binding = binding
+      @line = line
+      @column = column
+      @options = options
       set_values
       log "<#{self.class}> #{self[:line]}[#{self[:column]}]: ERROR[:#{self[:type]}] #{self[:message]}"
     end
@@ -19,8 +21,8 @@ class Tailor
     # Sets the standard values for the problem based on the type and binding.
     def set_values
       self[:type] = @type
-      self[:line] = @binding.eval("lineno")
-      self[:column] = @binding.eval("column")
+      self[:line] = @line
+      self[:column] = @column
       self[:message] = message(@type)
     end
 
@@ -32,14 +34,17 @@ class Tailor
     def message(type)
       case type
       when :indentation
-        self[:column] = @binding.eval('@actual_indentation')
-        "Line is indented to #{@binding.eval('@actual_indentation')}, but should be at #{@binding.eval('should_be_at')}"
+        self[:column] = @options[:actual_indentation]
+        msg = "Line is indented to #{@options[:actual_indentation]}, "
+        msg << "but should be at #{@options[:should_be_at]}."
       when :trailing_newlines
-        "File has #{@binding.eval('trailing_newline_count')} trailing newlines, but should have #{@binding.eval('@config[:vertical_spacing][:trailing_newlines]')}"
+        msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"
+        msg << " but should have #{@options[:should_have]}."
       when :hard_tab
         "Hard tab found."
       when :line_length
-        "Line is #{@binding.eval('current_line_of_text.length')} chars long, but should be #{@binding.eval('@config[:horizontal_spacing][:line_length]')}"
+        msg = "Line is #{@options[:actual_length]} chars long, "
+        msg << "but should be #{@options[:line_length]}."
       end
     end
   end
