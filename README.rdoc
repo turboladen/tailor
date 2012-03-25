@@ -20,13 +20,14 @@ http://wiki.github.com/turboladen/tailor.
     * Use of hard-tabs
     * Line length
     * Trailing spaces at the end of lines
+    * Spacing after commas
+    * Spacing before commas
   * Vertical spacing
     * Trailing newlines (at the end of the file)
   * Name cases
     * Snake case class & module names
     * Camel case method names
   * Extra whitespace
-    * Around commas
     * Around open/closed parentheses
     * Around open/closed square brackets
     * Around open/closed curly braces
