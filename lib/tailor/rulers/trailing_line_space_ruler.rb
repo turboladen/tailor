@@ -13,8 +13,7 @@ class Tailor
 
       def check_line_end_for_spaces(lexed_line, lineno, column)
         log "<#{self.class}> last event: #{lexed_line.last_non_line_feed_event}"
-
-        log lexed_line.line_ends_with_sp?
+        log "<#{self.class}> line ends with space: #{lexed_line.line_ends_with_sp?}"
 
         if lexed_line.line_ends_with_sp?
           log "<#{self.class}> Last event: #{lexed_line.last_non_line_feed_event}"

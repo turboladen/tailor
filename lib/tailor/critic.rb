@@ -60,8 +60,17 @@ class Tailor
           lexer.add_nl_observer(trailing_line_space_ruler)
         end
       end
+      
+      if @config[:vertical_spacing]
+        if @config[:vertical_spacing][:trailing_newlines]
+          trailing_newline_ruler = TrailingNewlineRuler.new(
+            @config[:vertical_spacing][:trailing_newlines]
+          )
+          v_spacing_ruler.add_child_ruler(trailing_newline_ruler)
+          lexer.add_file_observer(trailing_newline_ruler)
+        end
+      end
 
-      lexer.add_file_observer v_spacing_ruler
       lexer.add_comma_observer indentation_ruler
       lexer.add_embexpr_beg_observer indentation_ruler
       lexer.add_embexpr_end_observer indentation_ruler
@@ -81,7 +90,6 @@ class Tailor
       lexer.lex
       lexer.check_added_newline
 
-      log "linsdflk #{line_length_ruler.inspect}"
       problems[file] = ruler.problems
 
       { file => problems[file] }
