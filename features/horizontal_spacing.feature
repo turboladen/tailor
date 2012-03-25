@@ -30,7 +30,6 @@ Feature: Horizontal spacing detection
     | h_spacing/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5        | 2     |
 
   @bad_files @long_lines
-
   Scenario Outline: Detect long lines
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:

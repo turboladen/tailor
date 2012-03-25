@@ -43,6 +43,15 @@ class Tailor
           h_spacing_ruler.add_child_ruler(hard_tab_ruler)
           lexer.add_sp_observer(hard_tab_ruler)
         end
+        
+        if @config[:horizontal_spacing][:line_length]
+          line_length_ruler = LineLengthRuler.new(
+            @config[:horizontal_spacing][:line_length]
+          )
+          h_spacing_ruler.add_child_ruler(line_length_ruler)
+          lexer.add_ignored_nl_observer(line_length_ruler)
+          lexer.add_nl_observer(line_length_ruler)
+        end
       end
 
       lexer.add_file_observer v_spacing_ruler
@@ -67,7 +76,8 @@ class Tailor
       
       lexer.lex
       lexer.check_added_newline
-      
+
+      log "linsdflk #{line_length_ruler.inspect}"
       problems[file] = ruler.problems
 
       { file => problems[file] }
