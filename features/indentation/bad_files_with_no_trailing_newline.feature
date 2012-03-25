@@ -1,3 +1,4 @@
+@indentation
 Feature: Indentation check on bad fails without trailing newlines
 
   @bad_files
@@ -7,12 +8,11 @@ Feature: Indentation check on bad fails without trailing newlines
     """
     ---
     :style:
-      :indentation:
-        :spaces: 2
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
         :allow_trailing_spaces: true
+        :indent_spaces: 2
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*1/

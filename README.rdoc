@@ -16,12 +16,12 @@ http://wiki.github.com/turboladen/tailor.
   * A given file
 * Checks for:
   * Horizontal spacing
+    * Indentation
     * Use of hard-tabs
     * Line length
     * Trailing spaces at the end of lines
   * Vertical spacing
     * Trailing newlines (at the end of the file)
-  * Indentation
   * Name cases
     * Snake case class & module names
     * Camel case method names

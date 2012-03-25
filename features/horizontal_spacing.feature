@@ -9,12 +9,11 @@ Feature: Horizontal spacing detection
     """
     ---
     :style:
-      :indentation:
-        :spaces: 2
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
         :allow_hard_tabs: false
+        :indent_spaces: 2
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Count>/

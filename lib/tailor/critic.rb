@@ -30,18 +30,45 @@ class Tailor
       h_spacing_ruler = HorizontalSpacingRuler.
         new(@config[:horizontal_spacing])
       v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
-      indentation_ruler = IndentationRuler.new(@config[:indentation])
-      indentation_ruler.start
       
       ruler.add_child_ruler(h_spacing_ruler)
       ruler.add_child_ruler(v_spacing_ruler)
-      ruler.add_child_ruler(indentation_ruler)
 
       if @config[:horizontal_spacing]
         unless @config[:horizontal_spacing][:allow_hard_tabs]
           hard_tab_ruler = HardTabRuler.new
           h_spacing_ruler.add_child_ruler(hard_tab_ruler)
           lexer.add_sp_observer(hard_tab_ruler)
+        end
+
+        unless @config[:horizontal_spacing][:allow_trailing_spaces]
+          trailing_line_space_ruler = TrailingLineSpaceRuler.new
+          h_spacing_ruler.add_child_ruler(trailing_line_space_ruler)
+          lexer.add_ignored_nl_observer(trailing_line_space_ruler)
+          lexer.add_nl_observer(trailing_line_space_ruler)
+        end
+        
+        if @config[:horizontal_spacing][:indent_spaces]
+          indentation_ruler = IndentationRuler.new(
+            @config[:horizontal_spacing][:indent_spaces])
+          h_spacing_ruler.add_child_ruler(indentation_ruler)
+          lexer.add_comma_observer indentation_ruler
+          lexer.add_embexpr_beg_observer indentation_ruler
+          lexer.add_embexpr_end_observer indentation_ruler
+          lexer.add_ignored_nl_observer indentation_ruler
+          lexer.add_kw_observer indentation_ruler
+          lexer.add_lbrace_observer indentation_ruler
+          lexer.add_lbracket_observer indentation_ruler
+          lexer.add_lparen_observer indentation_ruler
+          lexer.add_nl_observer indentation_ruler
+          lexer.add_period_observer indentation_ruler
+          lexer.add_rbrace_observer indentation_ruler
+          lexer.add_rbracket_observer indentation_ruler
+          lexer.add_rparen_observer indentation_ruler
+          lexer.add_tstring_beg_observer indentation_ruler
+          lexer.add_tstring_end_observer indentation_ruler
+          
+          indentation_ruler.start
         end
         
         if @config[:horizontal_spacing][:line_length]
@@ -51,13 +78,6 @@ class Tailor
           h_spacing_ruler.add_child_ruler(line_length_ruler)
           lexer.add_ignored_nl_observer(line_length_ruler)
           lexer.add_nl_observer(line_length_ruler)
-        end
-        
-        unless @config[:horizontal_spacing][:allow_trailing_spaces]
-          trailing_line_space_ruler = TrailingLineSpaceRuler.new
-          h_spacing_ruler.add_child_ruler(trailing_line_space_ruler)
-          lexer.add_ignored_nl_observer(trailing_line_space_ruler)
-          lexer.add_nl_observer(trailing_line_space_ruler)
         end
       end
       
@@ -71,21 +91,6 @@ class Tailor
         end
       end
 
-      lexer.add_comma_observer indentation_ruler
-      lexer.add_embexpr_beg_observer indentation_ruler
-      lexer.add_embexpr_end_observer indentation_ruler
-      lexer.add_ignored_nl_observer indentation_ruler
-      lexer.add_kw_observer indentation_ruler
-      lexer.add_lbrace_observer indentation_ruler
-      lexer.add_lbracket_observer indentation_ruler
-      lexer.add_lparen_observer indentation_ruler
-      lexer.add_nl_observer indentation_ruler
-      lexer.add_period_observer indentation_ruler
-      lexer.add_rbrace_observer indentation_ruler
-      lexer.add_rbracket_observer indentation_ruler
-      lexer.add_rparen_observer indentation_ruler
-      lexer.add_tstring_beg_observer indentation_ruler
-      lexer.add_tstring_end_observer indentation_ruler
       
       lexer.lex
       lexer.check_added_newline

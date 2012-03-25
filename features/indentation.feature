@@ -8,12 +8,11 @@ Feature: Indentation check
     Given my configuration file "testfile.yml" looks like:
     """
     ---
-    :indentation:
-      :spaces: 2
     :vertical_spacing:
       :trailing_newlines: 1
     :horizontal_spacing:
       :allow_trailing_spaces: true
+      :indent_spaces: 2
     """
     When I successfully run `tailor --config testfile.yml ../../lib`
     Then the output should contain "problem count: 0"

@@ -88,15 +88,13 @@ class Tailor
 
     def default_style
       {
-        indentation: {
-          spaces: 2,
-        },
         vertical_spacing: {
           trailing_newlines: 1
         },
         horizontal_spacing: {
           allow_hard_tabs: false,
           allow_trailing_spaces: false,
+          indent_spaces: 2,
           line_length: 80
         }
       }

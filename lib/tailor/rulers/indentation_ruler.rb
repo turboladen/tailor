@@ -41,7 +41,7 @@ class Tailor
       # +@config[:spaces]+.
       def decrease_this_line
         if started?
-          @proper_indentation[:this_line] -= @config[:spaces]
+          @proper_indentation[:this_line] -= @config
 
           if @proper_indentation[:this_line] < 0
             @proper_indentation[:this_line] = 0
@@ -57,7 +57,7 @@ class Tailor
       # +@config[:spaces]+.
       def increase_next_line
         if started?
-          @proper_indentation[:next_line] += @config[:spaces]
+          @proper_indentation[:next_line] += @config
           log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
         else
           log "#increase_this_line called, but checking is stopped."
@@ -68,7 +68,7 @@ class Tailor
       # +@config[:spaces]+.
       def decrease_next_line
         if started?
-          @proper_indentation[:next_line] -= @config[:spaces]
+          @proper_indentation[:next_line] -= @config
           log "@proper_indentation[:next_line] = #{@proper_indentation[:next_line]}"
         else
           log "#decrease_next_line called, but checking is stopped."

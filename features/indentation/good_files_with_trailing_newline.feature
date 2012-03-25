@@ -1,18 +1,18 @@
+@indentation
 Feature: Indentation check on good files with trailing newlines
 
-  @trailing_newlines, @good_files
+  @trailing_newlines @good_files
   Scenario Outline: Don't detect problems on properly indented files with newlines at the end
     Given <File> exists with a newline at the end
     And my configuration file "testfile.yml" looks like:
     """
     ---
     :style:
-      :indentation:
-        :spaces: 2
       :vertical_spacing:
         :trailing_newlines: 1
       :horizontal_spacing:
         :allow_trailing_spaces: true
+        :indent_spaces: 2
     """
     When I successfully run `tailor -d --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
