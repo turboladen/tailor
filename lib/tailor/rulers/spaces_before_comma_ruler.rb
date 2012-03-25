@@ -16,6 +16,8 @@ class Tailor
         @comma_columns.each do |c|
           column_event = lexed_line.event_at(c)
           event_index = lexed_line.index(column_event)
+          next if event_index.nil?
+          
           previous_event = lexed_line.at(event_index - 1)
           actual_spaces = previous_event[1] != :on_sp ? 0 : previous_event.last.size
           

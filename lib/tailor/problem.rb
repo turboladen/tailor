@@ -43,10 +43,10 @@ class Tailor
         msg = "Line is #{@options[:actual_length]} chars long, "
         msg << "but should be #{@options[:line_length]}."
       when :spaces_after_comma
-        msg = "Line has #{@options[:actual_spaces]} after a comma, "
+        msg = "Line has #{@options[:actual_spaces]} spaces after a comma, "
         msg << "but should have #{@options[:should_have]}."
       when :spaces_before_comma
-        msg = "Line has #{@options[:actual_spaces]} before a comma, "
+        msg = "Line has #{@options[:actual_spaces]} spaces before a comma, "
         msg << "but should have #{@options[:should_have]}."
       when :trailing_newlines
         msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"

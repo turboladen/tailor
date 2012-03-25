@@ -77,6 +77,11 @@ H_SPACING_2[:two_spaces_after_comma_twice] =
 H_SPACING_OK[:space_after_comma_in_array] =
   %Q{[1, 2]}
 
+H_SPACING_OK[:trailing_comma] =
+  %Q{def thing(one, two,
+  three)
+end}
+
 #-------------------------------------------------------------------------------
 H_SPACING_1[:one_space_before_comma] =
   %Q{[1 ,2]}

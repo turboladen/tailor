@@ -16,7 +16,11 @@ class Tailor
         @comma_columns.each do |c|
           column_event = lexed_line.event_at(c)
           event_index = lexed_line.index(column_event)
+          next if event_index.nil?
+          
           next_event = lexed_line.at(event_index + 1)
+          return if lexed_line.line_ends_with_comma?
+          
           actual_spaces = next_event[1] != :on_sp ? 0 : next_event.last.size
           
           if actual_spaces != @config

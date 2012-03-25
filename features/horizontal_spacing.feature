@@ -150,4 +150,5 @@ Feature: Horizontal spacing detection
   Scenarios:
     | File                                    |
     | h_spacing/ok/space_after_comma_in_array |
+    | h_spacing/ok/trailing_comma             |
 
