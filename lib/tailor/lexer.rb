@@ -42,6 +42,7 @@ class Tailor
 
       add_file_observer @v_spacing_ruler
       add_comma_observer @indentation_ruler
+      add_comma_observer @h_spacing_ruler
       add_embexpr_beg_observer @indentation_ruler
       add_embexpr_end_observer @indentation_ruler
       add_ignored_nl_observer @indentation_ruler
@@ -89,8 +90,9 @@ class Tailor
       log "COMMA: #{token}"
       log "Line length: #{current_line_of_text.length}"
 
+      lexed_line = LexedLine.new(super, lineno)
       comma_changed
-      notify_comma_observers(current_line_of_text, lineno, column)
+      notify_comma_observers(lexed_line, current_line_of_text, lineno, column)
 
       super(token)
     end

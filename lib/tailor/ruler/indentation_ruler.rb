@@ -163,8 +163,9 @@ class Tailor
       end
     end
 
-    def comma_update(current_line_of_text, lineno, column)
-      if column == current_line_of_text.length
+    def comma_update(lexed_line, text_line, lineno, column)
+      if column == text_line.length
+        log "Line ends with comma."
         @last_comma_statement_line = lineno
       end
     end
@@ -209,6 +210,7 @@ class Tailor
         @bracket_nesting.empty?
         if current_lexed_line.line_ends_with_comma?
           if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            log "In keyword-plus-comma statement."
             @in_keyword_plus_comma = true
           elsif @last_comma_statement_line.nil?
             log "Increasing :next_line expectation due to multi-line comma statement."
