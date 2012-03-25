@@ -52,21 +52,25 @@ class Tailor
           lexer.add_ignored_nl_observer(line_length_ruler)
           lexer.add_nl_observer(line_length_ruler)
         end
+        
+        unless @config[:horizontal_spacing][:allow_trailing_spaces]
+          trailing_line_space_ruler = TrailingLineSpaceRuler.new
+          h_spacing_ruler.add_child_ruler(trailing_line_space_ruler)
+          lexer.add_ignored_nl_observer(trailing_line_space_ruler)
+          lexer.add_nl_observer(trailing_line_space_ruler)
+        end
       end
 
       lexer.add_file_observer v_spacing_ruler
       lexer.add_comma_observer indentation_ruler
-      lexer.add_comma_observer h_spacing_ruler
       lexer.add_embexpr_beg_observer indentation_ruler
       lexer.add_embexpr_end_observer indentation_ruler
       lexer.add_ignored_nl_observer indentation_ruler
-      lexer.add_ignored_nl_observer h_spacing_ruler
       lexer.add_kw_observer indentation_ruler
       lexer.add_lbrace_observer indentation_ruler
       lexer.add_lbracket_observer indentation_ruler
       lexer.add_lparen_observer indentation_ruler
       lexer.add_nl_observer indentation_ruler
-      lexer.add_nl_observer h_spacing_ruler
       lexer.add_period_observer indentation_ruler
       lexer.add_rbrace_observer indentation_ruler
       lexer.add_rbracket_observer indentation_ruler
