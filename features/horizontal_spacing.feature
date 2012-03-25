@@ -29,6 +29,7 @@ Feature: Horizontal spacing detection
     | h_spacing/2/hard_tab_with_2_indented_spaces | 3:0      | 3:5        | 2     |
 
   @bad_files @long_lines
+
   Scenario Outline: Detect long lines
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:
@@ -96,4 +97,52 @@ Feature: Horizontal spacing detection
     | h_spacing/1/empty_line_with_spaces           | 1     | 1:2      |
     | h_spacing/1/empty_line_with_spaces_in_method | 1     | 2:2      |
     | h_spacing/1/trailing_spaces_on_def           | 1     | 1:10     |
+
+  @bad_files @commas
+
+  Scenario Outline: Lines with bad comma spacing
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :spaces_after_comma: 1
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*<Count>/
+    And the output should match /position:  <Position>/
+    And the output should match /position:  <Position 2>/
+    And the exit status should be 1
+
+  Scenarios:
+    | File                                     | Count | Position | Position 2 |
+    | h_spacing/1/no_space_after_comma         | 1     | 1:3      |            |
+    | h_spacing/1/two_spaces_after_comma       | 1     | 1:3      |            |
+    | h_spacing/2/two_spaces_after_comma_twice | 2     | 1:3      | 1:7        |
+
+  @good_files @commas
+
+  Scenario Outline: Lines with good comma spacing
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :spaces_after_comma: 1
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*0/
+    And the exit status should be 0
+
+  Scenarios:
+    | File                                    |
+    | h_spacing/ok/space_after_comma_in_array |
 

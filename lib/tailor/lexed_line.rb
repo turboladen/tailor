@@ -109,6 +109,12 @@ class Tailor
 
       event.first.last + event.last.size
     end
+    
+    # @param [Fixnum] column Number of the column to get the event for.
+    # @return [Array] The event at the given column.
+    def event_at column
+      self.find { |e| e.first.last == column }
+    end
 
     #---------------------------------------------------------------------------
     # Privates!

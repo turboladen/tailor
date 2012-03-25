@@ -242,4 +242,20 @@ describe Tailor::LexedLine do
       end
     end
   end
+  
+  describe "#event_at" do
+    let(:lexed_output) { [[[1, 0], :on_sp, "     "]] }
+
+    context "self contains an event at the given column" do
+      it "returns that event" do
+        subject.event_at(0).should == lexed_output.first
+      end
+    end
+    
+    context "self does not contain an event at the given column" do
+      it "returns nil" do
+        subject.event_at(1234).should be_nil
+      end
+    end
+  end
 end

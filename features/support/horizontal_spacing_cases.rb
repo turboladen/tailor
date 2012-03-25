@@ -64,4 +64,15 @@ H_SPACING_1[:trailing_spaces_on_def] =
   puts 'something'
 end}
 
+#-------------------------------------------------------------------------------
+H_SPACING_1[:no_space_after_comma] =
+  %Q{[1,2]}
 
+H_SPACING_1[:two_spaces_after_comma] =
+  %Q{[1,  2]}
+
+H_SPACING_2[:two_spaces_after_comma_twice] =
+  %Q{[1,  2,  3]}
+
+H_SPACING_OK[:space_after_comma_in_array] =
+  %Q{[1, 2]}

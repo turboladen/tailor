@@ -164,7 +164,7 @@ class Tailor
         end
       end
 
-      def comma_update(lexed_line, text_line, lineno, column)
+      def comma_update(text_line, lineno, column)
         if column == text_line.length
           log "Line ends with comma."
           @last_comma_statement_line = lineno

@@ -42,6 +42,9 @@ class Tailor
       when :line_length
         msg = "Line is #{@options[:actual_length]} chars long, "
         msg << "but should be #{@options[:line_length]}."
+      when :spaces_after_comma
+        msg = "Line has #{@options[:actual_spaces]} after a comma, "
+        msg << "but should have #{@options[:should_have]}."
       when :trailing_newlines
         msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"
         msg << " but should have #{@options[:should_have]}."

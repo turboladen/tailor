@@ -55,9 +55,8 @@ class Tailor
       log "COMMA: #{token}"
       log "Line length: #{current_line_of_text.length}"
 
-      lexed_line = LexedLine.new(super, lineno)
       comma_changed
-      notify_comma_observers(lexed_line, current_line_of_text, lineno, column)
+      notify_comma_observers(current_line_of_text, lineno, column)
 
       super(token)
     end

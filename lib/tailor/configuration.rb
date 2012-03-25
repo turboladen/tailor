@@ -95,7 +95,8 @@ class Tailor
           allow_hard_tabs: false,
           allow_trailing_spaces: false,
           indent_spaces: 2,
-          line_length: 80
+          line_length: 80,
+          spaces_after_comma: 1
         }
       }
     end
