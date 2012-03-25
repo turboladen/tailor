@@ -89,6 +89,16 @@ class Tailor
           lexer.add_ignored_nl_observer(space_after_comma_ruler)
           lexer.add_nl_observer(space_after_comma_ruler)
         end
+
+        if @config[:horizontal_spacing][:spaces_before_comma]
+          space_before_comma_ruler = SpacesBeforeCommaRuler.new(
+            @config[:horizontal_spacing][:spaces_before_comma]
+          )
+          h_spacing_ruler.add_child_ruler(space_before_comma_ruler)
+          lexer.add_comma_observer(space_before_comma_ruler)
+          lexer.add_ignored_nl_observer(space_before_comma_ruler)
+          lexer.add_nl_observer(space_before_comma_ruler)
+        end
       end
       
       if @config[:vertical_spacing]

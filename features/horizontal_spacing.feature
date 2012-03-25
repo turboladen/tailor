@@ -111,6 +111,7 @@ Feature: Horizontal spacing detection
       :horizontal_spacing:
         :allow_trailing_spaces: false
         :spaces_after_comma: 1
+        :spaces_before_comma: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Count>/
@@ -119,10 +120,13 @@ Feature: Horizontal spacing detection
     And the exit status should be 1
 
   Scenarios:
-    | File                                     | Count | Position | Position 2 |
-    | h_spacing/1/no_space_after_comma         | 1     | 1:3      |            |
-    | h_spacing/1/two_spaces_after_comma       | 1     | 1:3      |            |
-    | h_spacing/2/two_spaces_after_comma_twice | 2     | 1:3      | 1:7        |
+    | File                                      | Count | Position | Position 2 |
+    | h_spacing/1/no_space_after_comma          | 1     | 1:3      |            |
+    | h_spacing/1/two_spaces_after_comma        | 1     | 1:3      |            |
+    | h_spacing/2/two_spaces_after_comma_twice  | 2     | 1:3      | 1:7        |
+    | h_spacing/1/one_space_before_comma        | 1     | 1:4      |            |
+    | h_spacing/1/two_spaces_before_comma       | 1     | 1:3      |            |
+    | h_spacing/2/two_spaces_before_comma_twice | 2     | 1:3      | 1:8        |
 
   @good_files @commas
 
@@ -137,6 +141,7 @@ Feature: Horizontal spacing detection
       :horizontal_spacing:
         :allow_trailing_spaces: false
         :spaces_after_comma: 1
+        :spaces_before_comma: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
