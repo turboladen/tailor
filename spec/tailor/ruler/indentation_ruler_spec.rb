@@ -1,5 +1,5 @@
 require_relative '../../spec_helper'
-require 'tailor/ruler/indentation_ruler'
+require 'tailor/rulers/indentation_ruler'
 require 'ripper'
 
 describe Tailor::IndentationRuler do
@@ -250,8 +250,15 @@ describe Tailor::IndentationRuler do
 
   describe "#comma_update" do
     context "column is the last in the line" do
+      let(:lexed_line) do
+        l = double "LexedLine"
+        l.stub(:line_ends_with_comma?).and_return true
+        
+        l
+      end
+      
       it "sets @last_comma_statement_line to lineno" do
-        subject.comma_update(",", 100, 1)
+        subject.comma_update(lexed_line, 100, 1)
         subject.instance_variable_get(:@last_comma_statement_line).
           should == 100
       end

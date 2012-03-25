@@ -5,14 +5,17 @@ require_relative 'runtime_error'
 require_relative 'logger'
 require_relative 'lexer'
 require_relative 'configuration'
+require_relative 'ruler'
+require_relative 'rulers'
 
 
 class Tailor
   class Critic
     include LogSwitch::Mixin
+    include Tailor::Rulers
 
     def initialize(configuration)
-      @configuration = configuration
+      @config = configuration
     end
 
     # Adds problems found from Lexing to the {problems} list.
@@ -21,13 +24,55 @@ class Tailor
     # @return [Hash] The Problems for that file.
     def check_file file
       log "<#{self.class}> Checking style of a single file: #{file}."
-      lexer = Tailor::Lexer.new(file, @configuration)
+      lexer = Tailor::Lexer.new(file)
+      
+      ruler = Ruler.new
+      h_spacing_ruler = HorizontalSpacingRuler.
+        new(@config[:horizontal_spacing])
+      v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
+      indentation_ruler = IndentationRuler.new(@config[:indentation])
+      indentation_ruler.start
+      
+      ruler.add_child_ruler(h_spacing_ruler)
+      ruler.add_child_ruler(v_spacing_ruler)
+      ruler.add_child_ruler(indentation_ruler)
+
+      if @config[:horizontal_spacing]
+        unless @config[:horizontal_spacing][:allow_hard_tabs]
+          hard_tab_ruler = HardTabRuler.new
+          h_spacing_ruler.add_child_ruler(hard_tab_ruler)
+          lexer.add_sp_observer(hard_tab_ruler)
+        end
+      end
+
+      lexer.add_file_observer v_spacing_ruler
+      lexer.add_comma_observer indentation_ruler
+      lexer.add_comma_observer h_spacing_ruler
+      lexer.add_embexpr_beg_observer indentation_ruler
+      lexer.add_embexpr_end_observer indentation_ruler
+      lexer.add_ignored_nl_observer indentation_ruler
+      lexer.add_ignored_nl_observer h_spacing_ruler
+      lexer.add_kw_observer indentation_ruler
+      lexer.add_lbrace_observer indentation_ruler
+      lexer.add_lbracket_observer indentation_ruler
+      lexer.add_lparen_observer indentation_ruler
+      lexer.add_nl_observer indentation_ruler
+      lexer.add_nl_observer h_spacing_ruler
+      lexer.add_period_observer indentation_ruler
+      lexer.add_rbrace_observer indentation_ruler
+      lexer.add_rbracket_observer indentation_ruler
+      lexer.add_rparen_observer indentation_ruler
+      lexer.add_tstring_beg_observer indentation_ruler
+      lexer.add_tstring_end_observer indentation_ruler
+      
       lexer.lex
-      problems[file] = lexer.problems
+      lexer.check_added_newline
+      
+      problems[file] = ruler.problems
 
       { file => problems[file] }
     end
-
+    
     # @todo This could delegate to Ruport (or something similar) for allowing
     #   output of different types.
     def print_report

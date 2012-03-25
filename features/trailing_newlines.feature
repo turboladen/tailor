@@ -11,7 +11,7 @@ Feature: Trailing newlines
         puts 'hi'
       end
       """
-    When I run `tailor .`
+    When I run `tailor -d .`
     Then the output should match /Total Problems.*1/
     And the output should contain "0 trailing newlines, but should have 1"
 
@@ -25,7 +25,7 @@ Feature: Trailing newlines
 
 
       """
-    When I run `tailor .`
+    When I run `tailor -d .`
     Then the output should match /Total Problems.*1/
     And the output should contain "2 trailing newlines, but should have 1"
 
@@ -38,5 +38,5 @@ Feature: Trailing newlines
       end
 
       """
-    When I run `tailor .`
+    When I run `tailor -d .`
     Then the output should match /Total Problems.*0/

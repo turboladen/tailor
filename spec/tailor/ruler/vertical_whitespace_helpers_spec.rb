@@ -1,5 +1,5 @@
 require_relative '../../spec_helper'
-require 'tailor/ruler/vertical_spacing_ruler'
+require 'tailor/rulers/vertical_spacing_ruler'
 
 describe Tailor::Lexer::VerticalWhitespaceHelpers do
   subject do

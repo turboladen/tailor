@@ -3,10 +3,6 @@ require_relative 'composite_observable'
 require_relative 'lexed_line'
 require_relative 'lexer_constants'
 require_relative 'logger'
-require_relative 'problem'
-require_relative 'ruler/indentation_ruler'
-require_relative 'ruler/horizontal_spacing_ruler'
-require_relative 'ruler/vertical_spacing_ruler'
 
 
 class Tailor
@@ -17,65 +13,34 @@ class Tailor
     include LexerConstants
     include LogSwitch::Mixin
 
-    attr_reader :problems
-
     # @param [String] file The string to lex, or name of the file to read
     #   and analyze.
-    def initialize(file, style)
-      if File.exists? file
+    def initialize(file)
+      @original_file_text = if File.exists? file
         @file_name = file
-        @file_text = File.open(@file_name, 'r').read
+        File.open(@file_name, 'r').read
       else
         @file_name = "<notafile>"
-        @file_text = file
+        file
       end
 
-      @problems = []
-      @config = style
-      log "@config: #{@config}"
-
-      @h_spacing_ruler = HorizontalSpacingRuler.
-        new(@config[:horizontal_spacing])
-      @v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
-      @indentation_ruler = IndentationRuler.new(@config[:indentation])
-      @indentation_ruler.start
-
-      add_file_observer @v_spacing_ruler
-      add_comma_observer @indentation_ruler
-      add_comma_observer @h_spacing_ruler
-      add_embexpr_beg_observer @indentation_ruler
-      add_embexpr_end_observer @indentation_ruler
-      add_ignored_nl_observer @indentation_ruler
-      add_ignored_nl_observer @h_spacing_ruler
-      add_kw_observer @indentation_ruler
-      add_lbrace_observer @indentation_ruler
-      add_lbracket_observer @indentation_ruler
-      add_lparen_observer @indentation_ruler
-      add_nl_observer @indentation_ruler
-      add_nl_observer @h_spacing_ruler
-      add_period_observer @indentation_ruler
-      add_rbrace_observer @indentation_ruler
-      add_rbracket_observer @indentation_ruler
-      add_rparen_observer @indentation_ruler
-      add_sp_observer @h_spacing_ruler
-      add_tstring_beg_observer @indentation_ruler
-      add_tstring_end_observer @indentation_ruler
-
-      file_changed
-      notify_file_observers(count_trailing_newlines(@file_text))
-
-      @file_text = ensure_trailing_newline(@file_text)
+      @file_text = ensure_trailing_newline(@original_file_text)
       super @file_text
+      
+      if @file_text != @original_file_text
+        @added_newline = true
+      else
+        @added_newline = false
+      end
     end
 
-    def problems
-      @problems += @indentation_ruler.problems
-      @problems += @h_spacing_ruler.problems
-      @problems += @v_spacing_ruler.problems
-
-      @problems
+    def check_added_newline
+      if @added_newline
+        file_changed
+        notify_file_observers(count_trailing_newlines(@original_file_text))
+      end
     end
-
+    
     def on_backref(token)
       log "BACKREF: '#{token}'"
       super(token)

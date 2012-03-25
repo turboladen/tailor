@@ -2,7 +2,7 @@ Feature: Horizontal spacing detection
   As a Ruby developer, I want to be able to detect horizontal spacing
   problems so that I can fix them.
 
-  @bad_files
+  @bad_files @hard_tabs
   Scenario Outline: Detect hard tabs
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:
@@ -22,7 +22,6 @@ Feature: Horizontal spacing detection
     And the output should match /position:  <Position 2>/
     And the exit status should be 1
 
-  @hard_tabs
   Scenarios: Hard tab
     | File                                        | Position | Position 2 | Count |
     | h_spacing/1/hard_tab                        | 2:0      |            | 1     |
