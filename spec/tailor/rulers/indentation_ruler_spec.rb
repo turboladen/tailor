@@ -2,11 +2,11 @@ require_relative '../../spec_helper'
 require 'tailor/rulers/indentation_ruler'
 require 'ripper'
 
-describe Tailor::IndentationRuler do
+describe Tailor::Rulers::IndentationRuler do
   let!(:spaces) { 5 }
 
   subject do
-    Tailor::IndentationRuler.new({ spaces: spaces })
+    Tailor::Rulers::IndentationRuler.new(spaces)
   end
 
   describe "#initialize" do
@@ -253,7 +253,7 @@ describe Tailor::IndentationRuler do
       let(:lexed_line) do
         l = double "LexedLine"
         l.stub(:line_ends_with_comma?).and_return true
-        
+        l.stub(:length).and_return 1
         l
       end
       
