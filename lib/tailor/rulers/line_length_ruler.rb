@@ -6,7 +6,7 @@ class Tailor
       def ignored_nl_update(lexed_line, lineno, column)
         check_line_length(lexed_line, lineno, column)
       end
-      
+
       def nl_update(lexed_line, lineno, column)
         ignored_nl_update(lexed_line, lineno, column)
       end
