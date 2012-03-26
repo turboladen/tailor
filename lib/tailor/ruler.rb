@@ -13,6 +13,7 @@ class Tailor
 
     def add_child_ruler(ruler)
       @child_rulers << ruler
+      log "Added child: #{ruler}"
     end
 
     def problems

@@ -122,6 +122,12 @@ class Tailor
           names_ruler.add_child_ruler(camel_case_method_ruler)
           lexer.add_ident_observer(camel_case_method_ruler)
         end
+        
+        unless @config[:names][:allow_screaming_snake_case_classes]
+          screaming_snake_case_class_ruler = ScreamingSnakeCaseClassRuler.new
+          names_ruler.add_child_ruler(screaming_snake_case_class_ruler)
+          lexer.add_const_observer(screaming_snake_case_class_ruler)
+        end
       end
       
       lexer.lex

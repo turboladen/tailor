@@ -97,7 +97,8 @@ class Tailor
           spaces_before_comma: 0
         },
         names: {
-          allow_camel_case_methods: false
+          allow_camel_case_methods: false,
+          allow_screaming_snake_case_classes: false
         },
         vertical_spacing: {
           trailing_newlines: 1

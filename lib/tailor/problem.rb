@@ -47,6 +47,8 @@ class Tailor
       when :line_length
         msg = "Line is #{@options[:actual_length]} chars long, "
         msg << "but should be #{@options[:should_be_at]}."
+      when :screaming_snake_case_class_name
+        "Screaming-snake-case class/module found."
       when :spaces_after_comma
         msg = "Line has #{@options[:actual_spaces]} spaces after a comma, "
         msg << "but should have #{@options[:should_have]}."

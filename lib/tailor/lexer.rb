@@ -70,6 +70,16 @@ class Tailor
       
       super(token)
     end
+    
+    def on_const(token)
+      log "CONST: '#{token}'"
+
+      lexed_line = LexedLine.new(super, lineno)
+      const_changed
+      notify_const_observers(token, lexed_line, lineno, column)
+      
+      super(token)
+    end
 
     def on_cvar(token)
       log "CVAR: '#{token}'"
