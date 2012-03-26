@@ -15,7 +15,9 @@ class Tailor
       @column = column
       @options = options
       set_values
-      log "<#{self.class}> #{self[:line]}[#{self[:column]}]: ERROR[:#{self[:type]}] #{self[:message]}"
+      msg = "<#{self.class}> #{self[:line]}[#{self[:column]}]: "
+      msg << "ERROR[:#{self[:type]}] #{self[:message]}"
+      log msg
     end
 
     # Sets the standard values for the problem based on the type and binding.
@@ -49,8 +51,8 @@ class Tailor
         msg = "Line has #{@options[:actual_spaces]} spaces before a comma, "
         msg << "but should have #{@options[:should_have]}."
       when :trailing_newlines
-        msg = "File has #{@options[:actual_trailing_newlines]} trailing newlines,"
-        msg << " but should have #{@options[:should_have]}."
+        msg = "File has #{@options[:actual_trailing_newlines]} trailing "
+        msg << "newlines, but should have #{@options[:should_have]}."
       when :trailing_spaces
         "Line has #{@options[:actual_trailing_spaces]} trailing spaces."
       end
