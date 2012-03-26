@@ -331,11 +331,28 @@ describe Tailor::Rulers::IndentationRuler do
   end
 
   describe "#tstring_beg_update" do
-    pending
+    it "calls #stop" do
+      subject.should_receive(:stop)
+      subject.tstring_beg_update 1
+    end
+    
+    it "adds the lineno to @tstring_nesting" do
+      subject.tstring_beg_update 1
+      subject.instance_variable_get(:@tstring_nesting).should == [1]
+    end
   end
 
   describe "#tstring_end_update" do
-    pending
+    it "calls #start" do
+      subject.should_receive(:start)
+      subject.tstring_end_update
+    end
+
+    it "removes the lineno to @tstring_nesting" do
+      subject.instance_variable_set(:@tstring_nesting, [1])
+      subject.tstring_end_update
+      subject.instance_variable_get(:@tstring_nesting).should be_empty
+    end
   end
 
   describe "#single_line_indent_statement?" do
