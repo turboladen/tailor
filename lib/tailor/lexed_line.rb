@@ -115,6 +115,16 @@ class Tailor
     def event_at column
       self.find { |e| e.first.last == column }
     end
+    
+    # Useful for inspecting events relevant to this one.
+    #
+    # @param [Fixnum] column Number of the column of which event to get the
+    #   index for.
+    # @return [Fixnum] The index within +self+ that the event is at.
+    def event_index column
+      column_event = self.event_at column
+      self.index(column_event)
+    end
 
     #---------------------------------------------------------------------------
     # Privates!

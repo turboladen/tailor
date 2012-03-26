@@ -21,8 +21,7 @@ class Tailor
 
       def check_spaces_before_comma(lexed_line, lineno)
         @comma_columns.each do |c|
-          column_event = lexed_line.event_at(c)
-          event_index = lexed_line.index(column_event)
+          event_index = lexed_line.event_index(c)
           if event_index.nil?
             log "Event index is nil.  Weird..."
             next

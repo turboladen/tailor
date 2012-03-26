@@ -258,4 +258,19 @@ describe Tailor::LexedLine do
       end
     end
   end
+  
+  describe "#event_index" do
+    let(:lexed_output) { [[[1, 0], :on_sp, "     "]] }
+    
+    context "#event_at returns nil" do
+      before { subject.stub(:event_at).and_return nil }
+      specify { subject.event_index(1234).should be_nil }
+    end
+    
+    context "#event_at returns a valid colunn" do
+      it "returns the event" do
+        subject.event_index(0).should be_zero
+      end
+    end
+  end
 end
