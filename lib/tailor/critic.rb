@@ -30,9 +30,11 @@ class Tailor
       h_spacing_ruler = HorizontalSpacingRuler.
         new(@config[:horizontal_spacing])
       v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
+      names_ruler = NamesRuler.new(@config[:names])
       
       ruler.add_child_ruler(h_spacing_ruler)
       ruler.add_child_ruler(v_spacing_ruler)
+      ruler.add_child_ruler(names_ruler)
 
       if @config[:horizontal_spacing]
         unless @config[:horizontal_spacing][:allow_hard_tabs]
@@ -114,6 +116,13 @@ class Tailor
         end
       end
 
+      if @config[:names]
+        unless @config[:names][:allow_camel_case_methods]
+          camel_case_method_ruler = CamelCaseMethodRuler.new
+          names_ruler.add_child_ruler(camel_case_method_ruler)
+          lexer.add_ident_observer(camel_case_method_ruler)
+        end
+      end
       
       lexer.lex
       lexer.check_added_newline

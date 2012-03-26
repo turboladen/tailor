@@ -10,7 +10,6 @@ class Tailor
       def check_hard_tab(token, lineno, column)
         if token =~ /\t/
           @problems << Problem.new(:hard_tab, lineno, column)
-          log "ERROR: Hard tab.  #{@problems.last[:message]}"
         end
       end
     end

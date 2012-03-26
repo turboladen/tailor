@@ -129,6 +129,9 @@ class Tailor
 
     def on_ident(token)
       log "IDENT: '#{token}'"
+      lexed_line = LexedLine.new(super, lineno)
+      ident_changed
+      notify_ident_observers(token, lexed_line, lineno, column)
       super(token)
     end
 

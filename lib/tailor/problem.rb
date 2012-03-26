@@ -1,4 +1,5 @@
 require_relative 'logger'
+require_relative 'runtime_error'
 
 class Tailor
 
@@ -35,6 +36,8 @@ class Tailor
     # @return [String] The error message.
     def message(type)
       case type
+      when :camel_case_method
+        "Camel-case method name found."
       when :hard_tab
         "Hard tab found."
       when :indentation
@@ -55,6 +58,9 @@ class Tailor
         msg << "newlines, but should have #{@options[:should_have]}."
       when :trailing_spaces
         "Line has #{@options[:actual_trailing_spaces]} trailing spaces."
+      else
+        raise Tailor::RuntimeError,
+          "Problem type '#{type}' doesn't exist."
       end
     end
   end

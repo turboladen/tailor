@@ -88,9 +88,6 @@ class Tailor
 
     def default_style
       {
-        vertical_spacing: {
-          trailing_newlines: 1
-        },
         horizontal_spacing: {
           allow_hard_tabs: false,
           allow_trailing_spaces: false,
@@ -98,6 +95,12 @@ class Tailor
           line_length: 80,
           spaces_after_comma: 1,
           spaces_before_comma: 0
+        },
+        names: {
+          allow_camel_case_methods: false
+        },
+        vertical_spacing: {
+          trailing_newlines: 1
         }
       }
     end
