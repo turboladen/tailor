@@ -29,6 +29,8 @@ class Tailor
               { actual_spaces: actual_spaces, should_have: @config })
           end
         end
+        
+        @comma_columns.clear
       end
 
       def ignored_nl_update(lexed_line, lineno, column)
