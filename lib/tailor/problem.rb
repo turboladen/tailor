@@ -41,7 +41,7 @@ class Tailor
         msg << "but should be at #{@options[:should_be_at]}."
       when :line_length
         msg = "Line is #{@options[:actual_length]} chars long, "
-        msg << "but should be #{@options[:line_length]}."
+        msg << "but should be #{@options[:should_be_at]}."
       when :spaces_after_comma
         msg = "Line has #{@options[:actual_spaces]} spaces after a comma, "
         msg << "but should have #{@options[:should_have]}."
