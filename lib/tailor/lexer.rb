@@ -26,7 +26,7 @@ class Tailor
 
       @file_text = ensure_trailing_newline(@original_file_text)
       super @file_text
-      
+
       if @file_text != @original_file_text
         @added_newline = true
       else
@@ -40,7 +40,7 @@ class Tailor
         notify_file_observers(count_trailing_newlines(@original_file_text))
       end
     end
-    
+
     def on_backref(token)
       log "BACKREF: '#{token}'"
       super(token)
@@ -63,21 +63,21 @@ class Tailor
 
     def on_comment(token)
       log "COMMENT: '#{token}'"
-      
+
       lexed_line = LexedLine.new(super, lineno)
       comment_changed
       notify_comment_observers(token, lexed_line, @file_text, lineno, column)
-      
+
       super(token)
     end
-    
+
     def on_const(token)
       log "CONST: '#{token}'"
 
       lexed_line = LexedLine.new(super, lineno)
       const_changed
       notify_const_observers(token, lexed_line, lineno, column)
-      
+
       super(token)
     end
 
@@ -370,7 +370,9 @@ class Tailor
         sexp_line = Ripper.sexp(line_of_text)
 
         if sexp_line.nil?
-          log "sexp line was nil.  Perhaps that line is part of a multi-line statement?"
+          msg = "sexp line was nil.  "
+          msg << "Perhaps that line is part of a multi-line statement?"
+          log msg
           log "Trying again with the last char removed from the line..."
           line_of_text.chop!
           sexp_line = Ripper.sexp(line_of_text)
@@ -388,7 +390,9 @@ class Tailor
           log "sexp_line.last.first: #{sexp_line.last.first}"
 
           begin
-            throw(:result, sexp_line.flatten.compact.any? { |s| s == MODIFIERS[token] })
+            throw(:result, sexp_line.flatten.compact.any? do |s|
+              s == MODIFIERS[token]
+            end)
           rescue NoMethodError
           end
         end

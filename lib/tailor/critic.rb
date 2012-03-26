@@ -25,13 +25,13 @@ class Tailor
     def check_file file
       log "<#{self.class}> Checking style of a single file: #{file}."
       lexer = Tailor::Lexer.new(file)
-      
+
       ruler = Ruler.new
       h_spacing_ruler = HorizontalSpacingRuler.
         new(@config[:horizontal_spacing])
       v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
       names_ruler = NamesRuler.new(@config[:names])
-      
+
       ruler.add_child_ruler(h_spacing_ruler)
       ruler.add_child_ruler(v_spacing_ruler)
       ruler.add_child_ruler(names_ruler)
@@ -49,7 +49,7 @@ class Tailor
           lexer.add_ignored_nl_observer(trailing_line_space_ruler)
           lexer.add_nl_observer(trailing_line_space_ruler)
         end
-        
+
         if @config[:horizontal_spacing][:indent_spaces]
           indentation_ruler = IndentationRuler.new(
             @config[:horizontal_spacing][:indent_spaces])
@@ -70,10 +70,10 @@ class Tailor
           lexer.add_rparen_observer indentation_ruler
           lexer.add_tstring_beg_observer indentation_ruler
           lexer.add_tstring_end_observer indentation_ruler
-          
+
           indentation_ruler.start
         end
-        
+
         if @config[:horizontal_spacing][:line_length]
           line_length_ruler = LineLengthRuler.new(
             @config[:horizontal_spacing][:line_length]
@@ -82,7 +82,7 @@ class Tailor
           lexer.add_ignored_nl_observer(line_length_ruler)
           lexer.add_nl_observer(line_length_ruler)
         end
-        
+
         if @config[:horizontal_spacing][:spaces_after_comma]
           space_after_comma_ruler = SpacesAfterCommaRuler.new(
             @config[:horizontal_spacing][:spaces_after_comma]
@@ -105,7 +105,7 @@ class Tailor
           lexer.add_nl_observer(space_before_comma_ruler)
         end
       end
-      
+
       if @config[:vertical_spacing]
         if @config[:vertical_spacing][:trailing_newlines]
           trailing_newline_ruler = TrailingNewlineRuler.new(
@@ -122,14 +122,14 @@ class Tailor
           names_ruler.add_child_ruler(camel_case_method_ruler)
           lexer.add_ident_observer(camel_case_method_ruler)
         end
-        
+
         unless @config[:names][:allow_screaming_snake_case_classes]
           screaming_snake_case_class_ruler = ScreamingSnakeCaseClassRuler.new
           names_ruler.add_child_ruler(screaming_snake_case_class_ruler)
           lexer.add_const_observer(screaming_snake_case_class_ruler)
         end
       end
-      
+
       lexer.lex
       lexer.check_added_newline
 
@@ -137,7 +137,7 @@ class Tailor
 
       { file => problems[file] }
     end
-    
+
     # @todo This could delegate to Ruport (or something similar) for allowing
     #   output of different types.
     def print_report

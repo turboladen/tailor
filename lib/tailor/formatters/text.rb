@@ -14,7 +14,7 @@ class Tailor
         file = problems.keys.first
         problem_list = problems.values.first
 
-        message = "#-------------------------------------------------------------------------------\n"
+        message = "##{'-' * 79}\n"
         if defined? Term::ANSIColor
           message << "# #{'File:'.underscore}\n"
         else
@@ -33,7 +33,9 @@ class Tailor
             '<EOF>'
           else
             if defined? Term::ANSIColor
-              "#{problem[:line].to_s.red.bold}:#{problem[:column].to_s.red.bold}"
+              msg = "#{problem[:line].to_s.red.bold}:"
+              msg << "#{problem[:column].to_s.red.bold}"
+              msg
             else
               "#{problem[:line]}:#{problem[:column]}"
             end

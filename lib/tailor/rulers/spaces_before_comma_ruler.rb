@@ -11,7 +11,7 @@ class Tailor
       def comma_update(text_line, lineno, column)
         @comma_columns << column
       end
-      
+
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
           log "Found comment with trailing newline."

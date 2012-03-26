@@ -30,7 +30,7 @@ class Tailor
       user_config_file = File.expand_path(config_file)
 
       config = if File.exists? user_config_file
-        log "<#{self.class}> Loading configuration from file: #{user_config_file}"
+        log "<#{self.class}> Loading config from file: #{user_config_file}"
         YAML.load_file user_config_file
       end
 

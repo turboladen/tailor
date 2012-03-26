@@ -19,7 +19,8 @@ class Tailor
             require_relative '../../ext/string_ext'
           end
 
-          o.on('-f', '--config-file FILE', "Use a specific config file") do |config|
+          o.on('-f', '--config-file FILE',
+            "Use a specific config file") do |config|
             options[:config_file] = config
           end
 
@@ -29,7 +30,9 @@ class Tailor
 
           o.on('', '--create-config', 'Create a new ~/.tailorrc') do
             if create_config
-              $stdout.puts "Your new tailorrc file was created at #{Tailor::Configuration::DEFAULT_RC_FILE}"
+              msg = "Your new tailorrc file was created at "
+              msg << "#{Tailor::Configuration::DEFAULT_RC_FILE}"
+              $stdout.puts msg
               exit
             else
               $stderr.puts "Creation of ~/.tailorrc failed."
@@ -109,9 +112,11 @@ class Tailor
           $stderr.puts "Can't create new config; it already exists."
           false
         else
-          erb_file = File.expand_path(File.dirname(__FILE__) + '/../../../tailor_config.yaml.erb')
+          erb_file = File.expand_path(
+            File.dirname(__FILE__) + '/../../../tailor_config.yaml.erb')
           default_config_file = ERB.new(File.read(erb_file)).result(binding)
-          File.write(Tailor::Configuration::DEFAULT_RC_FILE, default_config_file)
+          File.write(
+            Tailor::Configuration::DEFAULT_RC_FILE, default_config_file)
         end
       end
     end

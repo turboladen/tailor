@@ -52,7 +52,7 @@ class Tailor
 
     # @return [Boolean]
     def does_line_end_with(event, exclude_newlines=true)
-      if exclude_newlines 
+      if exclude_newlines
         if last_non_line_feed_event.first.empty?
           false
         else
@@ -66,7 +66,7 @@ class Tailor
     def method_missing(meth, *args, &blk)
       if meth.to_s =~ /^line_ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
-        
+
         if event == :on_ignored_nl || event == :on_nl
           does_line_end_with(event, false)
         else
@@ -110,7 +110,8 @@ class Tailor
     # @return [Array] The lexed event that represents the last event in the
     #   line that's not a +\n+.
     def last_non_line_feed_event
-      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last || [[]]
+      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last ||
+        [[]]
     end
 
     # @return [Fixnum] The length of the line minus the +\n+.
@@ -120,13 +121,13 @@ class Tailor
 
       event.first.last + event.last.size
     end
-    
+
     # @param [Fixnum] column Number of the column to get the event for.
     # @return [Array] The event at the given column.
     def event_at column
       self.find { |e| e.first.last == column }
     end
-    
+
     # Useful for inspecting events relevant to this one.
     #
     # @param [Fixnum] column Number of the column of which event to get the
@@ -136,12 +137,12 @@ class Tailor
       column_event = self.event_at column
       self.index(column_event)
     end
-    
+
     # @return [String] The string reassembled from self's tokens.
     def to_s
       self.inject('') { |new_string, e| new_string << e.last }
     end
-    
+
     # If a trailing comment exists in the line, remove it and the spaces that
     # come before it.  This is necessary, as {Ripper} doesn't trigger an event
     # for the end of the line when the line ends with a comment.  Without this
@@ -158,24 +159,24 @@ class Tailor
       lineno = self.last.first.first
       column = self.last.first.last
       log "Removing comment event at #{lineno}:#{column}."
-      
+
       comment_index = event_index(column)
       self.delete_at(comment_index)
       self.insert(comment_index, [[lineno, column], :on_nl, "\n"])
       log "Inserted newline for comma; self is now #{self.inspect}"
-      
+
       if self.at(comment_index - 1)[1] == :on_sp
         self.delete_at(comment_index - 1)
       end
-      
+
       new_text = self.to_s
       log "New line as text: '#{new_text}'"
-      
+
       file_lines.delete_at(lineno - 1)
       file_lines.insert(lineno - 1, new_text)
       file_lines = file_lines.join("\n")
       log "new file lines: #{file_lines}"
-      
+
       ripped_output = ::Ripper.lex(file_lines)
       log "New ripped output: #{ripped_output}"
       LexedLine.new(ripped_output, lineno)

@@ -11,7 +11,7 @@ class Tailor
       def comma_update(text_line, lineno, column)
         @comma_columns << column
       end
-      
+
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
           log "Found comment with trailing newline."
@@ -26,7 +26,7 @@ class Tailor
       def nl_update(lexed_line, lineno, column)
         ignored_nl_update(lexed_line, lineno, column)
       end
-      
+
       def check_spaces_after_comma(lexed_line, lineno)
         log "Commas found at: #{@comma_columns}"
 
@@ -42,12 +42,12 @@ class Tailor
             log "Looks like there is no next event (this is last in the line)."
             break
           end
-          
+
           if next_event[1] == :on_nl || next_event[1] == :on_ignored_nl
             log "Next event is a newline."
             break
           end
-          
+
           second_next_event = lexed_line.at(event_index + 2)
           if second_next_event[1] == :on_comment
             log "Event + 2 is a comment."
