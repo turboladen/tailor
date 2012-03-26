@@ -86,6 +86,7 @@ class Tailor
           )
           h_spacing_ruler.add_child_ruler(space_after_comma_ruler)
           lexer.add_comma_observer(space_after_comma_ruler)
+          lexer.add_comment_observer(space_after_comma_ruler)
           lexer.add_ignored_nl_observer(space_after_comma_ruler)
           lexer.add_nl_observer(space_after_comma_ruler)
         end
@@ -96,6 +97,7 @@ class Tailor
           )
           h_spacing_ruler.add_child_ruler(space_before_comma_ruler)
           lexer.add_comma_observer(space_before_comma_ruler)
+          lexer.add_comment_observer(space_before_comma_ruler)
           lexer.add_ignored_nl_observer(space_before_comma_ruler)
           lexer.add_nl_observer(space_before_comma_ruler)
         end

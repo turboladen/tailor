@@ -11,12 +11,22 @@ class Tailor
       def comma_update(text_line, lineno, column)
         @comma_columns << column
       end
+      
+      def comment_update(token, lexed_line, lineno, column)
+        if token =~ /\n$/
+          log "Found comment with trailing newline."
+          ignored_nl_update(lexed_line, lineno, column)
+        end
+      end
 
       def check_spaces_before_comma(lexed_line, lineno)
         @comma_columns.each do |c|
           column_event = lexed_line.event_at(c)
           event_index = lexed_line.index(column_event)
-          next if event_index.nil?
+          if event_index.nil?
+            log "Event index is nil.  Weird..."
+            next
+          end
 
           previous_event = lexed_line.at(event_index - 1)
           actual_spaces = if previous_event[1] != :on_sp

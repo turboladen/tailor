@@ -74,11 +74,22 @@ H_SPACING_1[:two_spaces_after_comma] =
 H_SPACING_2[:two_spaces_after_comma_twice] =
   %Q{[1,  2,  3]}
 
+H_SPACING_2[:spaces_before_with_trailing_comments] =
+  %Q{[
+  1 ,   # Comment!
+  2 ,   # Another comment.
+}
+
 H_SPACING_OK[:space_after_comma_in_array] =
   %Q{[1, 2]}
 
 H_SPACING_OK[:trailing_comma] =
   %Q{def thing(one, two,
+  three)
+end}
+
+H_SPACING_OK[:trailing_comma_with_trailing_comment] =
+  %Q{def thing(one, two,  # Comment!
   three)
 end}
 

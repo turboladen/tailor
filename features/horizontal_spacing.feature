@@ -120,13 +120,14 @@ Feature: Horizontal spacing detection
     And the exit status should be 1
 
   Scenarios:
-    | File                                      | Count | Position | Position 2 |
-    | h_spacing/1/no_space_after_comma          | 1     | 1:3      |            |
-    | h_spacing/1/two_spaces_after_comma        | 1     | 1:3      |            |
-    | h_spacing/2/two_spaces_after_comma_twice  | 2     | 1:3      | 1:7        |
-    | h_spacing/1/one_space_before_comma        | 1     | 1:4      |            |
-    | h_spacing/1/two_spaces_before_comma       | 1     | 1:3      |            |
-    | h_spacing/2/two_spaces_before_comma_twice | 2     | 1:3      | 1:8        |
+    | File                                             | Count | Position | Position 2 |
+    | h_spacing/1/no_space_after_comma                 | 1     | 1:3      |            |
+    | h_spacing/1/two_spaces_after_comma               | 1     | 1:3      |            |
+    | h_spacing/2/two_spaces_after_comma_twice         | 2     | 1:3      | 1:7        |
+    | h_spacing/1/one_space_before_comma               | 1     | 1:4      |            |
+    | h_spacing/1/two_spaces_before_comma              | 1     | 1:3      |            |
+    | h_spacing/2/two_spaces_before_comma_twice        | 2     | 1:3      | 1:8        |
+    | h_spacing/2/spaces_before_with_trailing_comments | 2     | 2:3      | 3:3        |
 
   @good_files @commas
 
@@ -148,7 +149,8 @@ Feature: Horizontal spacing detection
     And the exit status should be 0
 
   Scenarios:
-    | File                                    |
-    | h_spacing/ok/space_after_comma_in_array |
-    | h_spacing/ok/trailing_comma             |
+    | File                                              |
+    | h_spacing/ok/space_after_comma_in_array           |
+    | h_spacing/ok/trailing_comma                       |
+    | h_spacing/ok/trailing_comma_with_trailing_comment |
 

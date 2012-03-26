@@ -63,6 +63,11 @@ class Tailor
 
     def on_comment(token)
       log "COMMENT: '#{token}'"
+      
+      lexed_line = LexedLine.new(super, lineno)
+      comment_changed
+      notify_comment_observers(token, lexed_line, lineno, column)
+      
       super(token)
     end
 
