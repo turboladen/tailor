@@ -119,7 +119,7 @@ class Tailor
       #
       # @return [Boolean] +true+ if it's started; +false+ if not.
       def started?
-        @started
+        @started == true
       end
 
       # Stops the process of increasing/decreasing line indentation
@@ -442,6 +442,7 @@ class Tailor
 
       def tstring_beg_update(lineno)
         @tstring_nesting << lineno
+        stop
       end
 
       def tstring_end_update
