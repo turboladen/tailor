@@ -10,8 +10,8 @@ describe Tailor::IndentationRuler do
   end
 
   describe "#initialize" do
-    it "sets @proper_indentation to an Hash with :this_line and :next_line keys = 0" do
-      proper_indentation = subject.instance_variable_get(:@proper_indentation)
+    it "sets @proper to an Hash with :this_line and :next_line keys = 0" do
+      proper_indentation = subject.instance_variable_get(:@proper)
       proper_indentation.should be_a Hash
       proper_indentation[:this_line].should be_zero
       proper_indentation[:next_line].should be_zero
@@ -19,15 +19,15 @@ describe Tailor::IndentationRuler do
   end
 
   describe "#should_be_at" do
-    it "returns @proper_indentation[:this_line]" do
-      subject.instance_variable_set(:@proper_indentation, { this_line: 321 })
+    it "returns @proper[:this_line]" do
+      subject.instance_variable_set(:@proper, { this_line: 321 })
       subject.should_be_at.should == 321
     end
   end
 
   describe "#next_should_be_at" do
-    it "returns @proper_indentation[:next_line]" do
-      subject.instance_variable_set(:@proper_indentation, { next_line: 123 })
+    it "returns @proper[:next_line]" do
+      subject.instance_variable_set(:@proper, { next_line: 123 })
       subject.next_should_be_at.should == 123
     end
   end
@@ -38,26 +38,26 @@ describe Tailor::IndentationRuler do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      context "@proper_indentation[:this_line] gets decremented < 0" do
-        it "sets @proper_indentation[:this_line] to 0" do
-          subject.instance_variable_set(:@proper_indentation, {
+      context "@proper[:this_line] gets decremented < 0" do
+        it "sets @proper[:this_line] to 0" do
+          subject.instance_variable_set(:@proper, {
             this_line: 0, next_line: 0
           })
 
           subject.decrease_this_line
-          proper_indentation = subject.instance_variable_get(:@proper_indentation)
+          proper_indentation = subject.instance_variable_get(:@proper)
           proper_indentation[:this_line].should == 0
         end
       end
 
-      context "@proper_indentation[:this_line] NOT decremented < 0" do
-        it "decrements @proper_indentation[:this_line] by @config[:spaces]" do
-          subject.instance_variable_set(:@proper_indentation, {
+      context "@proper[:this_line] NOT decremented < 0" do
+        it "decrements @proper[:this_line] by @config[:spaces]" do
+          subject.instance_variable_set(:@proper, {
             this_line: 28, next_line: 28
           })
           subject.decrease_this_line
 
-          proper_indentation = subject.instance_variable_get(:@proper_indentation)
+          proper_indentation = subject.instance_variable_get(:@proper)
           proper_indentation[:this_line].should == 1
         end
       end
@@ -66,13 +66,13 @@ describe Tailor::IndentationRuler do
     context "#started? is false" do
       before { subject.stub(:started?).and_return false }
 
-      it "does not decrement @proper_indentation[:this_line]" do
-        subject.instance_variable_set(:@proper_indentation, {
+      it "does not decrement @proper[:this_line]" do
+        subject.instance_variable_set(:@proper, {
           this_line: 28, next_line: 28
         })
         subject.decrease_this_line
 
-        proper_indentation = subject.instance_variable_get(:@proper_indentation)
+        proper_indentation = subject.instance_variable_get(:@proper)
         proper_indentation[:this_line].should == 28
       end
     end
@@ -82,7 +82,7 @@ describe Tailor::IndentationRuler do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      it "increases @proper_indentation[:next_line] by @config[:spaces]" do
+      it "increases @proper[:next_line] by @config[:spaces]" do
         expect { subject.increase_next_line }.to change{subject.next_should_be_at}.
           by(spaces)
       end
@@ -91,7 +91,7 @@ describe Tailor::IndentationRuler do
     context "#started? is false" do
       before { subject.stub(:started?).and_return false }
 
-      it "does not increases @proper_indentation[:next_line]" do
+      it "does not increases @proper[:next_line]" do
         expect { subject.increase_next_line }.to_not change{subject.next_should_be_at}.
           by(spaces)
       end
@@ -104,7 +104,7 @@ describe Tailor::IndentationRuler do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
+      it "decrements @proper[:next_line] by @config[:spaces]" do
         expect { subject.decrease_next_line }.to change{subject.next_should_be_at}.
           by(-spaces)
       end
@@ -113,7 +113,7 @@ describe Tailor::IndentationRuler do
     context "#started? is false" do
       before { subject.stub(:started?).and_return false }
 
-      it "decrements @proper_indentation[:next_line] by @config[:spaces]" do
+      it "decrements @proper[:next_line] by @config[:spaces]" do
         expect { subject.decrease_next_line }.to_not change{subject.next_should_be_at}.
           by(-spaces)
       end
@@ -128,8 +128,8 @@ describe Tailor::IndentationRuler do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      it "sets @proper_indentation[:this_line] to @proper_indentation[:next_line]" do
-      subject.instance_variable_set(:@proper_indentation, { next_line: 33 })
+      it "sets @proper[:this_line] to @proper[:next_line]" do
+      subject.instance_variable_set(:@proper, { next_line: 33 })
 
       expect { subject.transition_lines }.to change{subject.should_be_at}.
         from(subject.should_be_at).to(subject.next_should_be_at)
@@ -139,8 +139,8 @@ describe Tailor::IndentationRuler do
     context "#started? is true" do
       before { subject.stub(:started?).and_return false }
 
-      it "sets @proper_indentation[:this_line] to @proper_indentation[:next_line]" do
-        subject.instance_variable_set(:@proper_indentation, { next_line: 33 })
+      it "sets @proper[:this_line] to @proper[:next_line]" do
+        subject.instance_variable_set(:@proper, { next_line: 33 })
 
         expect { subject.transition_lines }.to_not change{subject.should_be_at}.
           from(subject.should_be_at).to(subject.next_should_be_at)
