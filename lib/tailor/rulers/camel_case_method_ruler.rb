@@ -8,6 +8,8 @@ class Tailor
         previous_event = lexed_line.event_at(ident_index - 2)
         log "previous event: #{previous_event}"
         
+        return if previous_event.nil?
+        
         if previous_event[1] == :on_kw && previous_event.last == "def"
           check_camel_case_method_name(token, lineno, column)
         end

@@ -8,6 +8,8 @@ class Tailor
         previous_event = lexed_line.event_at(ident_index - 2)
         log "previous event: #{previous_event}"
 
+        return if previous_event.nil?
+        
         if previous_event[1] == :on_kw &&
           (previous_event.last == "class" || previous_event.last == "module")
           check_screaming_snake_case_class_name(token, lineno, column)
