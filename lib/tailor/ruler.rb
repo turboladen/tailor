@@ -10,17 +10,27 @@ class Tailor
       @problems = []
       @child_rulers = []
     end
-    
+
     def add_child_ruler(ruler)
       @child_rulers << ruler
     end
-    
+
     def problems
       @problems = @child_rulers.inject(@problems) do |problems, ruler|
         problems + ruler.problems
       end
-      
+
       @problems
+    end
+
+    #---------------------------------------------------------------------------
+    # Privates!
+    #---------------------------------------------------------------------------
+    private
+
+    def log(*args)
+      args.first.insert(0, "<#{self.class}> ")
+      Tailor::Logger.log(*args)
     end
   end
 end

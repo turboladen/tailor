@@ -463,16 +463,6 @@ class Tailor
       def r_event_without_content?(current_line, lineno, column)
         current_line.first_non_space_element.first == [lineno, column]
       end
-
-      #---------------------------------------------------------------------------
-      # Privates!
-      #---------------------------------------------------------------------------
-      private
-
-      def log(*args)
-        args.first.insert(0, "<#{self.class}> ")
-        Tailor::Logger.log(*args)
-      end
     end
   end
 end
