@@ -273,4 +273,20 @@ describe Tailor::LexedLine do
       end
     end
   end
+  
+  describe "#to_s" do
+    let(:lexed_output) do
+      [
+        [[1, 0], :on_kw, "def"],
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "thing"],
+          [[1, 9], :on_sp, " "],
+          [[1, 10], :on_nl, "\n"]
+      ]
+    end
+    
+    it "returns the String made up of self's tokens" do
+      subject.to_s.should == "def thing \n"
+    end
+  end
 end

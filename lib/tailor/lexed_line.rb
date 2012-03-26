@@ -125,6 +125,11 @@ class Tailor
       column_event = self.event_at column
       self.index(column_event)
     end
+    
+    # @return [String] The string reassembled from self's tokens.
+    def to_s
+      self.inject('') { |new_string, e| new_string << e.last }
+    end
 
     #---------------------------------------------------------------------------
     # Privates!
