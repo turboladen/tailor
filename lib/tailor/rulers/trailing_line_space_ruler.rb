@@ -18,7 +18,8 @@ class Tailor
         if lexed_line.line_ends_with_sp?
           log "Last event: #{lexed_line.last_non_line_feed_event}"
           options = {
-            actual_trailing_spaces: lexed_line.last_non_line_feed_event.last.size
+            actual_trailing_spaces:
+              lexed_line.last_non_line_feed_event.last.size
           }
           @problems << Problem.new(:trailing_spaces, lineno, column, options)
         end
