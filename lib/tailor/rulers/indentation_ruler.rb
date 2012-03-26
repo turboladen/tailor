@@ -100,14 +100,18 @@ class Tailor
           @proper[:this_line] = @proper[:next_line]
           log "Transitioning @proper[:this_line] to #{@proper[:this_line]}"
         else
-          log "Skipping #transition_lines; checking is stopped." and return if started?
+          if started?
+            log "Skipping #transition_lines; checking is stopped."
+            return
+          end
         end
       end
 
       # Starts the process of increasing/decreasing line indentation
       # expectations.
       def start
-        log "Starting indentation ruling.  Next check should be at #{should_be_at}"
+        log "Starting indentation ruling."
+        log "Next check should be at #{should_be_at}"
         @started = true
       end
 
@@ -189,10 +193,13 @@ class Tailor
           if @op_statement_nesting.empty?
             @op_statement_nesting << lineno
 
-            if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            if current_lexed_line.contains_keyword_to_indent? &&
+              @modifier_in_line.nil?
               @in_keyword_plus_op = true
             else
-              log "Increasing :next_line expectation due to multi-line operator statement."
+              msg = "Increasing :next_line expectation due to "
+              msg << "multi-line operator statement."
+              log msg
               @amount_to_change_next += 1
             end
 
@@ -210,11 +217,14 @@ class Tailor
           @brace_nesting.empty? &&
           @bracket_nesting.empty?
           if current_lexed_line.line_ends_with_comma?
-            if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+            if current_lexed_line.contains_keyword_to_indent? &&
+              @modifier_in_line.nil?
               log "In keyword-plus-comma statement."
               @in_keyword_plus_comma = true
             elsif @last_comma_statement_line.nil?
-              log "Increasing :next_line expectation due to multi-line comma statement."
+              msg = "Increasing :next_line expectation due to "
+              msg << "multi-line comma statement."
+              log msg
               @amount_to_change_next += 1
             end
 
@@ -224,10 +234,13 @@ class Tailor
         end
 
         if current_lexed_line.line_ends_with_period?
-          if current_lexed_line.contains_keyword_to_indent? && @modifier_in_line.nil?
+          if current_lexed_line.contains_keyword_to_indent? &&
+            @modifier_in_line.nil?
             @in_keyword_plus_period = true
           elsif @last_period_statement_line.nil?
-            log "Increasing :next_line expectation due to multi-line period statement."
+            msg = "Increasing :next_line expectation due to "
+            msg << "multi-line period statement."
+            log msg
             @amount_to_change_next += 1
           end
 
@@ -270,10 +283,14 @@ class Tailor
             log "Keyword '#{token}' not used as a modifier."
 
             if CONTINUATION_KEYWORDS.include? token
-              log "Continuation keyword: '#{token}'.  Decreasing indent expectation for this line."
+              msg = "Continuation keyword: '#{token}'.  "
+              msg << "Decreasing indent expectation for this line."
+              log msg
               @amount_to_change_this -= 1
             else
-              log "Keyword '#{token}' is not a continuation keyword.  Increasing indent expectation for next line."
+              msg = "Keyword '#{token}' is not a continuation keyword.  "
+              msg << "Increasing indent expectation for next line."
+              log msg
               @amount_to_change_next += 1
             end
           end
@@ -281,7 +298,9 @@ class Tailor
 
         if token == "end"
           if not single_line_indent_statement?(lineno)
-            log "End of not a single-line statement that needs indenting.  Decrease this line."
+            msg = "End of not a single-line statement that needs indenting.  "
+            msg < "Decrease this line."
+            log msg
             @amount_to_change_this -= 1
           end
 
