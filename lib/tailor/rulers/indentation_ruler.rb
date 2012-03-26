@@ -174,6 +174,24 @@ class Tailor
           @last_comma_statement_line = lineno
         end
       end
+      
+      def comment_update(token, lexed_line, file_text, lineno, column)
+        # trailing comment?
+        if token =~ /\n$/
+          log "Comment ends with newline.  Removing comment..."
+          log "Old lexed line: #{lexed_line.inspect}"
+          new_lexed_line = lexed_line.remove_trailing_comment(file_text)
+          log "New lexed line: #{new_lexed_line.inspect}"
+          
+          if new_lexed_line.line_ends_with_ignored_nl?
+            log "New lexed line ends with :on_ignored_nl."
+            ignored_nl_update(new_lexed_line, lineno, column)
+          elsif new_lexed_line.line_ends_with_nl?
+            log "New lexed line ends with :on_nl."
+            nl_update(new_lexed_line, lineno, column)
+          end
+        end
+      end
 
       def embexpr_beg_update
         @embexpr_beg = true

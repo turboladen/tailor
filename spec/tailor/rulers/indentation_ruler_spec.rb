@@ -272,6 +272,31 @@ describe Tailor::Rulers::IndentationRuler do
       end
     end
   end
+  
+  describe "#comment_update" do
+    pending
+    context "token does not contain a trailing newline" do
+      
+    end
+    
+    context "token contains a trailing newline" do
+      context "lexed_line is spaces then a comment" do
+        
+      end
+      
+      context "lexed_line is no spaces and a comment" do
+        
+      end
+      
+      context "lexed_line ends with an operator" do
+        
+      end
+      
+      context "lexed_line ends with a comma" do
+        
+      end
+    end
+  end
 
   describe "#embexpr_beg_update" do
     it "sets @embexpr_beg to true" do

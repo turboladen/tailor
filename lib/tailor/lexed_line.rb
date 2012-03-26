@@ -1,5 +1,6 @@
 require_relative 'logger'
 require_relative 'lexer_constants'
+require 'ripper'
 
 class Tailor
   class LexedLine < Array
@@ -13,7 +14,7 @@ class Tailor
     # @param [Array] lexed_output The lexed output for the whole file.
     # @return [Array]
     def current_line_lex(lexed_output, lineno)
-      lexed_output.find_all { |token| token.first.first == lineno }
+      lexed_output.find_all { |token| token.first.first == lineno }.uniq
     end
 
     # Looks at self and determines if it' s a line of just
@@ -49,18 +50,28 @@ class Tailor
       end
     end
 
-    def does_line_end_with(event)
-      if last_non_line_feed_event.first.empty?
-        false
+    # @return [Boolean]
+    def does_line_end_with(event, exclude_newlines=true)
+      if exclude_newlines 
+        if last_non_line_feed_event.first.empty?
+          false
+        else
+          last_non_line_feed_event[1] == event
+        end
       else
-        last_non_line_feed_event[1] == event
+        self.last[1] == :on_ignored_nl || self.last[1] == :on_nl
       end
     end
 
-    def method_missing(meth)
+    def method_missing(meth, *args, &blk)
       if meth.to_s =~ /^line_ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
-        does_line_end_with event
+        
+        if event == :on_ignored_nl || event == :on_nl
+          does_line_end_with(event, false)
+        else
+          does_line_end_with event
+        end
       else
         super(meth)
       end
@@ -129,6 +140,45 @@ class Tailor
     # @return [String] The string reassembled from self's tokens.
     def to_s
       self.inject('') { |new_string, e| new_string << e.last }
+    end
+    
+    # If a trailing comment exists in the line, remove it and the spaces that
+    # come before it.  This is necessary, as {Ripper} doesn't trigger an event
+    # for the end of the line when the line ends with a comment.  Without this
+    # observers that key off ending the line will never get triggered, and thus
+    # style won't get checked for that line.
+    #
+    # @param [Fixnum] column The column that the comment is at.
+    # @param [String] file_text The whole file's worth of text.  Required in
+    #   order to be able to reconstruct the context in which the line exists.
+    # @return [LexedLine] The current lexed line, but with the trailing comment
+    #   removed.
+    def remove_trailing_comment(file_text)
+      file_lines = file_text.split("\n")
+      lineno = self.last.first.first
+      column = self.last.first.last
+      log "Removing comment event at #{lineno}:#{column}."
+      
+      comment_index = event_index(column)
+      self.delete_at(comment_index)
+      self.insert(comment_index, [[lineno, column], :on_nl, "\n"])
+      log "Inserted newline for comma; self is now #{self.inspect}"
+      
+      if self.at(comment_index - 1)[1] == :on_sp
+        self.delete_at(comment_index - 1)
+      end
+      
+      new_text = self.to_s
+      log "New line as text: '#{new_text}'"
+      
+      file_lines.delete_at(lineno - 1)
+      file_lines.insert(lineno - 1, new_text)
+      file_lines = file_lines.join("\n")
+      log "new file lines: #{file_lines}"
+      
+      ripped_output = ::Ripper.lex(file_lines)
+      log "New ripped output: #{ripped_output}"
+      LexedLine.new(ripped_output, lineno)
     end
 
     #---------------------------------------------------------------------------

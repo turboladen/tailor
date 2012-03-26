@@ -66,7 +66,7 @@ class Tailor
       
       lexed_line = LexedLine.new(super, lineno)
       comment_changed
-      notify_comment_observers(token, lexed_line, lineno, column)
+      notify_comment_observers(token, lexed_line, @file_text, lineno, column)
       
       super(token)
     end

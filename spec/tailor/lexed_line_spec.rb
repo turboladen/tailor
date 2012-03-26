@@ -130,7 +130,7 @@ describe Tailor::LexedLine do
       end
     end
   end
-  
+
   describe "#does_line_end_with" do
     let(:lexed_output) do
       [
@@ -147,7 +147,7 @@ describe Tailor::LexedLine do
         subject.does_line_end_with(:on_sp).should be_true
       end
     end
-    
+
     context "line does not even with event" do
       it "returns false" do
         subject.does_line_end_with(:on_kw).should be_false
@@ -238,11 +238,11 @@ describe Tailor::LexedLine do
       let(:lexed_output) { [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 3], :on_nl, "\n"]] }
 
       it "returns nil" do
-        subject.first_non_space_element.should == [[1,2], :on_rbrace, "}"]
+        subject.first_non_space_element.should == [[1, 2], :on_rbrace, "}"]
       end
     end
   end
-  
+
   describe "#event_at" do
     let(:lexed_output) { [[[1, 0], :on_sp, "     "]] }
 
@@ -251,29 +251,29 @@ describe Tailor::LexedLine do
         subject.event_at(0).should == lexed_output.first
       end
     end
-    
+
     context "self does not contain an event at the given column" do
       it "returns nil" do
         subject.event_at(1234).should be_nil
       end
     end
   end
-  
+
   describe "#event_index" do
     let(:lexed_output) { [[[1, 0], :on_sp, "     "]] }
-    
+
     context "#event_at returns nil" do
       before { subject.stub(:event_at).and_return nil }
       specify { subject.event_index(1234).should be_nil }
     end
-    
+
     context "#event_at returns a valid colunn" do
       it "returns the event" do
         subject.event_index(0).should be_zero
       end
     end
   end
-  
+
   describe "#to_s" do
     let(:lexed_output) do
       [
@@ -284,9 +284,137 @@ describe Tailor::LexedLine do
           [[1, 10], :on_nl, "\n"]
       ]
     end
-    
+
     it "returns the String made up of self's tokens" do
       subject.to_s.should == "def thing \n"
+    end
+  end
+
+  describe "#remove_comment_at" do
+    context "stuff before comment is an incomplete statement" do
+      context "spaces before comment" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_comma, ","],
+              [[1, 14], :on_sp, "  "],
+              [[1, 16], :on_comment, "# comment\n"]
+          ]
+        end
+
+        let(:file_text) do
+          "def thing one,  # comment\n  two\nend\n"
+        end
+
+        it "replaces the comment with an :on_ignored_nl" do
+          subject.remove_trailing_comment(file_text).should == [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_comma, ","],
+              [[1, 14], :on_ignored_nl, "\n"]
+          ]
+        end
+      end
+      
+      context "no spaces before comment" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_comma, ","],
+              [[1, 14], :on_comment, "# comment\n"]
+          ]
+        end
+
+        let(:file_text) do
+          "def thing one,# comment\n  two\nend\n"
+        end
+
+        it "replaces the comment with an :on_ignored_nl" do
+          subject.remove_trailing_comment(file_text).should == [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_comma, ","],
+              [[1, 14], :on_ignored_nl, "\n"]
+          ]
+        end
+      end
+    end
+    
+    context "stuff before comment is a complete statement" do
+      context "spaces before comment" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_sp, "  "],
+              [[1, 15], :on_comment, "# comment\n"]
+          ]
+        end
+
+        let(:file_text) do
+          "def thing one  # comment\n\nend\n"
+        end
+
+        it "replaces the comment with an :on_nl" do
+          subject.remove_trailing_comment(file_text).should == [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_nl, "\n"]
+          ]
+        end
+      end
+
+      context "no spaces before comment" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_comment, "# comment\n"]
+          ]
+        end
+
+        let(:file_text) do
+          "def thing one# comment\n  \nend\n"
+        end
+
+        it "replaces the comment with an :on_nl" do
+          subject.remove_trailing_comment(file_text).should == [
+            [[1, 0], :on_kw, "def"],
+              [[1, 3], :on_sp, " "],
+              [[1, 4], :on_ident, "thing"],
+              [[1, 9], :on_sp, " "],
+              [[1, 10], :on_ident, "one"],
+              [[1, 13], :on_nl, "\n"]
+          ]
+        end
+        
+        it "returns a LexedLine" do
+          subject.remove_trailing_comment(file_text).should be_a Tailor::LexedLine
+        end
+      end
     end
   end
 end

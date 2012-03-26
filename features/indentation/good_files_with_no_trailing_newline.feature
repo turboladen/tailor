@@ -23,6 +23,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/class                              |
     | indent/ok/nested_class                       |
     | indent/ok/class_empty                        |
+    | indent/ok/class_empty_trailing_comment       |
     | indent/ok/one_line_class                     |
     | indent/ok/one_line_subclass                  |
     | indent/ok/one_line_subclass_with_inheritance |
@@ -34,18 +35,26 @@ Feature: Indentation check on good files without trailing newlines
 
   @multi_line
   Scenarios: Good multi-line statement uses
-    | File                                               |
-    | indent/ok/assignment_addition_multistatement       |
-    | indent/ok/assignment_hash_multistatement           |
-    | indent/ok/assignment_array_multistatement          |
-    | indent/ok/assignment_paren_multistatement          |
-    | indent/ok/assignment_twolevel_hash_multistatement  |
-    | indent/ok/assignment_twolevel_array_multistatement |
-    | indent/ok/assignment_twolevel_paren_multistatement |
-    | indent/ok/method_call_multistatement               |
-    | indent/ok/method_call_multistatement_lonely_paren  |
-    | indent/ok/rescue_ending_with_comma                 |
-    | indent/ok/keyword_ending_with_period               |
+    | File                                                               |
+    | indent/ok/assignment_addition_multistatement                       |
+    | indent/ok/assignment_addition_multistatement_trailing_comment      |
+    | indent/ok/assignment_hash_multistatement                           |
+    | indent/ok/assignment_hash_multistatement_trailing_comment          |
+    | indent/ok/assignment_array_multistatement                          |
+    | indent/ok/assignment_array_multistatement_trailing_comment         |
+    | indent/ok/assignment_paren_multistatement                          |
+    | indent/ok/assignment_paren_multistatement_trailing_comment         |
+    | indent/ok/assignment_twolevel_hash_multistatement                  |
+    | indent/ok/assignment_twolevel_array_multistatement                 |
+    | indent/ok/assignment_twolevel_paren_multistatement                 |
+    | indent/ok/method_call_multistatement                               |
+    | indent/ok/method_call_multistatement_trailing_comment              |
+    | indent/ok/method_call_multistatement_lonely_paren                  |
+    | indent/ok/method_call_multistatement_lonely_paren_trailing_comment |
+    | indent/ok/rescue_ending_with_comma                                 |
+    | indent/ok/rescue_ending_with_comma_trailing_comment                |
+    | indent/ok/keyword_ending_with_period                               |
+    | indent/ok/keyword_ending_with_period_trailing_comment              |
 
   Scenarios: Good def uses
     | File                                                |

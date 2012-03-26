@@ -21,6 +21,11 @@ INDENT_OK[:class_empty] =
 
 end}
 
+INDENT_OK[:class_empty_trailing_comment] =
+  %Q{class MyClass    # Comment!
+
+end}
+
 INDENT_OK[:class_singlestatement] =
 %Q{class MyClass
   include Stuff
@@ -31,9 +36,20 @@ INDENT_OK[:assignment_addition_multistatement] =
   2 + 3 + 4 +
   5}
 
+INDENT_OK[:assignment_addition_multistatement_trailing_comment] =
+  %Q{thing = 1 +    # Comment!
+  2 + 3 + 4 +
+  5}
+
 INDENT_OK[:assignment_hash_multistatement] =
 %Q{thing = {
   :one => 'one',
+  two: 'two'
+}}
+
+INDENT_OK[:assignment_hash_multistatement_trailing_comment] =
+  %Q{thing = {
+  :one => 'one', # Comment
   two: 'two'
 }}
 
@@ -43,11 +59,23 @@ INDENT_OK[:assignment_array_multistatement] =
   :two
 ]}
 
+INDENT_OK[:assignment_array_multistatement_trailing_comment] =
+  %Q{thing = [
+  :one,            # comment
+  :two
+]}
+
 INDENT_OK[:assignment_paren_multistatement] =
   %Q{eval('puts',
   binding,
   'my_file.rb',
-  5}
+  5)}
+
+INDENT_OK[:assignment_paren_multistatement_trailing_comment] =
+  %Q{eval('puts',
+  binding,
+  'my_file.rb',         # comment
+  5)}
 
 INDENT_OK[:assignment_twolevel_hash_multistatement] =
 %Q{thing = {
@@ -84,8 +112,21 @@ INDENT_OK[:method_call_multistatement] =
   four,
   five)}
 
+INDENT_OK[:method_call_multistatement_trailing_comment] =
+  %Q{my_method_with_many_params(one, two,
+  three,    # comment
+  four,
+  five)}
+
 INDENT_OK[:method_call_multistatement_lonely_paren] =
   %Q{my_method_with_many_params(one, two,
+  three,
+  four,
+  five
+)}
+
+INDENT_OK[:method_call_multistatement_lonely_paren_trailing_comment] =
+  %Q{my_method_with_many_params(one, two,  # comment
   three,
   four,
   five
@@ -102,8 +143,25 @@ rescue SocketError, ArgumentError, SystemCallError,
     "\#{ex.message}"
 end}
 
+INDENT_OK[:rescue_ending_with_comma_trailing_comment] =
+  %Q{begin
+  ssh.upload source, dest
+  @logger.info "Successfully copied the file \#{source} to " +
+    "\#{@config[:scp_hostname]}:\#{dest}."
+rescue SocketError, ArgumentError, SystemCallError,     # comment
+  Net::SCP::Exception, Timeout::Error => ex
+  @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
+    "\#{ex.message}"
+end}
+
 INDENT_OK[:keyword_ending_with_period] =
   %Q{if [].
+  empty?
+  puts 'hi'
+end}
+
+INDENT_OK[:keyword_ending_with_period_trailing_comment] =
+  %Q{if [].   # comment
   empty?
   puts 'hi'
 end}
@@ -520,6 +578,11 @@ INDENT_1[:class_indented_singlestatement] =
    include Something
 end}
 
+INDENT_1[:class_indented_singlestatement_trailing_comment] =
+  %Q{class MyClass
+   include Something     # comment
+end}
+
 INDENT_1[:class_outdented_singlestatement] =
 %Q{class MyClass
  include Something
@@ -558,6 +621,16 @@ end}
 INDENT_1[:case_indented_whens_level] =
 %Q{def my_method
    case true
+  when true
+    puts "stuff"
+  when false
+    puts "blah blah"
+  end
+end}
+
+INDENT_1[:case_indented_whens_level_trailing_comment] =
+  %Q{def my_method
+   case true        # comment
   when true
     puts "stuff"
   when false
@@ -640,6 +713,15 @@ num = 5;
   i +=1;
 end}
 
+INDENT_1[:while_do_indented2_trailing_comment] =
+  %Q{i = 0;
+num = 5;
+
+ while i < num do        # comment
+  puts("Inside the loop i = \#{i}" );
+  i +=1;
+end}
+
 INDENT_1[:until_do_indented] =
   %Q{i = 0;
 num = 5;
@@ -676,9 +758,32 @@ INDENT_1[:multi_line_string_first_line_indented] =
   end
 end}
 
+INDENT_1[:multi_line_string_first_line_indented_trailing_comment] =
+  %Q{def a_method
+   if defined? Term::ANSIColor     # comment
+    message << %Q{#  \#{(i + 1).to_s.bold}.
+#    * position:  \#{position}
+#    * type:      \#{problem[:type].to_s.red}
+#    * message:   \#{problem[:message].red}
+}
+  else
+    message << %Q{#  \#{(i + 1)}.
+#    * position:  \#{position}
+#    * type:      \#{problem[:type]}
+#    * message:   \#{problem[:message]}
+}
+  end
+end}
+
 INDENT_1[:multi_line_andop_first_line_indented] =
   %Q{def end_of_multiline_string?(lexed_line_output)
    lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
+    lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
+end}
+
+INDENT_1[:multi_line_andop_first_line_indented_trailing_comment] =
+  %Q{def end_of_multiline_string?(lexed_line_output)
+   lexed_line_output.any? { |e| e[1] == :on_tstring_end } && # comment
     lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
 end}
 
@@ -711,3 +816,9 @@ INDENT_1[:multi_line_method_call_ends_with_many_periods_last_in] =
   %Q{my_hashie.first_level.
   second_level.
     third_level}
+
+INDENT_1[:multi_line_method_call_ends_with_many_periods_last_in_trailing_comment] =
+  %Q{my_hashie.first_level.
+  second_level.
+    third_level  # comment}
+

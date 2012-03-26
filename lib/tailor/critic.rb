@@ -53,6 +53,7 @@ class Tailor
             @config[:horizontal_spacing][:indent_spaces])
           h_spacing_ruler.add_child_ruler(indentation_ruler)
           lexer.add_comma_observer indentation_ruler
+          lexer.add_comment_observer indentation_ruler
           lexer.add_embexpr_beg_observer indentation_ruler
           lexer.add_embexpr_end_observer indentation_ruler
           lexer.add_ignored_nl_observer indentation_ruler
