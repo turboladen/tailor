@@ -11,7 +11,7 @@ class Tailor
         current_index = lexed_line.event_index(column)
         previous_event = lexed_line.event_at(current_index - 1)
 
-        if column.zero? || previous_event.nil?
+        if previous_event.nil?
           nil
         elsif previous_event[1] != :on_sp
           0
