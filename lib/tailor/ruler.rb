@@ -21,7 +21,7 @@ class Tailor
         problems + ruler.problems
       end
 
-      @problems
+      @problems.sort! { |a, b| a[:line] <=> b[:line] }
     end
 
     #---------------------------------------------------------------------------
