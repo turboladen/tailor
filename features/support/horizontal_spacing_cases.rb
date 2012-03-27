@@ -123,6 +123,11 @@ H_SPACING_OK[:multi_line_qword_using_braces] = %Q{%w{
   bla
 end}
 
+H_SPACING_OK[:empty_hash_in_multi_line_statement] =
+  %Q{if true
+  {}
+end}
+
 H_SPACING_OK[:single_line_string_interp] = %Q{`\#{IFCONFIG} | grep \#{ip}`}
 H_SPACING_OK[:single_line_block_in_string_interp] =
   %Q{"I did this \#{1..10.times { |n| n }} times."}

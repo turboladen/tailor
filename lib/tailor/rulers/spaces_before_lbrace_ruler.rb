@@ -16,12 +16,13 @@ class Tailor
         if column.zero? || previous_event.nil? ||
           previous_event[1] == :on_embexpr_beg ||
           previous_event[1] == :on_lparen
-          nil
-        elsif previous_event[1] != :on_sp
-          0
-        else
-          previous_event.last.size
+          return nil
         end
+        
+        return 0 if previous_event[1] != :on_sp
+        return nil if current_index - 2 < 0
+        
+        previous_event.last.size
       end
 
       def lbrace_update(lexed_line, lineno, column)
