@@ -7,7 +7,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
       let(:lexed_line) do
         l = double "LexedLine"
         l.stub(:event_index).and_return 0
-        l.stub(:event_at).and_return nil
+        l.stub(:at).and_return nil
         
         l
       end
@@ -19,7 +19,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
       let(:lexed_line) do
         l = double "LexedLine"
         l.stub(:event_index).and_return 1
-        l.stub(:event_at).and_return [[10, 0], :on_const, "HI"]
+        l.stub(:at).and_return [[10, 0], :on_const, "HI"]
 
         l
       end
@@ -31,7 +31,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
       let(:lexed_line) do
         l = double "LexedLine"
         l.stub(:event_index).and_return 1
-        l.stub(:event_at).and_return [[10, 0], :on_sp, " "]
+        l.stub(:at).and_return [[10, 0], :on_sp, " "]
 
         l
       end
@@ -43,7 +43,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
       let(:lexed_line) do
         l = double "LexedLine"
         l.stub(:event_index).and_return 1
-        l.stub(:event_at).and_return [[10, 0], :on_sp, "  "]
+        l.stub(:at).and_return [[10, 0], :on_sp, "  "]
 
         l
       end
