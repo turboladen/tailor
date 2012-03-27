@@ -175,13 +175,19 @@ Feature: Horizontal spacing detection
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
-  Scenarios:
+  @single_line
+  Scenarios: Single-line
     | File                                        |
     | h_spacing/ok/single_line_hash               |
     | h_spacing/ok/single_line_hash_lonely_braces |
-    | h_spacing/ok/two_line_hash                  |
-    | h_spacing/ok/three_line_hash                |
     | h_spacing/ok/single_line_block              |
+
+  @multi_line
+  Scenarios: Multi-line
+    | File                                        |
+    | h_spacing/ok/two_line_hash                  |
+    | h_spacing/ok/two_line_hash_trailing_comment |
+    | h_spacing/ok/three_line_hash                |
     | h_spacing/ok/multi_line_braces_block        |
 
   @bad_files @braces
@@ -205,14 +211,20 @@ Feature: Horizontal spacing detection
     And the output should match /position:  <Position>/
     And the exit status should be 1
 
+  @single_line
   Scenarios:
-    | File                                                           | Position |
-    | h_spacing/1/single_line_hash_2_spaces_before_lbrace            | 1:9      |
-    | h_spacing/1/single_line_hash_2_spaces_after_lbrace             | 1:9      |
-    | h_spacing/1/single_line_hash_0_spaces_before_lbrace            | 1:7      |
-    | h_spacing/1/two_line_hash_2_spaces_before_lbrace               | 2:12     |
-    | h_spacing/1/two_line_hash_2_spaces_before_lbrace_lonely_braces | 2:12     |
-    | h_spacing/1/single_line_block_2_spaces_before_lbrace           | 1:13     |
-    | h_spacing/1/single_line_block_0_spaces_before_lbrace           | 1:11     |
-    | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace       | 1:13     |
+    | File                                                 | Position |
+    | h_spacing/1/single_line_hash_2_spaces_before_lbrace  | 1:9      |
+    | h_spacing/1/single_line_hash_2_spaces_after_lbrace   | 1:9      |
+    | h_spacing/1/single_line_hash_0_spaces_before_lbrace  | 1:7      |
+    | h_spacing/1/single_line_block_2_spaces_before_lbrace | 1:13     |
+    | h_spacing/1/single_line_block_0_spaces_before_lbrace | 1:11     |
+
+  @multi_line
+  Scenarios:
+    | File                                                                      | Position |
+    | h_spacing/1/two_line_hash_2_spaces_before_lbrace                          | 2:12     |
+    | h_spacing/1/two_line_hash_2_spaces_before_lbrace_lonely_braces            | 2:12     |
+    | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace                  | 1:13     |
+    | h_spacing/1/two_line_braces_block_0_spaces_before_lbrace_trailing_comment | 1:11     |
 

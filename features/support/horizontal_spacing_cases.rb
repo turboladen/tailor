@@ -107,6 +107,8 @@ H_SPACING_OK[:no_before_comma_in_array] =
   %Q{[1, 2]}
 
 #-------------------------------------------------------------------------------
+# Braces
+#-------------------------------------------------------------------------------
 H_SPACING_OK[:single_line_hash] =
   %Q{{ :one => 'one' }}
 
@@ -117,6 +119,10 @@ H_SPACING_OK[:single_line_hash_lonely_braces] =
 
 H_SPACING_OK[:two_line_hash] =
   %Q{{ :one =>
+'one' }}
+
+H_SPACING_OK[:two_line_hash_trailing_comment] =
+  %Q{{ :one =>    # comment
 'one' }}
 
 H_SPACING_OK[:three_line_hash] =
@@ -158,5 +164,9 @@ H_SPACING_1[:single_line_block_0_spaces_before_lbrace] =
 
 H_SPACING_1[:two_line_braces_block_2_spaces_before_lbrace] =
 %Q{1..10.times  { |n|
-puts number }}
+puts n}}
+
+H_SPACING_1[:two_line_braces_block_0_spaces_before_lbrace_trailing_comment] =
+  %Q{1..10.times{ |n|    # comment
+puts n}}
 
