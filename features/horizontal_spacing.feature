@@ -234,6 +234,7 @@ Feature: Horizontal spacing detection
     | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |            | 1        |
     | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:36     |            | 1        |
     | h_spacing/2/no_space_after_l_before_r_after_string_interp             | 1:69     | 1:86       | 2        |
+    | h_spacing/2/no_space_before_consecutive_rbraces                       | 1:72     | 1:73       | 2        |
 
   @multi_line
   Scenarios: Multi-line

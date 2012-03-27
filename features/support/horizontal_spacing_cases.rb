@@ -177,4 +177,7 @@ puts n}}
 H_SPACING_2[:no_space_after_l_before_r_after_string_interp] =
   %Q{logger.debug "Upgrading from \#{current_version} to \#{new_version}", {:format => :short}}
 
+H_SPACING_2[:no_space_before_consecutive_rbraces] =
+  %Q{thing = { 'id' => "\#{source}", 'attributes' => { 'height' => "\#{height}"}}}
+
 
