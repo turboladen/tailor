@@ -146,6 +146,9 @@ H_SPACING_OK[:multi_line_qword_using_braces] =
   bla
 end}
 
+H_SPACING_OK[:single_line_string_interp] =
+  %Q{`\#{IFCONFIG} | grep \#{ip}`}
+
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
 

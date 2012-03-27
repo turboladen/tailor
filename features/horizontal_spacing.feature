@@ -181,6 +181,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/single_line_hash               |
     | h_spacing/ok/single_line_hash_lonely_braces |
     | h_spacing/ok/single_line_block              |
+    | h_spacing/ok/single_line_string_interp      |
 
   @multi_line
   Scenarios: Multi-line
