@@ -64,7 +64,6 @@ class Tailor
 
         @comma_columns.clear
       end
-
     end
   end
 end
