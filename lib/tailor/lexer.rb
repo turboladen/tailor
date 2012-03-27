@@ -8,6 +8,7 @@ require_relative 'logger'
 class Tailor
 
   # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
+  # https://github.com/ruby/ruby/blob/trunk/test/ripper/test_scanner_events.rb
   class Lexer < Ripper::Lexer
     include CompositeObservable
     include LexerConstants
@@ -120,6 +121,11 @@ class Tailor
       log "EMBVAR: '#{token}'"
       super(token)
     end
+    
+    def on_float(token)
+      log "FLOAT: '#{token}'"
+      super(token)
+    end
 
     # Global variable
     def on_gvar(token)
@@ -160,6 +166,11 @@ class Tailor
       super(token)
     end
 
+    def on_int(token)
+      log "INT: '#{token}'"
+      super(token)
+    end
+    
     # Instance variable
     def on_ivar(token)
       log "IVAR: '#{token}'"
