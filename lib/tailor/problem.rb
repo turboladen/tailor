@@ -61,6 +61,9 @@ class Tailor
       when :spaces_before_lbrace
         msg = "Line has #{@options[:actual_spaces]} spaces before a left brace,"
         msg << " but should have #{@options[:should_have]}."
+      when :spaces_before_rbrace
+        msg = "Line has #{@options[:actual_spaces]} spaces before a right "
+        msg << "brace, but should have #{@options[:should_have]}."
       when :trailing_newlines
         msg = "File has #{@options[:actual_trailing_newlines]} trailing "
         msg << "newlines, but should have #{@options[:should_have]}."

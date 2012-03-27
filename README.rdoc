@@ -22,6 +22,7 @@ http://wiki.github.com/turboladen/tailor.
     * Trailing spaces at the end of lines
     * Spacing after commas
     * Spacing before commas
+    * Spacing around { and before }
   * Vertical spacing
     * Trailing newlines (at the end of the file)
   * Name cases
@@ -30,7 +31,6 @@ http://wiki.github.com/turboladen/tailor.
   * Extra whitespace
     * Around open/closed parentheses
     * Around open/closed square brackets
-    * Around open/closed curly braces
     * Around colons in ternary statements
 
 == SYNOPSIS:

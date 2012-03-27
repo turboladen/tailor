@@ -170,6 +170,7 @@ Feature: Horizontal spacing detection
         :braces:
           :spaces_before_left: 1
           :spaces_after_left: 1
+          :spaces_before_right: 1
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -184,6 +185,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/single_line_block                  |
     | h_spacing/ok/single_line_string_interp          |
     | h_spacing/ok/single_line_block_in_string_interp |
+    | h_spacing/ok/empty_hash_in_string_in_block      |
 
   @multi_line
   Scenarios: Multi-line
@@ -209,6 +211,7 @@ Feature: Horizontal spacing detection
         :braces:
           :spaces_before_left: 1
           :spaces_after_left: 1
+          :spaces_before_right: 1
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*1/
@@ -219,16 +222,19 @@ Feature: Horizontal spacing detection
   Scenarios: Single-line
     | File                                                                  | Position |
     | h_spacing/1/single_line_hash_2_spaces_before_lbrace                   | 1:9      |
+    | h_spacing/1/single_line_hash_2_spaces_before_rbrace                   | 1:25     |
     | h_spacing/1/single_line_hash_2_spaces_after_lbrace                    | 1:9      |
     | h_spacing/1/single_line_hash_0_spaces_before_lbrace                   | 1:7      |
     | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |
     | h_spacing/1/single_line_block_in_string_interp_2_spaces_before_lbrace | 1:27     |
     | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |
+    | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:34     |
 
   @multi_line
   Scenarios: Multi-line
     | File                                                                      | Position |
     | h_spacing/1/two_line_hash_2_spaces_before_lbrace                          | 2:12     |
+    | h_spacing/1/two_line_hash_2_spaces_before_rbrace                          | 2:28     |
     | h_spacing/1/two_line_hash_2_spaces_before_lbrace_lonely_braces            | 2:12     |
     | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace                  | 1:13     |
     | h_spacing/1/two_line_braces_block_0_spaces_before_lbrace_trailing_comment | 1:11     |

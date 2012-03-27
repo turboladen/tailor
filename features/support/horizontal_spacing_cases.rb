@@ -124,8 +124,14 @@ H_SPACING_OK[:single_line_string_interp] = %Q{`\#{IFCONFIG} | grep \#{ip}`}
 H_SPACING_OK[:single_line_block_in_string_interp] =
   %Q{"I did this \#{1..10.times { |n| n }} times."}
 
+H_SPACING_OK[:empty_hash_in_string_in_block] =
+  %Q{[1].map { |n| { :first => "\#{n}-\#{{}}" } }}
+
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
+
+H_SPACING_1[:single_line_hash_2_spaces_before_rbrace] =
+  %Q{thing = { :one => 'one'  }}
 
 H_SPACING_1[:single_line_hash_2_spaces_after_lbrace] =
   %Q{thing = {  :one => 'one' }}
@@ -136,11 +142,17 @@ H_SPACING_1[:single_line_hash_0_spaces_before_lbrace] =
 H_SPACING_1[:two_line_hash_2_spaces_before_lbrace] = %Q{thing1 =
   thing2 =  { :one => 'one' }}
 
+H_SPACING_1[:two_line_hash_2_spaces_before_rbrace] = %Q{thing1 =
+  thing2 = { :one => 'one'  }}
+
 H_SPACING_1[:two_line_hash_2_spaces_before_lbrace_lonely_braces] =
   %Q{thing1 =
   thing2 =  {
   :one => 'one'
 }}
+
+H_SPACING_1[:space_in_empty_hash_in_string_in_block] =
+  %Q{[1].map { |n| { :first => "\#{n}-\#{{ }}" } }}
 
 H_SPACING_1[:single_line_block_2_spaces_before_lbrace] =
   %Q{1..10.times  { |n| puts n }}

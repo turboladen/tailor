@@ -13,7 +13,8 @@ class Tailor
         previous_event = lexed_line.at(current_index - 1)
         log "Previous event: #{previous_event}"
 
-        if column.zero? || previous_event.nil?
+        if column.zero? || previous_event.nil? ||
+          previous_event[1] == :on_embexpr_beg
           nil
         elsif previous_event[1] != :on_sp
           0
