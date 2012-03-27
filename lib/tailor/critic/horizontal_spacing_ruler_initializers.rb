@@ -5,21 +5,6 @@ class Tailor
     module HorizontalSpacingRulerInitializers
       include Tailor::Rulers
 
-      def init_horizontal_spacing_ruler(h_spacing_ruler, lexer)
-        if @config[:horizontal_spacing]
-          init_hard_tab_ruler(h_spacing_ruler, lexer)
-          init_trailing_line_space_ruler(h_spacing_ruler, lexer)
-          init_indentation_ruler(h_spacing_ruler, lexer)
-          init_line_length_ruler(h_spacing_ruler, lexer)
-          init_spaces_after_comma_ruler(h_spacing_ruler, lexer)
-          init_spaces_before_comma_ruler(h_spacing_ruler, lexer)
-          init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
-          init_spaces_after_lbrace_ruler(h_spacing_ruler, lexer)
-          init_spaces_before_rbrace_ruler(h_spacing_ruler, lexer)
-          init_spaces_in_empty_braces_ruler(h_spacing_ruler, lexer)
-        end
-      end
-
       def init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing]
           if @config[:horizontal_spacing][:braces]
@@ -42,10 +27,12 @@ class Tailor
                 @config[:horizontal_spacing][:braces][:spaces_after_left]
               )
               h_spacing_ruler.add_child_ruler(spaces_after_lbrace_ruler)
-              lexer.add_comment_observer(spaces_after_lbrace_ruler)
-              lexer.add_ignored_nl_observer(spaces_after_lbrace_ruler)
-              lexer.add_lbrace_observer(spaces_after_lbrace_ruler)
-              lexer.add_nl_observer(spaces_after_lbrace_ruler)
+              [
+                :add_comment_observer,
+                :add_ignored_nl_observer,
+                :add_lbrace_observer,
+                :add_nl_observer
+              ].each { |o| lexer.send(o, spaces_after_lbrace_ruler)}
             end
           end
         end
@@ -59,9 +46,30 @@ class Tailor
                 @config[:horizontal_spacing][:braces][:spaces_before_right]
               )
               h_spacing_ruler.add_child_ruler(spaces_before_rbrace_ruler)
-              lexer.add_embexpr_beg_observer(spaces_before_rbrace_ruler)
-              lexer.add_lbrace_observer(spaces_before_rbrace_ruler)
-              lexer.add_rbrace_observer(spaces_before_rbrace_ruler)
+              [
+                :add_embexpr_beg_observer,
+                :add_lbrace_observer,
+                :add_rbrace_observer
+              ].each { |o| lexer.send(o, spaces_before_rbrace_ruler)}
+            end
+          end
+        end
+      end
+
+      def init_spaces_after_lbracket_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:brackets]
+            if @config[:horizontal_spacing][:brackets][:spaces_after_left]
+              spaces_after_lbracket_ruler = SpacesAfterLBracketRuler.new(
+                @config[:horizontal_spacing][:brackets][:spaces_after_left]
+              )
+              h_spacing_ruler.add_child_ruler(spaces_after_lbracket_ruler)
+              [
+                :add_comment_observer,
+                :add_ignored_nl_observer,
+                :add_lbracket_observer,
+                :add_nl_observer
+              ].each { |o| lexer.send(o, spaces_after_lbracket_ruler)}
             end
           end
         end
@@ -75,9 +83,11 @@ class Tailor
                 @config[:horizontal_spacing][:braces][:spaces_when_empty]
               )
               h_spacing_ruler.add_child_ruler(spaces_in_empty_braces_ruler)
-              lexer.add_embexpr_beg_observer(spaces_in_empty_braces_ruler)
-              lexer.add_lbrace_observer(spaces_in_empty_braces_ruler)
-              lexer.add_rbrace_observer(spaces_in_empty_braces_ruler)
+              [
+                :add_embexpr_beg_observer,
+                :add_lbrace_observer,
+                :add_rbrace_observer
+              ].each { |o| lexer.send(o, spaces_in_empty_braces_ruler) }
             end
           end
         end
@@ -89,10 +99,12 @@ class Tailor
             @config[:horizontal_spacing][:spaces_before_comma]
           )
           h_spacing_ruler.add_child_ruler(space_before_comma_ruler)
-          lexer.add_comma_observer(space_before_comma_ruler)
-          lexer.add_comment_observer(space_before_comma_ruler)
-          lexer.add_ignored_nl_observer(space_before_comma_ruler)
-          lexer.add_nl_observer(space_before_comma_ruler)
+          [
+            :add_comma_observer,
+            :add_comment_observer,
+            :add_ignored_nl_observer,
+            :add_nl_observer
+          ].each { |o| lexer.send(o, space_before_comma_ruler) }
         end
       end
 
@@ -102,10 +114,12 @@ class Tailor
             @config[:horizontal_spacing][:spaces_after_comma]
           )
           h_spacing_ruler.add_child_ruler(space_after_comma_ruler)
-          lexer.add_comma_observer(space_after_comma_ruler)
-          lexer.add_comment_observer(space_after_comma_ruler)
-          lexer.add_ignored_nl_observer(space_after_comma_ruler)
-          lexer.add_nl_observer(space_after_comma_ruler)
+          [
+            :add_comma_observer,
+            :add_comment_observer,
+            :add_ignored_nl_observer,
+            :add_nl_observer
+          ].each { |o| lexer.send(o, space_after_comma_ruler) }
         end
       end
 
@@ -115,8 +129,10 @@ class Tailor
             @config[:horizontal_spacing][:line_length]
           )
           h_spacing_ruler.add_child_ruler(line_length_ruler)
-          lexer.add_ignored_nl_observer(line_length_ruler)
-          lexer.add_nl_observer(line_length_ruler)
+          [
+            :add_ignored_nl_observer,
+            :add_nl_observer
+          ].each { |o| lexer.send(o, line_length_ruler) }
         end
       end
 
@@ -125,22 +141,24 @@ class Tailor
           indentation_ruler = IndentationRuler.new(
             @config[:horizontal_spacing][:indent_spaces])
           h_spacing_ruler.add_child_ruler(indentation_ruler)
-          lexer.add_comma_observer indentation_ruler
-          lexer.add_comment_observer indentation_ruler
-          lexer.add_embexpr_beg_observer indentation_ruler
-          lexer.add_embexpr_end_observer indentation_ruler
-          lexer.add_ignored_nl_observer indentation_ruler
-          lexer.add_kw_observer indentation_ruler
-          lexer.add_lbrace_observer indentation_ruler
-          lexer.add_lbracket_observer indentation_ruler
-          lexer.add_lparen_observer indentation_ruler
-          lexer.add_nl_observer indentation_ruler
-          lexer.add_period_observer indentation_ruler
-          lexer.add_rbrace_observer indentation_ruler
-          lexer.add_rbracket_observer indentation_ruler
-          lexer.add_rparen_observer indentation_ruler
-          lexer.add_tstring_beg_observer indentation_ruler
-          lexer.add_tstring_end_observer indentation_ruler
+          [
+            :add_comma_observer,
+            :add_comment_observer,
+            :add_embexpr_beg_observer,
+            :add_embexpr_end_observer,
+            :add_ignored_nl_observer,
+            :add_kw_observer,
+            :add_lbrace_observer,
+            :add_lbracket_observer,
+            :add_lparen_observer,
+            :add_nl_observer,
+            :add_period_observer,
+            :add_rbrace_observer,
+            :add_rbracket_observer,
+            :add_rparen_observer,
+            :add_tstring_beg_observer,
+            :add_tstring_end_observer
+          ].each { |o| lexer.send(o, line_length_ruler) }
 
           indentation_ruler.start
         end
@@ -150,8 +168,10 @@ class Tailor
         unless @config[:horizontal_spacing][:allow_trailing_spaces]
           trailing_line_space_ruler = TrailingLineSpaceRuler.new
           h_spacing_ruler.add_child_ruler(trailing_line_space_ruler)
-          lexer.add_ignored_nl_observer(trailing_line_space_ruler)
-          lexer.add_nl_observer(trailing_line_space_ruler)
+          [
+            :add_ignored_nl_observer,
+            :add_nl_observer
+          ].each { |o| lexer.send(o, line_length_ruler) }
         end
       end
 

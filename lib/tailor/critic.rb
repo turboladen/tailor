@@ -32,21 +32,36 @@ class Tailor
     def check_file file
       log "<#{self.class}> Checking style of a single file: #{file}."
       lexer = Tailor::Lexer.new(file)
-
       ruler = Ruler.new
-      h_spacing_ruler = HorizontalSpacingRuler.
-        new(@config[:horizontal_spacing])
-      v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
-      names_ruler = NamesRuler.new(@config[:names])
 
-      ruler.add_child_ruler(h_spacing_ruler)
-      ruler.add_child_ruler(v_spacing_ruler)
-      ruler.add_child_ruler(names_ruler)
+      if @config[:horizontal_spacing]
+        h_spacing_ruler =
+          HorizontalSpacingRuler.new(@config[:horizontal_spacing])
+        ruler.add_child_ruler(h_spacing_ruler)
+        
+        HorizontalSpacingRulerInitializers.instance_methods.each do |m|
+          send m, h_spacing_ruler, lexer
+        end
+      end
+      
+      if @config[:vertical_spacing]
+        v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
+        ruler.add_child_ruler(v_spacing_ruler)
 
-      init_horizontal_spacing_ruler(h_spacing_ruler, lexer)
-      init_vertical_spacing_ruler(lexer, v_spacing_ruler)
-      init_names_ruler(lexer, names_ruler)
-
+        VerticalSpacingRulerInitializers.instance_methods.each do |m|
+          send m, v_spacing_ruler, lexer
+        end
+      end
+      
+      if @config[:names]
+        names_ruler = NamesRuler.new(@config[:names])
+        ruler.add_child_ruler(names_ruler)
+        
+        NamesRulerInitializers.instance_methods.each do |m|
+          send m, names_ruler, lexer
+        end
+      end
+      
       lexer.lex
       lexer.check_added_newline
 

@@ -5,14 +5,7 @@ class Tailor
     module NamesRulerInitializers
       include Tailor::Rulers
 
-      def init_names_ruler(lexer, names_ruler)
-        if @config[:names]
-          init_camel_case_method_ruler(lexer, names_ruler)
-          init_screaming_snake_case_class_ruler(lexer, names_ruler)
-        end
-      end
-
-      def init_camel_case_method_ruler(lexer, names_ruler)
+      def init_camel_case_method_ruler(names_ruler, lexer)
         unless @config[:names][:allow_camel_case_methods]
           camel_case_method_ruler = CamelCaseMethodRuler.new
           names_ruler.add_child_ruler(camel_case_method_ruler)
@@ -20,7 +13,7 @@ class Tailor
         end
       end
 
-      def init_screaming_snake_case_class_ruler(lexer, names_ruler)
+      def init_screaming_snake_case_class_ruler(names_ruler, lexer)
         unless @config[:names][:allow_screaming_snake_case_classes]
           screaming_snake_case_class_ruler = ScreamingSnakeCaseClassRuler.new
           names_ruler.add_child_ruler(screaming_snake_case_class_ruler)
