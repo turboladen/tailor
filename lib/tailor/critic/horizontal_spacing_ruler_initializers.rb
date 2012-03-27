@@ -14,6 +14,7 @@ class Tailor
           init_spaces_after_comma_ruler(h_spacing_ruler, lexer)
           init_spaces_before_comma_ruler(h_spacing_ruler, lexer)
           init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
+          init_spaces_after_lbrace_ruler(h_spacing_ruler, lexer)
         end
       end
 
@@ -21,11 +22,28 @@ class Tailor
         if @config[:horizontal_spacing]
           if @config[:horizontal_spacing][:braces]
             if @config[:horizontal_spacing][:braces][:spaces_before_left]
-              space_before_lbrace_ruler = SpacesBeforeLBraceRuler.new(
+              spaces_before_lbrace_ruler = SpacesBeforeLBraceRuler.new(
                 @config[:horizontal_spacing][:braces][:spaces_before_left]
               )
-              h_spacing_ruler.add_child_ruler(space_before_lbrace_ruler)
-              lexer.add_lbrace_observer(space_before_lbrace_ruler)
+              h_spacing_ruler.add_child_ruler(spaces_before_lbrace_ruler)
+              lexer.add_lbrace_observer(spaces_before_lbrace_ruler)
+            end
+          end
+        end
+      end
+
+      def init_spaces_after_lbrace_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:braces]
+            if @config[:horizontal_spacing][:braces][:spaces_after_left]
+              spaces_after_lbrace_ruler = SpacesAfterLBraceRuler.new(
+                @config[:horizontal_spacing][:braces][:spaces_after_left]
+              )
+              h_spacing_ruler.add_child_ruler(spaces_after_lbrace_ruler)
+              lexer.add_comment_observer(spaces_after_lbrace_ruler)
+              lexer.add_ignored_nl_observer(spaces_after_lbrace_ruler)
+              lexer.add_lbrace_observer(spaces_after_lbrace_ruler)
+              lexer.add_nl_observer(spaces_after_lbrace_ruler)
             end
           end
         end

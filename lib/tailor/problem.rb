@@ -55,6 +55,9 @@ class Tailor
       when :spaces_before_comma
         msg = "Line has #{@options[:actual_spaces]} spaces before a comma, "
         msg << "but should have #{@options[:should_have]}."
+      when :spaces_after_lbrace
+        msg = "Line has #{@options[:actual_spaces]} spaces after a left brace,"
+        msg << " but should have #{@options[:should_have]}."
       when :spaces_before_lbrace
         msg = "Line has #{@options[:actual_spaces]} spaces before a left brace,"
         msg << " but should have #{@options[:should_have]}."

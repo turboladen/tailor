@@ -110,6 +110,11 @@ H_SPACING_OK[:no_before_comma_in_array] =
 H_SPACING_OK[:single_line_hash] =
   %Q{{ :one => 'one' }}
 
+H_SPACING_OK[:single_line_hash_lonely_braces] =
+  %Q{{
+  :one => 'one'
+}}
+
 H_SPACING_OK[:two_line_hash] =
   %Q{{ :one =>
 'one' }}
@@ -129,12 +134,21 @@ puts number }}
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
 
+H_SPACING_1[:single_line_hash_2_spaces_after_lbrace] =
+  %Q{thing = {  :one => 'one' }}
+
 H_SPACING_1[:single_line_hash_0_spaces_before_lbrace] =
   %Q{thing ={ :one => 'one' }}
 
 H_SPACING_1[:two_line_hash_2_spaces_before_lbrace] =
   %Q{thing1 =
   thing2 =  { :one => 'one' }}
+
+H_SPACING_1[:two_line_hash_2_spaces_before_lbrace_lonely_braces] =
+  %Q{thing1 =
+  thing2 =  {
+  :one => 'one'
+}}
 
 H_SPACING_1[:single_line_block_2_spaces_before_lbrace] =
   %Q{1..10.times  { |n| puts number }}
