@@ -205,7 +205,9 @@ Feature: Horizontal spacing detection
   Scenarios:
     | File                                                     | Position |
     | h_spacing/1/single_line_hash_2_spaces_before_lbrace      | 1:9      |
+    | h_spacing/1/single_line_hash_0_spaces_before_lbrace      | 1:7      |
     | h_spacing/1/two_line_hash_2_spaces_before_lbrace         | 2:12     |
     | h_spacing/1/single_line_block_2_spaces_before_lbrace     | 1:13     |
+    | h_spacing/1/single_line_block_0_spaces_before_lbrace     | 1:11     |
     | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace | 1:13     |
 

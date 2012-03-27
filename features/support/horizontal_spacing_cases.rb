@@ -129,12 +129,18 @@ puts number }}
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
 
+H_SPACING_1[:single_line_hash_0_spaces_before_lbrace] =
+  %Q{thing ={ :one => 'one' }}
+
 H_SPACING_1[:two_line_hash_2_spaces_before_lbrace] =
   %Q{thing1 =
   thing2 =  { :one => 'one' }}
 
 H_SPACING_1[:single_line_block_2_spaces_before_lbrace] =
   %Q{1..10.times  { |n| puts number }}
+
+H_SPACING_1[:single_line_block_0_spaces_before_lbrace] =
+  %Q{1..10.times{ |n| puts number }}
 
 H_SPACING_1[:two_line_braces_block_2_spaces_before_lbrace] =
 %Q{1..10.times  { |n|
