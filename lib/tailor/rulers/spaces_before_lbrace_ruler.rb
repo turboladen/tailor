@@ -9,9 +9,11 @@ class Tailor
       # @return [Fixnum] The number of spaces before the lbrace.
       def count_spaces(lexed_line, column)
         current_index = lexed_line.event_index(column)
-        previous_event = lexed_line.event_at(current_index - 1)
+        log "Current event index: #{current_index}"
+        previous_event = lexed_line.at(current_index - 1)
+        log "Previous event: #{previous_event}"
 
-        if previous_event.nil?
+        if column.zero? || previous_event.nil?
           nil
         elsif previous_event[1] != :on_sp
           0
@@ -22,7 +24,13 @@ class Tailor
 
       def lbrace_update(lexed_line, lineno, column)
         count = count_spaces(lexed_line, column)
-        log "Found #{count} space(s) before lbrace."
+        
+        if count.nil?
+          log "lbrace must be at the beginning of the line."
+          return
+        else
+          log "Found #{count} space(s) before lbrace."
+        end
         
         if count != @config
           @problems << Problem.new(:spaces_before_lbrace, lineno, column,
