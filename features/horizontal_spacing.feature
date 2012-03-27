@@ -189,6 +189,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/two_line_hash_trailing_comment |
     | h_spacing/ok/three_line_hash                |
     | h_spacing/ok/multi_line_braces_block        |
+    | h_spacing/ok/multi_line_qword_using_braces  |
 
   @bad_files @braces
 

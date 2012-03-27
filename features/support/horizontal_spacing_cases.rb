@@ -137,6 +137,15 @@ H_SPACING_OK[:multi_line_braces_block] =
   %Q{1..10.times { |n|
 puts number }}
 
+H_SPACING_OK[:multi_line_qword_using_braces] =
+  %Q{%w{
+  foo
+  bar
+  baz
+}.each do |whatevs|
+  bla
+end}
+
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
 
