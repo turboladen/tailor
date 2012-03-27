@@ -57,6 +57,11 @@ class Tailor
           return
         end
 
+        if next_event[1] == :on_rbrace
+          log "Next event is a '}'.  Looks like this is an empty Hash."
+          return
+        end
+        
         if next_event[1] == :on_nl || next_event[1] == :on_ignored_nl
           log "Next event is a newline."
           return

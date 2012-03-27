@@ -178,6 +178,7 @@ Feature: Horizontal spacing detection
   @single_line
   Scenarios: Single-line
     | File                                            |
+    | h_spacing/ok/empty_hash                         |
     | h_spacing/ok/single_line_hash                   |
     | h_spacing/ok/single_line_hash_lonely_braces     |
     | h_spacing/ok/single_line_block                  |
