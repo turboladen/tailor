@@ -16,6 +16,7 @@ class Tailor
           init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
           init_spaces_after_lbrace_ruler(h_spacing_ruler, lexer)
           init_spaces_before_rbrace_ruler(h_spacing_ruler, lexer)
+          init_spaces_in_empty_braces_ruler(h_spacing_ruler, lexer)
         end
       end
 
@@ -61,6 +62,22 @@ class Tailor
               lexer.add_embexpr_beg_observer(spaces_before_rbrace_ruler)
               lexer.add_lbrace_observer(spaces_before_rbrace_ruler)
               lexer.add_rbrace_observer(spaces_before_rbrace_ruler)
+            end
+          end
+        end
+      end
+
+      def init_spaces_in_empty_braces_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:braces]
+            if @config[:horizontal_spacing][:braces][:spaces_when_empty]
+              spaces_in_empty_braces_ruler = SpacesInEmptyBracesRuler.new(
+                @config[:horizontal_spacing][:braces][:spaces_when_empty]
+              )
+              h_spacing_ruler.add_child_ruler(spaces_in_empty_braces_ruler)
+              lexer.add_embexpr_beg_observer(spaces_in_empty_braces_ruler)
+              lexer.add_lbrace_observer(spaces_in_empty_braces_ruler)
+              lexer.add_rbrace_observer(spaces_in_empty_braces_ruler)
             end
           end
         end

@@ -171,6 +171,7 @@ Feature: Horizontal spacing detection
           :spaces_before_left: 1
           :spaces_after_left: 1
           :spaces_before_right: 1
+          :spaces_when_empty: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -212,6 +213,7 @@ Feature: Horizontal spacing detection
           :spaces_before_left: 1
           :spaces_after_left: 1
           :spaces_before_right: 1
+          :spaces_when_empty: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*1/
@@ -228,7 +230,7 @@ Feature: Horizontal spacing detection
     | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |
     | h_spacing/1/single_line_block_in_string_interp_2_spaces_before_lbrace | 1:27     |
     | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |
-    | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:34     |
+    | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:36     |
 
   @multi_line
   Scenarios: Multi-line

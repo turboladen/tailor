@@ -94,7 +94,8 @@ class Tailor
           braces: {
             spaces_before_left: 1,
             spaces_after_left: 1,
-            spaces_before_right: 1
+            spaces_before_right: 1,
+            spaces_when_empty: 0,
           },
           indent_spaces: 2,
           line_length: 80,
