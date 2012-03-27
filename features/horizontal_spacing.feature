@@ -217,28 +217,30 @@ Feature: Horizontal spacing detection
           :spaces_when_empty: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
-    Then the output should match /Total Problems.*1/
+    Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/
+    And the output should match /position:  <Position 2>/
     And the exit status should be 1
 
   @single_line
   Scenarios: Single-line
-    | File                                                                  | Position |
-    | h_spacing/1/single_line_hash_2_spaces_before_lbrace                   | 1:9      |
-    | h_spacing/1/single_line_hash_2_spaces_before_rbrace                   | 1:25     |
-    | h_spacing/1/single_line_hash_2_spaces_after_lbrace                    | 1:9      |
-    | h_spacing/1/single_line_hash_0_spaces_before_lbrace                   | 1:7      |
-    | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |
-    | h_spacing/1/single_line_block_in_string_interp_2_spaces_before_lbrace | 1:27     |
-    | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |
-    | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:36     |
+    | File                                                                  | Position | Position 2 | Problems |
+    | h_spacing/1/single_line_hash_2_spaces_before_lbrace                   | 1:9      |            | 1        |
+    | h_spacing/1/single_line_hash_2_spaces_before_rbrace                   | 1:25     |            | 1        |
+    | h_spacing/1/single_line_hash_2_spaces_after_lbrace                    | 1:9      |            | 1        |
+    | h_spacing/1/single_line_hash_0_spaces_before_lbrace                   | 1:7      |            | 1        |
+    | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |            | 1        |                                                     
+    | h_spacing/1/single_line_block_in_string_interp_2_spaces_before_lbrace | 1:27     |            | 1        |
+    | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |            | 1        |
+    | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:36     |            | 1        |
+    | h_spacing/2/no_space_after_l_before_r_after_string_interp             | 1:69     | 1:86       | 2        |
 
   @multi_line
   Scenarios: Multi-line
-    | File                                                                      | Position |
-    | h_spacing/1/two_line_hash_2_spaces_before_lbrace                          | 2:12     |
-    | h_spacing/1/two_line_hash_2_spaces_before_rbrace                          | 2:28     |
-    | h_spacing/1/two_line_hash_2_spaces_before_lbrace_lonely_braces            | 2:12     |
-    | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace                  | 1:13     |
-    | h_spacing/1/two_line_braces_block_0_spaces_before_lbrace_trailing_comment | 1:11     |
+    | File                                                                      | Position | Position 2 | Problems |
+    | h_spacing/1/two_line_hash_2_spaces_before_lbrace                          | 2:12     |            | 1        |
+    | h_spacing/1/two_line_hash_2_spaces_before_rbrace                          | 2:28     |            | 1        |
+    | h_spacing/1/two_line_hash_2_spaces_before_lbrace_lonely_braces            | 2:12     |            | 1        |
+    | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace                  | 1:13     |            | 1        |
+    | h_spacing/1/two_line_braces_block_0_spaces_before_lbrace_trailing_comment | 1:11     |            | 1        |
 

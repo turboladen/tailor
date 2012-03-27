@@ -174,3 +174,7 @@ H_SPACING_1[:two_line_braces_block_0_spaces_before_lbrace_trailing_comment] =
   %Q{1..10.times{ |n|    # comment
 puts n}}
 
+H_SPACING_2[:no_space_after_l_before_r_after_string_interp] =
+  %Q{logger.debug "Upgrading from \#{current_version} to \#{new_version}", {:format => :short}}
+
+
