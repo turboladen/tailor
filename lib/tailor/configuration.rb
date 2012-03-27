@@ -91,6 +91,11 @@ class Tailor
         horizontal_spacing: {
           allow_hard_tabs: false,
           allow_trailing_spaces: false,
+          braces: {
+            spaces_before_left: 1,
+            spaces_after_left: 1,
+            spaces_before_right: 1
+          },
           indent_spaces: 2,
           line_length: 80,
           spaces_after_comma: 1,

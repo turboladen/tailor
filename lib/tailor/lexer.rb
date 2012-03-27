@@ -192,8 +192,9 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbrace(token)
       log "LBRACE: '#{token}'"
+      current_line = LexedLine.new(super, lineno)
       lbrace_changed
-      notify_lbrace_observers(lineno)
+      notify_lbrace_observers(current_line, lineno, column)
       super(token)
     end
 

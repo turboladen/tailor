@@ -11,13 +11,27 @@ class Tailor
           init_trailing_line_space_ruler(h_spacing_ruler, lexer)
           init_indentation_ruler(h_spacing_ruler, lexer)
           init_line_length_ruler(h_spacing_ruler, lexer)
-          init_space_after_comma_ruler(h_spacing_ruler, lexer)
-          init_space_before_comma_ruler(h_spacing_ruler, lexer)
-          #init_space_before_lbrace_ruler(h_spacing_ruler, lexer)
+          init_spaces_after_comma_ruler(h_spacing_ruler, lexer)
+          init_spaces_before_comma_ruler(h_spacing_ruler, lexer)
+          init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
         end
       end
 
-      def init_space_before_comma_ruler(h_spacing_ruler, lexer)
+      def init_spaces_before_lbrace_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:braces]
+            if @config[:horizontal_spacing][:braces][:spaces_before_left]
+              space_before_lbrace_ruler = SpacesBeforeLBraceRuler.new(
+                @config[:horizontal_spacing][:braces][:spaces_before_left]
+              )
+              h_spacing_ruler.add_child_ruler(space_before_lbrace_ruler)
+              lexer.add_lbrace_observer(space_before_lbrace_ruler)
+            end
+          end
+        end
+      end
+
+      def init_spaces_before_comma_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing][:spaces_before_comma]
           space_before_comma_ruler = SpacesBeforeCommaRuler.new(
             @config[:horizontal_spacing][:spaces_before_comma]
@@ -30,7 +44,7 @@ class Tailor
         end
       end
 
-      def init_space_after_comma_ruler(h_spacing_ruler, lexer)
+      def init_spaces_after_comma_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing][:spaces_after_comma]
           space_after_comma_ruler = SpacesAfterCommaRuler.new(
             @config[:horizontal_spacing][:spaces_after_comma]

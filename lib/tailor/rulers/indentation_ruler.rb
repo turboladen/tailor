@@ -327,7 +327,7 @@ class Tailor
         end
       end
 
-      def lbrace_update(lineno)
+      def lbrace_update(lexed_line, lineno, column)
         @brace_nesting << lineno
         @amount_to_change_next += 1
       end

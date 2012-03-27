@@ -3,6 +3,7 @@ Feature: Horizontal spacing detection
   problems so that I can fix them.
 
   @bad_files @hard_tabs
+
   Scenario Outline: Detect hard tabs
     Given <File> exists without a newline at the end
     And my configuration file "testfile.yml" looks like:
@@ -153,4 +154,58 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/space_after_comma_in_array           |
     | h_spacing/ok/trailing_comma                       |
     | h_spacing/ok/trailing_comma_with_trailing_comment |
+
+  @good_files @braces
+
+  Scenario Outline: Lines with good spacing around braces
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :braces:
+          :spaces_before_lbrace: 1
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*0/
+    And the exit status should be 0
+
+  Scenarios:
+    | File                                 |
+    | h_spacing/ok/single_line_hash        |
+    | h_spacing/ok/two_line_hash           |
+    | h_spacing/ok/three_line_hash         |
+    | h_spacing/ok/single_line_block       |
+    | h_spacing/ok/multi_line_braces_block |
+
+  @bad_files @braces
+
+  Scenario Outline: Lines with bad spacing around braces
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :braces:
+          :spaces_before_left: 1
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*1/
+    And the output should match /position:  <Position>/
+    And the exit status should be 1
+
+  Scenarios:
+    | File                                                     | Position |
+    | h_spacing/1/single_line_hash_2_spaces_before_lbrace      | 1:9      |
+    | h_spacing/1/two_line_hash_2_spaces_before_lbrace         | 2:12     |
+    | h_spacing/1/single_line_block_2_spaces_before_lbrace     | 1:13     |
+    | h_spacing/1/two_line_braces_block_2_spaces_before_lbrace | 1:13     |
 
