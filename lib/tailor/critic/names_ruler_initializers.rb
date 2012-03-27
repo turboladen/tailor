@@ -1,0 +1,32 @@
+require_relative '../rulers'
+
+class Tailor
+  class Critic
+    module NamesRulerInitializers
+      include Tailor::Rulers
+
+      def init_names_ruler(lexer, names_ruler)
+        if @config[:names]
+          init_camel_case_method_ruler(lexer, names_ruler)
+          init_screaming_snake_case_class_ruler(lexer, names_ruler)
+        end
+      end
+
+      def init_camel_case_method_ruler(lexer, names_ruler)
+        unless @config[:names][:allow_camel_case_methods]
+          camel_case_method_ruler = CamelCaseMethodRuler.new
+          names_ruler.add_child_ruler(camel_case_method_ruler)
+          lexer.add_ident_observer(camel_case_method_ruler)
+        end
+      end
+
+      def init_screaming_snake_case_class_ruler(lexer, names_ruler)
+        unless @config[:names][:allow_screaming_snake_case_classes]
+          screaming_snake_case_class_ruler = ScreamingSnakeCaseClassRuler.new
+          names_ruler.add_child_ruler(screaming_snake_case_class_ruler)
+          lexer.add_const_observer(screaming_snake_case_class_ruler)
+        end
+      end
+    end
+  end
+end
