@@ -98,6 +98,9 @@ H_SPACING_OK[:single_line_hash_lonely_braces] = %Q{{
   :one => 'one'
 }}
 
+H_SPACING_OK[:hash_as_param_in_parens] =
+  %Q{add_headers({ content_length: new_body.length })}
+
 H_SPACING_OK[:two_line_hash] = %Q{{ :one =>
 'one' }}
 

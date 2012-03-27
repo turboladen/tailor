@@ -188,6 +188,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/single_line_block_in_string_interp |
     | h_spacing/ok/empty_hash_in_string_in_block      |
     | h_spacing/ok/string_interp_with_colonop         |
+    | h_spacing/ok/hash_as_param_in_parens            |
 
   @multi_line
   Scenarios: Multi-line
@@ -229,7 +230,7 @@ Feature: Horizontal spacing detection
     | h_spacing/1/single_line_hash_2_spaces_before_rbrace                   | 1:25     |            | 1        |
     | h_spacing/1/single_line_hash_2_spaces_after_lbrace                    | 1:9      |            | 1        |
     | h_spacing/1/single_line_hash_0_spaces_before_lbrace                   | 1:7      |            | 1        |
-    | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |            | 1        |                                                     
+    | h_spacing/1/single_line_block_2_spaces_before_lbrace                  | 1:13     |            | 1        |
     | h_spacing/1/single_line_block_in_string_interp_2_spaces_before_lbrace | 1:27     |            | 1        |
     | h_spacing/1/single_line_block_0_spaces_before_lbrace                  | 1:11     |            | 1        |
     | h_spacing/1/space_in_empty_hash_in_string_in_block                    | 1:36     |            | 1        |

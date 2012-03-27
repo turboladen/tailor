@@ -14,7 +14,8 @@ class Tailor
         log "Previous event: #{previous_event}"
 
         if column.zero? || previous_event.nil? ||
-          previous_event[1] == :on_embexpr_beg
+          previous_event[1] == :on_embexpr_beg ||
+          previous_event[1] == :on_lparen
           nil
         elsif previous_event[1] != :on_sp
           0
