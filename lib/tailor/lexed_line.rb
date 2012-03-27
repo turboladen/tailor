@@ -130,6 +130,9 @@ class Tailor
 
     # Useful for inspecting events relevant to this one.
     #
+    # @example
+    #   i = lexed_line.event_index(11)
+    #   previous_event = lexed_line.at(i - 1)
     # @param [Fixnum] column Number of the column of which event to get the
     #   index for.
     # @return [Fixnum] The index within +self+ that the event is at.
