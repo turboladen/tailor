@@ -187,6 +187,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/single_line_string_interp          |
     | h_spacing/ok/single_line_block_in_string_interp |
     | h_spacing/ok/empty_hash_in_string_in_block      |
+    | h_spacing/ok/string_interp_with_colonop         |
 
   @multi_line
   Scenarios: Multi-line

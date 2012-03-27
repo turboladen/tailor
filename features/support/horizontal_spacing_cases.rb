@@ -127,6 +127,9 @@ H_SPACING_OK[:single_line_block_in_string_interp] =
 H_SPACING_OK[:empty_hash_in_string_in_block] =
   %Q{[1].map { |n| { :first => "\#{n}-\#{{}}" } }}
 
+H_SPACING_OK[:string_interp_with_colonop] =
+  %Q{"\#{::Rails.root}"}
+
 H_SPACING_1[:single_line_hash_2_spaces_before_lbrace] =
   %Q{thing =  { :one => 'one' }}
 
