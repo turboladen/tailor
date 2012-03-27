@@ -12,7 +12,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
         l
       end
       
-      specify { subject.count_spaces(1, lexed_line).should be_nil }
+      specify { subject.count_spaces(lexed_line, 1).should be_nil }
     end
     
     context "no space before lbrace" do
@@ -24,7 +24,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
         l
       end
 
-      specify { subject.count_spaces(1, lexed_line).should be_zero }
+      specify { subject.count_spaces(lexed_line, 1).should be_zero }
     end
     
     context "1 space before lbrace" do
@@ -36,7 +36,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
         l
       end
 
-      specify { subject.count_spaces(1, lexed_line).should == 1 }
+      specify { subject.count_spaces(lexed_line, 1).should == 1 }
     end
     
     context "> 1 space before lbrace" do
@@ -48,7 +48,7 @@ describe Tailor::Rulers::SpacesBeforeLBraceRuler do
         l
       end
 
-      specify { subject.count_spaces(1, lexed_line).should == 2 }
+      specify { subject.count_spaces(lexed_line, 1).should == 2 }
     end
   end
 end
