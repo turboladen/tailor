@@ -13,8 +13,23 @@ Feature: Horizontal spacing detection
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
+        :allow_trailing_spaces: true
         :allow_hard_tabs: false
         :indent_spaces: 2
+        :line_length: 80
+        :spaces_after_comma: 1
+        :spaces_before_comma: 0
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Count>/
@@ -65,6 +80,19 @@ Feature: Horizontal spacing detection
       :horizontal_spacing:
         :allow_trailing_spaces: true
         :line_length: 80
+        :spaces_after_comma: 1
+        :spaces_before_comma: 0
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -83,10 +111,24 @@ Feature: Horizontal spacing detection
     """
     ---
     :style:
+      :horizontal_spacing:
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
         :allow_trailing_spaces: false
+        :spaces_after_comma: 1
+        :spaces_before_comma: 0
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Count>/
@@ -107,12 +149,24 @@ Feature: Horizontal spacing detection
     """
     ---
     :style:
+      :horizontal_spacing:
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
         :allow_trailing_spaces: false
         :spaces_after_comma: 1
         :spaces_before_comma: 0
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Count>/
@@ -138,12 +192,24 @@ Feature: Horizontal spacing detection
     """
     ---
     :style:
+      :horizontal_spacing:
       :vertical_spacing:
         :trailing_newlines: 0
       :horizontal_spacing:
         :allow_trailing_spaces: false
         :spaces_after_comma: 1
         :spaces_before_comma: 0
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -172,6 +238,12 @@ Feature: Horizontal spacing detection
           :spaces_after_left: 1
           :spaces_before_right: 1
           :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -218,6 +290,12 @@ Feature: Horizontal spacing detection
           :spaces_after_left: 1
           :spaces_before_right: 1
           :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Problems>/
@@ -268,7 +346,9 @@ Feature: Horizontal spacing detection
         :brackets:
           :spaces_after_left: 0
           :spaces_before_right: 0
-          :spaces_when_empty: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*0/
@@ -309,7 +389,9 @@ Feature: Horizontal spacing detection
         :brackets:
           :spaces_after_left: 0
           :spaces_before_right: 0
-          :spaces_when_empty: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
     """
     When I run `tailor --debug --config testfile.yml <File>`
     Then the output should match /Total Problems.*<Problems>/
