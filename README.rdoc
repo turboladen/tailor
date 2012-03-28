@@ -28,6 +28,7 @@ http://wiki.github.com/turboladen/tailor.
   * Vertical spacing
     * Trailing newlines (at the end of the file)
     * Max code lines in a class/module
+    * Max code lines in a method
   * Name cases
     * Snake case class & module names
     * Camel case method names

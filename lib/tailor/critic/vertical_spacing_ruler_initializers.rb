@@ -19,6 +19,20 @@ class Tailor
         end
       end
 
+      def init_code_lines_in_method_ruler(v_spacing_ruler, lexer)
+        if @config[:vertical_spacing][:max_code_lines_in_method]
+          code_lines_in_method_ruler = CodeLinesInMethodRuler.new(
+            @config[:vertical_spacing][:max_code_lines_in_method]
+          )
+          v_spacing_ruler.add_child_ruler(code_lines_in_method_ruler)
+          [
+            :add_ignored_nl_observer,
+              :add_kw_observer,
+              :add_nl_observer
+          ].each { |o| lexer.send(o, code_lines_in_method_ruler) }
+        end
+      end
+
       def init_trailing_newline_ruler(v_spacing_ruler, lexer)
         if @config[:vertical_spacing][:trailing_newlines]
           trailing_newline_ruler = TrailingNewlineRuler.new(

@@ -116,6 +116,7 @@ class Tailor
         },
         vertical_spacing: {
           max_code_lines_in_class: 300,
+          max_code_lines_in_method: 30,
           trailing_newlines: 1
         }
       }

@@ -41,6 +41,9 @@ class Tailor
       when :code_lines_in_class
         msg = "Class/module has #{@options[:actual_count]} code lines, but "
         msg << "should have no more than #{@options[:should_be_at]}."
+      when :code_lines_in_method
+        msg = "Method has #{@options[:actual_count]} code lines, but "
+        msg << "should have no more than #{@options[:should_be_at]}."
       when :hard_tab
         "Hard tab found."
       when :indentation
