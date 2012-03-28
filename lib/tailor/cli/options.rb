@@ -13,7 +13,6 @@ class Tailor
         opts = OptionParser.new do |o|
           o.banner = self.banner
           o.separator ""
-          o.separator "pants"
 
           o.on('-c', '--color', "Output in color") do |color|
             require_relative '../../ext/string_ext'
@@ -96,15 +95,9 @@ class Tailor
         ABOUT
       end
 
-
       # @return [String]
       def self.usage
-        <<-USEAGE
-  Usage:
-    $ #{File.basename($0)} [directory with .rb files]
-      -OR-
-    $ #{File.basename($0)} [single .rb file]"
-        USEAGE
+        "  Usage:  tailor [FILE|DIR]"
       end
 
       def self.create_config
