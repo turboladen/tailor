@@ -2,6 +2,9 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
+    
+    # Checks for spaces that exist between a '{' and '}' when there is only
+    # space in between them.
     class SpacesInEmptyBracesRuler < Tailor::Ruler
       def initialize(config)
         super(config)
