@@ -33,7 +33,7 @@ class Tailor
       end
 
       def check_spaces_after_comma(lexed_line, lineno)
-        log "Commas found at: #{@comma_columns}"
+        log "Commas found at: #{@comma_columns}" unless @comma_columns.empty?
 
         @comma_columns.each do |c|
           event_index = lexed_line.event_index(c)
