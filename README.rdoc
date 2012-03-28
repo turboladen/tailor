@@ -22,9 +22,9 @@ http://wiki.github.com/turboladen/tailor.
     * Trailing spaces at the end of lines
     * Spacing after commas
     * Spacing before commas
-    * Spacing around { and before }
-    * Spacing after [ and before ]
-    * Spacing after ( and before )
+    * Spacing around +{+ and before +}+
+    * Spacing after +[+ and before +]+
+    * Spacing after +(+ and before +)+
   * Vertical spacing
     * Trailing newlines (at the end of the file)
     * Max code lines in a class/module
