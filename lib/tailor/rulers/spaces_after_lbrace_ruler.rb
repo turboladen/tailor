@@ -28,7 +28,7 @@ class Tailor
       end
 
       def check_spaces_after_lbrace(lexed_line, lineno)
-       log "lbraces found at: #{@lbrace_columns}"
+        log "lbraces found at: #{@lbrace_columns}" unless @lbrace_columns.empty?
 
         @lbrace_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)

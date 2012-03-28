@@ -67,6 +67,9 @@ class Tailor
       when :spaces_before_rbrace
         msg = "Line has #{@options[:actual_spaces]} space(s) before a }, "
         msg << "but should have #{@options[:should_have]}."
+      when :spaces_before_rbracket
+        msg = "Line has #{@options[:actual_spaces]} space(s) before a ], "
+        msg << "but should have #{@options[:should_have]}."
       when :spaces_in_empty_braces
         msg = "Line has #{@options[:actual_spaces]} space(s) in between empty"
         msg << "braces, but should have #{@options[:should_have]}."

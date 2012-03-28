@@ -205,7 +205,7 @@ H_SPACING_OK[:array_of_symbols] =
   %Q{transition [:active, :reactivated] => :opened}
 H_SPACING_OK[:array_of_hashes] =
   %Q{[ { :one => [[1, 2, 3], ['a', 'b', 'c']] },
-  { :two => [[4, 5, 6], ['d', 'e', 'f']] } ]}
+  { :two => [[4, 5, 6], ['d', 'e', 'f']] }]}
 
 H_SPACING_OK[:simple_array_lonely_brackets] =
   %Q{[
@@ -217,6 +217,11 @@ H_SPACING_OK[:empty_array_in_multi_line_statement] =
   []
 end}
 
+H_SPACING_1[:space_in_empty_array] = %Q{[ ]}
 H_SPACING_1[:simple_array_space_after_lbracket] = %Q{[ 1, 2, 3]}
+H_SPACING_1[:simple_array_space_before_rbracket] = %Q{[1, 2, 3 ]}
 H_SPACING_2[:two_d_array_space_after_lbrackets] =
   %Q{[ [1, 2, 3], [ 'a', 'b', 'c']]}
+H_SPACING_2[:two_d_array_space_before_rbrackets] =
+  %Q{[[1, 2, 3 ], [ 'a', 'b', 'c'] ]}
+

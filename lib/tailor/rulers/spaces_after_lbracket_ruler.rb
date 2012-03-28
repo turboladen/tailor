@@ -28,7 +28,9 @@ class Tailor
       end
 
       def check_spaces_after_lbracket(lexed_line, lineno)
-       log "lbrackets found at: #{@lbracket_columns}"
+        unless @lbracket_columns.empty?
+         log "lbrackets found at: #{@lbracket_columns}"
+        end
 
         @lbracket_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
@@ -52,32 +54,27 @@ class Tailor
         end
 
         next_event = lexed_line.at(event_index + 1)
+        log "Next event: #{next_event}"
         if next_event.nil?
           log "Looks like there is no next event (this is last in the line)."
           return
         end
 
-        if next_event[1] == :on_rbracket
-          log "Next event is a ']'.  Looks like this is an empty Array."
-          return
-        end
-        
-        if next_event[1] == :on_nl || next_event[1] == :on_ignored_nl
-          log "Next event is a newline.  Moving on."
-          return
+        [:on_rbracket, :on_nl, :on_ignored_nl].each do |event|
+          if next_event[1] == event
+            log "Next event is a '#{event}'.  Moving on."
+            return
+          end
         end
 
         second_next_event = lexed_line.at(event_index + 2)
         log "Event + 2: #{second_next_event}"
         
-        if second_next_event[1] == :on_comment
-          log "Event + 2 is a comment.  Moving on."
-          return
-        end
-        
-        if second_next_event[1] == :on_lbrace
-          log "Event + 2 is a {.  Moving on."
-          return
+        [:on_comment, :on_lbrace, :on_lbracket].each do |event|
+          if second_next_event[1] == event
+            log "Event + 2 is a #{event}.  Moving on."
+            return
+          end
         end
         
         next_event[1] != :on_sp ? 0 : next_event.last.size

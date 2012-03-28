@@ -319,7 +319,10 @@ Feature: Horizontal spacing detection
 
   @single_line
   Scenarios: Single-line
-    | File                                          | Position | Position 2 | Problems |
-    | h_spacing/1/simple_array_space_after_lbracket | 1:1      |            | 1        |
-    | h_spacing/2/two_d_array_space_after_lbrackets | 1:1      | 1:14       | 2        |
+    | File                                           | Position | Position 2 | Problems |
+    | h_spacing/1/space_in_empty_array               | 1:1      |            | 1        |
+    | h_spacing/1/simple_array_space_after_lbracket  | 1:1      |            | 1        |
+    | h_spacing/1/simple_array_space_before_rbracket | 1:9      |            | 1        |
+    | h_spacing/2/two_d_array_space_after_lbrackets  | 1:1      | 1:14       | 2        |
+    | h_spacing/2/two_d_array_space_before_rbrackets | 1:10     | 1:30       | 2        |
 

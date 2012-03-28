@@ -75,6 +75,22 @@ class Tailor
         end
       end
 
+      def init_spaces_before_rbracket_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:brackets]
+            if @config[:horizontal_spacing][:brackets][:spaces_before_right]
+              spaces_before_rbracket_ruler = SpacesBeforeRBracketRuler.new(
+                @config[:horizontal_spacing][:brackets][:spaces_before_right]
+              )
+              h_spacing_ruler.add_child_ruler(spaces_before_rbracket_ruler)
+              [
+                :add_rbracket_observer
+              ].each { |o| lexer.send(o, spaces_before_rbracket_ruler)}
+            end
+          end
+        end
+      end
+
       def init_spaces_in_empty_braces_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing]
           if @config[:horizontal_spacing][:braces]
