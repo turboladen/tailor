@@ -49,11 +49,13 @@ class Tailor
         if token == "end"
           log "Got 'end' of class/module."
           
-          if @class_start_lines.last[:lineno] == @kw_start_lines.last
-            msg = "Class/module from line #{@class_start_lines.last[:lineno]} "
-            msg << "was #{@class_start_lines.last[:count]} lines long."
-            log msg 
-            @end_last_class = true
+          unless @class_start_lines.empty?
+            if @class_start_lines.last[:lineno] == @kw_start_lines.last
+              msg = "Class/module from line #{@class_start_lines.last[:lineno]}"
+              msg << " was #{@class_start_lines.last[:count]} lines long."
+              log msg
+              @end_last_class = true
+            end
           end
           
           @kw_start_lines.pop
