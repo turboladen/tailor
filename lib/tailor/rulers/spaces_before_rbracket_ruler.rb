@@ -2,6 +2,12 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
+    
+    # Checks for spaces before a ']' as given by +@config+.  It skips checking
+    # when:
+    # * it's the first char in the line.
+    # * it's directly preceded by a '['.
+    # * it's directly preceded by spaces, then a '['.
     class SpacesBeforeRBracketRuler < Tailor::Ruler
       def initialize(config)
         super(config)
