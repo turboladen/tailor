@@ -8,6 +8,7 @@ class Tailor
     # * it's the first char in the line.
     # * the char before it is a '#{'.
     # * the char before it is a '('.
+    # * the char before it is a '['.
     # * it's only preceded by spaces.
     class SpacesBeforeLBraceRuler < Tailor::Ruler
       
@@ -22,7 +23,8 @@ class Tailor
 
         if column.zero? || previous_event.nil? ||
           previous_event[1] == :on_embexpr_beg ||
-          previous_event[1] == :on_lparen
+          previous_event[1] == :on_lparen ||
+          previous_event[1] == :on_lbracket
           return nil
         end
         
