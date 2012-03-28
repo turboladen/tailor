@@ -398,9 +398,11 @@ Feature: Horizontal spacing detection
 
   @single_line
   Scenarios: Single-line
-    | File                                                        | Position | Position 2 | Problems |
-    | h_spacing/1/simple_method_call_space_after_lparen           | 1:6      |            | 1        |
-    | h_spacing/1/method_call_space_after_lparen_trailing_comment | 1:6      |            | 1        |
+    | File                                                                      | Position | Position 2 | Problems |
+    | h_spacing/1/simple_method_call_space_after_lparen                         | 1:6      |            | 1        |
+    | h_spacing/1/simple_method_call_space_before_rparen                        | 1:15     |            | 1        |
+    | h_spacing/1/method_call_space_after_lparen_trailing_comment               | 1:6      |            | 1        |
+    | h_spacing/2/method_call_space_after_lparen_before_rparen_trailing_comment | 1:6      | 1:16       | 2        |
 
   @multi_line
   Scenarios: Multi-line

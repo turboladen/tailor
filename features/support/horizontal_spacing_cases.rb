@@ -237,11 +237,16 @@ H_SPACING_OK[:multi_line_method_call_lonely_parens] = %Q{thing(
 )}
 
 H_SPACING_1[:simple_method_call_space_after_lparen] = %Q{thing( one, two)}
+H_SPACING_1[:simple_method_call_space_before_rparen] = %Q{thing(one, two )}
 H_SPACING_1[:method_call_space_after_lparen_trailing_comment] =
   %Q{thing( one, two)    # comment}
+H_SPACING_2[:method_call_space_after_lparen_before_rparen_trailing_comment] =
+  %Q{thing( one, two )    # comment}
+
 H_SPACING_1[:multi_line_method_call_space_after_lparen] = %Q{thing( one,
   two)}
 H_SPACING_1[:multi_line_method_call_space_after_lparen_trailing_comment] =
   %Q{thing( one,
   two)}
+
 
