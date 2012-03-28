@@ -30,7 +30,7 @@ http://wiki.github.com/turboladen/tailor.
     * Snake case class & module names
     * Camel case method names
   * Extra whitespace
-    * Around open/closed square brackets
+    * Around open/closed parentheses
     * Around colons in ternary statements
 
 == SYNOPSIS:
