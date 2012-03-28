@@ -287,7 +287,7 @@ class Tailor
         transition_lines
       end
 
-      def kw_update(token, modifier, loop_with_do, lineno)
+      def kw_update(token, modifier, loop_with_do, lineno, column)
         if KEYWORDS_TO_INDENT.include?(token)
           log "Indent keyword found: '#{token}'."
           @indent_keyword_line = lineno

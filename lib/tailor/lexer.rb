@@ -187,7 +187,8 @@ class Tailor
       notify_kw_observers(token,
         modifier_keyword?(token),
         LexedLine.new(super, lineno).loop_with_do?,
-        lineno)
+        lineno,
+        column)
 
       super(token)
     end

@@ -26,6 +26,11 @@ class Tailor
       log "first non-space element '#{element}'"
       element.nil? || element.empty?
     end
+    
+    # @return [Boolean]
+    def comment_line?
+      first_non_space_element[1] == :on_comment
+    end
 
     # Checks to see if the current line ends with an operator (not counting the
     # newline that might come after it).

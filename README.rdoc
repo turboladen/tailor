@@ -27,11 +27,10 @@ http://wiki.github.com/turboladen/tailor.
     * Spacing after ( and before )
   * Vertical spacing
     * Trailing newlines (at the end of the file)
+    * Max code lines in a class/module
   * Name cases
     * Snake case class & module names
     * Camel case method names
-  * Extra whitespace
-    * Around colons in ternary statements
 
 == SYNOPSIS:
 
@@ -39,7 +38,7 @@ Run tailor like:
 
   $ tailor path/to/check/
 ...or...
-  $ tail file_to_check.rb
+  $ tailor file_to_check.rb
 
 There are a number of false-positives and false-negatives in detection of the
 above rules, so please don't expect perfection in this detection.  :)
@@ -51,7 +50,6 @@ FIX ME!
 == REQUIREMENTS:
 
 * Rubies (tested)
- * 1.8.7
  * 1.9.2
  * 1.9.3
 * Gems

@@ -115,6 +115,7 @@ class Tailor
           allow_screaming_snake_case_classes: false
         },
         vertical_spacing: {
+          max_code_lines_in_class: 300,
           trailing_newlines: 1
         }
       }
