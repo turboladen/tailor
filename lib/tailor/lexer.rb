@@ -223,7 +223,7 @@ class Tailor
     def on_lparen(token)
       log "LPAREN: '#{token}'"
       lparen_changed
-      notify_lparen_observers(lineno)
+      notify_lparen_observers(lineno, column)
       super(token)
     end
 

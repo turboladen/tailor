@@ -90,6 +90,25 @@ class Tailor
           end
         end
       end
+      
+      def init_spaces_after_lparen_ruler(h_spacing_ruler, lexer)
+        if @config[:horizontal_spacing]
+          if @config[:horizontal_spacing][:parentheses]
+            if @config[:horizontal_spacing][:parentheses][:spaces_after_left]
+              spaces_after_lparen_ruler = SpacesAfterLParenRuler.new(
+                @config[:horizontal_spacing][:parentheses][:spaces_after_left]
+              )
+              h_spacing_ruler.add_child_ruler(spaces_after_lparen_ruler)
+              [
+                :add_comment_observer,
+                :add_ignored_nl_observer,
+                :add_lparen_observer,
+                :add_nl_observer
+              ].each { |o| lexer.send(o, spaces_after_lparen_ruler)}
+            end
+          end
+        end
+      end
 
       def init_spaces_in_empty_braces_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing]

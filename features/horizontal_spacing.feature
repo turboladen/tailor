@@ -326,3 +326,85 @@ Feature: Horizontal spacing detection
     | h_spacing/2/two_d_array_space_after_lbrackets  | 1:1      | 1:14       | 2        |
     | h_spacing/2/two_d_array_space_before_rbrackets | 1:10     | 1:30       | 2        |
 
+  @good_files @parens
+
+  Scenario Outline: Lines with good spacing around parens
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*0/
+    And the exit status should be 0
+
+  @single_line
+  Scenarios: Single-line
+    | File                                              |
+    | h_spacing/ok/empty_parens                         |
+    | h_spacing/ok/simple_method_call                   |
+    | h_spacing/ok/multi_line_method_call               |
+    | h_spacing/ok/multi_line_method_call_lonely_parens |
+
+  @multi_line
+  Scenarios: Multi-line
+    | File |
+
+  @bad_files @parens
+
+  Scenario Outline: Lines with bad spacing around parens
+    Given <File> exists without a newline at the end
+    And my configuration file "testfile.yml" looks like:
+    """
+    ---
+    :style:
+      :vertical_spacing:
+        :trailing_newlines: 0
+      :horizontal_spacing:
+        :allow_trailing_spaces: false
+        :braces:
+          :spaces_before_left: 1
+          :spaces_after_left: 1
+          :spaces_before_right: 1
+          :spaces_when_empty: 0
+        :brackets:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+        :parentheses:
+          :spaces_after_left: 0
+          :spaces_before_right: 0
+    """
+    When I run `tailor --debug --config testfile.yml <File>`
+    Then the output should match /Total Problems.*<Problems>/
+    And the output should match /position:  <Position>/
+    And the output should match /position:  <Position 2>/
+    And the exit status should be 1
+
+  @single_line
+  Scenarios: Single-line
+    | File                                                        | Position | Position 2 | Problems |
+    | h_spacing/1/simple_method_call_space_after_lparen           | 1:6      |            | 1        |
+    | h_spacing/1/method_call_space_after_lparen_trailing_comment | 1:6      |            | 1        |
+
+  @multi_line
+  Scenarios: Multi-line
+    | File                                                                   | Position | Position 2 | Problems |
+    | h_spacing/1/multi_line_method_call_space_after_lparen                  | 1:6      |            | 1        |
+    | h_spacing/1/multi_line_method_call_space_after_lparen_trailing_comment | 1:6      |            | 1        |
+

@@ -337,7 +337,7 @@ class Tailor
         @amount_to_change_next += 1
       end
 
-      def lparen_update(lineno)
+      def lparen_update(lineno, column)
         @paren_nesting << lineno
         @amount_to_change_next += 1
       end

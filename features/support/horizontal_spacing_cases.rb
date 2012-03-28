@@ -225,3 +225,23 @@ H_SPACING_2[:two_d_array_space_after_lbrackets] =
 H_SPACING_2[:two_d_array_space_before_rbrackets] =
   %Q{[[1, 2, 3 ], [ 'a', 'b', 'c'] ]}
 
+#-------------------------------------------------------------------------------
+# Parens
+#-------------------------------------------------------------------------------
+H_SPACING_OK[:empty_parens] = %Q{def thing()}
+H_SPACING_OK[:simple_method_call] = %Q{thing(one, two)}
+H_SPACING_OK[:multi_line_method_call] = %Q{thing(one,
+  two)}
+H_SPACING_OK[:multi_line_method_call_lonely_parens] = %Q{thing(
+  one, two
+)}
+
+H_SPACING_1[:simple_method_call_space_after_lparen] = %Q{thing( one, two)}
+H_SPACING_1[:method_call_space_after_lparen_trailing_comment] =
+  %Q{thing( one, two)    # comment}
+H_SPACING_1[:multi_line_method_call_space_after_lparen] = %Q{thing( one,
+  two)}
+H_SPACING_1[:multi_line_method_call_space_after_lparen_trailing_comment] =
+  %Q{thing( one,
+  two)}
+

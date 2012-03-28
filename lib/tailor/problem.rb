@@ -61,6 +61,9 @@ class Tailor
       when :spaces_after_lbracket
         msg = "Line has #{@options[:actual_spaces]} space(s) after a [, "
         msg << "but should have #{@options[:should_have]}."
+      when :spaces_after_lparen
+        msg = "Line has #{@options[:actual_spaces]} space(s) after a (, "
+        msg << "but should have #{@options[:should_have]}."
       when :spaces_before_lbrace
         msg = "Line has #{@options[:actual_spaces]} space(s) before a {, "
         msg << "but should have #{@options[:should_have]}."
