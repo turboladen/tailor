@@ -192,13 +192,14 @@ Feature: Horizontal spacing detection
 
   @multi_line
   Scenarios: Multi-line
-    | File                                            |
-    | h_spacing/ok/two_line_hash                      |
-    | h_spacing/ok/two_line_hash_trailing_comment     |
-    | h_spacing/ok/three_line_hash                    |
-    | h_spacing/ok/multi_line_braces_block            |
-    | h_spacing/ok/multi_line_qword_using_braces      |
-    | h_spacing/ok/empty_hash_in_multi_line_statement |
+    | File                                                 |
+    | h_spacing/ok/two_line_hash                           |
+    | h_spacing/ok/two_line_hash_trailing_comment          |
+    | h_spacing/ok/three_line_hash                         |
+    | h_spacing/ok/multi_line_braces_block                 |
+    | h_spacing/ok/multi_line_qword_using_braces           |
+    | h_spacing/ok/empty_hash_in_multi_line_statement      |
+    | h_spacing/ok/multi_line_hash_in_multi_line_statement |
 
   @bad_files @braces
 

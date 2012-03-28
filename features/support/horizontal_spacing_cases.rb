@@ -128,6 +128,13 @@ H_SPACING_OK[:empty_hash_in_multi_line_statement] =
   {}
 end}
 
+H_SPACING_OK[:multi_line_hash_in_multi_line_statement] =
+  %Q{if true
+  options = {
+    one: 1
+  }
+end}
+
 H_SPACING_OK[:single_line_string_interp] = %Q{`\#{IFCONFIG} | grep \#{ip}`}
 H_SPACING_OK[:single_line_block_in_string_interp] =
   %Q{"I did this \#{1..10.times { |n| n }} times."}

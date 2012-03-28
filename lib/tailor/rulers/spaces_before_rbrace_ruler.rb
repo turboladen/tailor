@@ -19,12 +19,13 @@ class Tailor
 
         if column.zero? || previous_event.nil? ||
           previous_event[1] == :on_lbrace
-          nil
-        elsif previous_event[1] != :on_sp
-          0
-        else
-          previous_event.last.size
+          return nil
         end
+        
+        return 0 if previous_event[1] != :on_sp
+        return nil if current_index - 2 < 0
+        
+        previous_event.last.size
       end
 
       def embexpr_beg_update
