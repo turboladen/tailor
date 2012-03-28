@@ -2,6 +2,12 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
+    
+    # Detects spaces after a '[' as given by +@config+.  It skips checking
+    # when:
+    # * it's the last char in line.
+    # * the char after it is a ']'.
+    # * the char after it is space, then a '{'.
     class SpacesAfterLBracketRuler < Tailor::Ruler
       def initialize(config)
         super(config)
@@ -70,7 +76,7 @@ class Tailor
         second_next_event = lexed_line.at(event_index + 2)
         log "Event + 2: #{second_next_event}"
         
-        [:on_comment, :on_lbrace, :on_lbracket].each do |event|
+        [:on_comment, :on_lbrace].each do |event|
           if second_next_event[1] == event
             log "Event + 2 is a #{event}.  Moving on."
             return
