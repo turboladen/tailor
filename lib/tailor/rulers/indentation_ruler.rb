@@ -332,7 +332,7 @@ class Tailor
         @amount_to_change_next += 1
       end
 
-      def lbracket_update(lineno)
+      def lbracket_update(lexed_line, lineno, column)
         @bracket_nesting << lineno
         @amount_to_change_next += 1
       end

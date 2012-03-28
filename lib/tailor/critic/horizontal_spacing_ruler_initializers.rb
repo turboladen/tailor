@@ -158,7 +158,7 @@ class Tailor
             :add_rparen_observer,
             :add_tstring_beg_observer,
             :add_tstring_end_observer
-          ].each { |o| lexer.send(o, line_length_ruler) }
+          ].each { |o| lexer.send(o, indentation_ruler) }
 
           indentation_ruler.start
         end
@@ -171,7 +171,7 @@ class Tailor
           [
             :add_ignored_nl_observer,
             :add_nl_observer
-          ].each { |o| lexer.send(o, line_length_ruler) }
+          ].each { |o| lexer.send(o, trailing_line_space_ruler) }
         end
       end
 

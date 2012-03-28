@@ -97,6 +97,11 @@ class Tailor
             spaces_before_right: 1,
             spaces_when_empty: 0,
           },
+          brackets: {
+            spaces_after_left: 0,
+            spaces_before_right: 0,
+            spaces_when_empty: 0,
+          },
           indent_spaces: 2,
           line_length: 80,
           spaces_after_comma: 1,

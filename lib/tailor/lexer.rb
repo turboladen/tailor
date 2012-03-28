@@ -214,8 +214,9 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_lbracket(token)
       log "LBRACKET: '#{token}'"
+      current_line = LexedLine.new(super, lineno)
       lbracket_changed
-      notify_lbracket_observers(lineno)
+      notify_lbracket_observers(current_line, lineno, column)
       super(token)
     end
 

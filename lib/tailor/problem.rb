@@ -50,22 +50,25 @@ class Tailor
       when :screaming_snake_case_class_name
         "Screaming-snake-case class/module found."
       when :spaces_after_comma
-        msg = "Line has #{@options[:actual_spaces]} spaces after a comma, "
+        msg = "Line has #{@options[:actual_spaces]} space(s) after a comma, "
         msg << "but should have #{@options[:should_have]}."
       when :spaces_before_comma
-        msg = "Line has #{@options[:actual_spaces]} spaces before a comma, "
+        msg = "Line has #{@options[:actual_spaces]} space(s) before a comma, "
         msg << "but should have #{@options[:should_have]}."
       when :spaces_after_lbrace
-        msg = "Line has #{@options[:actual_spaces]} spaces after a left brace,"
-        msg << " but should have #{@options[:should_have]}."
+        msg = "Line has #{@options[:actual_spaces]} space(s) after a {, "
+        msg << "but should have #{@options[:should_have]}."
+      when :spaces_after_lbracket
+        msg = "Line has #{@options[:actual_spaces]} space(s) after a [, "
+        msg << "but should have #{@options[:should_have]}."
       when :spaces_before_lbrace
-        msg = "Line has #{@options[:actual_spaces]} spaces before a left brace,"
-        msg << " but should have #{@options[:should_have]}."
+        msg = "Line has #{@options[:actual_spaces]} space(s) before a {, "
+        msg << "but should have #{@options[:should_have]}."
       when :spaces_before_rbrace
-        msg = "Line has #{@options[:actual_spaces]} spaces before a right "
-        msg << "brace, but should have #{@options[:should_have]}."
+        msg = "Line has #{@options[:actual_spaces]} space(s) before a }, "
+        msg << "but should have #{@options[:should_have]}."
       when :spaces_in_empty_braces
-        msg = "Line has #{@options[:actual_spaces]} spaces in between empty"
+        msg = "Line has #{@options[:actual_spaces]} space(s) in between empty"
         msg << "braces, but should have #{@options[:should_have]}."
       when :trailing_newlines
         msg = "File has #{@options[:actual_trailing_newlines]} trailing "
