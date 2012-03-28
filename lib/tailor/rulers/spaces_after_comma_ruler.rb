@@ -6,7 +6,7 @@ class Tailor
     # Looks for spaces after a ',' as given by +@config+.  It skips checking
     # when:
     # * the char after it is a '\n'.
-    # * it's at the end of a line that has a trailing comment.
+    # * it's at the end of a line, followed by a trailing comment.
     class SpacesAfterCommaRuler < Tailor::Ruler
       def initialize(config)
         super(config)

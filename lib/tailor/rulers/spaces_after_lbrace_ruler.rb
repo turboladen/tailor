@@ -2,6 +2,12 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
+    
+    # Checks for spaces after a '{' as given by +@config+.  It skips checking
+    # when:
+    # * it's at the end of a line.
+    # * the next char is a '}'
+    # * it's at the end of a line, followed by a trailing comment.
     class SpacesAfterLBraceRuler < Tailor::Ruler
       def initialize(config)
         super(config)
