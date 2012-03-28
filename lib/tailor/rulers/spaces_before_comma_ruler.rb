@@ -2,6 +2,8 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
+    
+    # Checks for spaces before a ',' as given by +@config+.
     class SpacesBeforeCommaRuler < Tailor::Ruler
       def initialize(config)
         super(config)
