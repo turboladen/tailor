@@ -7,16 +7,14 @@ require_relative '../configuration'
 class Tailor
   class CLI
     class Options
+      @output_color = true
+
       def self.parse!(args)
         options = {}
 
         opts = OptionParser.new do |o|
           o.banner = self.banner
           o.separator ""
-
-          o.on('-c', '--color', "Output in color") do |color|
-            require_relative '../../ext/string_ext'
-          end
 
           o.on('-f', '--config-file FILE',
             "Use a specific config file") do |config|
@@ -37,6 +35,10 @@ class Tailor
               $stderr.puts "Creation of ~/.tailorrc failed."
               exit 1
             end
+          end
+
+          o.on('-c', '--[no-]color', "Output in color") do |color|
+            @output_color = color
           end
 
           o.on_tail('-v', '--version', "Show the version") do
@@ -60,6 +62,7 @@ class Tailor
         end
 
         opts.parse!(args)
+        require_relative '../../ext/string_ext' if @output_color
 
         options
       end
