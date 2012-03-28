@@ -23,13 +23,13 @@ http://wiki.github.com/turboladen/tailor.
     * Spacing after commas
     * Spacing before commas
     * Spacing around { and before }
+    * Spacing after [ and before ]
   * Vertical spacing
     * Trailing newlines (at the end of the file)
   * Name cases
     * Snake case class & module names
     * Camel case method names
   * Extra whitespace
-    * Around open/closed parentheses
     * Around open/closed square brackets
     * Around colons in ternary statements
 
