@@ -21,7 +21,7 @@ class Tailor
         problems + ruler.problems
       end
 
-      @problems.sort_by! { |problem| problem[:line] }
+      @problems.sort_by! { |problem| problem[:line].to_i }
     end
 
     #---------------------------------------------------------------------------
