@@ -184,16 +184,10 @@ class Tailor
           end
 
           opt.on_tail('-h', '--help', 'Show this message') do |help|
-            puts opts if help
-            #puts opt
+            puts opt
             exit
           end
         end
-
-        #if args.empty?
-        #  puts opts
-        #  exit
-        #end
 
         opts.parse!(args)
         require_relative '../../ext/string_ext' if @output_color
