@@ -1,5 +1,6 @@
 require 'erb'
 require 'optparse'
+require 'ostruct'
 require 'text-table'
 require_relative '../version'
 require_relative '../configuration'
@@ -10,25 +11,31 @@ class Tailor
       @output_color = true
 
       def self.parse!(args)
-        options = {}
+        options = OpenStruct.new
+        options.config_file = ''
+        options.formatters = []
+        options.show_config = false
+        options.style = {}
 
-        opts = OptionParser.new do |o|
-          o.banner = self.banner
-          o.separator ""
+        opts = OptionParser.new do |opt|
+          opt.banner = self.banner
 
-          o.on('-f', '--config-file FILE',
-            "Use a specific config file") do |config|
-            options[:config_file] = config
+          opt.separator ""
+          opt.separator ""
+          opt.separator "Config file options:"
+          opt.on('-s', '--show-config', 'Show your current config.') do
+            options.show_config = true
           end
 
-          o.on('-s', '--show-config', 'Show your current config') do
-            options[:show_config] = true
+          opt.on('', '--config-file FILE',
+            "Use a specific config file.") do |config|
+            options.config_file = config
           end
 
-          o.on('', '--create-config', 'Create a new ~/.tailorrc') do
+          opt.on('', '--create-config', 'Create a new ~/.tailorrc') do
             if create_config
               msg = "Your new tailorrc file was created at "
-              msg << "#{Tailor::Configuration::DEFAULT_RC_FILE}"
+              msg << "#{Tailor::Configuration::DEFAULT_RC_FILE}."
               $stdout.puts msg
               exit
             else
@@ -37,29 +44,156 @@ class Tailor
             end
           end
 
-          o.on('-c', '--[no-]color', "Output in color") do |color|
+          #---------------------------------------------------------------------
+          # Style options
+          #---------------------------------------------------------------------
+          opt.separator ""
+          opt.separator "Style Options:"
+          opt.separator "  (Any option that doesn't have an explicit way of"
+          opt.separator "  turning it off can be done so simply by passing"
+          opt.separator "  passing it 'false'.)"
+
+          opt.separator ""
+          opt.separator "  * Horizontal Spacing:"
+          opt.on('--allow-hard-tabs BOOL',
+            'Check for hard tabs?  (default: true)') do |c|
+            options.style[:allow_hard_tabs] = c
+          end
+
+          opt.on('--allow-trailing-line-spaces BOOL',
+            'Check for trailing spaces at the end of lines?',
+            '(default: true)') do |c|
+            options.style[:allow_trailing_line_spaces] = c
+          end
+
+          opt.on('--indentation-spaces NUMBER',
+            'Spaces to expect indentation.  (default: 2)') do |c|
+            options.style[:indentation_spaces] = c
+          end
+
+          opt.on('--line-length NUMBER',
+            'Max characters in a line. (default: 80)') do |c|
+            options.style[:line_length] = c
+          end
+
+          opt.on('--spaces-after-comma NUMBER',
+            'Spaces to expect after a comma.  (default: 1)') do |c|
+            options.style[:spaces_after_comma] = c
+          end
+
+          opt.on('--spaces-before-comma NUMBER',
+            'Spaces to expect after a comma.  (default: 0)') do |c|
+            options.style[:spaces_before_comma] = c
+          end
+
+          opt.on('--spaces-after-lbrace NUMBER',
+            'Spaces to expect after a {.  (default: 1)') do |c|
+            options.style[:spaces_after_lbrace] = c
+          end
+
+          opt.on('--spaces-before-lbrace NUMBER',
+            'Spaces to expect before a {.  (default: 1)') do |c|
+            options.style[:spaces_before_lbrace] = c
+          end
+
+          opt.on('--spaces-before-rbrace NUMBER',
+            'Spaces to expect before a }.  (default: 1)') do |c|
+            options.style[:spaces_before_rbrace] = c
+          end
+
+          opt.on('--spaces-in-empty-braces NUMBER',
+            'Spaces to expect between a { and }.  (default: 0)') do |c|
+            options.style[:spaces_in_empty_braces] = c
+          end
+
+          opt.on('--spaces-after-lbracket NUMBER',
+            'Spaces to expect after a [.  (default: 0)') do |c|
+            options.style[:spaces_after_comma] = c
+          end
+
+          opt.on('--spaces-before-rbracket NUMBER',
+            'Spaces to expect before a ].  (default: 0)') do |c|
+            options.style[:spaces_before_rbracket] = c
+          end
+
+          opt.on('--spaces-after-lparen NUMBER',
+            'Spaces to expect after a (.  (default: 0)') do |c|
+            options.style[:spaces_after_lparen] = c
+          end
+
+          opt.on('--spaces-before-rparen NUMBER',
+            'Spaces to expect before a ).  (default: 0)') do |c|
+            options.style[:spaces_before_rparen] = c
+          end
+
+          opt.separator ""
+          opt.separator ""
+
+          opt.separator "  * Naming:"
+
+          opt.on('--camel-case-method-names BOOL',
+            'Check for camel-case method names?', '(default: true)') do |c|
+            options.style[:camel_case_method_names] = c
+          end
+
+          opt.on('--screaming-snake-case-names BOOL',
+            'Check for classes like "My_Class"?', '(default: true)') do |c|
+            options.style[:screaming_snake_case] = c
+          end
+
+          opt.separator ""
+          opt.separator ""
+          opt.separator "  * Vertical Spacing"
+
+          opt.on('--code-lines-in-class NUMBER',
+            'Max number lines of code in a class.', '(default: 300)') do |c|
+            options.style[:code_lines_in_class] = c
+          end
+
+          opt.on('--code-lines-in-method NUMBER',
+            'Max number lines of code in a method.', '(default: 30)') do |c|
+            options.style[:code_lines_in_method] = c
+          end
+
+          opt.on('--trailing-newlines',
+            'Newlines to expect at the end of the file.', '(default: 1)') do |c|
+            options.style[:trailing_newlines] = c
+          end
+
+          #---------------------------------------------------------------------
+          # Common options
+          #---------------------------------------------------------------------
+          opt.separator ""
+          opt.separator "Common options:"
+
+          opt.on('-f', '--fomat FORMATTER') do |format|
+            options.formatters << format
+          end
+
+          opt.on('-c', '--[no-]color', "Output in color") do |color|
             @output_color = color
           end
 
-          o.on_tail('-v', '--version', "Show the version") do
+          opt.on_tail('-v', '--version', "Show the version") do
             puts version
             exit
           end
 
-          o.on_tail('-d', '--debug', "Turn on debug logging") do
+          opt.on_tail('-d', '--debug', "Turn on debug logging") do
             Tailor::Logger.log = true
           end
 
-          o.on_tail('-h', '--help', 'Show this message') do |help|
-            puts opts
+          opt.on_tail('-h', '--help', 'Show this message') do |help|
+            puts opts if help
+            #puts opt
             exit
           end
         end
 
-        if args.empty?
-          p opts
-          exit
-        end
+        #if args.empty?
+        #  puts opts
+        #  exit
+        #end
 
         opts.parse!(args)
         require_relative '../../ext/string_ext' if @output_color
@@ -109,7 +243,10 @@ class Tailor
           false
         else
           erb_file = File.expand_path(
-            File.dirname(__FILE__) + '/../../../tailor_config.yaml.erb')
+            File.dirname(__FILE__) + '/../tailorrc.erb')
+          formatters = Tailor::Configuration.default[:formatters]
+          file_list = Tailor::Configuration.default[:file_sets].first[:file_list]
+          style = Tailor::Configuration.default[:file_sets].first[:style]
           default_config_file = ERB.new(File.read(erb_file)).result(binding)
           File.write(
             Tailor::Configuration::DEFAULT_RC_FILE, default_config_file)

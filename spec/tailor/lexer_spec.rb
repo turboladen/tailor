@@ -5,7 +5,7 @@ require 'tailor/lexer'
 describe Tailor::Lexer do
   let!(:file_text) { "" }
   let(:style) { {} }
-  let(:indentation_ruler) { double "IndentationRuler" }
+  let(:indentation_ruler) { double "IndentationSpacesRuler" }
 
   subject do
     r = Tailor::Lexer.new(file_text, style)

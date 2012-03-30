@@ -51,8 +51,8 @@ describe Tailor::CLI do
     let(:reporter) do
       reporter = double "Tailor::Reporter"
       formatter = double "Tailor::Formatter::Faker"
-      formatter.stub(:print_file_report)
-      formatter.stub(:print_summary_report)
+      formatter.stub(:file_report)
+      formatter.stub(:summary_report)
       formatter.stub(:each)
       reporter.stub(:formatters).and_return(formatter)
 

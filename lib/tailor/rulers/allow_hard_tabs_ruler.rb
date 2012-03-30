@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    class HardTabRuler < Tailor::Ruler
+    class AllowHardTabsRuler < Tailor::Ruler
       def sp_update(token, lineno, column)
         check_hard_tab(token, lineno, column)
       end

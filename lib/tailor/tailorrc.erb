@@ -19,15 +19,10 @@
 #                         the file.
 #                         Default:      1
 #
-<%= {
-  style: {
-    indentation: {
-      spaces: 2,
-      allow_hard_tabs: false,
-      continuation_spaces: 2
-      },
-    vertical_whitespace: {
-      trailing_newlines: 1
-    }
-  }
-}.to_yaml %>
+Tailor.config do
+  formatters <%= formatters %>
+  file_set '<%= file_list %>' do
+    <% style.each do |rule, value| %><%= rule %> <%= value %>
+    <% end %>
+  end
+end

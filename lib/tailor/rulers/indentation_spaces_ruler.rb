@@ -4,7 +4,7 @@ require_relative '../lexed_line'
 
 class Tailor
   module Rulers
-    class IndentationRuler < Tailor::Ruler
+    class IndentationSpacesRuler < Tailor::Ruler
       include LexerConstants
 
       def initialize(config)

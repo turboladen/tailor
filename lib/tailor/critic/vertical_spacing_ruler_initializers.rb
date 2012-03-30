@@ -1,3 +1,4 @@
+=begin
 require_relative '../rulers'
 
 class Tailor
@@ -7,7 +8,7 @@ class Tailor
 
       def init_code_lines_in_class_ruler(v_spacing_ruler, lexer)
         if @config[:vertical_spacing][:max_code_lines_in_class]
-          code_lines_in_class_ruler = CodeLinesInClassRuler.new(
+          code_lines_in_class_ruler = MaxCodeLinesInClassRuler.new(
             @config[:vertical_spacing][:max_code_lines_in_class]
           )
           v_spacing_ruler.add_child_ruler(code_lines_in_class_ruler)
@@ -21,7 +22,7 @@ class Tailor
 
       def init_code_lines_in_method_ruler(v_spacing_ruler, lexer)
         if @config[:vertical_spacing][:max_code_lines_in_method]
-          code_lines_in_method_ruler = CodeLinesInMethodRuler.new(
+          code_lines_in_method_ruler = MaxCodeLinesInMethodRuler.new(
             @config[:vertical_spacing][:max_code_lines_in_method]
           )
           v_spacing_ruler.add_child_ruler(code_lines_in_method_ruler)
@@ -45,3 +46,4 @@ class Tailor
     end
   end
 end
+=end

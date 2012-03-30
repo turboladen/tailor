@@ -3,7 +3,7 @@ require_relative '../lexer_constants'
 
 class Tailor
   module Rulers
-    class CodeLinesInClassRuler < Tailor::Ruler
+    class MaxCodeLinesInClassRuler < Tailor::Ruler
       include LexerConstants
 
       def initialize(config)

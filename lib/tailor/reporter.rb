@@ -10,5 +10,17 @@ class Tailor
         @formatters << eval("Tailor::Formatter::#{formatter.capitalize}.new")
       end
     end
+    
+    def file_report(file_problems)
+      @formatters.each do |formatter|
+        formatter.file_report(file_problems)
+      end
+    end
+    
+    def summary_report(all_problems)
+      @formatters.each do |formatter|
+        formatter.summary_report(all_problems)
+      end
+    end
   end
 end

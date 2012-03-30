@@ -6,6 +6,7 @@ describe Tailor::Configuration do
     Tailor::Configuration.new('.')
   end
 
+=begin
   describe "#load_from_file" do
     let!(:config_file_contents) do
       <<-CONFIG
@@ -84,4 +85,7 @@ describe Tailor::Configuration do
       end
     end
   end
+=end
+  
+  describe "#"
 end

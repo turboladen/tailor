@@ -3,29 +3,41 @@ require 'text-table'
 class Tailor
   module Formatter
     class Text
+      def line(length=79)
+        "##{'-' * length}\n"
+      end
 
-      # Prints the report on the file that just got checked.
-      #
-      # @param [Hash] problems Value should be the file name; keys should be
-      #   problems with the file.
-      def print_file_report(problems)
-        return if problems.values.first.empty?
-
-        file = problems.keys.first
-        problem_list = problems.values.first
-
-        message = "##{'-' * 79}\n"
-        if defined? Term::ANSIColor
-          message << "# #{'File:'.underscore}\n"
+      def file_header(file)
+        message << if defined? Term::ANSIColor
+          "# #{'File:'.underscore}\n"
         else
-          message << "# File:\n"
+          "# File:\n"
         end
+
         message << "#   #{file}\n"
         message << "#\n"
-        if defined? Term::ANSIColor
-          message << "# #{'Problems:'.underscore}\n"
+        
+        message
+      end
+
+      def file_set_header(file_set)
+        message << if defined? Term::ANSIColor
+          "# #{'File Set:'.underscore}\n"
         else
-          message << "# Problems:\n"
+          "# File Set:\n"
+        end
+
+        message << "#   #{file_set}\n"
+        message << "#\n"
+
+        message
+      end
+
+      def problems_header(problem_list)
+        message << if defined? Term::ANSIColor
+          "# #{'Problems:'.underscore}\n"
+        else
+          "# Problems:\n"
         end
 
         problem_list.each_with_index do |problem, i|
@@ -41,20 +53,35 @@ class Tailor
             end
           end
 
-          if defined? Term::ANSIColor
-            message << %Q{#  #{(i + 1).to_s.bold}.
+          message << if defined? Term::ANSIColor
+            %Q{#  #{(i + 1).to_s.bold}.
 #    * position:  #{position}
 #    * type:      #{problem[:type].to_s.red}
 #    * message:   #{problem[:message].red}
-}
+            }
           else
-            message << %Q{#  #{(i + 1)}.
+            %Q{#  #{(i + 1)}.
 #    * position:  #{position}
 #    * type:      #{problem[:type]}
 #    * message:   #{problem[:message]}
-}
+            }
           end
         end
+      end
+
+      # Prints the report on the file that just got checked.
+      #
+      # @param [Hash] problems Value should be the file name; keys should be
+      #   problems with the file.
+      def file_report(problems)
+        return if problems.values.first.empty?
+
+        file = problems.keys.first
+        problem_list = problems.values.first
+        message = line
+        message << file_header(file)
+        message << file_set_header(file_set)
+        message << problems_header(problem_list)
 
         message << <<-MSG
 #
@@ -68,7 +95,7 @@ class Tailor
       #
       # @param [Hash] problems Values are filenames; keys are problems for each
       #   of those files.
-      def print_summary_report(problems)
+      def summary_report(problems)
         if problems.empty?
           puts "Your files are in style."
         else

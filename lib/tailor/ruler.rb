@@ -5,10 +5,13 @@ class Tailor
   class Ruler
     include LogSwitch::Mixin
 
+    attr_reader :cli_option
+    
     def initialize(config={})
       @config = config
       @problems = []
       @child_rulers = []
+      @cli_option = ""
     end
 
     def add_child_ruler(ruler)

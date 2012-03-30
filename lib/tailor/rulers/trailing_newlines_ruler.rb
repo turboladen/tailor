@@ -3,7 +3,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    class TrailingNewlineRuler < Tailor::Ruler
+    class TrailingNewlinesRuler < Tailor::Ruler
 
       # Checks to see if the file's final character is a \n.  If it is, it just
       # returns the text that was passed in.  If it's not, it adds a \n, since

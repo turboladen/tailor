@@ -2,9 +2,6 @@ require 'erb'
 require 'yaml'
 require 'fileutils'
 require_relative 'configuration'
-require_relative 'critic/horizontal_spacing_ruler_initializers'
-require_relative 'critic/names_ruler_initializers'
-require_relative 'critic/vertical_spacing_ruler_initializers'
 require_relative 'lexer'
 require_relative 'logger'
 require_relative 'ruler'
@@ -15,52 +12,138 @@ require_relative 'runtime_error'
 class Tailor
   class Critic
     include LogSwitch::Mixin
-    include HorizontalSpacingRulerInitializers
-    include NamesRulerInitializers
-    include VerticalSpacingRulerInitializers
     include Tailor::Rulers
+    
+    RULER_OBSERVERS = {
+      spaces_before_lbrace: [:add_lbrace_observer],
+      spaces_after_lbrace: [
+        :add_comment_observer,
+        :add_ignored_nl_observer,
+        :add_lbrace_observer,
+        :add_nl_observer
+      ],
+      spaces_before_rbrace: [
+        :add_embexpr_beg_observer,
+        :add_lbrace_observer,
+        :add_rbrace_observer
+      ],
+      spaces_after_lbracket: [
+        :add_comment_observer,
+        :add_ignored_nl_observer,
+        :add_nl_observer
+      ],
+      spaces_before_rbracket: [:add_rbracket_observer],
+      spaces_after_lparen: [
+        :add_comment_observer,
+        :add_ignored_nl_observer,
+        :add_lparen_observer,
+        :add_nl_observer
+      ],
+      spaces_before_rparen: [:add_rparen_observer],
+      spaces_in_empty_braces: [
+        :add_embexpr_beg_observer,
+        :add_lbrace_observer,
+        :add_rbrace_observer
+      ],
+      spaces_before_comma: [
+        :add_comma_observer,
+        :add_comment_observer,
+        :add_ignored_nl_observer,
+        :add_nl_observer
+      ],
+      spaces_after_comma: [
+        :add_comma_observer,
+        :add_comment_observer,
+        :add_ignored_nl_observer,
+        :add_nl_observer
+      ],
+      line_length: [:add_ignored_nl_observer, :add_nl_observer],
+      indentation_spaces: [
+        :add_comma_observer,
+        :add_comment_observer,
+        :add_embexpr_beg_observer,
+        :add_embexpr_end_observer,
+        :add_ignored_nl_observer,
+        :add_kw_observer,
+        :add_lbrace_observer,
+        :add_lbracket_observer,
+        :add_lparen_observer,
+        :add_nl_observer,
+        :add_period_observer,
+        :add_rbrace_observer,
+        :add_rbracket_observer,
+        :add_rparen_observer,
+        :add_tstring_beg_observer,
+        :add_tstring_end_observer
+      ],
+      allow_trailing_line_spaces: [:add_ignored_nl_observer, :add_nl_observer],
+      allow_hard_tabs: [:add_sp_observer],
+      allow_camel_case_methods: [:add_ident_observer],
+      allow_screaming_snake_case_classes: [:add_const_observer],
+      max_code_lines_in_class: [
+        :add_ignored_nl_observer,
+        :add_kw_observer,
+        :add_nl_observer
+      ],
+      max_code_lines_in_method: [
+        :add_ignored_nl_observer,
+        :add_kw_observer,
+        :add_nl_observer
+      ],
+      trailing_newlines: [:add_file_observer]
+    }
 
     def initialize(configuration)
-      @config = configuration
+      @file_sets = configuration
     end
 
+    def critique
+      @file_sets.each do |file_set|
+        log "file_set: #{file_set}"
+
+        file_set[:file_list].each do |file|
+          log "file: #{file}"
+          problems = check_file(file, file_set[:style])
+          yield problems if block_given?
+        end
+      end
+    end
+
+    def init_rulers(style, lexer, parent_ruler)
+      style.each do |ruler_name, value|
+        log "Initializing ruler: #{ruler_name}"
+        ruler = 
+          instance_eval("Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})")
+        parent_ruler.add_child_ruler(ruler)
+        RULER_OBSERVERS[ruler_name].each do |observer|
+          lexer.send(observer, ruler)
+        end
+      end
+    end
+
+    def camelize(string)
+      string.split(/_/).map do |word|
+        if word =~ /^(r|l)(brac|paren)/
+          word = word.split(//, 2).map { |w| w.capitalize }.join
+          word
+        else
+          word.capitalize
+        end
+        
+        #word.capitalize
+      end.join
+    end
 
     # Adds problems found from Lexing to the {problems} list.
     #
     # @param [String] file The file to open, read, and check.
     # @return [Hash] The Problems for that file.
-    def check_file file
+    def check_file(file, style)
       log "<#{self.class}> Checking style of a single file: #{file}."
       lexer = Tailor::Lexer.new(file)
       ruler = Ruler.new
-
-      if @config[:horizontal_spacing]
-        h_spacing_ruler =
-          HorizontalSpacingRuler.new(@config[:horizontal_spacing])
-        ruler.add_child_ruler(h_spacing_ruler)
-        
-        HorizontalSpacingRulerInitializers.instance_methods.each do |m|
-          send m, h_spacing_ruler, lexer
-        end
-      end
-      
-      if @config[:vertical_spacing]
-        v_spacing_ruler = VerticalSpacingRuler.new(@config[:vertical_spacing])
-        ruler.add_child_ruler(v_spacing_ruler)
-
-        VerticalSpacingRulerInitializers.instance_methods.each do |m|
-          send m, v_spacing_ruler, lexer
-        end
-      end
-      
-      if @config[:names]
-        names_ruler = NamesRuler.new(@config[:names])
-        ruler.add_child_ruler(names_ruler)
-        
-        NamesRulerInitializers.instance_methods.each do |m|
-          send m, names_ruler, lexer
-        end
-      end
+      log "Style: #{style}"
+      init_rulers(style, lexer, ruler)
       
       lexer.lex
       lexer.check_added_newline
@@ -68,30 +151,6 @@ class Tailor
       problems[file] = ruler.problems
 
       { file => problems[file] }
-    end
-
-    # @todo This could delegate to Ruport (or something similar) for allowing
-    #   output of different types.
-    def print_report
-      if problems.empty?
-        puts "Your files are in style."
-      else
-        summary_table = Text::Table.new
-        summary_table.head = [{ value: "Tailor Summary", colspan: 2 }]
-        summary_table.rows << [{ value: "File", align: :center },
-          { value: "Total Problems", align: :center }]
-        summary_table.rows << :separator
-
-        problems.each do |file, problem_list|
-          unless problem_list.empty?
-            print_file_problems(file, problem_list)
-          end
-
-          summary_table.rows << [file, problem_list.size]
-        end
-
-        puts summary_table
-      end
     end
 
     # @return [Hash]
@@ -104,12 +163,5 @@ class Tailor
       problems.values.flatten.size
     end
 
-    # Checks to see if +path_to_check+ is a real file or directory.
-    #
-    # @param [String] path_to_check
-    # @return [Boolean]
-    def checkable? path_to_check
-      File.file?(path_to_check) || File.directory?(path_to_check)
-    end
   end
 end
