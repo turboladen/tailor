@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    class LineLengthRuler < Tailor::Ruler
+    class MaxLineLengthRuler < Tailor::Ruler
       def ignored_nl_update(lexed_line, lineno, column)
         check_line_length(lexed_line, lineno, column)
       end

@@ -30,9 +30,9 @@ class Tailor
             allow_screaming_snake_case_classes: false,
             allow_trailing_line_spaces: false,
             indentation_spaces: 2,
-            line_length: 80,
             max_code_lines_in_class: 300,
             max_code_lines_in_method: 30,
+            max_line_length: 80,
             spaces_after_comma: 1,
             spaces_before_comma: 0,
             spaces_before_lbrace: 1,
@@ -99,7 +99,13 @@ class Tailor
       end
 
       # Use defaults
-      [{ files: file_list(DEFAULT_GLOB), style: Configuration.default[:style] }]
+      [
+        {
+          label: :default,
+          files: file_list(DEFAULT_GLOB),
+          style: Configuration.default[:style]
+        }
+      ]
     end
 
     # @return [Array] The list of formatters to use.
@@ -149,15 +155,6 @@ class Tailor
     # @param [String] path Path to the file, directory or glob to check.
     # @return [Array] The list of files to check.
     def file_list(path=nil)
-=begin
-      if path.nil?
-        return ['']
-      end
-=end
-      #if path.nil?
-      #  return Dir.glob(DEFAULT_GLOB)
-      #end
-
       if File.directory? path
         log "path is a directory"
         FileUtils.cd path

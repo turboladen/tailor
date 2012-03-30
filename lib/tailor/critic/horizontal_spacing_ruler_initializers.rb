@@ -168,7 +168,7 @@ class Tailor
 
       def init_line_length_ruler(h_spacing_ruler, lexer)
         if @config[:horizontal_spacing][:line_length]
-          line_length_ruler = LineLengthRuler.new(
+          line_length_ruler = MaxLineLengthRuler.new(
             @config[:horizontal_spacing][:line_length]
           )
           [
