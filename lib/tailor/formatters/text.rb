@@ -61,15 +61,17 @@ class Tailor
 #    * position:  #{position}
 #    * type:      #{problem[:type].to_s.red}
 #    * message:   #{problem[:message].red}
-            }
+}
           else
             %Q{#  #{(i + 1)}.
 #    * position:  #{position}
 #    * type:      #{problem[:type]}
 #    * message:   #{problem[:message]}
-            }
+}
           end
         end
+        
+        message
       end
 
       # Prints the report on the file that just got checked.
