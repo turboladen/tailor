@@ -8,6 +8,7 @@ class Tailor
       end
 
       def file_header(file)
+        message = ""
         message << if defined? Term::ANSIColor
           "# #{'File:'.underscore}\n"
         else
@@ -21,6 +22,7 @@ class Tailor
       end
 
       def file_set_header(file_set)
+        message = ""
         message << if defined? Term::ANSIColor
           "# #{'File Set:'.underscore}\n"
         else
@@ -34,6 +36,7 @@ class Tailor
       end
 
       def problems_header(problem_list)
+        message = ""
         message << if defined? Term::ANSIColor
           "# #{'Problems:'.underscore}\n"
         else
