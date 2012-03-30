@@ -81,7 +81,7 @@ class Tailor
         else
           runtime_file_list
         end
-        return [{ files: files, style: style }]
+        return [{ file_list: files, style: style }]
       end
 
       # Anything from the rc file?
