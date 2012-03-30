@@ -76,14 +76,14 @@ class Tailor
       #
       # @param [Hash] problems Value should be the file name; keys should be
       #   problems with the file.
-      def file_report(problems)
+      def file_report(problems, file_set_label)
         return if problems.values.first.empty?
 
         file = problems.keys.first
         problem_list = problems.values.first
         message = line
         message << file_header(file)
-        message << file_set_header(file_set)
+        message << file_set_header(file_set_label)
         message << problems_header(problem_list)
 
         message << <<-MSG

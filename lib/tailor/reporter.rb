@@ -11,9 +11,9 @@ class Tailor
       end
     end
     
-    def file_report(file_problems)
+    def file_report(file_problems, label)
       @formatters.each do |formatter|
-        formatter.file_report(file_problems)
+        formatter.file_report(file_problems, label)
       end
     end
     

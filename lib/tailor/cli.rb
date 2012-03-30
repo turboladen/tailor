@@ -20,7 +20,6 @@ class Tailor
     def initialize(args)
       Tailor::Logger.log = false
       options = Options.parse!(args)
-      #raise unless checkable?(glob)
       
       @configuration = Configuration.new(args, options)
       ap @configuration
@@ -40,26 +39,12 @@ class Tailor
     # @return [Boolean] +true+ if no problems were detected; false if there
     #   were.
     def execute!
-=begin
-      @configuration.file_list.each do |file|
-        problems = @critic.check_file(file)
-
-        @reporter.formatters.each do |formatter|
-          formatter.print_file_report(problems)
-        end
-      end
-=end
-      @critic.critique do |problems_for_file|
-        @reporter.file_report problems_for_file
+      @critic.critique do |problems_for_file, label|
+        @reporter.file_report(problems_for_file, label)
       end
 
-=begin
-      @reporter.formatters.each do |formatter|
-        formatter.print_summary_report(@critic.problems)
-      end
-=end
       @reporter.summary_report(@critic.problems)
-
+      
       @critic.problem_count > 0
     end
     

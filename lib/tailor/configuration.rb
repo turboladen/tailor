@@ -22,30 +22,32 @@ class Tailor
     # @return [Hash]
     def self.default
       {
-        file_sets: [
-          file_list: DEFAULT_GLOB,
-          style: {
-            allow_camel_case_methods: false,
-            allow_hard_tabs: false,
-            allow_screaming_snake_case_classes: false,
-            allow_trailing_line_spaces: false,
-            indentation_spaces: 2,
-            max_code_lines_in_class: 300,
-            max_code_lines_in_method: 30,
-            max_line_length: 80,
-            spaces_after_comma: 1,
-            spaces_before_comma: 0,
-            spaces_before_lbrace: 1,
-            spaces_after_lbrace: 1,
-            spaces_before_rbrace: 1,
-            spaces_in_empty_braces: 0,
-            spaces_after_lbracket: 0,
-            spaces_before_rbracket: 0,
-            spaces_after_lparen: 0,
-            spaces_before_rparen: 0,
-            trailing_newlines: 1
+        file_sets: {
+          default: {
+            file_list: DEFAULT_GLOB,
+            style: {
+              allow_camel_case_methods: false,
+              allow_hard_tabs: false,
+              allow_screaming_snake_case_classes: false,
+              allow_trailing_line_spaces: false,
+              indentation_spaces: 2,
+              max_code_lines_in_class: 300,
+              max_code_lines_in_method: 30,
+              max_line_length: 80,
+              spaces_after_comma: 1,
+              spaces_before_comma: 0,
+              spaces_before_lbrace: 1,
+              spaces_after_lbrace: 1,
+              spaces_before_rbrace: 1,
+              spaces_in_empty_braces: 0,
+              spaces_after_lbracket: 0,
+              spaces_before_rbracket: 0,
+              spaces_after_lparen: 0,
+              spaces_before_rparen: 0,
+              trailing_newlines: 1
+            }
           }
-        ],
+        },
         formatters: ['text']
       }
     end
@@ -64,7 +66,7 @@ class Tailor
 
     # @return [Hash] The style Hash to use.
     def init_style(runtime_style)
-      style = Configuration.default[:file_sets].first[:style]
+      style = Configuration.default[:file_sets][:default][:style]
       style.merge!(style) unless runtime_style.empty?
 
       style
@@ -81,7 +83,8 @@ class Tailor
         else
           runtime_file_list
         end
-        return [{ file_list: files, style: style }]
+
+        return { default: { file_list: files, style: style } }
       end
 
       # Anything from the rc file?
@@ -90,7 +93,8 @@ class Tailor
         
         unless @config_file_options[:file_sets].empty?
           return @config_file_options[:file_sets].tap do |file_sets|
-            file_sets.each do |file_set|
+            file_sets.each do |label, file_set|
+              log "file set label #{label}"
               log "file set #{file_set}"
               file_set[:file_list] = file_list(file_set[:file_list])
             end
@@ -99,13 +103,12 @@ class Tailor
       end
 
       # Use defaults
-      [
-        {
-          label: :default,
+      {
+        default: {
           files: file_list(DEFAULT_GLOB),
           style: Configuration.default[:style]
         }
-      ]
+      }
     end
 
     # @return [Array] The list of formatters to use.

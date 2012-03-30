@@ -57,7 +57,7 @@ class Tailor
         :add_ignored_nl_observer,
         :add_nl_observer
       ],
-      line_length: [:add_ignored_nl_observer, :add_nl_observer],
+      max_line_length: [:add_ignored_nl_observer, :add_nl_observer],
       indentation_spaces: [
         :add_comma_observer,
         :add_comment_observer,
@@ -98,13 +98,13 @@ class Tailor
     end
 
     def critique
-      @file_sets.each do |file_set|
+      @file_sets.each do |label, file_set|
         log "file_set: #{file_set}"
 
         file_set[:file_list].each do |file|
           log "file: #{file}"
           problems = check_file(file, file_set[:style])
-          yield problems if block_given?
+          yield [problems, label] if block_given?
         end
       end
     end
@@ -162,6 +162,5 @@ class Tailor
     def problem_count
       problems.values.flatten.size
     end
-
   end
 end
