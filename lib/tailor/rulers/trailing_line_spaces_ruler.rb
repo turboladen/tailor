@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    class TrailingLineSpaceRuler < Tailor::Ruler
+    class TrailingLineSpacesRuler < Tailor::Ruler
       def ignored_nl_update(lexed_line, lineno, column)
         check_line_end_for_spaces(lexed_line, lineno, column)
       end
