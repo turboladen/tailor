@@ -10,5 +10,6 @@ tmp/
 .bundle/
 .idea/
 coverage/
+doc/
 
 */.DS_Store
