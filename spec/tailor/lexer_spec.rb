@@ -8,8 +8,9 @@ describe Tailor::Lexer do
   let(:indentation_ruler) { double "IndentationSpacesRuler" }
 
   subject do
-    r = Tailor::Lexer.new(file_text, style)
+    r = Tailor::Lexer.new(file_text)
     r.instance_variable_set(:@buf, [])
+    r.stub(:log)
 
     r
   end
@@ -30,7 +31,7 @@ describe Tailor::Lexer do
         file = double "File"
         file.should_receive(:read).and_return file_text
         File.should_receive(:open).with("test", 'r').and_return file
-        Tailor::Lexer.new(file_name, style)
+        Tailor::Lexer.new(file_name)
       end
     end
 
@@ -39,7 +40,7 @@ describe Tailor::Lexer do
 
       it "doesn't try to open a file" do
         File.should_not_receive(:open)
-        Tailor::Lexer.new(text, style)
+        Tailor::Lexer.new(text)
       end
     end
   end
@@ -71,6 +72,8 @@ describe Tailor::Lexer do
 
       context "token contains a hard tab" do
         it "adds a new problem to @problems" do
+          pending "This behavior moved to indent_sp_ruler--move there."
+          
           subject.instance_variable_set(:@problems, [])
 
           expect { subject.on_sp("\t") }.
@@ -81,6 +84,8 @@ describe Tailor::Lexer do
 
       context "token does not contain a hard tab" do
         it "does not add a new problem to @problems" do
+          pending "This behavior moved to indent_sp_ruler--move there."
+
           subject.instance_variable_set(:@problems, [])
 
           expect { subject.on_sp("\x20") }.
@@ -139,189 +144,6 @@ describe Tailor::Lexer do
     end
   end
 
-  describe "#single_line_indent_statement?" do
-    context "@indent_keyword_line is nil and lineno is 1" do
-      before do
-        subject.instance_variable_set(:@indent_keyword_line, nil)
-        subject.stub(:lineno).and_return 1
-      end
-
-      specify { subject.single_line_indent_statement?.should be_false }
-    end
-
-    context "@indent_keyword_line is 1 and lineno is 1" do
-      before do
-        subject.instance_variable_set(:@indent_keyword_line, 1)
-        subject.stub(:lineno).and_return 1
-      end
-
-      specify { subject.single_line_indent_statement?.should be_true }
-    end
-
-    context "@indent_keyword_line is 2 and lineno is 1" do
-      before do
-        subject.instance_variable_set(:@indent_keyword_line, 2)
-        subject.stub(:lineno).and_return 1
-      end
-
-      specify { subject.single_line_indent_statement?.should be_false }
-    end
-
-    context "@indent_keyword_line is 1 and lineno is 2" do
-      before do
-        subject.instance_variable_set(:@indent_keyword_line, 1)
-        subject.stub(:lineno).and_return 2
-      end
-
-      specify { subject.single_line_indent_statement?.should be_false }
-    end
-  end
-
-  describe "#multiline_braces?" do
-    context "@indentation_ruler.brace_nesting is empty" do
-      before do
-        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(true)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-      end
-
-      specify { subject.multiline_braces?.should be_false }
-    end
-
-    context "@indentation_ruler.brace_nesting is 0 and lineno is 0" do
-      before do
-        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(0)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 0
-      end
-
-      specify { subject.multiline_braces?.should be_false }
-    end
-
-    context "@indentation_ruler.brace_nesting is 0 and lineno is 1" do
-      before do
-        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(0)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 1
-      end
-
-      specify { subject.multiline_braces?.should be_true }
-    end
-
-    context "@indentation_ruler.brace_nesting.last is 1 and lineno is 0" do
-      before do
-        indentation_ruler.stub_chain(:brace_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:brace_nesting, :last).and_return(1)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 0
-      end
-
-      specify { subject.multiline_braces?.should be_false }
-    end
-  end
-
-  describe "#multiline_brackets?" do
-    context "@indentation_ruler.bracket_nesting is empty" do
-      before do
-        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(true)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-      end
-
-      specify { subject.multiline_brackets?.should be_false }
-    end
-
-    context "@indentation_ruler.bracket_nesting.last is 0 and lineno is 0" do
-      before do
-        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(0)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 0
-      end
-
-      specify { subject.multiline_brackets?.should be_false }
-    end
-
-    context "@indentation_ruler.bracket_nesting.last is 0 and lineno is 1" do
-      before do
-        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(0)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 1
-      end
-
-      specify { subject.multiline_brackets?.should be_true }
-    end
-
-    context "@indentation_ruler.bracket_nesting.last is 1 and lineno is 0" do
-      before do
-        indentation_ruler.stub_chain(:bracket_nesting, :empty?).and_return(false)
-        indentation_ruler.stub_chain(:bracket_nesting, :last).and_return(1)
-        subject.instance_variable_set(:@indentation_ruler, indentation_ruler)
-        subject.stub(:lineno).and_return 0
-      end
-
-      specify { subject.multiline_brackets?.should be_false }
-    end
-  end
-
-  describe "#r_event_with_content?" do
-    context ":on_rparen" do
-      context "line is '  )'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 2], :on_rparen, ")"]
-
-          l
-        end
-
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 2
-        end
-
-        it "returns true" do
-          subject.r_event_without_content?(current_line).should be_true
-        end
-      end
-
-      context "line is '  })'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 2], :on_rbrace, "}"]
-
-          l
-        end
-
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 3
-        end
-
-        it "returns false" do
-          subject.r_event_without_content?(current_line).should be_false
-        end
-      end
-
-      context "line is '  def some_method'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 0], :on_kw, "def"]
-
-          l
-        end
-
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 3
-        end
-
-        it "returns false" do
-          subject.r_event_without_content?(current_line).should be_false
-        end
-      end
-    end
-  end
 
   describe "#current_line_of_text" do
     before do

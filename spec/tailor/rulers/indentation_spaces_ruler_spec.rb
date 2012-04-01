@@ -124,6 +124,44 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     pending
   end
 
+  describe "#single_line_indent_statement?" do
+    context "@indent_keyword_line is nil and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, nil)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+
+    context "@indent_keyword_line is 1 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 1)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_true }
+    end
+
+    context "@indent_keyword_line is 2 and lineno is 1" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 2)
+        subject.stub(:lineno).and_return 1
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+
+    context "@indent_keyword_line is 1 and lineno is 2" do
+      before do
+        subject.instance_variable_set(:@indent_keyword_line, 1)
+        subject.stub(:lineno).and_return 2
+      end
+
+      specify { subject.single_line_indent_statement?.should be_false }
+    end
+    end
+  
   describe "#transition_lines" do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
@@ -400,7 +438,61 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     pending
   end
 
-  describe "#r_event_without_content?" do
-    pending
+  describe "#r_event_with_content?" do
+    context ":on_rparen" do
+      context "line is '  )'" do
+        let(:current_line) do
+          l = double "LexedLine"
+          l.stub(:first_non_space_element).and_return [[1, 2], :on_rparen, ")"]
+
+          l
+        end
+
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 2
+        end
+
+        it "returns true" do
+          subject.r_event_without_content?(current_line).should be_true
+        end
+      end
+
+      context "line is '  })'" do
+        let(:current_line) do
+          l = double "LexedLine"
+          l.stub(:first_non_space_element).and_return [[1, 2], :on_rbrace, "}"]
+
+          l
+        end
+
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 3
+        end
+
+        it "returns false" do
+          subject.r_event_without_content?(current_line).should be_false
+        end
+      end
+
+      context "line is '  def some_method'" do
+        let(:current_line) do
+          l = double "LexedLine"
+          l.stub(:first_non_space_element).and_return [[1, 0], :on_kw, "def"]
+
+          l
+        end
+
+        before do
+          subject.stub(:lineno).and_return 1
+          subject.stub(:column).and_return 3
+        end
+
+        it "returns false" do
+          subject.r_event_without_content?(current_line).should be_false
+        end
+      end
+    end
   end
 end
