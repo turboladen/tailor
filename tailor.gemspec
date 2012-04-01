@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency(%q<aruba>, ">=0")
   s.add_development_dependency(%q<bundler>, ">=0")
+  s.add_development_dependency(%q<code_statistics>, ">=0")
   s.add_development_dependency(%q<cucumber>, ">= 1.0.2")
   s.add_development_dependency(%q<fakefs>, ">= 0.4.0")
   s.add_development_dependency(%q<rake>, ">= 0")
