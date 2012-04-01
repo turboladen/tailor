@@ -6,10 +6,11 @@
 logic.txt
 output.txt
 
-tmp/
 .bundle/
 .idea/
 coverage/
 doc/
+pkg/
+tmp/
 
 */.DS_Store
