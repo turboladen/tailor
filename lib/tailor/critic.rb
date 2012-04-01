@@ -139,10 +139,9 @@ class Tailor
       ruler = Ruler.new
       log "Style: #{style}"
       init_rulers(style, lexer, ruler)
-      
+
       lexer.lex
       lexer.check_added_newline
-
       problems[file] = ruler.problems
 
       { file => problems[file] }
@@ -155,7 +154,7 @@ class Tailor
 
     # @return [Fixnum] The number of problems found so far.
     def problem_count
-      @problems.values.flatten.size
+      problems.values.flatten.size
     end
   end
 end
