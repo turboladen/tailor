@@ -3,7 +3,7 @@ require 'tailor/rulers/spaces_before_lbrace_ruler'
 
 describe Tailor::Rulers::SpacesBeforeLbraceRuler do
   subject { Tailor::Rulers::SpacesBeforeLbraceRuler.new 1 }
-  #before { Tailor::Logger.stub(:log) }
+  before { Tailor::Logger.stub(:log) }
 
   describe "#count_spaces" do
     context "lexed_line.event_index is 0" do
@@ -18,8 +18,8 @@ describe Tailor::Rulers::SpacesBeforeLbraceRuler do
       specify { subject.count_spaces(lexed_line, 1).should be_zero }
 
       it "sets @do_validation to false" do
-        expect { subject.count_spaces(lexed_line, 1) }.to
-          change{subject.instance_variable_get(:@do_validation)}.from(true).
+        expect { subject.count_spaces(lexed_line, 1) }.
+          to change{subject.instance_variable_get(:@do_validation)}.from(true).
           to(false)
       end
     end
