@@ -27,12 +27,7 @@ class Tailor
 
       @file_text = ensure_trailing_newline(@original_file_text)
       super @file_text
-
-      if @file_text != @original_file_text
-        @added_newline = true
-      else
-        @added_newline = false
-      end
+      @added_newline = @file_text != @original_file_text
     end
 
     def check_added_newline
