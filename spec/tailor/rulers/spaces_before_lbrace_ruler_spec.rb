@@ -1,7 +1,7 @@
 require_relative '../../spec_helper'
 require 'tailor/rulers/spaces_before_lbrace_ruler'
 
-describe Tailor::Rulers::SpacesBeforeLBraceRuler do
+describe Tailor::Rulers::SpacesBeforeLbraceRuler do
   describe "#count_spaces" do
     context "lbrace is the first char in the line" do
       let(:lexed_line) do

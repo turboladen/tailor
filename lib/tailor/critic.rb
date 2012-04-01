@@ -121,17 +121,12 @@ class Tailor
       end
     end
 
+    # Converts a snake-case String to a camel-case String.
+    #
+    # @param [String] string The String to convert.
+    # @return [String] The converted String.
     def camelize(string)
-      string.split(/_/).map do |word|
-        if word =~ /^(r|l)(brac|paren)/
-          word = word.split(//, 2).map { |w| w.capitalize }.join
-          word
-        else
-          word.capitalize
-        end
-        
-        #word.capitalize
-      end.join
+      string.split(/_/).map { |word| word.capitalize }.join
     end
 
     # Adds problems found from Lexing to the {problems} list.

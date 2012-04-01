@@ -8,7 +8,7 @@ class Tailor
     # * it's the first char in the line.
     # * it's directly preceded by a '('.
     # * it's directly preceded by spaces, then a '('.
-    class SpacesBeforeRParenRuler < Tailor::Ruler
+    class SpacesBeforeRparenRuler < Tailor::Ruler
       def initialize(config)
         super(config)
       end

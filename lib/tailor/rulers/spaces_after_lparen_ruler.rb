@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    class SpacesAfterLParenRuler < Tailor::Ruler
+    class SpacesAfterLparenRuler < Tailor::Ruler
       def initialize(config)
         super(config)
         @lparen_columns = []

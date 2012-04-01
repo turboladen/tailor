@@ -10,7 +10,7 @@ class Tailor
     # * the char before it is a '('.
     # * the char before it is a '['.
     # * it's only preceded by spaces.
-    class SpacesBeforeLBraceRuler < Tailor::Ruler
+    class SpacesBeforeLbraceRuler < Tailor::Ruler
       
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column

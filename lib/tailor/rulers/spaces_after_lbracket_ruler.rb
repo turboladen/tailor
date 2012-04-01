@@ -8,7 +8,7 @@ class Tailor
     # * it's the last char in line.
     # * the char after it is a ']'.
     # * the char after it is space, then a '{'.
-    class SpacesAfterLBracketRuler < Tailor::Ruler
+    class SpacesAfterLbracketRuler < Tailor::Ruler
       def initialize(config)
         super(config)
         @lbracket_columns = []

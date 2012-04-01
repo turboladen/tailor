@@ -8,7 +8,7 @@ class Tailor
     # * it's the first char in the line.
     # * it's the first char in the line, preceded by spaces.
     # * it's directly preceded by a '{'.
-    class SpacesBeforeRBraceRuler < Tailor::Ruler
+    class SpacesBeforeRbraceRuler < Tailor::Ruler
       def initialize(config)
         super(config)
         @lbrace_nesting = []
