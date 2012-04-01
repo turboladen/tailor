@@ -155,7 +155,7 @@ class Tailor
 
     # @return [Fixnum] The number of problems found so far.
     def problem_count
-      problems.values.flatten.size
+      @problems.values.flatten.size
     end
   end
 end
