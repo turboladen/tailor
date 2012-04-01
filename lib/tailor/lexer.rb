@@ -439,6 +439,12 @@ class Tailor
       end
     end
 
+    # Adds a newline to the end of the test if one doesn't exist.  Without doing
+    # this, Ripper won't trigger a newline event for the last line of the file,
+    # which is required for some rulers to do their thing.
+    #
+    # @param [String] file_text The text to check.
+    # @return [String] The file text with a newline at the end.
     def ensure_trailing_newline(file_text)
       count_trailing_newlines(file_text) > 0 ? file_text : (file_text + "\n")
     end
