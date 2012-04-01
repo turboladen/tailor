@@ -6,7 +6,7 @@ class Tailor
     include LogSwitch::Mixin
 
     attr_reader :cli_option
-    
+
     def initialize(config={})
       @config = config
       @problems = []
