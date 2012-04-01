@@ -4,80 +4,90 @@ require 'tailor/cli'
 
 describe Tailor::CLI do
   let(:args) { [] }
-  subject { Tailor::CLI.new(args)}
+  let(:options) { double "Options", show_config: false }
+
+  let(:config) do
+    double "Tailor::Configuration",
+      file_sets: nil, formatters: nil
+  end
+
+  before do
+    Tailor::Configuration.stub(:new).and_return config
+    Tailor::Critic.stub(:new)
+    Tailor::Reporter.stub(:new)
+  end
+
+  after do
+    Tailor::Configuration.unstub(:new)
+  end
+
+  subject { Tailor::CLI.new(args) }
 
   describe "::run" do
     it "creates an instance of Tailor::CLI and calls that object's #execute!" do
       cli = double "Tailor::CLI"
       cli.should_receive(:execute!)
       Tailor::CLI.should_receive(:new).and_return cli
-      Tailor::CLI.run({})
+      Tailor::CLI.run([])
     end
   end
 
   describe "#initialize" do
     let(:args) { ['last'] }
-
+    
     it "uses Options to parse the args" do
-      config = double "Tailor::Configuration", style: [], formatters: []
       Tailor::Configuration.stub(:new).and_return config
       Tailor::Critic.stub(:new)
       Tailor::Reporter.stub(:new)
-      Tailor::CLI::Options.should_receive(:parse!).with(args).and_return({})
+      Tailor::CLI::Options.should_receive(:parse!).with(args).and_return options
 
       Tailor::CLI.new(args)
     end
 
     it "creates a new Configuration from the file/dir and options" do
-      Tailor::CLI::Options.stub(:parse!).and_return({})
-      config = double "Tailor::Configuration", style: [], formatters: []
-      Tailor::Configuration.should_receive(:new).with('last', {}).and_return config
+      Tailor::CLI::Options.stub(:parse!).and_return(options)
+      Tailor::Configuration.should_receive(:new).
+        with(args, options).and_return config
       Tailor::Critic.stub(:new)
 
       Tailor::CLI.new(args)
     end
+    
+    context "options.show_config is true" do
+      
+    end
+    
+    context "options.show_config is false" do
+      
+    end
+    
   end
 
   describe "#execute!" do
-    let(:config) do
-      config = double "Tailor::Configuration"
-      config.stub(:style).and_return([])
-      config.stub(:file_list).and_return(['one', 'two'])
-      config.stub(:formatters).and_return(['text'])
-
-      config
-    end
-
-    let(:reporter) do
-      reporter = double "Tailor::Reporter"
-      formatter = double "Tailor::Formatter::Faker"
-      formatter.stub(:file_report)
-      formatter.stub(:summary_report)
-      formatter.stub(:each)
-      reporter.stub(:formatters).and_return(formatter)
-
-      reporter
-    end
-
-    let(:critic) do
-      critic = double "Tailor::Critic"
-      critic.stub(:problem_count).and_return(0)
-      critic.should_receive(:check_file).twice
-
-      critic
-    end
+    let(:reporter) { double "Tailor::Reporter" }
+    let(:critic) { double "Tailor::Critic", problem_count: 0 }
 
     before do
-      Tailor::CLI::Options.stub(:parse!).and_return({})
-      Tailor::Configuration.stub(:new).and_return(config)
       Tailor::Critic.stub(:new).and_return(critic)
       Tailor::Reporter.stub(:new).and_return(reporter)
-    end
-
-    it "tells @critic to check each file" do
-      subject.instance_variable_set(:@configuration, config)
       subject.instance_variable_set(:@critic, critic)
       subject.instance_variable_set(:@reporter, reporter)
+    end
+    
+    after do
+      Tailor::Critic.unstub(:new)
+      Tailor::Reporter.unstub(:new)
+    end
+
+    it "calls @critic.critique and yields file problems and the label" do
+      problems_for_file = {}
+      label = :test
+      critic.stub(:problem_count).and_return 1
+      critic.stub(:problems)
+      critic.stub(:critique).and_yield(problems_for_file, label)
+      reporter.stub(:summary_report)
+      reporter.should_receive(:file_report).with(problems_for_file, label)
+      
       subject.execute!
     end
   end
