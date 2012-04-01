@@ -3,7 +3,6 @@ require_relative 'critic'
 require_relative 'cli/options'
 require_relative 'logger'
 require_relative 'reporter'
-require 'awesome_print'
 
 class Tailor
 
@@ -22,7 +21,6 @@ class Tailor
       options = Options.parse!(args)
       
       @configuration = Configuration.new(args, options)
-      ap @configuration
 
       if options.show_config
         @configuration.show
@@ -46,14 +44,6 @@ class Tailor
       @reporter.summary_report(@critic.problems)
       
       @critic.problem_count > 0
-    end
-    
-    # Checks to see if +path_to_check+ is a real file or directory.
-    #
-    # @param [String] path_to_check
-    # @return [Boolean]
-    def checkable? path_to_check
-      File.file?(path_to_check) || File.directory?(path_to_check)
     end
   end
 end
