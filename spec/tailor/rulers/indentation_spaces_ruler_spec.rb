@@ -128,40 +128,36 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     context "@indent_keyword_line is nil and lineno is 1" do
       before do
         subject.instance_variable_set(:@indent_keyword_line, nil)
-        subject.stub(:lineno).and_return 1
       end
 
-      specify { subject.single_line_indent_statement?.should be_false }
+      specify { subject.single_line_indent_statement?(1).should be_false }
     end
 
     context "@indent_keyword_line is 1 and lineno is 1" do
       before do
         subject.instance_variable_set(:@indent_keyword_line, 1)
-        subject.stub(:lineno).and_return 1
       end
 
-      specify { subject.single_line_indent_statement?.should be_true }
+      specify { subject.single_line_indent_statement?(1).should be_true }
     end
 
     context "@indent_keyword_line is 2 and lineno is 1" do
       before do
         subject.instance_variable_set(:@indent_keyword_line, 2)
-        subject.stub(:lineno).and_return 1
       end
 
-      specify { subject.single_line_indent_statement?.should be_false }
+      specify { subject.single_line_indent_statement?(1).should be_false }
     end
 
     context "@indent_keyword_line is 1 and lineno is 2" do
       before do
         subject.instance_variable_set(:@indent_keyword_line, 1)
-        subject.stub(:lineno).and_return 2
       end
 
-      specify { subject.single_line_indent_statement?.should be_false }
+      specify { subject.single_line_indent_statement?(2).should be_false }
     end
-    end
-  
+  end
+
   describe "#transition_lines" do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
@@ -448,13 +444,8 @@ describe Tailor::Rulers::IndentationSpacesRuler do
           l
         end
 
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 2
-        end
-
         it "returns true" do
-          subject.r_event_without_content?(current_line).should be_true
+          subject.r_event_without_content?(current_line, 1, 2).should be_true
         end
       end
 
@@ -466,13 +457,8 @@ describe Tailor::Rulers::IndentationSpacesRuler do
           l
         end
 
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 3
-        end
-
         it "returns false" do
-          subject.r_event_without_content?(current_line).should be_false
+          subject.r_event_without_content?(current_line, 1, 3).should be_false
         end
       end
 
@@ -484,13 +470,8 @@ describe Tailor::Rulers::IndentationSpacesRuler do
           l
         end
 
-        before do
-          subject.stub(:lineno).and_return 1
-          subject.stub(:column).and_return 3
-        end
-
         it "returns false" do
-          subject.r_event_without_content?(current_line).should be_false
+          subject.r_event_without_content?(current_line, 1, 3).should be_false
         end
       end
     end
