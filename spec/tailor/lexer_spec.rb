@@ -73,7 +73,7 @@ describe Tailor::Lexer do
       context "token contains a hard tab" do
         it "adds a new problem to @problems" do
           pending "This behavior moved to indent_sp_ruler--move there."
-          
+
           subject.instance_variable_set(:@problems, [])
 
           expect { subject.on_sp("\t") }.
@@ -172,6 +172,44 @@ describe Tailor::Lexer do
 
       it "returns an empty string" do
         subject.current_line_of_text.should == ""
+      end
+    end
+  end
+
+  describe "#count_trailing_newlines" do
+    context "text contains 0 trailing \\n" do
+      let(:text) { "text" }
+      specify { subject.count_trailing_newlines(text).should be_zero }
+    end
+
+    context "text contains 1 trailing \\n" do
+      let(:text) { "text\n" }
+      specify { subject.count_trailing_newlines(text).should == 1 }
+    end
+  end
+
+  describe "#ensure_trailing_newline" do
+    before do
+      Tailor::Lexer.any_instance.unstub(:ensure_trailing_newline)
+    end
+    
+    context "text contains a trailing newline already" do
+      let!(:text) { "text\n" }
+      
+      before do
+        subject.stub(:count_trailing_newlines).and_return 1
+      end
+
+      it "doesn't alter the text" do
+        subject.ensure_trailing_newline(text).should == text
+      end
+    end
+
+    context "text does not contain a trailing newline" do
+      let!(:text) { "text" }
+
+      it "adds a newline at the end" do
+        subject.ensure_trailing_newline(text).should == text + "\n"
       end
     end
   end
