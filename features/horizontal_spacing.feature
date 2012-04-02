@@ -356,17 +356,19 @@ Feature: Horizontal spacing detection
 
   @single_line
   Scenarios: Single-line
-    | File                          |
-    | h_spacing/ok/empty_array      |
-    | h_spacing/ok/simple_array     |
-    | h_spacing/ok/two_d_array      |
-    | h_spacing/ok/array_of_hashes  |
-    | h_spacing/ok/array_of_symbols |
+    | File                            |
+    | h_spacing/ok/empty_array        |
+    | h_spacing/ok/simple_array       |
+    | h_spacing/ok/two_d_array        |
+    | h_spacing/ok/hash_key_reference |
+    | h_spacing/ok/array_of_hashes    |
+    | h_spacing/ok/array_of_symbols   |
 
   @multi_line
   Scenarios: Multi-line
     | File                                             |
     | h_spacing/ok/simple_array_lonely_brackets        |
+    | h_spacing/ok/simple_nested_array_lonely_brackets |
     | h_spacing/ok/empty_array_in_multi_line_statement |
 
   @bad_files @brackets
@@ -405,6 +407,8 @@ Feature: Horizontal spacing detection
     | h_spacing/1/space_in_empty_array               | 1:1      |            | 1        |
     | h_spacing/1/simple_array_space_after_lbracket  | 1:1      |            | 1        |
     | h_spacing/1/simple_array_space_before_rbracket | 1:9      |            | 1        |
+    | h_spacing/1/hash_key_ref_space_before_rbracket | 1:11     |            | 1        |
+    | h_spacing/1/hash_key_ref_space_after_lbracket  | 1:7      |            | 1        |
     | h_spacing/2/two_d_array_space_after_lbrackets  | 1:1      | 1:14       | 2        |
     | h_spacing/2/two_d_array_space_before_rbrackets | 1:10     | 1:30       | 2        |
 
