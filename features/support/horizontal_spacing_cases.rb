@@ -232,7 +232,7 @@ H_SPACING_1[:space_in_empty_array] = %Q{[ ]}
 H_SPACING_1[:simple_array_space_after_lbracket] = %Q{[ 1, 2, 3]}
 H_SPACING_1[:simple_array_space_before_rbracket] = %Q{[1, 2, 3 ]}
 H_SPACING_1[:hash_key_ref_space_before_rbracket] = %Q{thing[:one ]}
-H_SPACING_1[:hash_key_ref_space_after_rbracket] = %Q{thing[ :one]}
+H_SPACING_1[:hash_key_ref_space_after_lbracket] = %Q{thing[ :one]}
 H_SPACING_2[:two_d_array_space_after_lbrackets] =
   %Q{[ [1, 2, 3], [ 'a', 'b', 'c']]}
 H_SPACING_2[:two_d_array_space_before_rbrackets] =
