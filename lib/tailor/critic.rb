@@ -30,6 +30,7 @@ class Tailor
       spaces_after_lbracket: [
         :add_comment_observer,
         :add_ignored_nl_observer,
+        :add_lbracket_observer,
         :add_nl_observer
       ],
       spaces_before_rbracket: [:add_rbracket_observer],
@@ -116,6 +117,7 @@ class Tailor
           instance_eval("Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})")
         parent_ruler.add_child_ruler(ruler)
         RULER_OBSERVERS[ruler_name].each do |observer|
+          log "Adding #{observer} to lexer..."
           lexer.send(observer, ruler)
         end
       end
@@ -155,6 +157,16 @@ class Tailor
     # @return [Fixnum] The number of problems found so far.
     def problem_count
       problems.values.flatten.size
+    end
+    
+    #---------------------------------------------------------------------------
+    # Privates!
+    #---------------------------------------------------------------------------
+    private
+
+    def log(*args)
+      args.first.insert(0, "<#{self.class}> ")
+      Tailor::Logger.log(*args)
     end
   end
 end

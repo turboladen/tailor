@@ -35,12 +35,11 @@ class Tailor
 
       def check_spaces_after_lbracket(lexed_line, lineno)
         unless @lbracket_columns.empty?
-         log "lbrackets found at: #{@lbracket_columns}"
+         log "lbracket found at: #{@lbracket_columns}"
         end
 
         @lbracket_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
-
           next if actual_spaces.nil?
           
           if actual_spaces != @config
