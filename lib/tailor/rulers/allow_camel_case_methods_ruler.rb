@@ -3,10 +3,6 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowCamelCaseMethodsRuler < Tailor::Ruler
-      def initialize(style)
-        super(style)
-      end
-      
       def ident_update(token, lexed_line, lineno, column)
         ident_index = lexed_line.event_index(column)
         previous_event = lexed_line.event_at(ident_index - 2)

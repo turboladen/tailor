@@ -9,10 +9,7 @@ class Tailor
     # * it's directly preceded by a '['.
     # * it's directly preceded by spaces, then a '['.
     class SpacesBeforeRbracketRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
-      end
-      
+
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column
       # @return [Fixnum] The number of spaces before the rbracket.

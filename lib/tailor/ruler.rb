@@ -12,6 +12,7 @@ class Tailor
       @problems = []
       @child_rulers = []
       @cli_option = ""
+      log "Ruler initialized with style setting: #{@config}"
     end
 
     def add_child_ruler(ruler)
