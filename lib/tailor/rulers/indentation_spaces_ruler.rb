@@ -14,7 +14,7 @@ class Tailor
         @proper[:this_line] = 0
         @proper[:next_line] = 0
         @actual_indentation = 0
-        @started = false
+        @started = true
 
         @brace_nesting = []
         @bracket_nesting = []
