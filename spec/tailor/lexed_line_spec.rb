@@ -267,7 +267,7 @@ describe Tailor::LexedLine do
       specify { subject.event_index(1234).should be_nil }
     end
 
-    context "#event_at returns a valid colunn" do
+    context "#event_at returns a valid column" do
       it "returns the event" do
         subject.event_index(0).should be_zero
       end
