@@ -31,10 +31,8 @@ class Tailor
     end
 
     def check_added_newline
-      if @added_newline
-        file_changed
-        notify_file_observers(count_trailing_newlines(@original_file_text))
-      end
+      file_changed
+      notify_file_observers(count_trailing_newlines(@original_file_text))
     end
 
     def on_backref(token)
