@@ -102,18 +102,18 @@ H_SPACING_OK[:hash_as_param_in_parens] =
   %Q{add_headers({ content_length: new_body.length })}
 
 H_SPACING_OK[:two_line_hash] = %Q{{ :one =>
-'one' }}
+  'one' }}
 
 H_SPACING_OK[:two_line_hash_trailing_comment] = %Q{{ :one =>    # comment
-'one' }}
+  'one' }}
 
 H_SPACING_OK[:three_line_hash] = %Q{{ :one =>
-'one', :two =>
-'two' }}
+  'one', :two =>
+  'two' }}
 
 H_SPACING_OK[:single_line_block] = %Q{1..10.times { |n| puts number }}
 H_SPACING_OK[:multi_line_braces_block] = %Q{1..10.times { |n|
-puts number }}
+  puts number }}
 
 H_SPACING_OK[:multi_line_qword_using_braces] = %Q{%w{
   foo
