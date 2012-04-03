@@ -21,10 +21,10 @@ class Tailor
       options = Options.parse!(args)
       
       @configuration = Configuration.new(args, options)
+      @configuration.load!
 
       if options.show_config
         @configuration.show
-        exit
       end
 
       @critic = Critic.new(@configuration.file_sets)

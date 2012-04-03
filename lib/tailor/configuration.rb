@@ -41,6 +41,8 @@ class Tailor
     def self.default
       new
     end
+    
+    attr_reader :file_sets
 
     # @param [Array] runtime_file_list
     # @param [OpenStruct] options
@@ -60,23 +62,43 @@ class Tailor
       @options = options
     end
 
+    # Call this to load settings from the config file and from CLI options.
     def load!
-      config_file = @options.config_file unless @options.config_file.empty?
-      @config_file_options = load_from_config_file(config_file)
-      @formatters = unless @config_file_options[:formatters].empty?
-        @config_file_options[:formatters]
+      # Get config file settings
+      @config_file = @options.config_file unless @options.config_file.empty?
+      @rc_file_config = load_from_config_file(config_file)
+      
+      # Get formatters from config file
+      unless @rc_file_config.formatters.empty?
+        @formatters = @rc_file_config.formatters
+        log "@formatters is now #{@formatters}"
       end
       
-      unless @config_file_options[:file_sets].empty?
-        @file_sets[:default].merge!(@config_file_options[:file_sets][:default])
-        @config_file_options.delete(:default)
+      # Get file sets from config file
+      unless @rc_file_config.file_sets.empty?
+        @file_sets[:default].merge!(@rc_file_config.file_sets[:default])
+        @rc_file_config.file_sets.delete(:default)
         
-        @config_file_options[:file_sets].each do |file_set|
+        @rc_file_config.file_sets.each do |file_set|
           @file_sets[file_set.key] = file_set.value
         end
       end
-      #@formatters = init_formatters(@options.formatters)
-      #@file_sets = init_file_sets(@runtime_file_list, @options.style)
+      
+      # Get formatters from CLI options
+      unless @options.formatters.empty? || @options.formatters.nil?
+        @formatters = @options.formatters
+        log "@formatters is now #{@formatters}"
+      end
+      
+      # Get file sets from CLI options
+      unless @runtime_file_list.nil?
+        @file_sets.delete_if { |k,v| k != :default }
+        @file_sets[:default][:file_list] = file_list(@runtime_file_list)
+      end
+      
+      if @file_sets[:default][:file_list].empty?
+        @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
+      end
     end
 
     # @return [String] Name of the config file to use.
@@ -84,77 +106,16 @@ class Tailor
       @config_file ||= DEFAULT_RC_FILE
     end
 
-    def config_file=(new_config_file)
-      # Anything at runtime?
-      return config_file unless config_file.empty?
-      
-      @config_file = new_config_file
-    end
-
-    # @return [Array<Hash>] The list of file sets to use.
-=begin
-    def init_file_sets(runtime_file_list, runtime_style)
-      style = init_style(runtime_style)
-      log "Style inited: #{style}"
-
-      # Anything from the rc file?
-      if @config_file_options
-        log "Got config file options..."
-
-        unless @config_file_options.file_sets.empty?
-          @file_sets = @config_file_options.file_sets.tap do |file_sets|
-            file_sets.each do |label, file_set|
-              log "file set label #{label}"
-              log "file set #{file_set}"
-
-              {
-                label => {
-                  file_list: file_list(file_set[:file_list]),
-                  style: style
-                }
-              }
-            end
-          end
-        end
-      end
-
-      # Anything at runtime?
-      unless runtime_file_list.empty?
-        if runtime_file_list.size == 1
-          @file_sets[:default][:file_list] = file_list(runtime_file_list.first)
-        else
-          runtime_file_list
-        end
-      end
-    end
-=end
-
-    # @return [Array] The list of formatters to use.
-=begin
-    def init_formatters(formatters)
-      # Anything from the rc file?
-      if @config_file_options
-        unless @config_file_options.formatters.nil?
-          unless @config_file_options.formatters.empty?
-            @formatters = @config_file_options.formatters
-          end
-        end
-      end
-
-      # Anything at runtime?
-      unless formatters.empty?
-        @formatters = formatters
-        return
-      end
-    end
-=end
-
-    def formatters(new_formatters=nil)
-      @formatters = new_formatters unless new_formatters.nil?
+    # @return [Array] The list of formatters.
+    def formatters(*new_formatters)
+      @formatters = new_formatters unless new_formatters.empty?
 
       @formatters
     end
 
+    # @param [Symbol] label The label that represents the file set.
+    # @param [String] file_glob The String that represents the file set.  This
+    #   can be a file, directory, or a glob.
     def file_set(label=:default, file_glob=DEFAULT_GLOB, &block)
       log "file set label #{label}"
 
@@ -168,6 +129,10 @@ class Tailor
       @temp_style = {}
     end
 
+    # Implemented for {file_set}, this converts the config file lines that look
+    # like methods into a Hash.
+    #
+    # @return [Hash] The new style as defined by the config file.
     def method_missing(meth, *args, &blk)
       ok_methods = DEFAULT_STYLE.keys
 
@@ -194,7 +159,7 @@ class Tailor
 
       if config
         log "<#{self.class}> Got new config from file: #{config}"
-        @config_file_options = config
+        @rc_file_config = config
       end
     end
 
@@ -203,7 +168,9 @@ class Tailor
     # @param [String] glob Path to the file, directory or glob to check.
     # @return [Array] The list of files to check.
     def file_list(glob)
-      if File.directory? glob
+      if glob.is_a? Array
+        files_in_project = glob
+      elsif File.directory? glob
         files_in_project = Dir.glob(File.join('*', '**', '*'))
         Dir.glob(File.join('*')).each { |file| files_in_project << file }
       else
@@ -223,7 +190,7 @@ class Tailor
       table = Text::Table.new(horizontal_padding: 4)
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
       table.rows << :separator
-      table.rows << ['Style', @style.inspect]
+      table.rows << ['Style', @file_sets.inspect]
       table.rows << :separator
       table.rows << ['Formatters', @formatters]
 

@@ -17,7 +17,7 @@ describe Tailor::Configuration do
     context "param is some value" do
       it "sets @formatters to that value" do
         subject.formatters "blah"
-        subject.instance_variable_get(:@formatters).should == "blah"
+        subject.instance_variable_get(:@formatters).should == ["blah"]
       end
     end
   end
@@ -76,6 +76,14 @@ describe Tailor::Configuration do
         subject.instance_variable_get(:@config_file).should == 'pants'
       end
     end
+    
+    context "@config_file is nil" do
+      it "returns DEFAULT_RC_FILE" do
+        subject.config_file
+        subject.instance_variable_get(:@config_file).should ==
+          Tailor::Configuration::DEFAULT_RC_FILE
+      end
+    end
   end
   
   describe "#file_list" do
@@ -84,6 +92,13 @@ describe Tailor::Configuration do
       File.new('one/two/three.rb', 'w') { |f| f.write "stuff" }
     end
 
+    context "glob is an Array" do
+      it "returns all files in the glob" do
+        results = subject.file_list(['one/two/three.rb'])
+        results.last.should match /one\/two\/three.rb/
+      end
+    end
+    
     context "glob is a glob" do
       it "returns all files in the glob" do
         results = subject.file_list('one/**/*.rb')
