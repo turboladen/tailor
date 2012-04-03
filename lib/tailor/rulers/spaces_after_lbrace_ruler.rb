@@ -33,18 +33,26 @@ class Tailor
         ignored_nl_update(lexed_line, lineno, column)
       end
 
+      # Checks to see if the number of spaces after an lbrace equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] actual_spaces The number of spaces after the lbrace.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          @problems << Problem.new(:spaces_after_lbrace, lineno, column + 1,
+            { actual_spaces: actual_spaces, should_have: @config })
+        end
+      end
+
       def check_spaces_after_lbrace(lexed_line, lineno)
         log "lbraces found at: #{@lbrace_columns}" unless @lbrace_columns.empty?
 
         @lbrace_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
-
           next if actual_spaces.nil?
-          
-          if actual_spaces != @config
-            @problems << Problem.new(:spaces_after_lbrace, lineno, column + 1,
-              { actual_spaces: actual_spaces, should_have: @config })
-          end
+          measure(actual_spaces, lineno, column)
         end
 
         @lbrace_columns.clear

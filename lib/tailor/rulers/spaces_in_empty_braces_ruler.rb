@@ -50,6 +50,19 @@ class Tailor
       def nl_update(lexed_line, lineno, column)
         ignored_nl_update(lexed_line, lineno, column)
       end
+      
+      # Checks to see if the counted spaces between an lbrace and an rbrace
+      # equals the value at +@config+.
+      #
+      # @param [Fixnum] count The number of spaces before the lbrace.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(count, lineno, column)
+        if count != @config
+          @problems << Problem.new(:spaces_in_empty_braces, lineno, column,
+            { actual_spaces: count, should_have: @config })
+        end
+      end
 
       # This has to keep track of '{'s and only follow through with the check
       # if the '{' was an lbrace because Ripper doesn't scan the '}' of an
@@ -74,10 +87,7 @@ class Tailor
           log "Found #{count} space(s) before rbrace."
         end
 
-        if count != @config
-          @problems << Problem.new(:spaces_in_empty_braces, lineno, column,
-            { actual_spaces: count, should_have: @config })
-        end
+        measure(count, lineno, column)
       end
     end
   end

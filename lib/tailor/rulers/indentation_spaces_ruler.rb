@@ -14,7 +14,6 @@ class Tailor
         @proper[:this_line] = 0
         @proper[:next_line] = 0
         @actual_indentation = 0
-        @started = true
 
         @brace_nesting = []
         @bracket_nesting = []
@@ -112,14 +111,14 @@ class Tailor
       def start
         log "Starting indentation ruling."
         log "Next check should be at #{should_be_at}"
-        @started = true
+        @do_measurement = true
       end
 
       # Tells if the indentation checking process is on.
       #
       # @return [Boolean] +true+ if it's started; +false+ if not.
       def started?
-        @started == true
+        @do_measurement == true
       end
 
       # Stops the process of increasing/decreasing line indentation
@@ -131,7 +130,7 @@ class Tailor
           log msg
         end
 
-        @started = false
+        @do_measurement = false
       end
 
       # Updates +@actual_indentation+ based on the given lexed_line_output.
@@ -199,6 +198,19 @@ class Tailor
 
       def embexpr_end_update
         @embexpr_beg = false
+      end
+
+      # Checks if the line's indentation level is appropriate.
+      #
+      # @param [Fixnum] lineno The line the potential problem is on.
+      # @param [Fixnum] column The column the potential problem is on.
+      def measure(lineno, column)
+        unless valid_line?
+          @problems << Problem.new(:indentation, lineno, column,
+            { actual_indentation: @actual_indentation,
+            should_be_at: should_be_at }
+          )
+        end
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
@@ -270,13 +282,7 @@ class Tailor
 
         if not current_lexed_line.only_spaces?
           update_actual_indentation(current_lexed_line)
-
-          unless valid_line?
-            @problems << Problem.new(:indentation, lineno, column,
-              { actual_indentation: @actual_indentation,
-                should_be_at: should_be_at }
-            )
-          end
+          measure(lineno, column)
         else
           log "Line of only spaces.  Moving on."
           return
@@ -390,12 +396,7 @@ class Tailor
         set_up_line_transition
 
         unless end_of_multi_line_string?(current_lexed_line)
-          unless valid_line?
-            @problems << Problem.new(:indentation, lineno, column,
-              { actual_indentation: @actual_indentation,
-                should_be_at: should_be_at }
-            )
-          end
+          measure(lineno, column)
         end
 
         @modifier_in_line = nil

@@ -12,11 +12,16 @@ class Tailor
 
         if previous_event[1] == :on_kw &&
           (previous_event.last == "class" || previous_event.last == "module")
-          check_screaming_snake_case_class_name(token, lineno, column)
+          measure(token, lineno, column)
         end
       end
 
-      def check_screaming_snake_case_class_name(token, lineno, column)
+      # Checks to see if the class name matches /[A-Z].*_/.
+      #
+      # @param [Fixnum] token The space(s).
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(token, lineno, column)
         if token =~ /[A-Z].*_/
           @problems << Problem.new(:screaming_snake_case_class_name,
             lineno, column)

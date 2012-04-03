@@ -33,6 +33,19 @@ class Tailor
         previous_event.last.size
       end
       
+      # Checks to see if the counted spaces before an rparen equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] count The number of spaces before the rparen.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(count, lineno, column)
+        if count != @config
+          @problems << Problem.new(:spaces_before_rparen, lineno, column,
+            { actual_spaces: count, should_have: @config })
+        end
+      end
+
       # This has to keep track of '{'s and only follow through with the check
       # if the '{' was an lbrace because Ripper doesn't scan the '}' of an
       # embedded expression (embexpr_end) as such.
@@ -49,11 +62,8 @@ class Tailor
         else
           log "Found #{count} space(s) before rparen."
         end
-        
-        if count != @config
-          @problems << Problem.new(:spaces_before_rparen, lineno, column,
-            { actual_spaces: count, should_have: @config })
-        end
+
+        measure(count, lineno, column)
       end
     end
   end

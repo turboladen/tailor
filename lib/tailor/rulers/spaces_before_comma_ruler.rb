@@ -21,6 +21,19 @@ class Tailor
         end
       end
 
+      # Checks to see if the number of spaces before a comma equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] actual_spaces The number of spaces before the comma.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          @problems << Problem.new(:spaces_before_comma, lineno, column - 1,
+            { actual_spaces: actual_spaces, should_have: @config })
+        end
+      end
+
       def check_spaces_before_comma(lexed_line, lineno)
         @comma_columns.each do |c|
           event_index = lexed_line.event_index(c)
@@ -36,10 +49,7 @@ class Tailor
             previous_event.last.size
           end
 
-          if actual_spaces != @config
-            @problems << Problem.new(:spaces_before_comma, lineno, c - 1,
-              { actual_spaces: actual_spaces, should_have: @config })
-          end
+          measure(actual_spaces, lineno, c)
         end
 
         @comma_columns.clear

@@ -11,11 +11,16 @@ class Tailor
         return if previous_event.nil?
 
         if previous_event[1] == :on_kw && previous_event.last == "def"
-          check_camel_case_method_name(token, lineno, column)
+          measure(token, lineno, column)
         end
       end
 
-      def check_camel_case_method_name(token, lineno, column)
+      # Checks to see if the method name contains capital letters.
+      #
+      # @param [Fixnum] token The method name.
+      # @param [Fixnum] lineno Line the problem was found on.
+      # @param [Fixnum] column Column the problem was found on.
+      def measure(token, lineno, column)
         if token =~ /[A-Z]/
           @problems << Problem.new(:camel_case_method, lineno, column)
         end

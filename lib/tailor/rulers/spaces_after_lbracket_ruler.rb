@@ -33,6 +33,19 @@ class Tailor
         ignored_nl_update(lexed_line, lineno, column)
       end
 
+      # Checks to see if the actual_spaces after an lbracket equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] actual_spaces The number of spaces after the lbracket.
+      # @param [Fixnum] lineno Line the problem was found on.
+      # @param [Fixnum] column Column the problem was found on.
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          @problems << Problem.new(:spaces_after_lbracket, lineno, column + 1,
+            { actual_spaces: actual_spaces, should_have: @config })
+        end
+      end
+
       def check_spaces_after_lbracket(lexed_line, lineno)
         unless @lbracket_columns.empty?
          log "lbracket found at: #{@lbracket_columns}"
@@ -41,35 +54,53 @@ class Tailor
         @lbracket_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          
-          if actual_spaces != @config
-            @problems << Problem.new(:spaces_after_lbracket, lineno, column + 1,
-              { actual_spaces: actual_spaces, should_have: @config })
+
+          if @do_measurement == false
+            log "Skipping measurement."
+          else
+            measure(actual_spaces, lineno, column)
           end
+          
+          @do_measurement = true
         end
 
         @lbracket_columns.clear
       end
       
+      # Counts the number of spaces after the lbracket.
+      #
+      # @param [LexedLine] lexed_line The LexedLine that contains the context
+      #   the lbracket was found in.
+      # @param [Fixnum] column Column the lbracket was found at.
+      # @return [Fixnum] The number of spaces found after the lbracket.
       def count_spaces(lexed_line, column)
         event_index = lexed_line.event_index(column)
+
         if event_index.nil?
-          log "Event index is nil.  Weird..."
-          return
+          log "Just a note: event index is nil.  Weird..."
         end
 
         next_event = lexed_line.at(event_index + 1)
         log "Next event: #{next_event}"
+        
         if next_event.nil?
-          log "Looks like there is no next event (this is last in the line)."
-          return
+          log "lbracket must be at the end of the line."
+          @do_measurement = false
+          return 0
         end
 
-        [:on_rbracket, :on_nl, :on_ignored_nl].each do |event|
+        [:on_nl, :on_ignored_nl].each do |event|
           if next_event[1] == event
-            log "Next event is a '#{event}'.  Moving on."
-            return
+            log "lbracket is followed by a '#{event}'.  Moving on."
+            @do_measurement = false
+            return 0
           end
+        end
+        
+        if next_event[1] == :on_rbracket
+          log "lbracket is followed by a rbracket.  Moving on."
+          @do_measurement = false
+          return 0
         end
 
         second_next_event = lexed_line.at(event_index + 2)
@@ -78,7 +109,8 @@ class Tailor
         [:on_comment, :on_lbrace].each do |event|
           if second_next_event[1] == event
             log "Event + 2 is a #{event}.  Moving on."
-            return
+            @do_measurement = false
+            return next_event.last.size
           end
         end
         

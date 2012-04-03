@@ -24,7 +24,7 @@ class Tailor
         end
         
         if @end_last_class
-          check_code_lines_count(@class_start_lines.last[:count],
+          measure(@class_start_lines.last[:count],
             @class_start_lines.last[:lineno],
             @class_start_lines.last[:column])
           @class_start_lines.pop
@@ -67,7 +67,13 @@ class Tailor
         ignored_nl_update(lexed_line, lineno, column)
       end
       
-      def check_code_lines_count(actual_count, lineno, column)
+      # Checks to see if the actual count of code lines in the class is greater
+      # than the value in +@config+.
+      #
+      # @param [Fixnum] actual_count The number of code lines found.
+      # @param [Fixnum] lineno The line the potential problem is on.
+      # @param [Fixnum] column The column the potential problem is on.
+      def measure(actual_count, lineno, column)
         if actual_count > @config
           @problems << Problem.new(:code_lines_in_class, lineno, column,
             { actual_count: actual_count, should_be_at: @config })

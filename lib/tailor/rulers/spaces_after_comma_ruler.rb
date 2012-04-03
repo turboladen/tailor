@@ -32,6 +32,19 @@ class Tailor
         ignored_nl_update(lexed_line, lineno, column)
       end
 
+      # Checks to see if the actual_spaces after a comma equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] actual_spaces The number of spaces after the comma.
+      # @param [Fixnum] lineno Line the problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          @problems << Problem.new(:spaces_after_comma, lineno, column + 1,
+            { actual_spaces: actual_spaces, should_have: @config })
+        end
+      end
+
       def check_spaces_after_comma(lexed_line, lineno)
         log "Commas found at: #{@comma_columns}" unless @comma_columns.empty?
 
@@ -60,11 +73,7 @@ class Tailor
           end
 
           actual_spaces = next_event[1] != :on_sp ? 0 : next_event.last.size
-
-          if actual_spaces != @config
-            @problems << Problem.new(:spaces_after_comma, lineno, c + 1,
-              { actual_spaces: actual_spaces, should_have: @config })
-          end
+          measure(actual_spaces, lineno, c)
         end
 
         @comma_columns.clear

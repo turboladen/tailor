@@ -12,7 +12,6 @@ class Tailor
       def initialize(config)
         super(config)
         @lbrace_nesting = []
-        @do_validation = true
       end
 
       # @param [LexedLine] lexed_line
@@ -26,23 +25,23 @@ class Tailor
 
         if column.zero? || previous_event.nil?
           log "rbrace is at the beginning of the line."
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         if previous_event[1] == :on_lbrace
           log "rbrace comes after a '{'"
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         return 0 if previous_event[1] != :on_sp
 
-        # todo: I forget why this is here...
-        #if current_index - 2 < 0
-        #  @do_validation = false
-        #  return 0
-        #end
+        if current_index - 2 < 0
+          log "rbrace is at the beginning of an indented line.  Moving on."
+          @do_measurement = false
+          return previous_event.last.size
+        end
 
         previous_event.last.size
       end
@@ -53,6 +52,19 @@ class Tailor
 
       def lbrace_update(lexed_line, lineno, column)
         @lbrace_nesting << :lbrace
+      end
+
+      # Checks to see if the number of spaces before an rbrace equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] count The number of spaces after the rbrace.
+      # @param [Fixnum] lineno Line the problem was found on.
+      # @param [Fixnum] column Column the problem was found on.
+      def measure(count, lineno, column)
+        if count != @config
+          @problems << Problem.new(:spaces_before_rbrace, lineno, column,
+            { actual_spaces: count, should_have: @config })
+        end
       end
 
       # This has to keep track of '{'s and only follow through with the check
@@ -71,17 +83,15 @@ class Tailor
         @lbrace_nesting.pop
 
         count = count_spaces(lexed_line, column)
+        log "Found #{count} space(s) before rbrace."
 
-        if @do_validation == false
-          return
+        if @do_measurement == false
+          log "Skipping measurement."
         else
-          log "Found #{count} space(s) before rbrace."
+          measure(count, lineno, column)
         end
-
-        if count != @config
-          @problems << Problem.new(:spaces_before_rbrace, lineno, column,
-            { actual_spaces: count, should_have: @config })
-        end
+        
+        @do_measurement = true
       end
     end
   end

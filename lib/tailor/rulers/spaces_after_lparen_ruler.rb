@@ -27,6 +27,19 @@ class Tailor
         ignored_nl_update(lexed_line, lineno, column)
       end
 
+      # Checks to see if the number of spaces after an lparen equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] actual_spaces The number of spaces after the lparen.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          @problems << Problem.new(:spaces_after_lparen, lineno, column + 1,
+            { actual_spaces: actual_spaces, should_have: @config })
+        end
+      end
+
       def check_spaces_after_lparen(lexed_line, lineno)
         unless @lparen_columns.empty?
          log "lparens found at: #{@lparen_columns}"
@@ -35,11 +48,7 @@ class Tailor
         @lparen_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          
-          if actual_spaces != @config
-            @problems << Problem.new(:spaces_after_lparen, lineno, column + 1,
-              { actual_spaces: actual_spaces, should_have: @config })
-          end
+          measure(actual_spaces, lineno, column)
         end
 
         @lparen_columns.clear

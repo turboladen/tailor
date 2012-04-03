@@ -11,10 +11,6 @@ class Tailor
     # * the char before it is a '['.
     # * it's only preceded by spaces.
     class SpacesBeforeLbraceRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
-        @do_validation = true
-      end
 
       # Counts the spaces before the '{'.
       #
@@ -29,34 +25,33 @@ class Tailor
 
         if column.zero? || previous_event.nil?
           log "lbrace must be at the beginning of the line."
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         if previous_event[1] == :on_embexpr_beg
           log "lbrace comes after a '\#{'."
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         if previous_event[1] == :on_lparen
           log "lbrace comes after a '('."
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         if previous_event[1] == :on_lbracket
           log "lbrace comes after a '['."
-          @do_validation = false
+          @do_measurement = false
           return 0
         end
 
         return 0 if previous_event[1] != :on_sp
 
-        # todo: I forget why this is here...
         if current_index - 2 < 0
           log "lbrace comes at the beginning of an indented line."
-          @do_validation = false
+          @do_measurement = false
           return previous_event.last.size
         end
 
@@ -72,11 +67,22 @@ class Tailor
         count = count_spaces(lexed_line, column)
         log "Found #{count} space(s) before lbrace."
 
-        if @do_validation == false
-          log "Skipping validation."
-          return
+        if @do_measurement == false
+          log "Skipping measurement."
+        else
+          measure(count, lineno, column)
         end
-
+        
+        @do_measurement = true
+      end
+      
+      # Checks to see if the counted spaces before an lbrace equals the value
+      # at +@config+.
+      #
+      # @param [Fixnum] count The number of spaces before the lbrace.
+      # @param [Fixnum] lineno Line the potential problem is on.
+      # @param [Fixnum] column Column the potential problem is on.
+      def measure(count, lineno, column)
         if count != @config
           @problems << Problem.new(:spaces_before_lbrace, lineno, column,
             { actual_spaces: count, should_have: @config })

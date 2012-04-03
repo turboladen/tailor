@@ -12,6 +12,7 @@ class Tailor
       @problems = []
       @child_rulers = []
       @cli_option = ""
+      @do_measurement = true
       log "Ruler initialized with style setting: #{@config}"
     end
 
@@ -28,6 +29,11 @@ class Tailor
       @problems.sort_by! { |problem| problem[:line].to_i }
     end
 
+    # Each ruler should redefine this for its needs.
+    def measure(*args)
+      # Place-holder
+    end
+    
     #---------------------------------------------------------------------------
     # Privates!
     #---------------------------------------------------------------------------
