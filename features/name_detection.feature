@@ -2,19 +2,20 @@ Feature: Name detection
   As a Ruby developer, I want to be able to detect improper class and method
   names so that I can fix them.
 
+  Background:
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do
+        trailing_newlines 0
+      end
+    end
+    """
+
   @method_naming @good_files
   Scenario Outline: Method naming
     Given <File> exists without a newline at the end
-    And my configuration file "config.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :names:
-        :allow_camel_case_methods: false
-    """
-    When I run `tailor --debug --config config.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -27,16 +28,7 @@ Feature: Name detection
 
   Scenario Outline: Bad method naming
     Given <File> exists without a newline at the end
-    And my configuration file "config.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :names:
-        :allow_camel_case_methods: false
-    """
-    When I run `tailor --debug --config config.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the exit status should be 1
@@ -50,16 +42,7 @@ Feature: Name detection
 
   Scenario Outline: Good class naming
     Given <File> exists without a newline at the end
-    And my configuration file "config.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :names:
-        :allow_screaming_snake_case_classes: false
-    """
-    When I run `tailor --debug --config config.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -74,16 +57,7 @@ Feature: Name detection
 
   Scenario Outline: Bad class/module naming
     Given <File> exists without a newline at the end
-    And my configuration file "config.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :names:
-        :allow_screaming_snake_case_classes: false
-    """
-    When I run `tailor --debug --config config.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the exit status should be 1
