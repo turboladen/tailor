@@ -105,7 +105,6 @@ class Tailor
           log "file: #{file}"
           problems = check_file(file, file_set[:style])
           yield [problems, label] if block_given?
-          exit
         end
       end
     end
