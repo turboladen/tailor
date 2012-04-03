@@ -54,11 +54,11 @@ class Tailor
         return 0 if previous_event[1] != :on_sp
 
         # todo: I forget why this is here...
-        #if current_index - 2 < 0
-        #  log "current_index - 2 < 0.  Why is this statement here?"
-        #  @do_validation = false
-        #  return 0
-        #end
+        if current_index - 2 < 0
+          log "lbrace comes at the beginning of an indented line."
+          @do_validation = false
+          return previous_event.last.size
+        end
 
         previous_event.last.size
       end
@@ -70,11 +70,11 @@ class Tailor
       # @param [Fixnum] column
       def lbrace_update(lexed_line, lineno, column)
         count = count_spaces(lexed_line, column)
+        log "Found #{count} space(s) before lbrace."
 
         if @do_validation == false
+          log "Skipping validation."
           return
-        else
-          log "Found #{count} space(s) before lbrace."
         end
 
         if count != @config
