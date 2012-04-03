@@ -48,16 +48,31 @@ class Tailor
         @lparen_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          measure(actual_spaces, lineno, column)
+          
+          if @do_measurement == false
+            log "Skipping measurement."
+          else
+            measure(actual_spaces, lineno, column)
+          end
+          
+          @do_measurement = true
         end
 
         @lparen_columns.clear
       end
       
+      # Counts the number of spaces after the lparen.
+      #
+      # @param [LexedLine] lexed_line The LexedLine that contains the context
+      #   the lparen was found in.
+      # @param [Fixnum] column Column the lparen was found at.
+      # @return [Fixnum] The number of spaces found after the lparen.
       def count_spaces(lexed_line, column)
         event_index = lexed_line.event_index(column)
+
         if event_index.nil?
-          log "Event index is nil.  Weird..."
+          log "No lparen in this line.  Moving on..."
+          @do_measurement = false
           return
         end
 
@@ -65,15 +80,22 @@ class Tailor
         log "Next event: #{next_event}"
         
         if next_event.nil?
-          log "Looks like there is no next event (this is last in the line)."
-          return
+          log "lparen must be at the end of the line."
+          @do_measurement = false
+          return 0
         end
 
-        [:on_rparen, :on_nl, :on_ignored_nl].each do |event|
+        [:on_nl, :on_ignored_nl].each do |event|
           if next_event[1] == event
-            log "Next event is a '#{event}'.  Moving on."
-            return
+            log "lparen is followed by a '#{event}'.  Moving on."
+            return 0
           end
+        end
+
+        if next_event[1] == :on_rparen
+          log "lparen is followed by an rparen.  Moving on."
+          @do_measurement = false
+          return 0
         end
 
         second_next_event = lexed_line.at(event_index + 2)
@@ -82,7 +104,8 @@ class Tailor
         [:on_comment, :on_lbrace, :on_lparen].each do |event|
           if second_next_event[1] == event
             log "Event + 2 is a #{event}.  Moving on."
-            return
+            @do_measurement = false
+            return next_event.last.size
           end
         end
         

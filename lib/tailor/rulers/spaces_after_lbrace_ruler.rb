@@ -52,39 +52,59 @@ class Tailor
         @lbrace_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          measure(actual_spaces, lineno, column)
+          
+          if @do_measurement == false
+            log "Skipping measurement."
+          else
+            measure(actual_spaces, lineno, column)
+          end
+          
+          @do_measurement = true
         end
 
         @lbrace_columns.clear
       end
-      
+
+      # Counts the number of spaces after the lbrace.
+      #
+      # @param [LexedLine] lexed_line The LexedLine that contains the context
+      #   the lbrace was found in.
+      # @param [Fixnum] column Column the lbrace was found at.
+      # @return [Fixnum] The number of spaces found after the lbrace.
       def count_spaces(lexed_line, column)
         event_index = lexed_line.event_index(column)
+
         if event_index.nil?
-          log "Event index is nil.  Weird..."
+          log "No lbrace in this line.  Moving on..."
+          @do_measurement = false
           return
         end
 
         next_event = lexed_line.at(event_index + 1)
+        
         if next_event.nil?
-          log "Looks like there is no next event (this is last in the line)."
-          return
+          log "lbrace must be at the end of the line.  Moving on."
+          @do_measurement = false
+          return 0
+        end
+
+        if next_event[1] == :on_nl || next_event[1] == :on_ignored_nl
+          log "lbrace is followed by a '#{next_event[1]}'.  Moving on."
+          @do_measurement = false
+          return 0
         end
 
         if next_event[1] == :on_rbrace
-          log "Next event is a '}'.  Looks like this is an empty Hash."
-          return
-        end
-        
-        if next_event[1] == :on_nl || next_event[1] == :on_ignored_nl
-          log "Next event is a newline."
-          return
+          log "lbrace is followed by an rbrace.  Moving on."
+          @do_measurement = false
+          return 0
         end
 
         second_next_event = lexed_line.at(event_index + 2)
         if second_next_event[1] == :on_comment
           log "Event + 2 is a comment."
-          return
+          @do_measurement = false
+          return next_event.last.size
         end
         
         next_event[1] != :on_sp ? 0 : next_event.last.size

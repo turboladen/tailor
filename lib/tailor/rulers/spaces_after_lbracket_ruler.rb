@@ -77,7 +77,9 @@ class Tailor
         event_index = lexed_line.event_index(column)
 
         if event_index.nil?
-          log "Just a note: event index is nil.  Weird..."
+          log "No lbracket in this line.  Moving on..."
+          @do_measurement = false
+          return
         end
 
         next_event = lexed_line.at(event_index + 1)
