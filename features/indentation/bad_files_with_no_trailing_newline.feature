@@ -1,20 +1,20 @@
 @indentation
 Feature: Indentation check on bad fails without trailing newlines
 
+  Background:
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do
+        trailing_newlines 0
+      end
+    end
+    """
+    
   @bad_files
   Scenario Outline: Detect singular problems on poorly indented files
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: true
-        :indent_spaces: 2
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*1/
     And the output should match /position:  <Position>/
     And the exit status should be 1
