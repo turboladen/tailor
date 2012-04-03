@@ -282,7 +282,7 @@ INDENT_OK[:while_do_loop2] =
 num = 5;
 
 while i < num do
-  puts("Inside the loop i = \#{i}" );
+  puts("Inside the loop i = \#{i}");
   i +=1;
 end}
 
@@ -296,7 +296,7 @@ INDENT_OK[:until_do_loop2] =
 num = 5;
 
 until i > num  do
-  puts("Inside the loop i = \#{i}" );
+  puts("Inside the loop i = \#{i}");
   i +=1;
 end}
 
@@ -314,7 +314,7 @@ INDENT_OK[:while_as_modifier_loop] =
   %Q{i = 0;
 num = 5;
 begin
-  puts("Inside the loop i = \#{i}" );
+  puts("Inside the loop i = \#{i}");
   i +=1;
 end while i < num}
 
@@ -322,7 +322,7 @@ INDENT_OK[:until_as_modifier_loop] =
   %Q{i = 0;
 num = 5;
 begin
-  puts("Inside the loop i = \#{i}" );
+  puts("Inside the loop i = \#{i}");
   i +=1;
 end until i > num}
 
@@ -478,7 +478,7 @@ rule(:interleaved) do
 end
 
 rule(:ttl) do
-  str('ttl=') >> match('[\d]').repeat(1,3).as(:ttl)
+  str('ttl=') >> match('[\d]').repeat(1, 3).as(:ttl)
 end}
 
 INDENT_OK[:multi_line_string_concat_with_plus] =
@@ -559,7 +559,7 @@ INDENT_OK[:combo2] =
 
   send :each do
     def foo
-    end 
+    end
   end
 
 end}
