@@ -60,6 +60,7 @@ class Tailor
 
       @runtime_file_list = runtime_file_list
       @options = options
+      log "Got options: #{@options}"
     end
 
     # Call this to load settings from the config file and from CLI options.
@@ -95,6 +96,9 @@ class Tailor
         @file_sets.delete_if { |k,v| k != :default }
         @file_sets[:default][:file_list] = file_list(@runtime_file_list)
       end
+      
+      # Get style overrides from CLI options
+      @file_sets[:default][:style].merge!(@options.style)
       
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)

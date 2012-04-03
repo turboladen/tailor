@@ -96,32 +96,32 @@ class Tailor
             options.style[:spaces_before_lbrace] = c
           end
 
-          opt.on('--spaces-before-rbrace NUMBER',
+          opt.on('--spaces-before-rbrace NUMBER', Integer,
             'Spaces to expect before a }.  (default: 1)') do |c|
             options.style[:spaces_before_rbrace] = c
           end
 
-          opt.on('--spaces-in-empty-braces NUMBER',
+          opt.on('--spaces-in-empty-braces NUMBER', Integer,
             'Spaces to expect between a { and }.  (default: 0)') do |c|
             options.style[:spaces_in_empty_braces] = c
           end
 
-          opt.on('--spaces-after-lbracket NUMBER',
+          opt.on('--spaces-after-lbracket NUMBER', Integer,
             'Spaces to expect after a [.  (default: 0)') do |c|
             options.style[:spaces_after_comma] = c
           end
 
-          opt.on('--spaces-before-rbracket NUMBER',
+          opt.on('--spaces-before-rbracket NUMBER', Integer,
             'Spaces to expect before a ].  (default: 0)') do |c|
             options.style[:spaces_before_rbracket] = c
           end
 
-          opt.on('--spaces-after-lparen NUMBER',
+          opt.on('--spaces-after-lparen NUMBER', Integer,
             'Spaces to expect after a (.  (default: 0)') do |c|
             options.style[:spaces_after_lparen] = c
           end
 
-          opt.on('--spaces-before-rparen NUMBER',
+          opt.on('--spaces-before-rparen NUMBER', Integer,
             'Spaces to expect before a ).  (default: 0)') do |c|
             options.style[:spaces_before_rparen] = c
           end
@@ -133,29 +133,29 @@ class Tailor
 
           opt.on('--camel-case-method-names BOOL',
             'Check for camel-case method names?', '(default: true)') do |c|
-            options.style[:camel_case_method_names] = c
+            options.style[:camel_case_method_names] = instance_eval(c)
           end
 
           opt.on('--screaming-snake-case-names BOOL',
             'Check for classes like "My_Class"?', '(default: true)') do |c|
-            options.style[:screaming_snake_case] = c
+            options.style[:screaming_snake_case] = instance_eval(c)
           end
 
           opt.separator ""
           opt.separator ""
           opt.separator "  * Vertical Spacing"
 
-          opt.on('--code-lines-in-class NUMBER',
+          opt.on('--code-lines-in-class NUMBER', Integer,
             'Max number lines of code in a class.', '(default: 300)') do |c|
             options.style[:code_lines_in_class] = c
           end
 
-          opt.on('--code-lines-in-method NUMBER',
+          opt.on('--code-lines-in-method NUMBER', Integer,
             'Max number lines of code in a method.', '(default: 30)') do |c|
             options.style[:code_lines_in_method] = c
           end
 
-          opt.on('--trailing-newlines',
+          opt.on('--trailing-newlines NUMBER', Integer,
             'Newlines to expect at the end of the file.', '(default: 1)') do |c|
             options.style[:trailing_newlines] = c
           end
