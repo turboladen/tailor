@@ -2,36 +2,21 @@ Feature: Horizontal spacing detection
   As a Ruby developer, I want to be able to detect horizontal spacing
   problems so that I can fix them.
 
+  Background:
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do
+        trailing_newlines 0
+      end
+    end
+    """
+
   @bad_files @hard_tabs
 
   Scenario Outline: Detect hard tabs
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: true
-        :allow_hard_tabs: false
-        :indent_spaces: 2
-        :line_length: 80
-        :spaces_after_comma: 1
-        :spaces_before_comma: 0
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the output should match /position:  <Position 2>/
@@ -48,16 +33,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Detect long lines
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :line_length: 80
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the exit status should be 1
@@ -71,30 +47,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines under long-line threshold
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: true
-        :line_length: 80
-        :spaces_after_comma: 1
-        :spaces_before_comma: 0
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -107,30 +60,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with trailing spaces
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :horizontal_spacing:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :spaces_after_comma: 1
-        :spaces_before_comma: 0
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the exit status should be 1
@@ -145,30 +75,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with bad comma spacing
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :horizontal_spacing:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :spaces_after_comma: 1
-        :spaces_before_comma: 0
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Count>/
     And the output should match /position:  <Position>/
     And the output should match /position:  <Position 2>/
@@ -188,30 +95,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with good comma spacing
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :horizontal_spacing:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :spaces_after_comma: 1
-        :spaces_before_comma: 0
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -225,27 +109,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with good spacing around braces
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -277,27 +141,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with bad spacing around braces
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/
     And the output should match /position:  <Position 2>/
@@ -330,27 +174,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with good spacing around brackets
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
@@ -375,27 +199,7 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with bad spacing around brackets
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/
     And the output should match /position:  <Position 2>/
@@ -416,67 +220,27 @@ Feature: Horizontal spacing detection
 
   Scenario Outline: Lines with good spacing around parens
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
 
   @single_line
   Scenarios: Single-line
-    | File                                              |
-    | h_spacing/ok/empty_parens                         |
-    | h_spacing/ok/simple_method_call                   |
-    | h_spacing/ok/multi_line_method_call               |
-    | h_spacing/ok/multi_line_method_call_lonely_parens |
+    | File                            |
+    | h_spacing/ok/empty_parens       |
+    | h_spacing/ok/simple_method_call |
 
   @multi_line
   Scenarios: Multi-line
-    | File |
+    | File                                              |
+    | h_spacing/ok/multi_line_method_call               |
+    | h_spacing/ok/multi_line_method_call_lonely_parens |
 
   @bad_files @parens
 
   Scenario Outline: Lines with bad spacing around parens
     Given <File> exists without a newline at the end
-    And my configuration file "testfile.yml" looks like:
-    """
-    ---
-    :style:
-      :vertical_spacing:
-        :trailing_newlines: 0
-      :horizontal_spacing:
-        :allow_trailing_spaces: false
-        :braces:
-          :spaces_before_left: 1
-          :spaces_after_left: 1
-          :spaces_before_right: 1
-          :spaces_when_empty: 0
-        :brackets:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-        :parentheses:
-          :spaces_after_left: 0
-          :spaces_before_right: 0
-    """
-    When I run `tailor --debug --config testfile.yml <File>`
+    When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/
     And the output should match /position:  <Position 2>/
