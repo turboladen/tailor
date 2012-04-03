@@ -183,10 +183,8 @@ class Tailor
       file_lines.delete_at(lineno - 1)
       file_lines.insert(lineno - 1, new_text)
       file_lines = file_lines.join("\n")
-      log "new file lines: #{file_lines}"
 
       ripped_output = ::Ripper.lex(file_lines)
-      log "New ripped output: #{ripped_output}"
       LexedLine.new(ripped_output, lineno)
     end
 
