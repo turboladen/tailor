@@ -6,86 +6,102 @@ describe Tailor::Configuration do
     Tailor::Configuration.new('.')
   end
 
-=begin
-  describe "#load_from_file" do
-    let!(:config_file_contents) do
-      <<-CONFIG
----
-:style:
-  :indentation:
-    :spaces: 2
-    :continuation_spaces: 2
-  :vertical_spacing:
-    :trailing_newlines: 1
-  :horizontal_spacing:
-    :allow_hard_tabs: false
-:format:
-  text
-      CONFIG
-    end
-
-    let!(:tailorrc_path) { File.expand_path('~/.tailorrc') }
-
-    context "~/.tailorrc exists" do
-      before do
-        FileUtils.mkdir_p ENV['HOME']
-        File.open(tailorrc_path, 'w+') { |f| f.write config_file_contents }
-      end
-
-      it "loads that file" do
-        YAML.should_receive(:load_file).with(tailorrc_path).at_least(:once).
-          and_return(YAML.load(config_file_contents))
-        subject.load_from_file(tailorrc_path)
-      end
-
-      it "sets @style to the the :style section of the config file" do
-        YAML.should_receive(:load_file).with(tailorrc_path).at_least(:once).
-          and_return(YAML.load(config_file_contents))
-        subject.load_from_file(tailorrc_path)
-        subject.instance_variable_get(:@style).should == {
-          indentation: {
-            spaces: 2,
-            continuation_spaces: 2
-          },
-          vertical_spacing: {
-            trailing_newlines: 1
-          },
-          horizontal_spacing: {
-            allow_hard_tabs: false
-          }
-        }
-      end
-
-      it "sets @formatters to the :format section of the config file" do
-        YAML.stub(:load_file).with(tailorrc_path).and_return(
-          YAML.load(config_file_contents)
-        )
-        subject.load_from_file(tailorrc_path)
-
-        subject.instance_variable_get(:@formatters).should == "text"
+  describe "#formatters" do
+    context "param is nil" do
+      it "returns the pre-exisiting @formatters" do
+        subject.instance_variable_set(:@formatters, [:blah])
+        subject.formatters.should == [:blah]
       end
     end
 
-    context "~/.tailorrc does not exist" do
-      it "does not try loading that file" do
-        YAML.should_not_receive(:load_file).with(tailorrc_path)
-        subject.load_from_file('.')
-      end
-
-      it "does not alter @style" do
-        style = double "@style"
-        subject.instance_variable_set(:@style, style)
-        expect { subject.load_from_file('.') }.to_not change{subject.style}
-      end
-
-      it "does not alter @formatters" do
-        formatters = double "@formatters"
-        subject.instance_variable_set(:@formatters, formatters)
-        expect { subject.load_from_file('.') }.to_not change{subject.formatters}
+    context "param is some value" do
+      it "sets @formatters to that value" do
+        subject.formatters "blah"
+        subject.instance_variable_get(:@formatters).should == "blah"
       end
     end
   end
-=end
+
+  describe "#file_set" do
+    before do
+      subject.instance_variable_set(:@file_sets, {})
+    end
+    
+    it "adds the set of stuff to @file_sets" do
+      subject.file_set(:bobo) do
+        trailing_newlines 2
+      end
+
+      subject.instance_variable_get(:@file_sets).should == {
+        bobo: {
+          file_list: [],
+          style: {
+            :allow_camel_case_methods=>false,
+            :allow_hard_tabs=>false,
+            :allow_screaming_snake_case_classes=>false,
+            :allow_trailing_line_spaces=>false,
+            :indentation_spaces=>2,
+            :max_code_lines_in_class=>300,
+            :max_code_lines_in_method=>30,
+            :max_line_length=>80,
+            :spaces_after_comma=>1,
+            :spaces_before_comma=>0,
+            :spaces_before_lbrace=>1,
+            :spaces_after_lbrace=>1,
+            :spaces_before_rbrace=>1,
+            :spaces_in_empty_braces=>0,
+            :spaces_after_lbracket=>0,
+            :spaces_before_rbracket=>0,
+            :spaces_after_lparen=>0,
+            :spaces_before_rparen=>0,
+            :trailing_newlines=>2
+          }
+        }
+      }
+    end
+
+    context "first param is nil" do
+      it "uses :default as the label" do
+        subject.file_set
+        subject.instance_variable_get(:@file_sets).should include(:default)
+      end
+    end
+  end
+
+  describe "#confg_file" do
+    context "@config_file is already set" do
+      it "returns @config_file" do
+        subject.instance_variable_set(:@config_file, 'pants')
+        subject.config_file
+        subject.instance_variable_get(:@config_file).should == 'pants'
+      end
+    end
+  end
   
-  describe "#"
+  describe "#file_list" do
+    before do
+      FileUtils.mkdir_p 'one/two'
+      File.new('one/two/three.rb', 'w') { |f| f.write "stuff" }
+    end
+
+    context "glob is a glob" do
+      it "returns all files in the glob" do
+        results = subject.file_list('one/**/*.rb')
+        results.last.should match /one\/two\/three.rb/
+      end
+    end
+
+    context "glob is a directory" do
+      it "returns all files in the glob" do
+        results = subject.file_list('one')
+        results.last.should match /one\/two\/three.rb/
+      end
+    end
+    
+    context "glob is a file" do
+      it "returns all files in the glob" do
+        subject.file_list('one/two/three.rb').last.should match /one\/two\/three.rb/
+      end
+    end
+  end
 end
