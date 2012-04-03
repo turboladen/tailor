@@ -67,21 +67,23 @@ class Tailor
     def load!
       # Get config file settings
       @config_file = @options.config_file unless @options.config_file.empty?
-      @rc_file_config = load_from_config_file(config_file)
+      load_from_config_file(config_file)
       
-      # Get formatters from config file
-      unless @rc_file_config.formatters.empty?
-        @formatters = @rc_file_config.formatters
-        log "@formatters is now #{@formatters}"
-      end
-      
-      # Get file sets from config file
-      unless @rc_file_config.file_sets.empty?
-        @file_sets[:default].merge!(@rc_file_config.file_sets[:default])
-        @rc_file_config.file_sets.delete(:default)
-        
-        @rc_file_config.file_sets.each do |file_set|
-          @file_sets[file_set.key] = file_set.value
+      if @rc_file_config
+        # Get formatters from config file
+        unless @rc_file_config.formatters.empty?
+          @formatters = @rc_file_config.formatters
+          log "@formatters is now #{@formatters}"
+        end
+
+        # Get file sets from config file
+        unless @rc_file_config.file_sets.empty?
+          @file_sets[:default].merge!(@rc_file_config.file_sets[:default])
+          @rc_file_config.file_sets.delete(:default)
+
+          @rc_file_config.file_sets.each do |file_set|
+            @file_sets[file_set.key] = file_set.value
+          end
         end
       end
       
@@ -154,12 +156,12 @@ class Tailor
     def load_from_config_file(config_file)
       user_config_file = File.expand_path(config_file)
 
-      config = if File.exists? user_config_file
-                 log "<#{self.class}> Loading config from file: #{user_config_file}"
-                 instance_eval File.read(user_config_file)
-               else
-                 log "<#{self.class}> No config file found at #{user_config_file}."
-               end
+      if File.exists? user_config_file
+        log "<#{self.class}> Loading config from file: #{user_config_file}"
+        config = instance_eval File.read(user_config_file)
+      else
+        log "<#{self.class}> No config file found at #{user_config_file}."
+      end
 
       if config
         log "<#{self.class}> Got new config from file: #{config}"
