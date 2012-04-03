@@ -27,12 +27,12 @@ class Tailor
             options.show_config = true
           end
 
-          opt.on('', '--config-file FILE',
+          opt.on('-c', '--config-file FILE',
             "Use a specific config file.") do |config|
             options.config_file = config
           end
 
-          opt.on('', '--create-config', 'Create a new ~/.tailorrc') do
+          opt.on('--create-config', 'Create a new ~/.tailorrc') do
             if create_config
               msg = "Your new tailorrc file was created at "
               msg << "#{Tailor::Configuration::DEFAULT_RC_FILE}."
@@ -166,11 +166,11 @@ class Tailor
           opt.separator ""
           opt.separator "Common options:"
 
-          opt.on('-f', '--fomat FORMATTER') do |format|
+          opt.on('-f', '--format FORMATTER') do |format|
             options.formatters << format
           end
 
-          opt.on('-c', '--[no-]color', "Output in color") do |color|
+          opt.on('--[no-]color', "Output in color") do |color|
             @output_color = color
           end
 
