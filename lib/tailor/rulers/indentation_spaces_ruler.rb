@@ -178,6 +178,7 @@ class Tailor
       def comment_update(token, lexed_line, file_text, lineno, column)
         # trailing comment?
         if token =~ /\n$/
+        if token.ends_with_newline?
           log "Comment ends with newline.  Removing comment..."
           log "Old lexed line: #{lexed_line.inspect}"
           new_lexed_line = lexed_line.remove_trailing_comment(file_text)
@@ -296,18 +297,23 @@ class Tailor
 
       def kw_update(token, modifier, loop_with_do, lineno, column)
         if KEYWORDS_TO_INDENT.include?(token)
+      def kw_update(token, lineno, column)
+        if token.keyword_to_indent?
           log "Indent keyword found: '#{token}'."
           @indent_keyword_line = lineno
 
           if modifier
+          if token.modifier_keyword?
             log "Found modifier in line: '#{token}'"
             @modifier_in_line = token
           elsif token == "do" && loop_with_do
+          elsif token.do_is_for_a_loop?
             log "Found keyword loop using optional 'do'"
           else
             log "Keyword '#{token}' not used as a modifier."
 
             if CONTINUATION_KEYWORDS.include? token
+            if token.continuation_keyword?
               msg = "Continuation keyword: '#{token}'.  "
               msg << "Decreasing indent expectation for this line."
               log msg

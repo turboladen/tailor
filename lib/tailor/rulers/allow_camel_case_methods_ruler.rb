@@ -21,7 +21,7 @@ class Tailor
       # @param [Fixnum] lineno Line the problem was found on.
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
-        if token =~ /[A-Z]/
+        if token.contains_capital_letter?
           @problems << Problem.new(:camel_case_method, lineno, column)
         end
       end

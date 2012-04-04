@@ -32,16 +32,16 @@ class Tailor
         end
       end
 
-      def kw_update(token, modifier, loop_with_do, lineno, column)
+      def kw_update(token, lineno, column)
         if token == "class" || token == "module"
           @class_start_lines << { lineno: lineno, column: column, count: 0 }
           log "Class start lines: #{@class_start_lines}"
         end
 
-        unless modifier ||
-          !KEYWORDS_TO_INDENT.include?(token) ||
-          (token == "do" && loop_with_do) ||
-          CONTINUATION_KEYWORDS.include?(token)
+        unless token.modifier_keyword? ||
+          !token.keyword_to_indent? ||
+          token.do_is_for_a_loop? ||
+          token.continuation_keyword?
           @kw_start_lines << lineno
           log "Keyword start lines: #{@kw_start_lines}"
         end

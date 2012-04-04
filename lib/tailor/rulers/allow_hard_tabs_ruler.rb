@@ -13,7 +13,7 @@ class Tailor
       # @param [Fixnum] lineno Line the problem was found on.
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
-        if token =~ /\t/
+        if token.contains_hard_tab?
           @problems << Problem.new(:hard_tab, lineno, column)
         end
       end

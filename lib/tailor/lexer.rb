@@ -3,6 +3,7 @@ require_relative 'composite_observable'
 require_relative 'lexed_line'
 require_relative 'lexer_constants'
 require_relative 'logger'
+require_relative 'lexer/token'
 
 
 class Tailor
@@ -58,9 +59,10 @@ class Tailor
     def on_comment(token)
       log "COMMENT: '#{token}'"
 
+      l_token = Tailor::Lexer::Token.new(token)
       lexed_line = LexedLine.new(super, lineno)
       comment_changed
-      notify_comment_observers(token, lexed_line, @file_text, lineno, column)
+      notify_comment_observers(l_token, lexed_line, @file_text, lineno, column)
 
       super(token)
     end
@@ -68,9 +70,10 @@ class Tailor
     def on_const(token)
       log "CONST: '#{token}'"
 
+      l_token = Tailor::Lexer::Token.new(token)
       lexed_line = LexedLine.new(super, lineno)
       const_changed
-      notify_const_observers(token, lexed_line, lineno, column)
+      notify_const_observers(l_token, lexed_line, lineno, column)
 
       super(token)
     end
@@ -138,9 +141,10 @@ class Tailor
 
     def on_ident(token)
       log "IDENT: '#{token}'"
+      l_token = Tailor::Lexer::Token.new(token)
       lexed_line = LexedLine.new(super, lineno)
       ident_changed
-      notify_ident_observers(token, lexed_line, lineno, column)
+      notify_ident_observers(l_token, lexed_line, lineno, column)
       super(token)
     end
 
@@ -175,11 +179,15 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_kw(token)
       log "KW: #{token}"
+      l_token = Tailor::Lexer::Token.new(token,
+        {
+          loop_with_do: LexedLine.new(super, lineno).loop_with_do?,
+          full_line_of_text: current_line_of_text
+        }
+      )
 
       kw_changed
-      notify_kw_observers(token,
-        modifier_keyword?(token),
-        LexedLine.new(super, lineno).loop_with_do?,
+      notify_kw_observers(l_token,
         lineno,
         column)
 
@@ -305,8 +313,9 @@ class Tailor
 
     def on_sp(token)
       log "SP: '#{token}'; size: #{token.size}"
+      l_token = Tailor::Lexer::Token.new(token)
       sp_changed
-      notify_sp_observers(token, lineno, column)
+      notify_sp_observers(l_token, lineno, column)
       super(token)
     end
 
@@ -362,50 +371,6 @@ class Tailor
     def on_CHAR(token)
       log "CHAR: '#{token}'"
       super(token)
-    end
-
-    # Checks the current line to see if the given +token+ is being used as a
-    # modifier.
-    #
-    # @return [Boolean] True if there's a modifier in the current line that
-    #   is the same type as +token+.
-    def modifier_keyword?(token)
-      line_of_text = current_line_of_text
-      log "Line of text: #{line_of_text}"
-
-      result = catch(:result) do
-        sexp_line = Ripper.sexp(line_of_text)
-
-        if sexp_line.nil?
-          msg = "sexp line was nil.  "
-          msg << "Perhaps that line is part of a multi-line statement?"
-          log msg
-          log "Trying again with the last char removed from the line..."
-          line_of_text.chop!
-          sexp_line = Ripper.sexp(line_of_text)
-        end
-
-        if sexp_line.nil?
-          log "sexp line was nil again."
-          log "Trying one more time with the last char removed from the line..."
-          line_of_text.chop!
-          sexp_line = Ripper.sexp(line_of_text)
-        end
-
-        if sexp_line.is_a? Array
-          log "sexp_line.flatten: #{sexp_line.flatten}"
-          log "sexp_line.last.first: #{sexp_line.last.first}"
-
-          begin
-            throw(:result, sexp_line.flatten.compact.any? do |s|
-              s == MODIFIERS[token]
-            end)
-          rescue NoMethodError
-          end
-        end
-      end
-
-      result
     end
 
     # The current line of text being examined.

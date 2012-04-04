@@ -110,41 +110,6 @@ describe Tailor::Lexer do
     end
   end
 
-  describe "#modifier_keyword?" do
-    context "the current line has a keyword that is also a modifier" do
-      context "the keyword is acting as a modifier" do
-        let!(:file_text) { %q{puts "hi" if true == true} }
-
-        it "returns true" do
-          subject.stub(:lineno).and_return 1
-          subject.instance_variable_set(:@file_text, file_text)
-          subject.modifier_keyword?("if").should be_true
-        end
-      end
-
-      context "they keyword is NOT acting as a modifier" do
-        let!(:file_text) { %q{if true == true; puts "hi"; end} }
-
-        it "returns false" do
-          subject.stub(:lineno).and_return 1
-          subject.instance_variable_set(:@file_text, file_text)
-          subject.modifier_keyword?("if").should be_false
-        end
-      end
-    end
-
-    context "the current line doesn't have a keyword" do
-      let!(:file_text) { %q{puts true} }
-
-      it "returns false" do
-        subject.stub(:lineno).and_return 1
-        subject.instance_variable_set(:@file_text, file_text)
-        subject.modifier_keyword?("puts").should be_false
-      end
-    end
-  end
-
-
   describe "#current_line_of_text" do
     before do
       subject.instance_variable_set(:@file_text, file_text)

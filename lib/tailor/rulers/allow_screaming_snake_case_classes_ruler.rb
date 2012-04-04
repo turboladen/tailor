@@ -22,7 +22,7 @@ class Tailor
       # @param [Fixnum] lineno Line the potential problem is on.
       # @param [Fixnum] column Column the potential problem is on.
       def measure(token, lineno, column)
-        if token =~ /[A-Z].*_/
+        if token.screaming_snake_case?
           @problems << Problem.new(:screaming_snake_case_class_name,
             lineno, column)
         end
