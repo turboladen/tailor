@@ -1,4 +1,5 @@
 require_relative '../tailor'
+require_relative 'runtime_error'
 require_relative 'logger'
 
 class Tailor
@@ -163,7 +164,12 @@ class Tailor
 
       if File.exists? user_config_file
         log "Loading config from file: #{user_config_file}"
-        config = instance_eval File.read(user_config_file)
+        begin
+          config = instance_eval File.read(user_config_file)
+        rescue LoadError => ex
+          raise Tailor::RuntimeError, 
+            "Couldn't load config file: #{user_config_file}"
+        end
       else
         log "No config file found at #{user_config_file}."
       end
