@@ -8,11 +8,12 @@ Feature: Vertical spacing
     Tailor.config do |config|
       config.file_set do
         max_code_lines_in_class 5
+        max_code_lines_in_method 3
         trailing_newlines 0
       end
     end
     """
-      
+
   @bad_files
   Scenario: Detect lack of newlines
     Given a file named "not_enough_newlines.rb" with:
@@ -91,7 +92,7 @@ Feature: Vertical spacing
     And the exit status should be 0
 
   Scenarios:
-    | File                                        |
+    | File                                      |
     | v_spacing/ok/method_3_code_lines          |
     | v_spacing/ok/embedded_method_3_code_lines |
 
@@ -107,7 +108,7 @@ Feature: Vertical spacing
     And the exit status should be 1
 
   Scenarios:
-    | File                              | Position | Position 2 | Problems |
+    | File                               | Position | Position 2 | Problems |
     | v_spacing/1/method_too_long        | 1:0      |            | 1        |
     | v_spacing/1/parent_method_too_long | 1:0      |            | 1        |
 
