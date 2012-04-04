@@ -2,6 +2,8 @@ require_relative '../spec_helper'
 require 'tailor/configuration'
 
 describe Tailor::Configuration do
+  before { Tailor::Logger.stub(:log) }
+
   subject do
     Tailor::Configuration.new('.')
   end
@@ -93,9 +95,32 @@ describe Tailor::Configuration do
     end
 
     context "glob is an Array" do
-      it "returns all files in the glob" do
-        results = subject.file_list(['one/two/three.rb'])
-        results.last.should match /one\/two\/three.rb/
+      context "the Array has files" do
+        it "returns all files in the glob" do
+          results = subject.file_list(['one/two/three.rb'])
+          results.last.should match /one\/two\/three.rb/
+        end
+      end
+      
+      context "the Array has a directory" do
+        context "the directory has files" do
+          it "returns all files in the directory" do
+            results = subject.file_list(['.'])
+            results.last.should match /one\/two\/three.rb/
+          end
+        end
+        
+        context "the directory is empty" do
+          before do
+            FileUtils.mkdir 'empty'
+            FileUtils.rm_rf 'one'
+          end
+
+          it "returns an empty Array" do
+            results = subject.file_list(['.'])
+            results.should == []
+          end
+        end
       end
     end
     

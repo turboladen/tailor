@@ -157,16 +157,28 @@ class Tailor
       user_config_file = File.expand_path(config_file)
 
       if File.exists? user_config_file
-        log "<#{self.class}> Loading config from file: #{user_config_file}"
+        log "Loading config from file: #{user_config_file}"
         config = instance_eval File.read(user_config_file)
       else
-        log "<#{self.class}> No config file found at #{user_config_file}."
+        log "No config file found at #{user_config_file}."
       end
 
       if config
-        log "<#{self.class}> Got new config from file: #{config}"
+        log "Got new config from file: #{config}"
         @rc_file_config = config
       end
+    end
+
+    # Gets a list of only files that are in +base_dir+.
+    #
+    # @param [String] base_dir The directory to get the file list for.
+    # @return [Array<String>] The List of files.
+    def all_files_in_dir(base_dir)
+      files = Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
+        file if File.file?(file)
+      end
+
+      files
     end
 
     # The list of the files in the project to check.
@@ -174,13 +186,22 @@ class Tailor
     # @param [String] glob Path to the file, directory or glob to check.
     # @return [Array] The list of files to check.
     def file_list(glob)
-      if glob.is_a? Array
-        files_in_project = glob
+      files_in_project = if glob.is_a? Array
+        log "Configured glob is an Array: #{glob}"
+
+        glob.map do |e|
+          if File.directory?(e)
+            all_files_in_dir(e)
+          else
+            e
+          end 
+        end.flatten.uniq
       elsif File.directory? glob
-        files_in_project = Dir.glob(File.join('*', '**', '*'))
-        Dir.glob(File.join('*')).each { |file| files_in_project << file }
+        log "Configured glob is an directory: #{glob}"
+        all_files_in_dir(glob)
       else
-        files_in_project = Dir.glob glob
+        log "Configured glob is a glob/single-file: #{glob}"
+        Dir.glob glob
       end
 
       list_with_absolute_paths = []
@@ -188,6 +209,8 @@ class Tailor
       files_in_project.each do |file|
         list_with_absolute_paths << File.expand_path(file)
       end
+      
+      log "All files: #{list_with_absolute_paths}"
 
       list_with_absolute_paths.sort
     end
@@ -202,6 +225,16 @@ class Tailor
 
 
       puts table
+    end
+        
+    #---------------------------------------------------------------------------
+    # Privates!
+    #---------------------------------------------------------------------------
+    private
+
+    def log(*args)
+      args.first.insert(0, "<#{self.class}> ")
+      Tailor::Logger.log(*args)
     end
   end
 end
