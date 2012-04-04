@@ -183,29 +183,29 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   end
 
   describe "#start" do
-    it "sets @started to true" do
-      subject.instance_variable_set(:@started, false)
+    it "sets @do_measurement to true" do
+      subject.instance_variable_set(:@do_measurement, false)
       subject.start
-      subject.instance_variable_get(:@started).should be_true
+      subject.instance_variable_get(:@do_measurement).should be_true
     end
   end
 
   describe "#stop" do
-    it "sets @started to false" do
-      subject.instance_variable_set(:@started, true)
+    it "sets @do_measurement to false" do
+      subject.instance_variable_set(:@do_measurement, true)
       subject.stop
-      subject.instance_variable_get(:@started).should be_false
+      subject.instance_variable_get(:@do_measurement).should be_false
     end
   end
 
   describe "#started?" do
-    context "@started is true" do
-      before { subject.instance_variable_set(:@started, true) }
+    context "@do_measurement is true" do
+      before { subject.instance_variable_set(:@do_measurement, true) }
       specify { subject.started?.should be_true }
     end
 
-    context "@started is false" do
-      before { subject.instance_variable_set(:@started, false) }
+    context "@do_measurement is false" do
+      before { subject.instance_variable_set(:@do_measurement, false) }
       specify { subject.started?.should be_false }
     end
   end
