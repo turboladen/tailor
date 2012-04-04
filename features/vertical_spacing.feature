@@ -18,10 +18,10 @@ Feature: Vertical spacing
   Scenario: Detect lack of newlines
     Given a file named "not_enough_newlines.rb" with:
     """
-      def a_method
-        puts 'hi'
-      end
-      """
+    def a_method
+      puts 'hi'
+    end
+    """
     When I run `tailor -d .`
     Then the output should match /Total Problems.*1/
     And the output should contain "0 trailing newlines, but should have 1"
@@ -30,12 +30,12 @@ Feature: Vertical spacing
   Scenario: Detect too many newlines
     Given a file named "too_many_newlines.rb" with:
     """
-      def a_method
-        puts 'hi'
-      end
+    def a_method
+      puts 'hi'
+    end
 
 
-      """
+    """
     When I run `tailor -d .`
     Then the output should match /Total Problems.*1/
     And the output should contain "2 trailing newlines, but should have 1"
@@ -44,11 +44,11 @@ Feature: Vertical spacing
   Scenario: Doesn't report problem when meeting criteria
     Given a file named "good_file.rb" with:
     """
-      def a_method
-        puts 'hi'
-      end
+    def a_method
+      puts 'hi'
+    end
 
-      """
+    """
     When I run `tailor -d .`
     Then the output should match /Total Problems.*0/
 
