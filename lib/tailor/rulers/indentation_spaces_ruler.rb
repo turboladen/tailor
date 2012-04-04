@@ -323,6 +323,7 @@ class Tailor
         if token == "end"
           if not single_line_indent_statement?(lineno)
             msg = "End of not a single-line statement that needs indenting.  "
+            msg = "End of not a single-line statement that needs indenting."
             msg < "Decrease this line."
             log msg
             @amount_to_change_this -= 1
