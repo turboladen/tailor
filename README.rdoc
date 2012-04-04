@@ -39,6 +39,8 @@ http://wiki.github.com/turboladen/tailor.
     * PROJECT_ROOT + .tailor
     * as CLI options
   * "File sets" allow for applying different styles to different sets of files
+* CI/Build Integration
+  * (Well, this may be stretching things a bit, but...) Exit 1 on failures
 
 == SYNOPSIS:
 
@@ -78,6 +80,10 @@ Run tailor like:
 ...or...
 
   $ tailor test/**/*.rb
+
+...or... (defaults to lib/**/*.rb):
+
+  $ tailor
 
 There are still a number of false-positives and false-negatives in detection of
 the above rules, so please don't expect perfection in this detection.  :)
