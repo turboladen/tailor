@@ -136,7 +136,7 @@ class Tailor
     # @param [String] file The file to open, read, and check.
     # @return [Hash] The Problems for that file.
     def check_file(file, style)
-      log "<#{self.class}> Checking style of a single file: #{file}."
+      log "<#{self.class}> Checking style of file: #{file}."
       lexer = Tailor::Lexer.new(file)
       ruler = Ruler.new
       log "Style: #{style}"
