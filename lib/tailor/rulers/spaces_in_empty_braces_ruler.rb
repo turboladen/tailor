@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Checks for spaces that exist between a '{' and '}' when there is only
     # space in between them.
     class SpacesInEmptyBracesRuler < Tailor::Ruler
@@ -50,7 +50,7 @@ class Tailor
       def nl_update(lexed_line, lineno, column)
         ignored_nl_update(lexed_line, lineno, column)
       end
-      
+
       # Checks to see if the counted spaces between an lbrace and an rbrace
       # equals the value at +@config+.
       #

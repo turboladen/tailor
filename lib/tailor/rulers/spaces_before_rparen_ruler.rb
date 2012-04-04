@@ -2,14 +2,14 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Checks for spaces before a ')' as given by +@config+.  It skips checking
     # when:
     # * it's the first char in the line.
     # * it's directly preceded by a '('.
     # * it's directly preceded by spaces, then a '('.
     class SpacesBeforeRparenRuler < Tailor::Ruler
-      
+
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column
       # @return [Fixnum] The number of spaces before the rparen.
@@ -23,16 +23,16 @@ class Tailor
           previous_event[1] == :on_lparen
           return nil
         end
-        
+
         return 0 if previous_event[1] != :on_sp
         return nil if current_index - 2 < 0
-        
+
         second_previous_event = lexed_line.at(current_index - 2)
         return nil if second_previous_event[1] == :on_lparen
-        
+
         previous_event.last.size
       end
-      
+
       # Checks to see if the counted spaces before an rparen equals the value
       # at +@config+.
       #
@@ -55,7 +55,7 @@ class Tailor
       # @param [Fixnum] column
       def rparen_update(lexed_line, lineno, column)
         count = count_spaces(lexed_line, column)
-        
+
         if count.nil?
           log "rparen must be at the beginning of the line."
           return
