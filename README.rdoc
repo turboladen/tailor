@@ -13,7 +13,8 @@ http://wiki.github.com/turboladen/tailor.
 
 * Checks for bad style in Ruby files
   * Recursively in a directory, or...
-  * A given file
+  * A given file, or...
+  * A glob ('lib/**/*.rb')
 * Checks for:
   * Horizontal spacing
     * Indentation
@@ -32,21 +33,139 @@ http://wiki.github.com/turboladen/tailor.
   * Name cases
     * Snake case class & module names
     * Camel case method names
+* Configurable
+  * Specify style in
+    * ~./tailorrc
+    * PROJECT_ROOT + .tailor
+    * as CLI options
+  * "File sets" allow for applying different styles to different sets of files
 
 == SYNOPSIS:
+
+=== Why style check?
+
+If you're reading this, there's a good chance you already have your own reasons
+for doing so.  If you're not familiar with static analysis, give tailor a go
+for a few days and see if you think it improves your code's readability.
+
+=== What's it do?
+
+At tailor's inception, there were some other static analysis tools for Ruby,
+but none which checked style stuff; tailor started off as a means to fill this
+gap.  Since then, a number of those tools have dropped by the wayside due to
+various Ruby 1.9 incompatibilities, and left a bigger tool gap for Rubyists.
+Right now it's mostly a style-checker, but might also have a future role in
+analyzing other aspects of your Ruby code.
+
+=== Since 0.x...
+
+tailor 1.x is a marked improvment over 0.x.  While 0.x provided a few (pretty
+inconsistent) style checks, its design made the code get all spaghetti-like,
+with lots of really gnarly regular expression matching, making it a realy bear
+to add new features and fix bugs.  tailor 1.x is completely redesigned to make
+that whole process much easier.
+
+=== Measure Stuff
 
 Run tailor like:
 
   $ tailor path/to/check/
+
 ...or...
+
   $ tailor file_to_check.rb
 
-There are a number of false-positives and false-negatives in detection of the
-above rules, so please don't expect perfection in this detection.  :)
+...or...
+
+  $ tailor test/**/*.rb
+
+There are still a number of false-positives and false-negatives in detection of
+the above rules, so please don't expect perfection in this detection.  :)
 
 === Configurable:
 
-FIX ME!
+Not everyone prefers the same style of, well, anything really.  tailor is
+configurable to allow you to check your code against the style measurements
+that you want.
+
+It has default values for each of the "rulers" it uses, but if you want to
+customize these, there are a number of ways you can do so.
+
+==== CLI
+
+At any time, you can tell tailor to show you the configuration that it's going
+to use by doing:
+
+  $ tailor --show-config
+
+To see, amongst other options, the style options that you can pass in, do
+
+  $ tailor --help
+
+If, for example, you want to tell tailor to warn you if any of your code lines
+are > 100 chars (instead of the default of 80):
+
+  $ tailor --max-line-length 100 lib/
+
+If you want to simply disable a ruler, just pass +false+ to the option:
+
+  $ tailor --max-line-length false lib/
+
+==== Configuration File
+
+Configuration files allow for some more flexibility with style rulers, file
+lists, and (eventually) report formatters.  To create one with default
+settings, do:
+
+  $ tailor --create-config
+
+With the documentation that's provided in the file, the settings should be
+straightforward--if they're not, please let me know!  You don't have to specify
+all of those settings in your config file--those are just rendered so you have
+a starting ground to tweak with.  If you only want to override a single value,
+you can delete the rest of the code from your config.  This would accomplish
+the same as the --max-line-length example above:
+
+  # .tailor
+  Tailor.config do |config|
+    config.file_set :default do
+      max_line_length 100
+    end
+  end
+
+This brings us to the concept of "file sets"...
+
+===== File Sets
+
+File sets allow you to use different style rulers against different groups of
+files.  You may, for example, want your Rails app code to allow for longer
+lines, or fewer code lines in methods... You may want your RSpec code to be
+more lenient with curly-brace usage... You may just want to specify a few file
+globs to use the default set of rulers...  File sets allow for this.
+
+In the default config file, you see a single parameter being passed to
+<tt>config.file_set</tt>--this is the _label_ for that file set.  The label is
+simply just a name to refer to that file set by; it will show in your report
+(in the case that problems were found, of course) so you know what set of
+rulers caused the problem to be found.  <tt>config.file_set</tt> also takes
+a second paramter: the file/directory/glob to apply the style to.
+
+  # .tailor
+  Tailor.config do |config|
+    config.file_set :rails_app, 'app/**/*.rb' do
+      max_line_length 100
+      # All other rulers will use default values
+    end
+
+    config.file_set :features, 'features/**/*.rb'     # Uses default style
+
+    config.file_set :rspec, 'spec/**/*.rb' do
+      spaces_after_lbrace false
+      spaces_before_lbrace false
+      spaces_before_rbrace false
+      # All other rulers will use default values
+    end
+  end
 
 == REQUIREMENTS:
 
