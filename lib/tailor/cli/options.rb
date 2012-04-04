@@ -71,9 +71,9 @@ class Tailor
             options.style[:indentation_spaces] = c
           end
 
-          opt.on('--line-length NUMBER',
+          opt.on('--max-line-length NUMBER',
             'Max characters in a line. (default: 80)') do |c|
-            options.style[:line_length] = c
+            options.style[:max_line_length] = c
           end
 
           opt.on('--spaces-after-comma NUMBER',
@@ -131,28 +131,29 @@ class Tailor
 
           opt.separator "  * Naming:"
 
-          opt.on('--camel-case-method-names BOOL',
+          opt.on('--allow-camel-case-methods BOOL',
             'Check for camel-case method names?', '(default: true)') do |c|
-            options.style[:camel_case_method_names] = instance_eval(c)
+            options.style[:allow_camel_case_methods] = instance_eval(c)
           end
 
-          opt.on('--screaming-snake-case-names BOOL',
+          opt.on('--allow-screaming-snake-case-classes BOOL',
             'Check for classes like "My_Class"?', '(default: true)') do |c|
-            options.style[:screaming_snake_case] = instance_eval(c)
+            options.style[:allow_screaming_snake_case_classes] =
+              instance_eval(c)
           end
 
           opt.separator ""
           opt.separator ""
           opt.separator "  * Vertical Spacing"
 
-          opt.on('--code-lines-in-class NUMBER', Integer,
+          opt.on('--max-code-lines-in-class NUMBER', Integer,
             'Max number lines of code in a class.', '(default: 300)') do |c|
-            options.style[:code_lines_in_class] = c
+            options.style[:max_code_lines_in_class] = c
           end
 
-          opt.on('--code-lines-in-method NUMBER', Integer,
+          opt.on('--max-code-lines-in-method NUMBER', Integer,
             'Max number lines of code in a method.', '(default: 30)') do |c|
-            options.style[:code_lines_in_method] = c
+            options.style[:max_code_lines_in_method] = c
           end
 
           opt.on('--trailing-newlines NUMBER', Integer,
