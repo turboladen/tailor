@@ -65,11 +65,11 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
         l
       end
 
-      it "breaks from the loop and returns nil" do
-        subject.count_spaces(lexed_line, 1).should be_nil
+      it "returns 0" do
+        subject.count_spaces(lexed_line, 1).should be_zero
       end
     end
-    
+
     context "next_event is a :on_nl" do
       let!(:next_event) do
         [[1,1], :on_nl, "\n"]
@@ -83,8 +83,8 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
         l
       end
 
-      it "breaks from the loop and returns nil" do
-        subject.count_spaces(lexed_line, 1).should be_nil
+      it "returns 0" do
+        subject.count_spaces(lexed_line, 1).should be_zero
       end
     end
 
