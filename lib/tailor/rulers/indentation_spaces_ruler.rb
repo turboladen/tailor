@@ -37,7 +37,7 @@ class Tailor
       end
 
       # Decreases the indentation expectation for the current line by
-      # +@config[:spaces]+.
+      # +@config+.
       def decrease_this_line
         if started?
           @proper[:this_line] -= @config
@@ -47,16 +47,18 @@ class Tailor
           end
 
           log "@proper[:this_line] = #{@proper[:this_line]}"
+          log "@proper[:next_line] = #{@proper[:next_line]}"
         else
           log "#decrease_this_line called, but checking is stopped."
         end
       end
 
       # Increases the indentation expectation for the next line by
-      # +@config[:spaces]+.
+      # +@config+.
       def increase_next_line
         if started?
           @proper[:next_line] += @config
+          log "@proper[:this_line] = #{@proper[:this_line]}"
           log "@proper[:next_line] = #{@proper[:next_line]}"
         else
           log "#increase_this_line called, but checking is stopped."
@@ -64,10 +66,11 @@ class Tailor
       end
 
       # Decreases the indentation expectation for the next line by
-      # +@config[:spaces]+.
+      # +@config+.
       def decrease_next_line
         if started?
           @proper[:next_line] -= @config
+          log "@proper[:this_line] = #{@proper[:this_line]}"
           log "@proper[:next_line] = #{@proper[:next_line]}"
         else
           log "#decrease_next_line called, but checking is stopped."
@@ -77,6 +80,7 @@ class Tailor
       def set_up_line_transition
         log "Amount to change next line: #{@amount_to_change_next}"
         log "Amount to change this line: #{@amount_to_change_this}"
+
         if @amount_to_change_next > 0
           increase_next_line
         elsif @amount_to_change_next < 0
@@ -99,10 +103,7 @@ class Tailor
           @proper[:this_line] = @proper[:next_line]
           log "Transitioning @proper[:this_line] to #{@proper[:this_line]}"
         else
-          if started?
-            log "Skipping #transition_lines; checking is stopped."
-            return
-          end
+          log "Skipping #transition_lines; checking is stopped."
         end
       end
 
@@ -322,7 +323,6 @@ class Tailor
 
         if token == "end"
           if not single_line_indent_statement?(lineno)
-            msg = "End of not a single-line statement that needs indenting.  "
             msg = "End of not a single-line statement that needs indenting."
             msg < "Decrease this line."
             log msg
