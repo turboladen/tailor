@@ -126,7 +126,7 @@ settings, do:
   $ tailor --create-config
 
 With the documentation that's provided in the file, the settings should be
-straightforward--if they're not, please let me know!  You don't have to specify
+straightforward (if they're not, please let me know!).  You don't have to specify
 all of those settings in your config file--those are just rendered so you have
 a starting ground to tweak with.  If you only want to override a single value,
 you can delete the rest of the code from your config.  This would accomplish
