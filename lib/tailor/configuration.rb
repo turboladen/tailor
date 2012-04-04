@@ -59,6 +59,7 @@ class Tailor
       }
 
       @runtime_file_list = runtime_file_list
+      log "Got runtime file list: #{@runtime_file_list}"
       @options = options
       log "Got options: #{@options}"
     end
@@ -78,11 +79,12 @@ class Tailor
 
         # Get file sets from config file
         unless @rc_file_config.file_sets.empty?
-          @file_sets[:default].merge!(@rc_file_config.file_sets[:default])
-          @rc_file_config.file_sets.delete(:default)
+          @rc_file_config.file_sets.each do |label, file_set|
+            unless @file_sets[label]
+              @file_sets[label] = { style: DEFAULT_STYLE }
+            end
 
-          @rc_file_config.file_sets.each do |file_set|
-            @file_sets[file_set.key] = file_set.value
+            @file_sets[label].merge! file_set
           end
         end
       end
@@ -94,8 +96,10 @@ class Tailor
       end
 
       # Get file sets from CLI options
-      unless @runtime_file_list.nil?
-        @file_sets.delete_if { |k,v| k != :default }
+      unless @runtime_file_list.nil? || @runtime_file_list.empty?
+        # Only use options set for the :default file set because the user gave
+        # a different set of files to measure.
+        @file_sets.delete_if { |k, v| k != :default }
         @file_sets[:default][:file_list] = file_list(@runtime_file_list)
       end
 
@@ -105,6 +109,7 @@ class Tailor
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
       end
+
     end
 
     # @return [String] Name of the config file to use.

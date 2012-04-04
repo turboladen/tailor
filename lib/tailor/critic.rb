@@ -99,11 +99,12 @@ class Tailor
     end
 
     def critique
+      log "file sets keys: #{@file_sets.keys}"
       @file_sets.each do |label, file_set|
-        log "file_set: #{file_set}"
+        log "Critiquing file_set: #{file_set}"
 
         file_set[:file_list].each do |file|
-          log "file: #{file}"
+          log "Critiquing file: #{file}"
           problems = check_file(file, file_set[:style])
           yield [problems, label] if block_given?
         end
@@ -112,7 +113,6 @@ class Tailor
 
     def init_rulers(style, lexer, parent_ruler)
       style.each do |ruler_name, value|
-        log "Initializing ruler: #{ruler_name}"
         ruler =
           instance_eval(
             "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})"
