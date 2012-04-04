@@ -7,7 +7,7 @@ class Tailor
         super(config)
         @lparen_columns = []
       end
-      
+
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
           log "Found comment with trailing newline."
@@ -42,25 +42,25 @@ class Tailor
 
       def check_spaces_after_lparen(lexed_line, lineno)
         unless @lparen_columns.empty?
-         log "lparens found at: #{@lparen_columns}"
+          log "lparens found at: #{@lparen_columns}"
         end
 
         @lparen_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          
+
           if @do_measurement == false
             log "Skipping measurement."
           else
             measure(actual_spaces, lineno, column)
           end
-          
+
           @do_measurement = true
         end
 
         @lparen_columns.clear
       end
-      
+
       # Counts the number of spaces after the lparen.
       #
       # @param [LexedLine] lexed_line The LexedLine that contains the context
@@ -78,7 +78,7 @@ class Tailor
 
         next_event = lexed_line.at(event_index + 1)
         log "Next event: #{next_event}"
-        
+
         if next_event.nil?
           log "lparen must be at the end of the line."
           @do_measurement = false
@@ -100,7 +100,7 @@ class Tailor
 
         second_next_event = lexed_line.at(event_index + 2)
         log "Event + 2: #{second_next_event}"
-        
+
         [:on_comment, :on_lbrace, :on_lparen].each do |event|
           if second_next_event[1] == event
             log "Event + 2 is a #{event}.  Moving on."
@@ -108,7 +108,7 @@ class Tailor
             return next_event.last.size
           end
         end
-        
+
         next_event[1] != :on_sp ? 0 : next_event.last.size
       end
     end

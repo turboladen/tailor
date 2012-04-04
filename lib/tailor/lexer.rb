@@ -114,7 +114,7 @@ class Tailor
       log "EMBVAR: '#{token}'"
       super(token)
     end
-    
+
     def on_float(token)
       log "FLOAT: '#{token}'"
       super(token)
@@ -163,7 +163,7 @@ class Tailor
       log "INT: '#{token}'"
       super(token)
     end
-    
+
     # Instance variable
     def on_ivar(token)
       log "IVAR: '#{token}'"

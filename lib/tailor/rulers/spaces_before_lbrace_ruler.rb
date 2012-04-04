@@ -72,10 +72,10 @@ class Tailor
         else
           measure(count, lineno, column)
         end
-        
+
         @do_measurement = true
       end
-      
+
       # Checks to see if the counted spaces before an lbrace equals the value
       # at +@config+.
       #

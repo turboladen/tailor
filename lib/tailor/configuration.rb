@@ -36,12 +36,12 @@ class Tailor
       spaces_before_rparen: 0,
       trailing_newlines: 1
     }
-    
+
     # @return [Hash]
     def self.default
       new
     end
-    
+
     attr_reader :file_sets
 
     # @param [Array] runtime_file_list
@@ -68,7 +68,7 @@ class Tailor
       # Get config file settings
       @config_file = @options.config_file unless @options.config_file.empty?
       load_from_config_file(config_file)
-      
+
       if @rc_file_config
         # Get formatters from config file
         unless @rc_file_config.formatters.empty?
@@ -86,22 +86,22 @@ class Tailor
           end
         end
       end
-      
+
       # Get formatters from CLI options
       unless @options.formatters.empty? || @options.formatters.nil?
         @formatters = @options.formatters
         log "@formatters is now #{@formatters}"
       end
-      
+
       # Get file sets from CLI options
       unless @runtime_file_list.nil?
         @file_sets.delete_if { |k,v| k != :default }
         @file_sets[:default][:file_list] = file_list(@runtime_file_list)
       end
-      
+
       # Get style overrides from CLI options
       @file_sets[:default][:style].merge!(@options.style)
-      
+
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
       end
@@ -127,7 +127,7 @@ class Tailor
 
       @temp_style = {}
       instance_eval(&block) if block_given?
-      
+
       @file_sets[label] = {
         file_list: file_list(file_glob),
         style: DEFAULT_STYLE.merge(@temp_style)
@@ -194,7 +194,7 @@ class Tailor
             all_files_in_dir(e)
           else
             e
-          end 
+          end
         end.flatten.uniq
       elsif File.directory? glob
         log "Configured glob is an directory: #{glob}"
@@ -209,7 +209,7 @@ class Tailor
       files_in_project.each do |file|
         list_with_absolute_paths << File.expand_path(file)
       end
-      
+
       log "All files: #{list_with_absolute_paths}"
 
       list_with_absolute_paths.sort
@@ -226,7 +226,7 @@ class Tailor
 
       puts table
     end
-        
+
     #---------------------------------------------------------------------------
     # Privates!
     #---------------------------------------------------------------------------

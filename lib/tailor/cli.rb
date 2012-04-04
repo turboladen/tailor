@@ -19,7 +19,7 @@ class Tailor
     def initialize(args)
       Tailor::Logger.log = false
       options = Options.parse!(args)
-      
+
       @configuration = Configuration.new(args, options)
       @configuration.load!
 
@@ -42,7 +42,7 @@ class Tailor
       end
 
       @reporter.summary_report(@critic.problems)
-      
+
       @critic.problem_count > 0
     end
   end

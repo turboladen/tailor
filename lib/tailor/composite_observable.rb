@@ -54,4 +54,3 @@ class Tailor
     define_observer :tstring_end
   end
 end
-

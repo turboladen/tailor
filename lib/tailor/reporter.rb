@@ -1,5 +1,5 @@
 class Tailor
-  
+
   # Objects of this type are responsible for sending the right data to report
   # formatters.
   class Reporter
@@ -18,7 +18,7 @@ class Tailor
         @formatters << eval("Tailor::Formatter::#{formatter.capitalize}.new")
       end
     end
-    
+
     # Sends the data to each +@formatters+ to generate the report of problems
     # for the file that was just critiqued.  A problem is in the format:
     #
@@ -34,7 +34,7 @@ class Tailor
         formatter.file_report(file_problems, label)
       end
     end
-    
+
     # Sends the data to each +@formatters+ to generate the reports of problems
     # for all files that were just critiqued.
     #

@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Looks for spaces after a ',' as given by +@config+.  It skips checking
     # when:
     # * the char after it is a '\n'.

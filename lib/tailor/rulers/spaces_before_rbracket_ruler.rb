@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Checks for spaces before a ']' as given by +@config+.  It skips checking
     # when:
     # * it's the first char in the line.
@@ -23,16 +23,16 @@ class Tailor
           previous_event[1] == :on_lbracket
           return nil
         end
-        
+
         return 0 if previous_event[1] != :on_sp
         return nil if current_index - 2 < 0
-        
+
         second_previous_event = lexed_line.at(current_index - 2)
         return nil if second_previous_event[1] == :on_lbracket
-        
+
         previous_event.last.size
       end
-      
+
       # Checks to see if the counted spaces before an rbracket equals the value
       # at +@config+.
       #
@@ -55,7 +55,7 @@ class Tailor
       # @param [Fixnum] column
       def rbracket_update(lexed_line, lineno, column)
         count = count_spaces(lexed_line, column)
-        
+
         if count.nil?
           log "rbracket must be at the beginning of the line."
           return

@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Checks for spaces after a '{' as given by +@config+.  It skips checking
     # when:
     # * it's at the end of a line.
@@ -13,7 +13,7 @@ class Tailor
         super(config)
         @lbrace_columns = []
       end
-      
+
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
           log "Found comment with trailing newline."
@@ -52,13 +52,13 @@ class Tailor
         @lbrace_columns.each do |column|
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
-          
+
           if @do_measurement == false
             log "Skipping measurement."
           else
             measure(actual_spaces, lineno, column)
           end
-          
+
           @do_measurement = true
         end
 
@@ -81,7 +81,7 @@ class Tailor
         end
 
         next_event = lexed_line.at(event_index + 1)
-        
+
         if next_event.nil?
           log "lbrace must be at the end of the line.  Moving on."
           @do_measurement = false
@@ -106,7 +106,7 @@ class Tailor
           @do_measurement = false
           return next_event.last.size
         end
-        
+
         next_event[1] != :on_sp ? 0 : next_event.last.size
       end
     end

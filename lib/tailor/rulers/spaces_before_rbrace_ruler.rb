@@ -90,7 +90,7 @@ class Tailor
         else
           measure(count, lineno, column)
         end
-        
+
         @do_measurement = true
       end
     end

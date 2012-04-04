@@ -239,7 +239,8 @@ class Tailor
           erb_file = File.expand_path(
             File.dirname(__FILE__) + '/../tailorrc.erb')
           formatters = Tailor::Configuration.default[:formatters]
-          file_list = Tailor::Configuration.default[:file_sets].first[:file_list]
+          file_list = Tailor::Configuration.
+            default[:file_sets].first[:file_list]
           style = Tailor::Configuration.default[:file_sets].first[:style]
           default_config_file = ERB.new(File.read(erb_file)).result(binding)
           File.write(

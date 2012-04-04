@@ -17,7 +17,7 @@ class Tailor
 
         message << "#   #{file}\n"
         message << "#\n"
-        
+
         message
       end
 
@@ -70,7 +70,7 @@ class Tailor
 }
           end
         end
-        
+
         message
       end
 

@@ -208,7 +208,7 @@ class Tailor
         unless valid_line?
           @problems << Problem.new(:indentation, lineno, column,
             { actual_indentation: @actual_indentation,
-            should_be_at: should_be_at }
+              should_be_at: should_be_at }
           )
         end
       end

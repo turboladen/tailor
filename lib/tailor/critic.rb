@@ -13,7 +13,7 @@ class Tailor
   class Critic
     include LogSwitch::Mixin
     include Tailor::Rulers
-    
+
     RULER_OBSERVERS = {
       spaces_before_lbrace: [:add_lbrace_observer],
       spaces_after_lbrace: [
@@ -113,8 +113,10 @@ class Tailor
     def init_rulers(style, lexer, parent_ruler)
       style.each do |ruler_name, value|
         log "Initializing ruler: #{ruler_name}"
-        ruler = 
-          instance_eval("Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})")
+        ruler =
+          instance_eval(
+            "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})"
+          )
         parent_ruler.add_child_ruler(ruler)
         RULER_OBSERVERS[ruler_name].each do |observer|
           log "Adding #{observer} to lexer..."
@@ -158,7 +160,7 @@ class Tailor
     def problem_count
       problems.values.flatten.size
     end
-    
+
     #---------------------------------------------------------------------------
     # Privates!
     #---------------------------------------------------------------------------

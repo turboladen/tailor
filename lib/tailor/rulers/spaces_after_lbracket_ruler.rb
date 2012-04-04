@@ -2,7 +2,7 @@ require_relative '../ruler'
 
 class Tailor
   module Rulers
-    
+
     # Detects spaces after a '[' as given by +@config+.  It skips checking
     # when:
     # * it's the last char in line.
@@ -13,7 +13,7 @@ class Tailor
         super(config)
         @lbracket_columns = []
       end
-      
+
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
           log "Found comment with trailing newline."
@@ -48,7 +48,7 @@ class Tailor
 
       def check_spaces_after_lbracket(lexed_line, lineno)
         unless @lbracket_columns.empty?
-         log "lbracket found at: #{@lbracket_columns}"
+          log "lbracket found at: #{@lbracket_columns}"
         end
 
         @lbracket_columns.each do |column|
@@ -60,13 +60,13 @@ class Tailor
           else
             measure(actual_spaces, lineno, column)
           end
-          
+
           @do_measurement = true
         end
 
         @lbracket_columns.clear
       end
-      
+
       # Counts the number of spaces after the lbracket.
       #
       # @param [LexedLine] lexed_line The LexedLine that contains the context
@@ -84,7 +84,7 @@ class Tailor
 
         next_event = lexed_line.at(event_index + 1)
         log "Next event: #{next_event}"
-        
+
         if next_event.nil?
           log "lbracket must be at the end of the line."
           @do_measurement = false
@@ -98,7 +98,7 @@ class Tailor
             return 0
           end
         end
-        
+
         if next_event[1] == :on_rbracket
           log "lbracket is followed by a rbracket.  Moving on."
           @do_measurement = false
@@ -107,7 +107,7 @@ class Tailor
 
         second_next_event = lexed_line.at(event_index + 2)
         log "Event + 2: #{second_next_event}"
-        
+
         [:on_comment, :on_lbrace].each do |event|
           if second_next_event[1] == event
             log "Event + 2 is a #{event}.  Moving on."
@@ -115,7 +115,7 @@ class Tailor
             return next_event.last.size
           end
         end
-        
+
         next_event[1] != :on_sp ? 0 : next_event.last.size
       end
     end
