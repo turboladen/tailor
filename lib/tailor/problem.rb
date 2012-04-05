@@ -16,7 +16,8 @@ class Tailor
       @column = column
       @options = options
       set_values
-      msg = "<#{self.class}> #{self[:line]}[#{self[:column]}]: "
+      subclass_name = self.class.to_s.sub(/^Tailor::/, '')
+      msg = "<#{subclass_name}> #{self[:line]}[#{self[:column]}]: "
       msg << "ERROR[:#{self[:type]}] #{self[:message]}"
       log msg
     end

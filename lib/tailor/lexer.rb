@@ -420,7 +420,8 @@ class Tailor
     def log(*args)
       l = begin; lineno; rescue; "<EOF>"; end
       c = begin; column; rescue; "<EOF>"; end
-      args.first.insert(0, "<#{self.class}> #{l}[#{c}]: ")
+      subclass_name = self.class.to_s.sub(/^Tailor::/, '')
+      args.first.insert(0, "<#{subclass_name}> #{l}[#{c}]: ")
       Tailor::Logger.log(*args)
     end
   end
