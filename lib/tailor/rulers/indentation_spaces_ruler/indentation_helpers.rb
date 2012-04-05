@@ -253,22 +253,26 @@ class Tailor
           if token.modifier_keyword?
             log "Found modifier in line: '#{token}'"
             @modifier_in_line = token
-          elsif token.do_is_for_a_loop?
-            log "Found keyword loop using optional 'do'"
-          else
-            log "Keyword '#{token}' not used as a modifier."
+            return
+          end
 
-            if token.continuation_keyword?
-              msg = "Continuation keyword: '#{token}'.  "
-              msg << "Decreasing indent expectation for this line."
-              log msg
-              @amount_to_change_this -= 1
-            else
-              msg = "Keyword '#{token}' is not a continuation keyword.  "
-              msg << "Increasing indent expectation for next line."
-              log msg
-              @amount_to_change_next += 1
-            end
+          if token.do_is_for_a_loop?
+            log "Found keyword loop using optional 'do'"
+            return
+          end
+
+          log "Keyword '#{token}' not used as a modifier."
+
+          if token.continuation_keyword?
+            msg = "Continuation keyword: '#{token}'.  "
+            msg << "Decreasing indent expectation for this line."
+            log msg
+            @amount_to_change_this -= 1
+          else
+            msg = "Keyword '#{token}' is not a continuation keyword.  "
+            msg << "Increasing indent expectation for next line."
+            log msg
+            @amount_to_change_next += 1
           end
         end
 
@@ -294,8 +298,8 @@ class Tailor
 
         def continuing_enclosed_statement?(lineno)
           multi_line_braces?(lineno) ||
-            multi_line_brackets?(lineno) ||
-            multi_line_parens?(lineno)
+          multi_line_brackets?(lineno) ||
+          multi_line_parens?(lineno)
         end
 
         def reset_keyword_state
