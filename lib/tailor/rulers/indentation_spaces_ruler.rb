@@ -67,77 +67,27 @@ class Tailor
       def ignored_nl_update(current_lexed_line, lineno, column)
         stop if @tstring_nesting.size > 0
 
-        if current_lexed_line.line_ends_with_op?
-          log "Line ends with op."
-
-          # Are we nested in a multi-line operation yet?
-          if @op_statement_nesting.empty?
-            @op_statement_nesting << lineno
-
-            if current_lexed_line.contains_keyword_to_indent? &&
-              @modifier_in_line.nil?
-              @in_keyword_plus_op = true
-            else
-              msg = "Increasing :next_line expectation due to "
-              msg << "multi-line operator statement."
-              log msg
-              @amount_to_change_next += 1
-            end
-
-            # If this line is a continuation of the last multi-line op statement
-            # then update the nesting line number with this line number.
-          else
-            @op_statement_nesting.pop
-            @op_statement_nesting << lineno
-          end
-        end
-
-        if @op_statement_nesting.empty? &&
-          @tstring_nesting.empty? &&
-          @paren_nesting.empty? &&
-          @brace_nesting.empty? &&
-          @bracket_nesting.empty?
-          if current_lexed_line.line_ends_with_comma?
-            if current_lexed_line.contains_keyword_to_indent? &&
-              @modifier_in_line.nil?
-              log "In keyword-plus-comma statement."
-              @in_keyword_plus_comma = true
-            elsif @last_comma_statement_line.nil?
-              msg = "Increasing :next_line expectation due to "
-              msg << "multi-line comma statement."
-              log msg
-              @amount_to_change_next += 1
-            end
-
-            @last_comma_statement_line = lineno
-            log "last_comma_statement_line: #{@last_comma_statement_line}"
-          end
-        end
-
-        if current_lexed_line.line_ends_with_period?
-          if current_lexed_line.contains_keyword_to_indent? &&
-            @modifier_in_line.nil?
-            @in_keyword_plus_period = true
-          elsif @last_period_statement_line.nil?
-            msg = "Increasing :next_line expectation due to "
-            msg << "multi-line period statement."
-            log msg
-            @amount_to_change_next += 1
-          end
-
-          @last_period_statement_line = lineno
-          log "last_period_statement_line: #{@last_period_statement_line}"
-        end
-
-        set_up_line_transition
-
         if current_lexed_line.only_spaces?
           log "Line of only spaces.  Moving on."
           return
-        else
-          update_actual_indentation(current_lexed_line)
-          measure(lineno, column)
         end
+
+        if current_lexed_line.line_ends_with_op?
+          update_for_start_of_op_statement(current_lexed_line, lineno)
+        end
+
+        if !in_a_nested_statement? &&
+          current_lexed_line.line_ends_with_comma?
+          update_for_start_of_comma_statement(current_lexed_line, lineno)
+        end
+
+        if current_lexed_line.line_ends_with_period?
+          update_for_start_of_period_statement(current_lexed_line, lineno)
+        end
+
+        set_up_line_transition
+        update_actual_indentation(current_lexed_line)
+        measure(lineno, column)
 
         # prep for next line
         @modifier_in_line = nil
@@ -147,40 +97,11 @@ class Tailor
       def kw_update(token, lineno, column)
         if token.keyword_to_indent?
           log "Indent keyword found: '#{token}'."
-          @indent_keyword_line = lineno
-
-          if token.modifier_keyword?
-            log "Found modifier in line: '#{token}'"
-            @modifier_in_line = token
-          elsif token.do_is_for_a_loop?
-            log "Found keyword loop using optional 'do'"
-          else
-            log "Keyword '#{token}' not used as a modifier."
-
-            if token.continuation_keyword?
-              msg = "Continuation keyword: '#{token}'.  "
-              msg << "Decreasing indent expectation for this line."
-              log msg
-              @amount_to_change_this -= 1
-            else
-              msg = "Keyword '#{token}' is not a continuation keyword.  "
-              msg << "Increasing indent expectation for next line."
-              log msg
-              @amount_to_change_next += 1
-            end
-          end
+          update_for_indent_keyword(token, lineno)
         end
 
         if token == "end"
-          unless single_line_indent_statement?(lineno)
-            msg = "End of not a single-line statement that needs indenting."
-            msg < "Decrease this line."
-            log msg
-            @amount_to_change_this -= 1
-          end
-
-          log "Decreasing next due to keyword 'end'."
-          @amount_to_change_next -= 1
+          update_for_outdent_keyword(lineno)
         end
       end
 
@@ -204,27 +125,21 @@ class Tailor
 
         unless @op_statement_nesting.empty?
           log "op nesting not empty: #{@op_statement_nesting}"
-          update_for_op_statement(lineno)
+          update_for_end_of_op_statement(lineno)
         end
 
-        if !multi_line_braces?(lineno) &&
-          !multi_line_brackets?(lineno) &&
-          !multi_line_parens?(lineno)
-          update_for_comma_statement(lineno)
+        unless continuing_enclosed_statement?(lineno)
+          update_for_end_of_comma_statement(lineno)
         end
 
-        update_for_period_statement(lineno)
-
+        update_for_end_of_period_statement(lineno)
         set_up_line_transition
 
         unless current_lexed_line.end_of_multi_line_string?
           measure(lineno, column)
         end
 
-        @modifier_in_line = nil
-        @in_keyword_plus_op = false
-        @in_keyword_plus_comma = false
-        @in_keyword_plus_period = false
+        reset_keyword_state
         transition_lines
       end
 
