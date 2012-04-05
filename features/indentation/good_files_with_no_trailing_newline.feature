@@ -10,7 +10,7 @@ Feature: Indentation check on good files without trailing newlines
       end
     end
     """
-    
+
   @good_files
   Scenario Outline: Don't detect problems on properly indented files with no newlines at the end
     Given <File> exists without a newline at the end
@@ -104,12 +104,13 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/for_with_retry_loop    |
     | indent/ok/loop_with_braces       |
 
+  @single_line @braces
   Scenarios: Good single-line brace uses
     | File                                     |
     | indent/ok/single_line_braces             |
     | indent/ok/single_line_braces_as_t_string |
 
-  @multi_line
+  @multi_line @braces
   Scenarios: Good multi-line brace uses
     | File                                           |
     | indent/ok/multi_line_braces                    |
@@ -118,12 +119,13 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_braces_as_t_string |
     | indent/ok/multi_line_braces_embedded_arrays    |
 
+  @single_line @brackets
   Scenarios: Good single-line bracket uses
     | File                                       |
     | indent/ok/single_line_brackets             |
     | indent/ok/single_line_brackets_as_t_string |
 
-  @multi_line
+  @multi_line @brackets
   Scenarios: Good multi-line bracket uses
     | File                                             |
     | indent/ok/multi_line_brackets                    |
@@ -132,17 +134,19 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_brackets_as_t_string |
     | indent/ok/multi_line_brackets_embedded_hashes    |
 
+  @single_line @parens
   Scenarios: Good single-line paren uses
     | File                                     |
     | indent/ok/single_line_parens             |
     | indent/ok/single_line_parens_as_t_string |
 
-  @multi_line
+  @multi_line @parens
   Scenarios: Good multi-line paren uses
     | File                                           |
     | indent/ok/multi_line_parens                    |
     | indent/ok/multi_line_parens_as_t_string        |
     | indent/ok/multi_line_lonely_parens             |
+    | indent/ok/multi_line_lonely_parens_with_commas |
     | indent/ok/multi_line_lonely_parens_as_t_string |
 
   @multi_line
@@ -165,6 +169,12 @@ Feature: Indentation check on good files without trailing newlines
   Scenarios: Good multi-line if + logical operators
     | File                                |
     | indent/ok/multi_line_if_logical_and |
+
+  @multi_line @blocks
+  Scenarios: Good multi-line blocks
+    | File                                               |
+    | indent/ok/multi_line_each_block                    |
+    | indent/ok/multi_line_each_block_with_op_and_parens |
 
   @multi_line
   Scenarios: Good combinations of many things

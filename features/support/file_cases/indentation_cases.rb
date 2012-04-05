@@ -448,6 +448,11 @@ anywhere!')}
 
 INDENT_OK[:multi_line_lonely_parens] =
   %Q{my_method(
+  first_argument
+)}
+
+INDENT_OK[:multi_line_lonely_parens_with_commas] =
+  %Q{my_method(
   first_argument, second_arg,
   third_arg
 )}
@@ -542,6 +547,23 @@ INDENT_OK[:multi_line_if_logical_and] =
     @indentation_ruler.last_comma_statement_line = lineno
     log "last: \#{@indentation_ruler.last_comma_statement_line}"
   end
+end}
+
+INDENT_OK[:multi_line_each_block] =
+  %Q{style.each do |ruler_name, value|
+  instance_eval(
+    "Tailor::Rulers::\#{camelize(ruler_name.to_s)}Ruler.new(\#{value})"
+  )
+  parent_ruler.add_child_ruler(ruler)
+end}
+
+INDENT_OK[:multi_line_each_block_with_op_and_parens] =
+  %Q{style.each do |ruler_name, value|
+  ruler =
+    instance_eval(
+      "Tailor::Rulers::\#{camelize(ruler_name.to_s)}Ruler.new(\#{value})"
+    )
+  parent_ruler.add_child_ruler(ruler)
 end}
 
 INDENT_OK[:combo1] =
