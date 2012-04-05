@@ -11,7 +11,7 @@ require_relative 'runtime_error'
 
 class Tailor
   class Critic
-    include LogSwitch::Mixin
+    include Tailor::Logger::Mixin
     include Tailor::Rulers
 
     RULER_OBSERVERS = {
@@ -159,16 +159,6 @@ class Tailor
     # @return [Fixnum] The number of problems found so far.
     def problem_count
       problems.values.flatten.size
-    end
-
-    #---------------------------------------------------------------------------
-    # Privates!
-    #---------------------------------------------------------------------------
-    private
-
-    def log(*args)
-      args.first.insert(0, "<#{self.class}> ")
-      Tailor::Logger.log(*args)
     end
   end
 end

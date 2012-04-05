@@ -3,7 +3,7 @@ require_relative 'problem'
 
 class Tailor
   class Ruler
-    include LogSwitch::Mixin
+    include Tailor::Logger::Mixin
 
     attr_reader :cli_option
 
@@ -32,16 +32,6 @@ class Tailor
     # Each ruler should redefine this for its needs.
     def measure(*args)
       # Place-holder
-    end
-
-    #---------------------------------------------------------------------------
-    # Privates!
-    #---------------------------------------------------------------------------
-    private
-
-    def log(*args)
-      args.first.insert(0, "<#{self.class}> ")
-      Tailor::Logger.log(*args)
     end
   end
 end

@@ -12,7 +12,7 @@ class Tailor
   # It then basically represents a list of "file sets" and the rulers that
   # should be applied against each file set.
   class Configuration
-    include LogSwitch::Mixin
+    include Tailor::Logger::Mixin
 
     DEFAULT_GLOB = 'lib/**/*.rb'
     DEFAULT_RC_FILE = Dir.home + '/.tailorrc'
@@ -234,18 +234,7 @@ class Tailor
       table.rows << :separator
       table.rows << ['Formatters', @formatters]
 
-
       puts table
-    end
-
-    #---------------------------------------------------------------------------
-    # Privates!
-    #---------------------------------------------------------------------------
-    private
-
-    def log(*args)
-      args.first.insert(0, "<#{self.class}> ")
-      Tailor::Logger.log(*args)
     end
   end
 end

@@ -14,5 +14,14 @@ class Tailor
 
       @logger
     end
+
+    module Mixin
+      def self.included(base)
+        define_method :log do |*args|
+          args.first.insert(0, "<#{self.class}> ")
+          Tailor::Logger.log(*args)
+        end
+      end
+    end
   end
 end
