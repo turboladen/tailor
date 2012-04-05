@@ -453,4 +453,47 @@ describe Tailor::LexedLine do
       end
     end
   end
+
+  describe "#is_line_only_a" do
+    let(:lexed_output) do
+      [[[1, 11], :on_comma, ","], [[1, 12], :on_nl, "\n"]]
+    end
+
+    context "last event is not the event passed in" do
+      let(:last_event) do
+        [[[1, 11], :on_comma, ","]]
+      end
+
+      before do
+        subject.stub(:last_non_line_feed_event).and_return last_event
+      end
+
+      specify { subject.is_line_only_a(:on_period).should be_false }
+    end
+
+    context "last event is the last event passed in" do
+      context "there is only space before the last event" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_sp, '          '],
+            [[1, 11], :on_comma, ","],
+            [[1, 12], :on_nl, "\n"]]
+        end
+
+        specify { subject.is_line_only_a(:on_comma).should be_true }
+      end
+
+      context "there is non-spaces before the last event" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_sp, "        "],
+            [[1, 8], :on_ident, "one"],
+            [[1, 11], :on_comma, ","],
+            [[1, 12], :on_nl, "\n"]]
+        end
+
+        specify { subject.is_line_only_a(:on_comma).should be_false }
+      end
+    end
+  end
 end

@@ -68,6 +68,21 @@ class Tailor
       end
     end
 
+    # Checks to see if the line contains only +event+ (where it may or may not
+    # be preceded by spaces, and is proceeded by a newline).
+    #
+    # @param [Symbol] event The type of event to check for.
+    # @return [Boolean]
+    def is_line_only_a(event)
+      last_event = last_non_line_feed_event
+      return false if last_event[1] != event
+
+      index = event_index(last_event.first.last)
+      previous_event = self.at(index - 1)
+
+      previous_event.first.last.zero? || previous_event.first.last.nil?
+    end
+
     def method_missing(meth, *args, &blk)
       if meth.to_s =~ /^line_ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
@@ -77,6 +92,9 @@ class Tailor
         else
           does_line_end_with event
         end
+      elsif meth.to_s =~ /^only_(.+)\?$/
+        event = "on_#{$1}".to_sym
+        is_line_only_a(event)
       else
         super(meth)
       end
