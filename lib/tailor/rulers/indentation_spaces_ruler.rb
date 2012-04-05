@@ -138,25 +138,16 @@ class Tailor
       #
       # @param [Array] lexed_line_output The lexed output for the current line.
       def update_actual_indentation(lexed_line_output)
-        if end_of_multi_line_string?(lexed_line_output)
+        if lexed_line_output.end_of_multi_line_string?
           log "Found end of multi-line string."
           return
         end
 
-        first_non_space_element = lexed_line_output.find { |e| e[1] != :on_sp }
+        first_non_space_element = lexed_line_output.first_non_space_element
         @actual_indentation = first_non_space_element.first.last
         log "Actual indentation: #{@actual_indentation}"
       end
 
-      # Determines if the current lexed line is just the end of a tstring.
-      #
-      # @param [Array] lexed_line_output The lexed output for the current line.
-      # @return [Boolean] +true+ if the line contains a +:on_tstring_end+ and
-      #   not a +:on_tstring_beg+.
-      def end_of_multi_line_string?(lexed_line_output)
-        lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
-          lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
-      end
 
       # @return [Boolean]
       def valid_line?
@@ -367,7 +358,7 @@ class Tailor
 
         set_up_line_transition
 
-        unless end_of_multi_line_string?(current_lexed_line)
+        unless current_lexed_line.end_of_multi_line_string?
           measure(lineno, column)
         end
 

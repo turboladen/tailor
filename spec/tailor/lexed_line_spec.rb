@@ -417,4 +417,40 @@ describe Tailor::LexedLine do
       end
     end
   end
+
+  describe "#end_of_multi-line_string?" do
+    context "lexed output is from the end of a multi-line % statement" do
+      let(:lexed_output) do
+        [[[1, 11], :on_tstring_end, "}"], [[1, 12], :on_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.end_of_multi_line_string?.should be_true
+      end
+    end
+
+    context "lexed output is not from the end of a multi-line % statement" do
+      let(:lexed_output) do
+        [[[1, 11], :on_comma, ","], [[1, 12], :on_nl, "\n"]]
+      end
+
+      it "returns true" do
+        subject.end_of_multi_line_string?.should be_false
+      end
+    end
+
+    context "lexed output contains start AND end of a multi-line % statement" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_tstring_beg, "%Q{"],
+          [[1, 3], :on_tstring_content, "this is a t string! suckaaaaaa!"],
+          [[1, 32], :on_tstring_end, "}"]
+        ]
+      end
+
+      it "returns true" do
+        subject.end_of_multi_line_string?.should be_false
+      end
+    end
+  end
 end
