@@ -6,7 +6,7 @@ class Tailor
   class Lexer < ::Ripper::Lexer
     class Token < String
       include LexerConstants
-      include LogSwitch::Mixin
+      include Tailor::Logger::Mixin
 
       def initialize(the_token, options={})
         super(the_token)

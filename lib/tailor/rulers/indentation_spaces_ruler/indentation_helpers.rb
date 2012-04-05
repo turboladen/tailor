@@ -1,9 +1,11 @@
 require_relative '../../ruler'
+require_relative '../../logger'
 
 class Tailor
   module Rulers
     class IndentationSpacesRuler < Tailor::Ruler
       module IndentationHelpers
+        include Tailor::Logger::Mixin
 
         # @return [Fixnum] The indent level the file should currently be at.
         def should_be_at
