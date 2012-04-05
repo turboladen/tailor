@@ -167,7 +167,7 @@ class Tailor
         begin
           config = instance_eval File.read(user_config_file)
         rescue LoadError => ex
-          raise Tailor::RuntimeError, 
+          raise Tailor::RuntimeError,
             "Couldn't load config file: #{user_config_file}"
         end
       else
