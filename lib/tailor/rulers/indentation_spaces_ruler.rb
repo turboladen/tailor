@@ -74,6 +74,7 @@ class Tailor
               @amount_to_change_next += 1
               msg = "Single-token-indent line-end; token: #{token_event[1]}. "
               msg << "change_next += 1 -> #{@amount_to_change_next}"
+              log msg
             end
 
             @single_tokens << { token: token_event.last, lineno: lineno }
@@ -83,6 +84,7 @@ class Tailor
             @amount_to_change_next -= 1
             msg = "Single-token ends a keyword-opening line.  "
             msg << "change_next -= 1 -> #{@amount_to_change_next}"
+            log msg
           end
         end
 
