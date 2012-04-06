@@ -84,6 +84,9 @@ class Tailor
           end
         end
 
+        # Sets up expectations in +@proper+ based on the number of +/- reasons
+        # to change this and next lines, given in +@amount_to_change_this+ and
+        # +@amount_to_change_next+, respectively.
         def set_up_line_transition
           log "Amount to change next line: #{@amount_to_change_next}"
           log "Amount to change this line: #{@amount_to_change_this}"

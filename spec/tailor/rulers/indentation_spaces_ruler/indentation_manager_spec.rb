@@ -118,7 +118,32 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#set_up_line_transition" do
-    pending
+    context "@amount_to_change_next > 0" do
+      before { subject.instance_variable_set(:@amount_to_change_next, 1) }
+
+      it "should call #increase_next_line" do
+        subject.should_receive(:increase_next_line)
+        subject.set_up_line_transition
+      end
+    end
+
+    context "@amount_to_change_next < 0" do
+      before { subject.instance_variable_set(:@amount_to_change_next, -1) }
+
+      it "should call #increase_next_line" do
+        subject.should_receive(:decrease_next_line)
+        subject.set_up_line_transition
+      end
+    end
+
+    context "@amount_to_change_this < 0" do
+      before { subject.instance_variable_set(:@amount_to_change_this, -1) }
+
+      it "should call #decrease_this_line" do
+        subject.should_receive(:decrease_this_line)
+        subject.set_up_line_transition
+      end
+    end
   end
 
   describe "#transition_lines" do
