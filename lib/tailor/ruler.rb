@@ -1,5 +1,6 @@
 require_relative 'logger'
 require_relative 'problem'
+require_relative 'runtime_error'
 
 class Tailor
   class Ruler
@@ -31,7 +32,8 @@ class Tailor
 
     # Each ruler should redefine this for its needs.
     def measure(*args)
-      # Place-holder
+      raise RuntimeError,
+        "Ruler#measure called, but should be redefined by a real ruler."
     end
   end
 end
