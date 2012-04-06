@@ -1,10 +1,12 @@
 require_relative '../../ruler'
 require_relative '../../logger'
+require_relative '../../lexer_constants'
 
 class Tailor
   module Rulers
     class IndentationSpacesRuler < Tailor::Ruler
       module IndentationHelpers
+        include Tailor::LexerConstants
         include Tailor::Logger::Mixin
 
         # @return [Fixnum] The indent level the file should currently be at.
@@ -155,114 +157,53 @@ class Tailor
           end
         end
 
-        def update_for_start_of_op_statement(current_lexed_line, lineno)
-          log "Line ends with op."
-
-          # Are we nested in a multi-line operation yet?
-          if @op_statement_nesting.empty?
-            @op_statement_nesting << lineno
-
-            if current_lexed_line.contains_keyword_to_indent? &&
-              @modifier_in_line.nil?
-              @in_keyword_plus_op = true
-            else
-              @amount_to_change_next += 1
-              msg = "Multi-line op statement: "
-              msg << "change_next += 1 -> #{@amount_to_change_next}"
-              log msg
-            end
-
-            # If this line is a continuation of the last multi-line op statement
-            # then update the nesting line number with this line number.
-          else
-            @op_statement_nesting.pop
-            @op_statement_nesting << lineno
-          end
+        def single_token_indent_line_end?(lexed_line)
+          lexed_line.ends_with_op? ||
+            lexed_line.ends_with_comma? ||
+            lexed_line.ends_with_period?
         end
 
-        def update_for_start_of_comma_statement(current_lexed_line, lineno)
-          if current_lexed_line.contains_keyword_to_indent? &&
-            @modifier_in_line.nil?
-            log "In keyword-plus-comma statement."
-            @in_keyword_plus_comma = true
-          elsif @last_comma_statement_line.nil?
-            msg = "Increasing :next_line expectation due to "
-            msg << "multi-line comma statement."
-            log msg
-            @amount_to_change_next += 1
-          end
+        def line_ends_with_same_as_last(token_event)
+          return false if @single_tokens.empty?
 
-          @last_comma_statement_line = lineno
-          log "last_comma_statement_line: #{@last_comma_statement_line}"
+          @single_tokens.last[:token] == token_event.last
         end
 
-        def update_for_start_of_period_statement(current_lexed_line, lineno)
-          if current_lexed_line.contains_keyword_to_indent? &&
-            @modifier_in_line.nil?
-            @in_keyword_plus_period = true
-          elsif @last_period_statement_line.nil?
-            @amount_to_change_next += 1
-            msg = "Increasing :next_line expectation due to "
-            msg << "multi-line period statement."
-            log msg
-          end
-
-          @last_period_statement_line = lineno
-          log "last_period_statement_line: #{@last_period_statement_line}"
+        def comma_is_part_of_enclosed_statement?(lexed_line, lineno)
+          lexed_line.ends_with_comma? &&
+            continuing_enclosed_statement?(lineno)
         end
 
-        def update_for_end_of_period_statement(lineno)
-          if @last_period_statement_line == (lineno - 1)
-            log "Last line of multi-line period statement"
-            @last_period_statement_line = nil
+        def keyword_and_single_token_line?(lineno)
+          d_tokens = @double_tokens.find_all { |t| t[:lineno] == lineno }
+          return false if d_tokens.empty?
 
-            if @in_keyword_plus_period
-              log "@in_keyword_plus_period: #{@in_keyword_plus_period}"
-            else
-              @amount_to_change_next -= 1
-              msg = "End of period statement. "
-              msg << "change_next -= 1 -> #{@amount_to_change_next}"
-              log msg
-            end
+          kw_token = d_tokens.reverse.find do |t|
+            ['{', '[', '('].none? { |e| t[:token] == e }
           end
+
+          return false if kw_token.nil?
+
+          s_token = @single_tokens.reverse.find { |t| t[:lineno] == lineno }
+          return false unless s_token
+
+          true
         end
 
-        def update_for_end_of_comma_statement(lineno)
-          if @last_comma_statement_line == (lineno - 1)
-            log "Last line of multi-line comma statement"
-            @last_comma_statement_line = nil
+        def single_token_start_line
+          return if @single_tokens.empty?
 
-            if @in_keyword_plus_comma
-              log "@in_keyword_plus_comma: #{@in_keyword_plus_comma}"
-            else
-              @amount_to_change_next -= 1
-              msg = "End of comma statement. "
-              msg << "change_next -= 1 -> #{@amount_to_change_next}"
-              log msg
-            end
-          end
+          @single_tokens.first[:lineno]
         end
 
-        def update_for_end_of_op_statement(lineno)
-          if @op_statement_nesting.last + 1 == lineno
-            log "End of multi-line op statement."
+        def double_token_start_line
+          return if @double_tokens.empty?
 
-            if @in_keyword_plus_op
-              log "@in_keyword_plus_op: #{@in_keyword_plus_op}"
-            else
-              @amount_to_change_next -= 1
-              msg = "End of op statement. "
-              msg << "change_next -= 1 -> #{@amount_to_change_next}"
-              log msg
-            end
-
-            @op_statement_nesting.clear
-          end
+          @double_tokens.last[:lineno]
         end
 
         def in_a_nested_statement?
-          !@op_statement_nesting.empty? ||
-          !@tstring_nesting.empty? ||
+          !@single_tokens.empty? ||
           !@double_tokens.empty?
         end
 
@@ -272,38 +213,26 @@ class Tailor
           multi_line_parens?(lineno)
         end
 
-        def reset_keyword_state
-          log "Resetting keyword state variables."
-          @modifier_in_line = nil
-          @in_keyword_plus_op = false
-          @in_keyword_plus_comma = false
-          @in_keyword_plus_period = false
-        end
-
         def update_for_opening_double_token(token, lineno)
+          if token.modifier_keyword?
+            log "Found modifier in line: '#{token}'"
+            return
+          end
+
+          if token.do_is_for_a_loop?
+            log "Found keyword loop using optional 'do'"
+            return
+          end
+
+          log "Keyword '#{token}' not used as a modifier."
           @double_tokens << { token: token, lineno: lineno }
 
-          if token.keyword_to_indent?
-            if token.modifier_keyword?
-              log "Found modifier in line: '#{token}'"
-              @modifier_in_line = token
-              return
-            end
-
-            if token.do_is_for_a_loop?
-              log "Found keyword loop using optional 'do'"
-              return
-            end
-
-            log "Keyword '#{token}' not used as a modifier."
-
-            if token.continuation_keyword?
-              msg = "Continuation keyword: '#{token}'.  "
-              msg << "Decreasing indent expectation for this line."
-              log msg
-              @amount_to_change_this -= 1
-              return
-            end
+          if token.continuation_keyword?
+            @amount_to_change_this -= 1
+            msg = "Continuation keyword: '#{token}'.  "
+            msg << "change_this -= 1 -> #{@amount_to_change_this}"
+            log msg
+            return
           end
 
           @amount_to_change_next += 1
@@ -335,7 +264,17 @@ class Tailor
           msg << "change_next -= 1 -> #{@amount_to_change_next}"
           log msg
 
+          remove_continuation_keywords
+
           @double_tokens.pop
+        end
+
+        def remove_continuation_keywords
+          return if @double_tokens.empty?
+
+          while CONTINUATION_KEYWORDS.include?(@double_tokens.last[:token])
+            @double_tokens.pop
+          end
         end
 
         def multi_line_braces?(lineno)

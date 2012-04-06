@@ -60,7 +60,6 @@ class Tailor
       ],
       max_line_length: [:add_ignored_nl_observer, :add_nl_observer],
       indentation_spaces: [
-        :add_comma_observer,
         :add_comment_observer,
         :add_embexpr_beg_observer,
         :add_embexpr_end_observer,
@@ -70,7 +69,6 @@ class Tailor
         :add_lbracket_observer,
         :add_lparen_observer,
         :add_nl_observer,
-        :add_period_observer,
         :add_rbrace_observer,
         :add_rbracket_observer,
         :add_rparen_observer,

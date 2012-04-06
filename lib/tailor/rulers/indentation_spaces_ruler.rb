@@ -20,18 +20,10 @@ class Tailor
 
         @double_tokens = []
         @tstring_nesting = []
-        @last_comma_statement_line = nil
-        @last_period_statement_line = nil
+        @single_tokens = []
 
         @amount_to_change_next = 0
         @amount_to_change_this = 0
-      end
-
-      def comma_update(text_line, lineno, column)
-        if column == text_line.length
-          log "Line ends with comma."
-          @last_comma_statement_line = lineno
-        end
       end
 
       def comment_update(token, lexed_line, file_text, lineno, column)
@@ -64,24 +56,35 @@ class Tailor
 
       def ignored_nl_update(current_lexed_line, lineno, column)
         log "double tokens on entry: #{@double_tokens}"
+        log "single tokens on entry: #{@single_tokens}"
         stop if @tstring_nesting.size > 0
 
         if current_lexed_line.only_spaces?
           log "Line of only spaces.  Moving on."
+          # todo: maybe i shouldn't return here? ...do transitions?
           return
         end
 
-        if current_lexed_line.line_ends_with_op?
-          update_for_start_of_op_statement(current_lexed_line, lineno)
-        end
+        if single_token_indent_line_end?(current_lexed_line)
+          log "Line ends with single-token indent token."
 
-        if !in_a_nested_statement? &&
-          current_lexed_line.line_ends_with_comma?
-          update_for_start_of_comma_statement(current_lexed_line, lineno)
-        end
+          unless comma_is_part_of_enclosed_statement?(current_lexed_line, lineno)
+            token_event = current_lexed_line.last_non_line_feed_event
 
-        if current_lexed_line.line_ends_with_period?
-          update_for_start_of_period_statement(current_lexed_line, lineno)
+            unless line_ends_with_same_as_last token_event
+              @amount_to_change_next += 1
+              msg = "Single-token-indent line-end; token: #{token_event[1]}. "
+              msg << "change_next += 1 -> #{@amount_to_change_next}"
+            end
+
+            @single_tokens << { token: token_event.last, lineno: lineno }
+          end
+
+          if keyword_and_single_token_line?(lineno)
+            @amount_to_change_next -= 1
+            msg = "Single-token ends a keyword-opening line.  "
+            msg << "change_next -= 1 -> #{@amount_to_change_next}"
+          end
         end
 
         set_up_line_transition
@@ -89,8 +92,8 @@ class Tailor
         measure(lineno, column)
 
         log "double tokens on exit: #{@double_tokens}"
+        log "single tokens on entry: #{@single_tokens}"
         # prep for next line
-        @modifier_in_line = nil
         transition_lines
       end
 
@@ -122,18 +125,22 @@ class Tailor
 
       def nl_update(current_lexed_line, lineno, column)
         log "double tokens on entry: #{@double_tokens}"
+        log "single tokens on entry: #{@single_tokens}"
         update_actual_indentation(current_lexed_line)
 
-        unless @op_statement_nesting.empty?
-          log "op nesting not empty: #{@op_statement_nesting}"
-          update_for_end_of_op_statement(lineno)
+        unless @single_tokens.empty?
+          log "End of single-token statement."
+
+          if single_token_start_line == double_token_start_line
+            log "Single-token started at same time as double-token."
+          else
+            @amount_to_change_next -= 1
+            log "change_next -= 1 -> #{@amount_to_change_next}"
+          end
+
+          @single_tokens.clear
         end
 
-        unless continuing_enclosed_statement?(lineno)
-          update_for_end_of_comma_statement(lineno)
-        end
-
-        update_for_end_of_period_statement(lineno)
         set_up_line_transition
 
         unless current_lexed_line.end_of_multi_line_string?
@@ -141,15 +148,8 @@ class Tailor
         end
 
         log "double tokens on exit: #{@double_tokens}"
-        reset_keyword_state
+        log "single tokens on entry: #{@single_tokens}"
         transition_lines
-      end
-
-      def period_update(current_line_length, lineno, column)
-        if column == current_line_length
-          log "Line length: #{current_line_length}"
-          @last_period_statement_line = lineno
-        end
       end
 
       def rbrace_update(current_lexed_line, lineno, column)
