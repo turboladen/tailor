@@ -170,6 +170,12 @@ class Tailor
             lexed_line.ends_with_period?
         end
 
+        # Checks to see if the last token in @single_tokens is the same as the
+        # one in +token_event+.
+        #
+        # @param [Array] token_event A single event (probably extracted from a
+        #   {LexedLine}).
+        # @return [Boolean]
         def line_ends_with_same_as_last(token_event)
           return false if @single_tokens.empty?
 

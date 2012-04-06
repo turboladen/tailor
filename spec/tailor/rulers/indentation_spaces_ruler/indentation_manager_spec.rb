@@ -289,6 +289,42 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
+  describe "#line_ends_with_same_as_last" do
+    context "@single_tokens is empty" do
+      before do
+        subject.instance_variable_set(:@single_tokens, [])
+      end
+
+      it "returns false" do
+        subject.line_ends_with_same_as_last([]).should be_false
+      end
+    end
+
+    context "@single_tokens.last[:token] != token_event.last" do
+      let(:last_single_token) { [[1, 2], :on_comma, ','] }
+
+      before do
+        subject.instance_variable_set(:@single_tokens, [{ token: '{' }])
+      end
+
+      it "returns false" do
+        subject.line_ends_with_same_as_last(last_single_token).should be_false
+      end
+    end
+
+    context "@single_tokens.last[:token] == token_event.last" do
+      let(:last_single_token) { [[1, 2], :on_comma, ','] }
+
+      before do
+        subject.instance_variable_set(:@single_tokens, [{ token: ',' }])
+      end
+
+      it "returns false" do
+        subject.line_ends_with_same_as_last(last_single_token).should be_true
+      end
+    end
+  end
+
   describe "#multi_line_braces?" do
     pending
   end
