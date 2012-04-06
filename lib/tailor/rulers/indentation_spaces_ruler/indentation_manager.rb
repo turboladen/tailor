@@ -5,9 +5,34 @@ require_relative '../../lexer_constants'
 class Tailor
   module Rulers
     class IndentationSpacesRuler < Tailor::Ruler
-      module IndentationHelpers
+      class IndentationManager
         include Tailor::LexerConstants
         include Tailor::Logger::Mixin
+
+        attr_accessor :amount_to_change_next
+        attr_accessor :amount_to_change_this
+        attr_accessor :embexpr_beg
+
+        attr_reader :actual_indentation
+        attr_reader :double_tokens
+        attr_reader :single_tokens
+        attr_reader :tstring_nesting
+
+        def initialize(spaces)
+          @spaces = spaces
+
+          log "Setting @proper[:this_line] to 0."
+          @proper = { this_line: 0, next_line: 0 }
+          @actual_indentation = 0
+
+          @double_tokens = []
+          @tstring_nesting = []
+          @single_tokens = []
+
+          @amount_to_change_next = 0
+          @amount_to_change_this = 0
+          start
+        end
 
         # @return [Fixnum] The indent level the file should currently be at.
         def should_be_at
@@ -19,10 +44,10 @@ class Tailor
         end
 
         # Decreases the indentation expectation for the current line by
-        # +@config+.
+        # +@spaces+.
         def decrease_this_line
           if started?
-            @proper[:this_line] -= @config
+            @proper[:this_line] -= @spaces
 
             if @proper[:this_line] < 0
               @proper[:this_line] = 0
@@ -36,10 +61,10 @@ class Tailor
         end
 
         # Increases the indentation expectation for the next line by
-        # +@config+.
+        # +@spaces+.
         def increase_next_line
           if started?
-            @proper[:next_line] += @config
+            @proper[:next_line] += @spaces
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
@@ -48,10 +73,10 @@ class Tailor
         end
 
         # Decreases the indentation expectation for the next line by
-        # +@config+.
+        # +@spaces+.
         def decrease_next_line
           if started?
-            @proper[:next_line] -= @config
+            @proper[:next_line] -= @spaces
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
@@ -139,21 +164,6 @@ class Tailor
           else
             log "Line is properly indented."
             true
-          end
-        end
-
-        # Checks if the line's indentation level is appropriate.
-        #
-        # @param [Fixnum] lineno The line the potential problem is on.
-        # @param [Fixnum] column The column the potential problem is on.
-        def measure(lineno, column)
-          log "Measuring..."
-
-          unless valid_line?
-            @problems << Problem.new(:indentation, lineno, column,
-              { actual_indentation: @actual_indentation,
-                should_be_at: should_be_at }
-            )
           end
         end
 

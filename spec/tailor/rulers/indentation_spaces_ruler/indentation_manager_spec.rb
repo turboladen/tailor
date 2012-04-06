@@ -1,19 +1,18 @@
 require 'ripper'
 require_relative '../../../spec_helper'
-require 'tailor/rulers/indentation_spaces_ruler/indentation_helpers'
+require 'tailor/rulers/indentation_spaces_ruler/indentation_manager'
 
 
-describe Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers do
-  let!(:config) { 5 }
+describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
+  let!(:spaces) { 5 }
 
   before do
-    subject.instance_variable_set(:@config, config)
+    Tailor::Logger.stub(:log)
+    subject.instance_variable_set(:@spaces, spaces)
   end
 
   subject do
-    Class.new do
-      include Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers
-    end.new
+    Tailor::Rulers::IndentationSpacesRuler::IndentationManager.new spaces
   end
 
   describe "#should_be_at" do
@@ -31,7 +30,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers do
   end
 
   describe "#decrease_this_line" do
-    let!(:config) { 27 }
+    let!(:spaces) { 27 }
 
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
@@ -49,7 +48,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers do
       end
 
       context "@proper[:this_line] NOT decremented < 0" do
-        it "decrements @proper[:this_line] by @config" do
+        it "decrements @proper[:this_line] by @spaces" do
           subject.instance_variable_set(:@proper, {
             this_line: 28, next_line: 28
           })
@@ -80,9 +79,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers do
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      it "increases @proper[:next_line] by @config" do
+      it "increases @proper[:next_line] by @spaces" do
         expect { subject.increase_next_line }.to change{subject.next_should_be_at}.
-          by(config)
+          by(spaces)
       end
     end
 
@@ -91,29 +90,29 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationHelpers do
 
       it "does not increases @proper[:next_line]" do
         expect { subject.increase_next_line }.to_not change{subject.next_should_be_at}.
-          by(config)
+          by(spaces)
       end
     end
   end
 
   describe "#decrease_next_line" do
-    let!(:config) { 27 }
+    let!(:spaces) { 27 }
 
     context "#started? is true" do
       before { subject.stub(:started?).and_return true }
 
-      it "decrements @proper[:next_line] by @config" do
+      it "decrements @proper[:next_line] by @spaces" do
         expect { subject.decrease_next_line }.to change{subject.next_should_be_at}.
-          by(-config)
+          by(-spaces)
       end
     end
 
     context "#started? is false" do
       before { subject.stub(:started?).and_return false }
 
-      it "decrements @proper[:next_line] by @config" do
+      it "decrements @proper[:next_line] by @spaces" do
         expect { subject.decrease_next_line }.to_not change{subject.next_should_be_at}.
-          by(-config)
+          by(-spaces)
       end
     end
   end
