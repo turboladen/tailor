@@ -245,12 +245,48 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe "#valid_line?" do
-    pending
-  end
+  describe "#line_ends_with_single_token_indenter?" do
+    let(:lexed_line) { double "LexedLine" }
 
-  describe "#single_line_indent_statement?" do
-    pending
+    context "lexed_line doesn't end with an op, comma, or period" do
+      before do
+        lexed_line.stub(ends_with_op?: false)
+        lexed_line.stub(ends_with_comma?: false)
+        lexed_line.stub(ends_with_period?: false)
+      end
+
+      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_false }
+    end
+
+    context "lexed_line ends with an op" do
+      before do
+        lexed_line.stub(ends_with_op?: true)
+        lexed_line.stub(ends_with_comma?: false)
+        lexed_line.stub(ends_with_period?: false)
+      end
+
+      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+    end
+
+    context "lexed_line ends with a comma" do
+      before do
+        lexed_line.stub(ends_with_op?: false)
+        lexed_line.stub(ends_with_comma?: true)
+        lexed_line.stub(ends_with_period?: false)
+      end
+
+      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+    end
+
+    context "lexed_line ends with a period" do
+      before do
+        lexed_line.stub(ends_with_op?: false)
+        lexed_line.stub(ends_with_comma?: false)
+        lexed_line.stub(ends_with_period?: true)
+      end
+
+      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+    end
   end
 
   describe "#multi_line_braces?" do

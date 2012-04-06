@@ -160,7 +160,11 @@ class Tailor
           log "Actual indentation: #{@actual_indentation}"
         end
 
-        def single_token_indent_line_end?(lexed_line)
+        # Checks if the current line ends with an operator, comma, or period.
+        #
+        # @param [LexedLine] lexed_line
+        # @return [Boolean]
+        def line_ends_with_single_token_indenter?(lexed_line)
           lexed_line.ends_with_op? ||
             lexed_line.ends_with_comma? ||
             lexed_line.ends_with_period?

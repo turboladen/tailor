@@ -50,7 +50,7 @@ class Tailor
           return
         end
 
-        if @manager.single_token_indent_line_end?(current_lexed_line)
+        if @manager.line_ends_with_single_token_indenter?(current_lexed_line)
           log "Line ends with single-token indent token."
 
           unless @manager.comma_is_part_of_enclosed_statement?(current_lexed_line, lineno)
