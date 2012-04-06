@@ -160,16 +160,6 @@ class Tailor
           log "Actual indentation: #{@actual_indentation}"
         end
 
-        # @return [Boolean]
-        def valid_line?
-          if @actual_indentation != should_be_at
-            false
-          else
-            log "Line is properly indented."
-            true
-          end
-        end
-
         def single_token_indent_line_end?(lexed_line)
           lexed_line.ends_with_op? ||
             lexed_line.ends_with_comma? ||

@@ -203,7 +203,7 @@ class Tailor
       def measure(lineno, column)
         log "Measuring..."
 
-        unless @manager.valid_line?
+        if @manager.actual_indentation != @manager.should_be_at
           @problems << Problem.new(:indentation, lineno, column,
             { actual_indentation: @manager.actual_indentation,
               should_be_at: @manager.should_be_at }
