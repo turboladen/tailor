@@ -77,7 +77,9 @@ class Tailor
         # +@proper[:this_line]+.
         def transition_lines
           if started?
+            log "Resetting change_this to 0."
             @amount_to_change_this = 0
+            log "Resetting change_next to 0."
             @amount_to_change_next = 0
             log "Setting @proper[:this_line] = that of :next_line"
             @proper[:this_line] = @proper[:next_line]
@@ -143,6 +145,8 @@ class Tailor
         # @param [Fixnum] lineno The line the potential problem is on.
         # @param [Fixnum] column The column the potential problem is on.
         def measure(lineno, column)
+          log "Measuring..."
+
           unless valid_line?
             @problems << Problem.new(:indentation, lineno, column,
               { actual_indentation: @actual_indentation,
@@ -162,10 +166,10 @@ class Tailor
               @modifier_in_line.nil?
               @in_keyword_plus_op = true
             else
-              msg = "Increasing :next_line expectation due to "
-              msg << "multi-line operator statement."
-              log msg
               @amount_to_change_next += 1
+              msg = "Multi-line op statement: "
+              msg << "change_next += 1 -> #{@amount_to_change_next}"
+              log msg
             end
 
             # If this line is a continuation of the last multi-line op statement
@@ -197,10 +201,10 @@ class Tailor
             @modifier_in_line.nil?
             @in_keyword_plus_period = true
           elsif @last_period_statement_line.nil?
+            @amount_to_change_next += 1
             msg = "Increasing :next_line expectation due to "
             msg << "multi-line period statement."
             log msg
-            @amount_to_change_next += 1
           end
 
           @last_period_statement_line = lineno
@@ -216,6 +220,9 @@ class Tailor
               log "@in_keyword_plus_period: #{@in_keyword_plus_period}"
             else
               @amount_to_change_next -= 1
+              msg = "End of period statement. "
+              msg << "change_next -= 1 -> #{@amount_to_change_next}"
+              log msg
             end
           end
         end
@@ -229,6 +236,9 @@ class Tailor
               log "@in_keyword_plus_comma: #{@in_keyword_plus_comma}"
             else
               @amount_to_change_next -= 1
+              msg = "End of comma statement. "
+              msg << "change_next -= 1 -> #{@amount_to_change_next}"
+              log msg
             end
           end
         end
@@ -241,59 +251,19 @@ class Tailor
               log "@in_keyword_plus_op: #{@in_keyword_plus_op}"
             else
               @amount_to_change_next -= 1
+              msg = "End of op statement. "
+              msg << "change_next -= 1 -> #{@amount_to_change_next}"
+              log msg
             end
 
             @op_statement_nesting.clear
           end
         end
 
-        def update_for_indent_keyword(token, lineno)
-          @indent_keyword_line = lineno
-
-          if token.modifier_keyword?
-            log "Found modifier in line: '#{token}'"
-            @modifier_in_line = token
-            return
-          end
-
-          if token.do_is_for_a_loop?
-            log "Found keyword loop using optional 'do'"
-            return
-          end
-
-          log "Keyword '#{token}' not used as a modifier."
-
-          if token.continuation_keyword?
-            msg = "Continuation keyword: '#{token}'.  "
-            msg << "Decreasing indent expectation for this line."
-            log msg
-            @amount_to_change_this -= 1
-          else
-            msg = "Keyword '#{token}' is not a continuation keyword.  "
-            msg << "Increasing indent expectation for next line."
-            log msg
-            @amount_to_change_next += 1
-          end
-        end
-
-        def update_for_outdent_keyword(lineno)
-          unless single_line_indent_statement?(lineno)
-            msg = "End of not a single-line statement that needs indenting."
-            msg < "Decrease this line."
-            log msg
-            @amount_to_change_this -= 1
-          end
-
-          log "Decreasing next due to keyword 'end'."
-          @amount_to_change_next -= 1
-        end
-
         def in_a_nested_statement?
           !@op_statement_nesting.empty? ||
-            !@tstring_nesting.empty? ||
-            !@paren_nesting.empty? ||
-            !@brace_nesting.empty? ||
-            !@bracket_nesting.empty?
+          !@tstring_nesting.empty? ||
+          !@double_tokens.empty?
         end
 
         def continuing_enclosed_statement?(lineno)
@@ -303,34 +273,87 @@ class Tailor
         end
 
         def reset_keyword_state
+          log "Resetting keyword state variables."
           @modifier_in_line = nil
           @in_keyword_plus_op = false
           @in_keyword_plus_comma = false
           @in_keyword_plus_period = false
         end
 
-        # Checks if the statement is a single line statement that needs indenting.
-        #
-        # @return [Boolean] True if +@indent_keyword_line+ is equal to the
-        #   {lineno} (where lineno is the currenly parsed line).
-        def single_line_indent_statement?(lineno)
-          @indent_keyword_line == lineno
+        def update_for_opening_double_token(token, lineno)
+          @double_tokens << { token: token, lineno: lineno }
+
+          if token.keyword_to_indent?
+            if token.modifier_keyword?
+              log "Found modifier in line: '#{token}'"
+              @modifier_in_line = token
+              return
+            end
+
+            if token.do_is_for_a_loop?
+              log "Found keyword loop using optional 'do'"
+              return
+            end
+
+            log "Keyword '#{token}' not used as a modifier."
+
+            if token.continuation_keyword?
+              msg = "Continuation keyword: '#{token}'.  "
+              msg << "Decreasing indent expectation for this line."
+              log msg
+              @amount_to_change_this -= 1
+              return
+            end
+          end
+
+          @amount_to_change_next += 1
+          msg = "double-token statement opening: "
+          msg << "change_next += 1 -> #{@amount_to_change_next}"
+          log msg
+        end
+
+        def update_for_closing_double_token(event_type, lexed_line)
+          meth = "only_#{event_type}?"
+
+          if lexed_line.send(meth.to_sym)
+            msg = "End of not a single-line statement that needs indenting."
+            msg < "Decrease this line."
+            log msg
+            @amount_to_change_this -= 1
+          end
+
+          if event_type == :rbrace && @embexpr_beg == true
+            msg = "Got :rbrace and @embexpr_beg is true. "
+            msg << " Must be at an @embexpr_end."
+            log msg
+            @embexpr_beg = false
+            return
+          end
+
+          @amount_to_change_next -= 1
+          msg = "double-token statement closing: "
+          msg << "change_next -= 1 -> #{@amount_to_change_next}"
+          log msg
+
+          @double_tokens.pop
         end
 
         def multi_line_braces?(lineno)
-          if @brace_nesting.empty?
-            false
-          else
-            @brace_nesting.last < lineno
+          @double_tokens.reverse.find do |t|
+            t[:token] == '{' && t[:lineno] < lineno
           end
         end
 
         def multi_line_brackets?(lineno)
-          @bracket_nesting.empty? ? false : (@bracket_nesting.last < lineno)
+          @double_tokens.reverse.find do |t|
+            t[:token] == '[' && t[:lineno] < lineno
+          end
         end
 
         def multi_line_parens?(lineno)
-          @paren_nesting.empty? ? false : (@paren_nesting.last < lineno)
+          @double_tokens.reverse.find do |t|
+            t[:token] == '(' && t[:lineno] < lineno
+          end
         end
 
         def in_tstring?

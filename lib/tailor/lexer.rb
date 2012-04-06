@@ -179,17 +179,17 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_kw(token)
       log "KW: #{token}"
+      current_line = LexedLine.new(super, lineno)
+
       l_token = Tailor::Lexer::Token.new(token,
         {
-          loop_with_do: LexedLine.new(super, lineno).loop_with_do?,
+          loop_with_do: current_line.loop_with_do?,
           full_line_of_text: current_line_of_text
         }
       )
 
       kw_changed
-      notify_kw_observers(l_token,
-        lineno,
-        column)
+      notify_kw_observers(l_token, current_line, lineno, column)
 
       super(token)
     end

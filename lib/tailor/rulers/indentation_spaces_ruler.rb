@@ -1,6 +1,7 @@
 require_relative '../ruler'
 require_relative '../lexer_constants'
 require_relative '../lexed_line'
+require_relative '../lexer/token'
 require_relative 'indentation_spaces_ruler/indentation_helpers'
 
 class Tailor
@@ -17,10 +18,7 @@ class Tailor
         @proper[:next_line] = 0
         @actual_indentation = 0
 
-        @brace_nesting = []
-        @bracket_nesting = []
-        @paren_nesting = []
-        @op_statement_nesting = []
+        @double_tokens = []
         @tstring_nesting = []
         @last_comma_statement_line = nil
         @last_period_statement_line = nil
@@ -65,6 +63,7 @@ class Tailor
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
+        log "double tokens on entry: #{@double_tokens}"
         stop if @tstring_nesting.size > 0
 
         if current_lexed_line.only_spaces?
@@ -89,38 +88,40 @@ class Tailor
         update_actual_indentation(current_lexed_line)
         measure(lineno, column)
 
+        log "double tokens on exit: #{@double_tokens}"
         # prep for next line
         @modifier_in_line = nil
         transition_lines
       end
 
-      def kw_update(token, lineno, column)
+      def kw_update(token, lexed_line, lineno, column)
         if token.keyword_to_indent?
           log "Indent keyword found: '#{token}'."
-          update_for_indent_keyword(token, lineno)
+          update_for_opening_double_token(token, lineno)
         end
 
         if token == "end"
-          update_for_outdent_keyword(lineno)
+          update_for_closing_double_token(:kw, lexed_line)
         end
       end
 
       def lbrace_update(lexed_line, lineno, column)
-        @brace_nesting << lineno
-        @amount_to_change_next += 1
+        token = Tailor::Lexer::Token.new('{')
+        update_for_opening_double_token(token, lineno)
       end
 
       def lbracket_update(lexed_line, lineno, column)
-        @bracket_nesting << lineno
-        @amount_to_change_next += 1
+        token = Tailor::Lexer::Token.new('[')
+        update_for_opening_double_token(token, lineno)
       end
 
       def lparen_update(lineno, column)
-        @paren_nesting << lineno
-        @amount_to_change_next += 1
+        token = Tailor::Lexer::Token.new('(')
+        update_for_opening_double_token(token, lineno)
       end
 
       def nl_update(current_lexed_line, lineno, column)
+        log "double tokens on entry: #{@double_tokens}"
         update_actual_indentation(current_lexed_line)
 
         unless @op_statement_nesting.empty?
@@ -139,6 +140,7 @@ class Tailor
           measure(lineno, column)
         end
 
+        log "double tokens on exit: #{@double_tokens}"
         reset_keyword_state
         transition_lines
       end
@@ -154,20 +156,22 @@ class Tailor
         if multi_line_braces?(lineno)
           log "End of multi-line braces!"
 
+          # todo: change to lexed_line.only_rbrace?
           if r_event_without_content?(current_lexed_line, lineno, column)
             @amount_to_change_this -= 1
           end
         end
 
-        @brace_nesting.pop
+        update_for_closing_double_token(:rbrace, current_lexed_line)
 
         # Ripper won't match a closing } in #{} so we have to track if we're
         # inside of one.  If we are, don't decrement then :next_line.
-        unless @embexpr_beg
-          @amount_to_change_next -= 1
-        end
-
-        @embexpr_beg = false
+        #unless @embexpr_beg
+        #  @amount_to_change_next -= 1
+        #  msg = "rbrace: "
+        #  msg << "change_next -= 1 -> #{@amount_to_change_next}"
+        #  log msg
+        #end
       end
 
       def rbracket_update(current_lexed_line, lineno, column)
@@ -179,8 +183,7 @@ class Tailor
           end
         end
 
-        @bracket_nesting.pop
-        @amount_to_change_next -= 1
+        update_for_closing_double_token(:rbracket, current_lexed_line)
       end
 
       def rparen_update(current_lexed_line, lineno, column)
@@ -188,12 +191,12 @@ class Tailor
           log "End of multi-line parens!"
 
           if r_event_without_content?(current_lexed_line, lineno, column)
+            log "r event without content"
             @amount_to_change_this -= 1
           end
         end
 
-        @paren_nesting.pop
-        @amount_to_change_next -= 1
+        update_for_closing_double_token(:rparen, current_lexed_line)
       end
 
       def tstring_beg_update(lineno)
