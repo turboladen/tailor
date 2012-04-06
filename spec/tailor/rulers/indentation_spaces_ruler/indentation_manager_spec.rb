@@ -8,7 +8,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:lexed_line) { double "LexedLine" }
 
   before do
-    #Tailor::Logger.stub(:log)
+    Tailor::Logger.stub(:log)
     subject.instance_variable_set(:@spaces, spaces)
   end
 
@@ -348,6 +348,56 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         it "returns false" do
           subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
             should be_false
+        end
+      end
+    end
+  end
+
+  describe "#keyword_and_single_token_line?" do
+    context "no @double_tokens on this line" do
+      before do
+        d_tokens = [{ lineno: 12345 }]
+        subject.instance_variable_set(:@double_tokens, d_tokens)
+      end
+
+      it "returns false" do
+        subject.keyword_and_single_token_line?(1).should be_false
+      end
+    end
+
+    context "@double_tokens exist on this line" do
+      context "no kw tokens on this line" do
+        before do
+          d_tokens = [{ token: '{', lineno: 1 }]
+          subject.instance_variable_set(:@double_tokens, d_tokens)
+        end
+
+        it "returns false" do
+          subject.keyword_and_single_token_line?(1).should be_false
+        end
+      end
+
+      context "kw tokens on this line" do
+        before do
+          d_tokens = [{ token: 'class', lineno: 1 }]
+          subject.instance_variable_set(:@double_tokens, d_tokens)
+        end
+
+        context "no @single_tokens on this line" do
+          it "returns false" do
+            subject.keyword_and_single_token_line?(1).should be_false
+          end
+        end
+
+        context "@single_tokens exist on this line" do
+          before do
+            s_tokens = [{ token: '[', lineno: 1 }]
+            subject.instance_variable_set(:@single_tokens, s_tokens)
+          end
+
+          it "returns true" do
+            subject.keyword_and_single_token_line?(1).should be_true
+          end
         end
       end
     end

@@ -195,6 +195,12 @@ class Tailor
             continuing_enclosed_statement?(lineno)
         end
 
+        # Checks if indentation level got increased on this line because of a
+        # keyword and if it got increased on this line because of a
+        # single-token indenter.
+        #
+        # @param [Fixnum] lineno
+        # @return [Boolean]
         def keyword_and_single_token_line?(lineno)
           d_tokens = @double_tokens.find_all { |t| t[:lineno] == lineno }
           return false if d_tokens.empty?
