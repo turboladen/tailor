@@ -5,9 +5,10 @@ require 'tailor/rulers/indentation_spaces_ruler/indentation_manager'
 
 describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:spaces) { 5 }
+  let!(:lexed_line) { double "LexedLine" }
 
   before do
-    Tailor::Logger.stub(:log)
+    #Tailor::Logger.stub(:log)
     subject.instance_variable_set(:@spaces, spaces)
   end
 
@@ -199,10 +200,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#update_actual_indentation" do
-    let(:lexed_line) do
-      double "LexedLine"
-    end
-
     context "lexed_line_output.end_of_multi_line_string? is true" do
       before do
         lexed_line.stub(:end_of_multi_line_string?).and_return true
@@ -246,8 +243,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#line_ends_with_single_token_indenter?" do
-    let(:lexed_line) { double "LexedLine" }
-
     context "lexed_line doesn't end with an op, comma, or period" do
       before do
         lexed_line.stub(ends_with_op?: false)
@@ -321,6 +316,39 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
       it "returns false" do
         subject.line_ends_with_same_as_last(last_single_token).should be_true
+      end
+    end
+  end
+
+  describe "#comma_is_part_of_enclosed_statement?" do
+    context "lexed_line does not end with a comma" do
+      before { lexed_line.stub(ends_with_comma?: false) }
+
+      it "returns false" do
+        subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
+          should be_false
+      end
+    end
+
+    context "lexed_line ends with a comma" do
+      before { lexed_line.stub(ends_with_comma?: true) }
+
+      context "continuing_enclosed_statement? is true" do
+        before { subject.stub(continuing_enclosed_statement?: true) }
+
+        it "returns true" do
+          subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
+            should be_true
+        end
+      end
+
+      context "continuing_enclosed_statement? is true" do
+        before { subject.stub(continuing_enclosed_statement?: false) }
+
+        it "returns false" do
+          subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
+            should be_false
+        end
       end
     end
   end

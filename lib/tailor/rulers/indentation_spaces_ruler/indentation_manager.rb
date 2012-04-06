@@ -182,6 +182,14 @@ class Tailor
           @single_tokens.last[:token] == token_event.last
         end
 
+        # Checks to see if +lexed_line+ ends with a comma, and if it is in the
+        # middle of an enclosed statement (unclosed braces, brackets, parens).
+        # You don't want to update indentation expectations for this comma if
+        # you've already done so for the start of the enclosed statement.
+        #
+        # @param [LexedLine] lexed_line
+        # @param [Fixnum] lineno
+        # @return [Boolean]
         def comma_is_part_of_enclosed_statement?(lexed_line, lineno)
           lexed_line.ends_with_comma? &&
             continuing_enclosed_statement?(lineno)
