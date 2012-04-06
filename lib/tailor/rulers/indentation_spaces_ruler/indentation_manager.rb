@@ -304,21 +304,35 @@ class Tailor
           end
         end
 
-        def multi_line_braces?(lineno)
-          @double_tokens.reverse.find do |t|
-            t[:token] == '{' && t[:lineno] < lineno
-          end
-        end
+        # Overriding to be able to call #multi_line_brackets?,
+        # #multi_line_braces?, and #multi_line_parens?, where each takes a
+        # single parameter, which is the lineno.
+        #
+        # @return [Boolean]
+        def method_missing(meth, *args, &blk)
+          if meth.to_s =~ /^multi_line_(.+)\?$/
+            token = case $1
+            when "brackets" then '['
+            when "braces" then '{'
+            when "parens" then '('
+            else
+              super(meth, *args, &blk)
+            end
 
-        def multi_line_brackets?(lineno)
-          @double_tokens.reverse.find do |t|
-            t[:token] == '[' && t[:lineno] < lineno
-          end
-        end
+            lineno = args.first
 
-        def multi_line_parens?(lineno)
-          @double_tokens.reverse.find do |t|
-            t[:token] == '(' && t[:lineno] < lineno
+            tokens = @double_tokens.find_all do |t|
+              t[:token] == token
+            end
+
+            return false if tokens.empty?
+
+            token_on_this_line = tokens.find { |t| t[:lineno] == lineno }
+            return true if token_on_this_line.nil?
+
+            false
+          else
+            super(meth, *args, &blk)
           end
         end
 

@@ -8,7 +8,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:lexed_line) { double "LexedLine" }
 
   before do
-    Tailor::Logger.stub(:log)
+    #Tailor::Logger.stub(:log)
     subject.instance_variable_set(:@spaces, spaces)
   end
 
@@ -412,7 +412,40 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#multi_line_parens?" do
-    pending
+    context "an unclosed ( exists on the previous line" do
+      context "an unclosed ( does not exist on the current line" do
+        before do
+          d_tokens = [{ token: '(', lineno: 1 }]
+          subject.instance_variable_set(:@double_tokens, d_tokens)
+        end
+
+        it "returns true" do
+          subject.multi_line_parens?(2).should be_true
+        end
+      end
+
+      context "an unclosed ( exists on the current line" do
+        before do
+          d_tokens = [{ token: '(', lineno: 1 }, { token: '(', lineno: 2 }]
+          subject.instance_variable_set(:@double_tokens, d_tokens)
+        end
+
+        it "returns true" do
+          subject.multi_line_parens?(2).should be_false
+        end
+      end
+    end
+
+    context "an unclosed ( does not exist on the previous line" do
+      before do
+        d_tokens = [{ token: '(', lineno: 1 }]
+        subject.instance_variable_set(:@double_tokens, d_tokens)
+      end
+
+      it "returns true" do
+        subject.multi_line_parens?(1).should be_false
+      end
+    end
   end
 
   describe "#in_tstring?" do

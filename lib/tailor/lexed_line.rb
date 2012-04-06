@@ -96,7 +96,7 @@ class Tailor
         event = "on_#{$1}".to_sym
         is_line_only_a(event)
       else
-        super(meth)
+        super(meth, *args, &blk)
       end
     end
 
