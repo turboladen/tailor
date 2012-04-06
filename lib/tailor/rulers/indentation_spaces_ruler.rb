@@ -44,10 +44,10 @@ class Tailor
 
           log "New lexed line: #{new_lexed_line.inspect}"
 
-          if new_lexed_line.line_ends_with_ignored_nl?
+          if new_lexed_line.ends_with_ignored_nl?
             log "New lexed line ends with :on_ignored_nl."
             ignored_nl_update(new_lexed_line, lineno, column)
-          elsif new_lexed_line.line_ends_with_nl?
+          elsif new_lexed_line.ends_with_nl?
             log "New lexed line ends with :on_nl."
             nl_update(new_lexed_line, lineno, column)
           end

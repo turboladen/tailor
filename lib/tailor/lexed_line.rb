@@ -36,7 +36,7 @@ class Tailor
     # newline that might come after it).
     #
     # @return [Boolean] true if the line ends with an operator; false if not.
-    def line_ends_with_op?
+    def ends_with_op?
       lexed_line = self.dup
       tokens_in_line = lexed_line.map { |e| e[1] }
 
@@ -84,7 +84,7 @@ class Tailor
     end
 
     def method_missing(meth, *args, &blk)
-      if meth.to_s =~ /^line_ends_with_(.+)\?$/
+      if meth.to_s =~ /^ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
 
         if event == :on_ignored_nl || event == :on_nl

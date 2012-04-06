@@ -5,7 +5,7 @@ class Tailor
     class AllowTrailingLineSpacesRuler < Tailor::Ruler
       def ignored_nl_update(lexed_line, lineno, column)
         log "Last event: #{lexed_line.last_non_line_feed_event}"
-        log "Line ends with space: #{lexed_line.line_ends_with_sp?}"
+        log "Line ends with space: #{lexed_line.ends_with_sp?}"
 
         measure(lexed_line, lineno, column)
       end
@@ -20,7 +20,7 @@ class Tailor
       # @param [Fixnum] lineno Line the potential problem is on.
       # @param [Fixnum] column Column the potential problem is on.
       def measure(lexed_line, lineno, column)
-        if lexed_line.line_ends_with_sp?
+        if lexed_line.ends_with_sp?
           options = {
             actual_trailing_spaces:
               lexed_line.last_non_line_feed_event.last.size
