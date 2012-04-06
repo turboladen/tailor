@@ -32,7 +32,6 @@ class Tailor
         end
       end
 
-      def kw_update(token, lineno, column)
       def kw_update(token, lexed_line, lineno, column)
         if token == "def"
           @method_start_lines << { lineno: lineno, column: column, count: 0 }
