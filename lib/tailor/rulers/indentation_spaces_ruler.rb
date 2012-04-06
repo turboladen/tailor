@@ -12,10 +12,9 @@ class Tailor
 
       def initialize(config)
         super(config)
-        @proper = {}
+
         log "Setting @proper[:this_line] to 0."
-        @proper[:this_line] = 0
-        @proper[:next_line] = 0
+        @proper = { this_line: 0, next_line: 0 }
         @actual_indentation = 0
 
         @double_tokens = []
