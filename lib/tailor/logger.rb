@@ -18,7 +18,7 @@ class Tailor
     module Mixin
       def self.included(base)
         define_method :log do |*args|
-          class_minus_main_name = self.class.to_s.sub(/^Tailor::/, '')
+          class_minus_main_name = self.class.to_s.sub(/^.*::/, '')
           args.first.insert(0, "<#{class_minus_main_name}> ")
           Tailor::Logger.log(*args)
         end
