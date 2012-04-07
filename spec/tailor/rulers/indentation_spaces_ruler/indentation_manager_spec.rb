@@ -451,47 +451,4 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   describe "#in_tstring?" do
     pending
   end
-
-  describe "#r_event_with_content?" do
-    context ":on_rparen" do
-      context "line is '  )'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 2], :on_rparen, ")"]
-
-          l
-        end
-
-        it "returns true" do
-          subject.r_event_without_content?(current_line, 1, 2).should be_true
-        end
-      end
-
-      context "line is '  })'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 2], :on_rbrace, "}"]
-
-          l
-        end
-
-        it "returns false" do
-          subject.r_event_without_content?(current_line, 1, 3).should be_false
-        end
-      end
-
-      context "line is '  def some_method'" do
-        let(:current_line) do
-          l = double "LexedLine"
-          l.stub(:first_non_space_element).and_return [[1, 0], :on_kw, "def"]
-
-          l
-        end
-
-        it "returns false" do
-          subject.r_event_without_content?(current_line, 1, 3).should be_false
-        end
-      end
-    end
-  end
 end

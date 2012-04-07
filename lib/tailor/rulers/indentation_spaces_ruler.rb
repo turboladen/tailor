@@ -151,9 +151,9 @@ class Tailor
         if @manager.multi_line_braces?(lineno)
           log "End of multi-line braces!"
 
-          # todo: change to lexed_line.only_rbrace?
-          if @manager.r_event_without_content?(current_lexed_line, lineno, column)
+          if current_lexed_line.only_rbrace?
             @manager.amount_to_change_this -= 1
+            log "lonely rbrace.  change_this -= 1 -> #{@manager.amount_to_change_this}"
           end
         end
 
@@ -173,8 +173,9 @@ class Tailor
         if @manager.multi_line_brackets?(lineno)
           log "End of multi-line brackets!"
 
-          if @manager.r_event_without_content?(current_lexed_line, lineno, column)
+          if current_lexed_line.only_rbracket?
             @manager.amount_to_change_this -= 1
+            log "lonely rbracket.  change_this -= 1 -> #{@manager.amount_to_change_this}"
           end
         end
 
@@ -185,9 +186,9 @@ class Tailor
         if @manager.multi_line_parens?(lineno)
           log "End of multi-line parens!"
 
-          if @manager.r_event_without_content?(current_lexed_line, lineno, column)
-            log "r event without content"
+          if current_lexed_line.only_rparen?
             @manager.amount_to_change_this -= 1
+            log "lonely rparen.  change_this -= 1 -> #{@manager.amount_to_change_this}"
           end
         end
 
