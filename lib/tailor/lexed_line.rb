@@ -1,5 +1,6 @@
 require_relative 'logger'
 require_relative 'lexer_constants'
+require_relative 'lexer/token'
 require 'ripper'
 
 class Tailor
@@ -53,6 +54,19 @@ class Tailor
       else
         false
       end
+    end
+
+    # Checks to see if the line ends with a keyword, and that the keyword is
+    # used as a modifier.
+    #
+    # @return [Boolean]
+    def ends_with_modifier_kw?
+      return false unless ends_with_kw?
+
+      token = Tailor::Lexer::Token.new(last.last,
+        { full_line_of_text: to_s })
+
+      token.modifier_keyword?
     end
 
     # @return [Boolean]

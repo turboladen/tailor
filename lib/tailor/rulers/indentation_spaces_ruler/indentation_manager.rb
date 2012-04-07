@@ -167,6 +167,8 @@ class Tailor
           lexed_line.ends_with_op? ||
             lexed_line.ends_with_comma? ||
             lexed_line.ends_with_period?
+            lexed_line.ends_with_period? ||
+            lexed_line.ends_with_modifier_kw?
         end
 
         # Checks to see if the last token in @single_tokens is the same as the

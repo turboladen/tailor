@@ -2,6 +2,10 @@ require_relative '../spec_helper'
 require 'tailor/lexed_line'
 
 describe Tailor::LexedLine do
+  before do
+    Tailor::Logger.stub(:log)
+  end
+
   subject { Tailor::LexedLine.new(lexed_output, 1) }
 
   describe "#initialize" do
@@ -92,7 +96,7 @@ describe Tailor::LexedLine do
     end
   end
 
-  describe "#line_ends_with_op?" do
+  describe "#ends_with_op?" do
     context "line ends with a +, then \\n" do
       let(:lexed_output) do
         [
@@ -109,7 +113,7 @@ describe Tailor::LexedLine do
       end
 
       it "returns true" do
-        subject.line_ends_with_op?.should be_true
+        subject.ends_with_op?.should be_true
       end
     end
 
@@ -126,7 +130,73 @@ describe Tailor::LexedLine do
       end
 
       it "returns false" do
-        subject.line_ends_with_op?.should be_false
+        subject.ends_with_op?.should be_false
+      end
+    end
+  end
+
+  describe "#ends_with_modifier_kw?" do
+    context "ends_with_kw? is false" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_ident, "thing"],
+            [[1, 5], :on_sp, " "],
+            [[1, 6], :on_op, "="],
+            [[1, 7], :on_sp, " "],
+            [[1, 8], :on_int, "1"],
+            [[1, 9], :on_ignored_nl, "\n"]
+        ]
+      end
+
+      before { subject.stub(:ends_with_kw?).and_return true }
+
+      it "returns false" do
+        subject.ends_with_modifier_kw?.should be_false
+      end
+    end
+
+    context "#ends_with_kw? is true" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_ident, "thing"],
+            [[1, 5], :on_sp, " "],
+            [[1, 6], :on_op, "="],
+            [[1, 7], :on_sp, " "],
+            [[1, 8], :on_int, "1"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_kw, "if"],
+            [[1, 12], :on_ignored_nl, "\n"]
+        ]
+      end
+
+      let(:token) { double "Token" }
+
+      context "the keyword is a modifier" do
+        before do
+          token.stub(:modifier_keyword?).and_return true
+          Tailor::Lexer::Token.stub(:new).and_return token
+          subject.stub(:ends_with_kw?).and_return true
+        end
+
+        after { Tailor::Lexer::Token.unstub(:new) }
+
+        it "returns true" do
+          subject.ends_with_modifier_kw?.should be_true
+        end
+      end
+
+      context "the keyword is not a modifier" do
+        before do
+          token.stub(:modifier_keyword?).and_return false
+          Tailor::Lexer::Token.stub(:new).and_return token
+          subject.stub(:ends_with_kw?).and_return true
+        end
+
+        after { Tailor::Lexer::Token.unstub(:new) }
+
+        it "returns true" do
+          subject.ends_with_modifier_kw?.should be_false
+        end
       end
     end
   end
