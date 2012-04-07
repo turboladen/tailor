@@ -118,6 +118,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_braces             |
     | indent/ok/multi_line_lonely_braces_as_t_string |
     | indent/ok/multi_line_braces_embedded_arrays    |
+    | indent/ok/braces_combo                         |
 
   @single_line @brackets
   Scenarios: Good single-line bracket uses
@@ -133,6 +134,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_brackets             |
     | indent/ok/multi_line_lonely_brackets_as_t_string |
     | indent/ok/multi_line_brackets_embedded_hashes    |
+    | indent/ok/brackets_combo                         |
 
   @single_line @parens
   Scenarios: Good single-line paren uses
@@ -148,11 +150,12 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_parens             |
     | indent/ok/multi_line_lonely_parens_with_commas |
     | indent/ok/multi_line_lonely_parens_as_t_string |
+    | indent/ok/parens_combo                         |
 
   @multi_line @ops
   Scenarios: Good multi-line operator uses
     | File                                                   |
-    | indent/ok/multi_line_ops                       |
+    | indent/ok/multi_line_ops                               |
     | indent/ok/multi_line_andop_in_method                   |
     | indent/ok/multi_line_rshift_in_method                  |
     | indent/ok/multi_line_string_concat_with_plus           |
@@ -182,9 +185,12 @@ Feature: Indentation check on good files without trailing newlines
     | File             |
     | indent/ok/combo1 |
     | indent/ok/combo2 |
+    | indent/ok/brace_bracket_paren_combo1 |
 
   @wip
   Scenarios: WIPs
-    | File                    |
-    | indent/ok/case_whens_in |
+    | File                                  |
+    | indent/ok/case_whens_in               |
+    | indent/ok/method_closing_lonely_paren |
+    | indent/ok/method_lonely_args          |
 

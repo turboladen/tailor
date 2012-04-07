@@ -393,6 +393,15 @@ INDENT_OK[:multi_line_braces_embedded_arrays] =
   :one => ['one', 17, {}], :two => ['two'],
   :three => 'three'
 }}
+INDENT_OK[:braces_combo] =
+  %Q{{ three: 3 }
+{
+  three: 3 }
+{ three: 3
+}
+{
+  three: 3
+}}
 
 #----------- Brackets ----------#
 INDENT_OK[:single_line_brackets] =
@@ -429,6 +438,16 @@ INDENT_OK[:multi_line_brackets_embedded_hashes] =
   %Q{summary_table.rows << [{ value: "File", align: :center },
   { value: "Total Problems", align: :center }]}
 
+INDENT_OK[:brackets_combo] =
+  %Q{[2]
+[
+  2]
+[2
+]
+[
+  2
+]}
+
 #----------- Parens ----------#
 
 INDENT_OK[:single_line_parens] =
@@ -463,6 +482,17 @@ this is a t string!
 and i'm not going
 anywhere!'
 )}
+
+INDENT_OK[:parens_combo] =
+  %Q{(1)
+(
+  1)
+(1
+)
+(
+  1
+)}
+
 
 #-------------------------------------------------------------------------------
 # Operators
@@ -545,6 +575,21 @@ INDENT_OK[:multi_line_method_call_ends_with_many_periods] =
   second_level.
   third_level}
 
+INDENT_OK[:method_closing_lonely_paren] =
+  %Q{def your_thing(one
+  )
+end}
+
+INDENT_OK[:method_lonely_args] =
+  %Q{def your_thing(
+  one
+)
+  puts "stuff"
+end}
+
+#------------------------------------------------------------------------------
+# If + logical operators
+#------------------------------------------------------------------------------
 INDENT_OK[:multi_line_if_logical_and] =
   %Q{if @indentation_ruler.op_statement_nesting.empty? &&
   @indentation_ruler.tstring_nesting.empty? &&
@@ -597,6 +642,12 @@ INDENT_OK[:combo2] =
   end
 
 end}
+
+INDENT_OK[:brace_bracket_paren_combo1] =
+  %Q{[{ :one => your_thing(
+  1)
+}
+]}
 
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
