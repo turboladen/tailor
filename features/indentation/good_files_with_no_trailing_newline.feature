@@ -149,9 +149,10 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_parens_with_commas |
     | indent/ok/multi_line_lonely_parens_as_t_string |
 
-  @multi_line
+  @multi_line @ops
   Scenarios: Good multi-line operator uses
     | File                                                   |
+    | indent/ok/multi_line_ops                       |
     | indent/ok/multi_line_andop_in_method                   |
     | indent/ok/multi_line_rshift_in_method                  |
     | indent/ok/multi_line_string_concat_with_plus           |

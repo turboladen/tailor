@@ -63,7 +63,10 @@ class Tailor
               log msg
             end
 
-            @manager.single_tokens << { token: token_event.last, lineno: lineno }
+            @manager.single_tokens << {
+              event: token_event[1],
+              token: token_event.last,
+              lineno: lineno }
           end
 
           if @manager.keyword_and_single_token_line?(lineno)

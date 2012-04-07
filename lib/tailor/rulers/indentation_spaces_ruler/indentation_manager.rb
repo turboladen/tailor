@@ -178,7 +178,7 @@ class Tailor
         def line_ends_with_same_as_last(token_event)
           return false if @single_tokens.empty?
 
-          @single_tokens.last[:token] == token_event.last
+          @single_tokens.last[:event] == token_event[1]
         end
 
         # Checks to see if +lexed_line+ ends with a comma, and if it is in the

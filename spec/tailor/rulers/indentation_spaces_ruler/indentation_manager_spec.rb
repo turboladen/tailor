@@ -299,7 +299,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       let(:last_single_token) { [[1, 2], :on_comma, ','] }
 
       before do
-        subject.instance_variable_set(:@single_tokens, [{ token: '{' }])
+        subject.instance_variable_set(:@single_tokens, [{ event: :on_op }])
       end
 
       it "returns false" do
@@ -311,7 +311,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       let(:last_single_token) { [[1, 2], :on_comma, ','] }
 
       before do
-        subject.instance_variable_set(:@single_tokens, [{ token: ',' }])
+        subject.instance_variable_set(:@single_tokens, [{ event: :on_comma }])
       end
 
       it "returns false" do

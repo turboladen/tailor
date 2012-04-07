@@ -464,6 +464,15 @@ and i'm not going
 anywhere!'
 )}
 
+#-------------------------------------------------------------------------------
+# Operators
+#-------------------------------------------------------------------------------
+INDENT_OK[:multi_line_ops] =
+  %Q{2 -
+  1 -
+  0 +
+  12}
+
 INDENT_OK[:multi_line_andop_in_method] =
   %Q{def end_of_multiline_string?(lexed_line_output)
   lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
@@ -507,6 +516,9 @@ def print_iteration_start iteration_number
   @logger.info bar(iteration_message)
 end}
 
+#-------------------------------------------------------------------------------
+# Method calls
+#-------------------------------------------------------------------------------
 INDENT_OK[:multi_line_method_call] =
   %Q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
@@ -797,6 +809,9 @@ INDENT_1[:multi_line_string_first_line_indented_trailing_comment] =
   end
 end}
 
+#-------------------------------------------------------------------------------
+# Operators
+#-------------------------------------------------------------------------------
 INDENT_1[:multi_line_andop_first_line_indented] =
   %Q{def end_of_multiline_string?(lexed_line_output)
    lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
