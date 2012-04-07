@@ -10,7 +10,7 @@ Feature: Indentation check on bad fails without trailing newlines
       end
     end
     """
-    
+
   @bad_files
   Scenario Outline: Detect singular problems on poorly indented files
     Given <File> exists without a newline at the end
@@ -21,8 +21,10 @@ Feature: Indentation check on bad fails without trailing newlines
 
   @multi_line
   Scenarios: 1 problem with classes
-    | File                        | Position |
-    | indent/1/class_indented_end | 2:1      |
+    | File                                           | Position |
+    | indent/1/class_indented_end                    | 2:1      |
+    | indent/1/class_method_def_using_self_outdented | 2:1      |
+
 
   @multi_line
   Scenarios: 1 problem with single-line statement
