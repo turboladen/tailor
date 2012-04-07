@@ -53,6 +53,8 @@ class Tailor
               @proper[:this_line] = 0
             end
 
+            @proper[:next_line] = 0 if @proper[:next_line] < 0
+
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
@@ -231,14 +233,11 @@ class Tailor
 
         def in_a_nested_statement?
           !@single_tokens.empty? ||
-          !@double_tokens.empty?
             !@double_tokens.empty?
         end
 
         def continuing_enclosed_statement?(lineno)
           multi_line_braces?(lineno) ||
-          multi_line_brackets?(lineno) ||
-          multi_line_parens?(lineno)
             multi_line_brackets?(lineno) ||
             multi_line_parens?(lineno)
         end
