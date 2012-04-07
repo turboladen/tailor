@@ -74,8 +74,8 @@ class Tailor
           end
         end
 
-        @manager.set_up_line_transition
         @manager.update_actual_indentation(current_lexed_line)
+        @manager.set_up_line_transition
         measure(lineno, column)
 
         log "double tokens on exit: #{@manager.double_tokens}"
@@ -116,16 +116,24 @@ class Tailor
         @manager.update_actual_indentation(current_lexed_line)
 
         unless @manager.single_tokens.empty?
-          log "End of single-token statement."
-
-          if @manager.single_token_start_line == @manager.double_token_start_line
-            log "Single-token started at same time as double-token."
-          else
-            @manager.amount_to_change_next -= 1
-            log "change_next -= 1 -> #{@manager.amount_to_change_next}"
+          # if double tokens exist after the last single token, it's not the end
+          # of the single-token statement.
+          double_in_a_single = @manager.double_tokens.find do |t|
+            t[:lineno] > @manager.single_tokens.last[:lineno]
           end
 
-          @manager.single_tokens.clear
+          unless double_in_a_single
+            log "End of single-token statement."
+
+            if @manager.single_token_start_line == @manager.double_token_start_line
+              log "Single-token started at same time as double-token."
+            else
+              @manager.amount_to_change_next -= 1
+              log "change_next -= 1 -> #{@manager.amount_to_change_next}"
+            end
+
+            @manager.single_tokens.clear
+          end
         end
 
         @manager.set_up_line_transition
