@@ -97,9 +97,8 @@ class Tailor
             decrease_next_line
           end
 
-          if @amount_to_change_this < 0
-            decrease_this_line
-          end
+          decrease_next_line if @amount_to_change_next <= -2
+          decrease_this_line if @amount_to_change_this < 0
         end
 
         # Should be called just before moving to the next line.  This sets the
@@ -272,10 +271,10 @@ class Tailor
           meth = "only_#{event_type}?"
 
           if lexed_line.send(meth.to_sym)
-            msg = "End of not a single-line statement that needs indenting."
-            msg < "Decrease this line."
-            log msg
             @amount_to_change_this -= 1
+            msg = "End of not a single-line statement that needs indenting."
+            msg < "change_this -= 1 -> #{@amount_to_change_this}."
+            log msg
           end
 
           if event_type == :rbrace && @embexpr_beg == true
@@ -338,12 +337,6 @@ class Tailor
 
         def in_tstring?
           !@tstring_nesting.empty?
-        end
-
-        # @return [Boolean] +true+ if any non-space chars come before the current
-        #   'r_' event (+:on_rbrace+, +:on_rbracket+, +:on_rparen+).
-        def r_event_without_content?(current_line, lineno, column)
-          current_line.first_non_space_element.first == [lineno, column]
         end
       end
     end
