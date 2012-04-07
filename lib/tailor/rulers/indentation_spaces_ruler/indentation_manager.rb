@@ -166,7 +166,6 @@ class Tailor
         def line_ends_with_single_token_indenter?(lexed_line)
           lexed_line.ends_with_op? ||
             lexed_line.ends_with_comma? ||
-            lexed_line.ends_with_period?
             lexed_line.ends_with_period? ||
             lexed_line.ends_with_modifier_kw?
         end
@@ -233,12 +232,15 @@ class Tailor
         def in_a_nested_statement?
           !@single_tokens.empty? ||
           !@double_tokens.empty?
+            !@double_tokens.empty?
         end
 
         def continuing_enclosed_statement?(lineno)
           multi_line_braces?(lineno) ||
           multi_line_brackets?(lineno) ||
           multi_line_parens?(lineno)
+            multi_line_brackets?(lineno) ||
+            multi_line_parens?(lineno)
         end
 
         def update_for_opening_double_token(token, lineno)
