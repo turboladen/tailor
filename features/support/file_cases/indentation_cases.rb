@@ -623,6 +623,19 @@ INDENT_OK[:multi_line_each_block_with_op_and_parens] =
   parent_ruler.add_child_ruler(ruler)
 end}
 
+#-------------------------------------------------------------------------------
+# Single-line keywords
+#-------------------------------------------------------------------------------
+INDENT_OK[:single_line_begin_rescue_end] =
+  %Q{l = begin; lineno; rescue; "<EOF>"; end
+c = begin; column; rescue; "<EOF>"; end
+subclass_name = self.class.to_s.sub(/^Tailor::/, '')
+args.first.insert(0, "<\#{subclass_name}> \#{l}[\#{c}]: ")
+Tailor::Logger.log(*args)}
+
+#-------------------------------------------------------------------------------
+# Combos
+#-------------------------------------------------------------------------------
 INDENT_OK[:combo1] =
   %Q{def set_default_smtp
   Mail.defaults do

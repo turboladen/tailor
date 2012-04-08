@@ -180,6 +180,11 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_each_block                    |
     | indent/ok/multi_line_each_block_with_op_and_parens |
 
+  @single_line @keywords
+  Scenarios: Good use of single-line keyword statements
+    | File |
+    | indent/ok/single_line_begin_rescue_end |
+
   @multi_line
   Scenarios: Good combinations of many things
     | File             |

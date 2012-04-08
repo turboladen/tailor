@@ -99,7 +99,7 @@ class Tailor
             decrease_next_line
           end
 
-          decrease_next_line if @amount_to_change_next <= -2
+          decrease_next_line if @amount_to_change_next < -2
           decrease_this_line if @amount_to_change_this < 0
         end
 
@@ -248,15 +248,21 @@ class Tailor
             return
           end
 
+          log "Keyword '#{token}' not used as a modifier."
+
           if token.do_is_for_a_loop?
             log "Found keyword loop using optional 'do'"
             return
           end
 
-          log "Keyword '#{token}' not used as a modifier."
           @double_tokens << { token: token, lineno: lineno }
 
-          if token.continuation_keyword?
+          d_tokens = @double_tokens.dup
+          d_tokens.pop
+          on_line_token = d_tokens.find { |t| t[:lineno] == lineno }
+          log "online token: #{on_line_token}"
+
+          if token.continuation_keyword? && on_line_token.nil?
             @amount_to_change_this -= 1
             msg = "Continuation keyword: '#{token}'.  "
             msg << "change_this -= 1 -> #{@amount_to_change_this}"
@@ -264,10 +270,12 @@ class Tailor
             return
           end
 
-          @amount_to_change_next += 1
-          msg = "double-token statement opening: "
-          msg << "change_next += 1 -> #{@amount_to_change_next}"
-          log msg
+          unless token.continuation_keyword?
+            @amount_to_change_next += 1
+            msg = "double-token statement opening: "
+            msg << "change_next += 1 -> #{@amount_to_change_next}"
+            log msg
+          end
         end
 
         def update_for_closing_double_token(event_type, lexed_line)
