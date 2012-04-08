@@ -53,8 +53,6 @@ class Tailor
               @proper[:this_line] = 0
             end
 
-            @proper[:next_line] = 0 if @proper[:next_line] < 0
-
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
@@ -79,6 +77,8 @@ class Tailor
         def decrease_next_line
           if started?
             @proper[:next_line] -= @spaces
+
+            @proper[:next_line] = 0 if @proper[:next_line] < 0
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
