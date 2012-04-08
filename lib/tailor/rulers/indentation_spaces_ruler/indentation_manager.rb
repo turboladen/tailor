@@ -99,7 +99,7 @@ class Tailor
             decrease_next_line
           end
 
-          decrease_next_line if @amount_to_change_next < -2
+          #decrease_next_line if @amount_to_change_next < -2
           decrease_this_line if @amount_to_change_this < 0
         end
 
