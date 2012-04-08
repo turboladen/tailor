@@ -182,15 +182,16 @@ Feature: Indentation check on good files without trailing newlines
 
   @single_line @keywords
   Scenarios: Good use of single-line keyword statements
-    | File |
+    | File                                   |
     | indent/ok/single_line_begin_rescue_end |
 
-  @multi_line
+  @multi_line @combos
   Scenarios: Good combinations of many things
-    | File             |
-    | indent/ok/combo1 |
-    | indent/ok/combo2 |
+    | File                                 |
+    | indent/ok/combo1                     |
+    | indent/ok/combo2                     |
     | indent/ok/brace_bracket_paren_combo1 |
+    | indent/ok/paren_comma_combo1         |
 
   @wip
   Scenarios: WIPs
