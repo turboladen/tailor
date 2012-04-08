@@ -662,6 +662,14 @@ INDENT_OK[:brace_bracket_paren_combo1] =
 }
 ]}
 
+INDENT_OK[:paren_comma_combo1] =
+  %Q{def do_something
+  self[:log_file_location] = Time.now.strftime(File.join(Tim::LOG_DIR,
+    "\#{self[:product]}_%Y-%m-%d_%H-%M-%S.log"))
+
+  handle_arguments arg_list
+end}
+
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)
 #-------------------------------------------------------------------------------
