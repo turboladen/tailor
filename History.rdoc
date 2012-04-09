@@ -1,5 +1,7 @@
 === 1.0.0.alpha3
 
+* Fix for overriding default style in config files.
+
 === 1.0.0.alpha2 2012-04-09
 
 * Fix for when not using a config file.

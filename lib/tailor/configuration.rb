@@ -148,17 +148,18 @@ class Tailor
       @temp_style = {}
       instance_eval(&block) if block_given?
 
+      log "file sets before: #{@file_sets}"
       if @file_sets[label]
         @file_sets[label][:file_list].concat file_list(file_glob)
-        log "file set: #{@file_sets}"
         @file_sets[label][:file_list].uniq!
-        @file_sets[label][:style].merge @temp_style
+        @file_sets[label][:style].merge! @temp_style
       else
         @file_sets[label] = {
           file_list: file_list(file_glob),
           style: DEFAULT_STYLE.merge(@temp_style)
         }
       end
+      log "file sets after: #{@file_sets}"
 
       @temp_style = {}
     end
