@@ -627,11 +627,13 @@ end}
 # Single-line keywords
 #-------------------------------------------------------------------------------
 INDENT_OK[:single_line_begin_rescue_end] =
-  %Q{l = begin; lineno; rescue; "<EOF>"; end
-c = begin; column; rescue; "<EOF>"; end
-subclass_name = self.class.to_s.sub(/^Tailor::/, '')
-args.first.insert(0, "<\#{subclass_name}> \#{l}[\#{c}]: ")
-Tailor::Logger.log(*args)}
+  %Q{def log
+  l = begin; lineno; rescue; "<EOF>"; end
+  c = begin; column; rescue; "<EOF>"; end
+  subclass_name = self.class.to_s.sub(/^Tailor::/, '')
+  args.first.insert(0, "<\#{subclass_name}> \#{l}[\#{c}]: ")
+  Tailor::Logger.log(*args)
+end}
 
 #-------------------------------------------------------------------------------
 # Combos
@@ -669,6 +671,12 @@ INDENT_OK[:paren_comma_combo1] =
 
   handle_arguments arg_list
 end}
+
+INDENT_OK[:line_ends_with_label] =
+  %Q{options = {
+  actual_trailing_spaces:
+    lexed_line.last_non_line_feed_event.last.size
+}}
 
 #-------------------------------------------------------------------------------
 # INDENT_1 (1 problem)

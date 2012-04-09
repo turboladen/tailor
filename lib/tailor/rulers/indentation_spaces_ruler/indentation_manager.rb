@@ -246,12 +246,8 @@ class Tailor
             lineno: lineno,
             should_be_at: @proper[:this_line]
           }
-          #@proper[:next_line] = if token.continuation_keyword?
-          #  @indent_reasons.last[:should_be_at]
-          #else
-             @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
-          #end
 
+          @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
           log "Added indent reason; it's now: #{@indent_reasons}"
         end
 
@@ -271,20 +267,27 @@ class Tailor
           add_indent_reason(event_type, token, lineno)
         end
 
-        def update_for_continuation_reason(event_type, token, lineno)
+        def update_for_continuation_reason(token, lexed_line, lineno)
           d_tokens = @indent_reasons.dup
           d_tokens.pop
           on_line_token = d_tokens.find { |t| t[:lineno] == lineno }
           log "online token: #{on_line_token}"
 
-          if token.continuation_keyword? && on_line_token.nil?
-            @amount_to_change_this -= 1
+          if on_line_token.nil? && lexed_line.to_s =~ /^\s*#{token}/
+            @proper[:this_line] -= @spaces unless @proper[:this_line].zero?
             msg = "Continuation keyword: '#{token}'.  "
-            msg << "change_this -= 1 -> #{@amount_to_change_this}"
+            msg << "change_this -= 1 -> #{@proper[:this_line]}"
             log msg
           end
 
-          @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
+          last_reason_line = @indent_reasons.find { |r| r[:lineno] == lineno }
+
+          if last_reason_line.nil?
+            @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
+          else
+            @proper[:next_line] = @indent_reasons.last[:should_be_at] - @spaces
+          end
+          #add_indent_reason(event_type, token, lineno)
 =begin
           unless token.continuation_keyword?
             @amount_to_change_next += 1

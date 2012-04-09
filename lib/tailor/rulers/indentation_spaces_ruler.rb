@@ -95,7 +95,7 @@ class Tailor
 
         if token.continuation_keyword?
           log "Continuation keyword found: '#{token}'."
-          @manager.update_for_continuation_reason(:on_kw, token, lineno)
+          @manager.update_for_continuation_reason(token, lexed_line, lineno)
           return
         end
 
