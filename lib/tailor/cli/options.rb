@@ -82,7 +82,7 @@ class Tailor
           end
 
           opt.on('--spaces-before-comma NUMBER',
-            'Spaces to expect after a comma.  (default: 0)') do |c|
+            'Spaces to expect before a comma.  (default: 0)') do |c|
             options.style[:spaces_before_comma] = c
           end
 
@@ -108,7 +108,7 @@ class Tailor
 
           opt.on('--spaces-after-lbracket NUMBER', Integer,
             'Spaces to expect after a [.  (default: 0)') do |c|
-            options.style[:spaces_after_comma] = c
+            options.style[:spaces_after_lbracket] = c
           end
 
           opt.on('--spaces-before-rbracket NUMBER', Integer,
