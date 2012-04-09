@@ -300,12 +300,15 @@ class Tailor
 
           remove_continuation_keywords
           @indent_reasons.pop
+          log "Removed indent reason; it's now #{@indent_reasons}."
 
           @proper[:next_line] = if @indent_reasons.empty?
             0
           else
             @indent_reasons.last[:should_be_at] + @spaces
           end
+
+          log "Updated :next after closing; it's now #{@proper[:next_line]}"
 
           meth = "only_#{event_type.to_s.sub("^on_", '')}?"
 
