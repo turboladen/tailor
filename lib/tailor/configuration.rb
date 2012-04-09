@@ -45,6 +45,7 @@ class Tailor
     end
 
     attr_reader :file_sets
+    attr_reader :formatters
 
     # @param [Array] runtime_file_list
     # @param [OpenStruct] options
@@ -86,7 +87,9 @@ class Tailor
               @file_sets[label] = { style: DEFAULT_STYLE }
             end
 
-            @file_sets[label].merge! file_set
+            @file_sets[label][:file_list].concat file_set[:file_list]
+            @file_sets[label][:file_list].uniq!
+            @file_sets[label][:style].merge! file_set[:style]
           end
         end
       end
@@ -134,19 +137,27 @@ class Tailor
       @formatters
     end
 
-    # @param [Symbol] label The label that represents the file set.
     # @param [String] file_glob The String that represents the file set.  This
     #   can be a file, directory, or a glob.
-    def file_set(label=:default, file_glob=DEFAULT_GLOB, &block)
+    # @param [Symbol] label The label that represents the file set.
+    def file_set(file_glob=DEFAULT_GLOB, label=:default, &block)
       log "file set label #{label}"
 
       @temp_style = {}
       instance_eval(&block) if block_given?
 
-      @file_sets[label] = {
-        file_list: file_list(file_glob),
-        style: DEFAULT_STYLE.merge(@temp_style)
-      }
+      if @file_sets[label]
+        @file_sets[label][:file_list].concat file_list(file_glob)
+        log "file set: #{@file_sets}"
+        @file_sets[label][:file_list].uniq!
+        @file_sets[label][:style].merge @temp_style
+      else
+        @file_sets[label] = {
+          file_list: file_list(file_glob),
+          style: DEFAULT_STYLE.merge(@temp_style)
+        }
+      end
+
       @temp_style = {}
     end
 
