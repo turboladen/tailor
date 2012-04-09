@@ -134,7 +134,7 @@ the same as the --max-line-length example above:
 
   # .tailor
   Tailor.config do |config|
-    config.file_set :default do
+    config.file_set 'lib/**/*.rb' do
       max_line_length 100
     end
   end
