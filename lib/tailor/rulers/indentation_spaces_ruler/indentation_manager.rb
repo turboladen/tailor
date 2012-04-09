@@ -14,8 +14,7 @@ class Tailor
         attr_accessor :embexpr_beg
 
         attr_reader :actual_indentation
-        attr_reader :double_tokens
-        attr_reader :single_tokens
+        attr_reader :indent_reasons
         attr_reader :tstring_nesting
 
         def initialize(spaces)
@@ -25,11 +24,9 @@ class Tailor
           @proper = { this_line: 0, next_line: 0 }
           @actual_indentation = 0
 
-          @double_tokens = []
+          @indent_reasons = []
           @tstring_nesting = []
-          @single_tokens = []
 
-          @amount_to_change_next = 0
           @amount_to_change_this = 0
           start
         end
@@ -37,10 +34,7 @@ class Tailor
         # @return [Fixnum] The indent level the file should currently be at.
         def should_be_at
           @proper[:this_line]
-        end
-
-        def next_should_be_at
-          @proper[:next_line]
+          #@double_tokens.empty? ? @proper[:this_line] : @double_tokens.last[:should_be_at]
         end
 
         # Decreases the indentation expectation for the current line by
@@ -60,6 +54,7 @@ class Tailor
           end
         end
 
+=begin
         # Increases the indentation expectation for the next line by
         # +@spaces+.
         def increase_next_line
@@ -85,19 +80,26 @@ class Tailor
             log "#decrease_next_line called, but checking is stopped."
           end
         end
+=end
 
         # Sets up expectations in +@proper+ based on the number of +/- reasons
         # to change this and next lines, given in +@amount_to_change_this+ and
         # +@amount_to_change_next+, respectively.
         def set_up_line_transition
-          log "Amount to change next line: #{@amount_to_change_next}"
           log "Amount to change this line: #{@amount_to_change_this}"
 
+=begin
           if @amount_to_change_next > 0
             increase_next_line
           elsif @amount_to_change_next < 0
             decrease_next_line
           end
+=end
+          #@proper[:next_line] = if @double_tokens.empty?
+          #  0
+          #else
+          #  @double_tokens.last[:should_be_at]
+          #end
 
           #decrease_next_line if @amount_to_change_next < -2
           decrease_this_line if @amount_to_change_this < 0
@@ -110,8 +112,6 @@ class Tailor
           if started?
             log "Resetting change_this to 0."
             @amount_to_change_this = 0
-            log "Resetting change_next to 0."
-            @amount_to_change_next = 0
             log "Setting @proper[:this_line] = that of :next_line"
             @proper[:this_line] = @proper[:next_line]
             log "Transitioning @proper[:this_line] to #{@proper[:this_line]}"
@@ -179,9 +179,9 @@ class Tailor
         #   {LexedLine}).
         # @return [Boolean]
         def line_ends_with_same_as_last(token_event)
-          return false if @single_tokens.empty?
+          return false if @indent_reasons.empty?
 
-          @single_tokens.last[:event] == token_event[1]
+          @indent_reasons.last[:event_type] == token_event[1]
         end
 
         # Checks to see if +lexed_line+ ends with a comma, and if it is in the
@@ -193,8 +193,13 @@ class Tailor
         # @param [Fixnum] lineno
         # @return [Boolean]
         def comma_is_part_of_enclosed_statement?(lexed_line, lineno)
+          return false if @indent_reasons.empty?
+
           lexed_line.ends_with_comma? &&
-            continuing_enclosed_statement?(lineno)
+            #continuing_enclosed_statement?(lineno)
+            @indent_reasons.last[:event_type] == :on_lbrace ||
+            @indent_reasons.last[:event_type] == :on_lbracket ||
+            @indent_reasons.last[:event_type] == :on_lparen
         end
 
         # Checks if indentation level got increased on this line because of a
@@ -204,7 +209,7 @@ class Tailor
         # @param [Fixnum] lineno
         # @return [Boolean]
         def keyword_and_single_token_line?(lineno)
-          d_tokens = @double_tokens.find_all { |t| t[:lineno] == lineno }
+          d_tokens = @indent_reasons.find_all { |t| t[:lineno] == lineno }
           return false if d_tokens.empty?
 
           kw_token = d_tokens.reverse.find do |t|
@@ -213,27 +218,22 @@ class Tailor
 
           return false if kw_token.nil?
 
-          s_token = @single_tokens.reverse.find { |t| t[:lineno] == lineno }
+          s_token = @indent_reasons.reverse.find { |t| t[:lineno] == lineno }
           return false unless s_token
 
           true
         end
 
         def single_token_start_line
-          return if @single_tokens.empty?
+          return if @indent_reasons.empty?
 
-          @single_tokens.first[:lineno]
+          @indent_reasons.first[:lineno]
         end
 
         def double_token_start_line
-          return if @double_tokens.empty?
+          return if @indent_reasons.empty?
 
-          @double_tokens.last[:lineno]
-        end
-
-        def in_a_nested_statement?
-          !@single_tokens.empty? ||
-            !@double_tokens.empty?
+          @indent_reasons.last[:lineno]
         end
 
         def continuing_enclosed_statement?(lineno)
@@ -242,7 +242,22 @@ class Tailor
             multi_line_parens?(lineno)
         end
 
-        def update_for_opening_double_token(token, lineno)
+        def double_tokens_in_line(lineno)
+          @indent_reasons.find_all { |t| t[:lineno] == lineno}
+        end
+
+        def add_indent_reason(event_type, token, lineno)
+          @indent_reasons << {
+            event_type: event_type,
+            token: token,
+            lineno: lineno,
+            should_be_at: @proper[:this_line]
+          }
+          @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
+          log "Added indent reason; it's now: #{@indent_reasons}"
+        end
+
+        def update_for_opening_reason(event_type, token, lineno)
           if token.modifier_keyword?
             log "Found modifier in line: '#{token}'"
             return
@@ -255,9 +270,8 @@ class Tailor
             return
           end
 
-          @double_tokens << { token: token, lineno: lineno }
-
-          d_tokens = @double_tokens.dup
+          add_indent_reason(event_type, token, lineno)
+          d_tokens = @indent_reasons.dup
           d_tokens.pop
           on_line_token = d_tokens.find { |t| t[:lineno] == lineno }
           log "online token: #{on_line_token}"
@@ -270,25 +284,18 @@ class Tailor
             return
           end
 
+=begin
           unless token.continuation_keyword?
             @amount_to_change_next += 1
             msg = "double-token statement opening: "
             msg << "change_next += 1 -> #{@amount_to_change_next}"
             log msg
           end
+=end
         end
 
-        def update_for_closing_double_token(event_type, lexed_line)
-          meth = "only_#{event_type}?"
-
-          if lexed_line.send(meth.to_sym)
-            @amount_to_change_this -= 1
-            msg = "End of not a single-line statement that needs indenting."
-            msg < "change_this -= 1 -> #{@amount_to_change_this}."
-            log msg
-          end
-
-          if event_type == :rbrace && @embexpr_beg == true
+        def update_for_closing_reason(event_type, token, lexed_line)
+          if event_type == :on_rbrace && @embexpr_beg == true
             msg = "Got :rbrace and @embexpr_beg is true. "
             msg << " Must be at an @embexpr_end."
             log msg
@@ -296,21 +303,36 @@ class Tailor
             return
           end
 
-          @amount_to_change_next -= 1
-          msg = "double-token statement closing: "
-          msg << "change_next -= 1 -> #{@amount_to_change_next}"
-          log msg
-
           remove_continuation_keywords
+          @indent_reasons.pop
 
-          @double_tokens.pop
+          @proper[:next_line] = if @indent_reasons.empty?
+            0
+          else
+            @indent_reasons.last[:should_be_at] + @spaces
+          end
+
+          meth = "only_#{event_type.to_s.sub("^on_", '')}?"
+
+          if lexed_line.send(meth.to_sym) || lexed_line.to_s =~ /^\s*end\n?/
+            @proper[:this_line] = @proper[:this_line] - @spaces
+            msg = "End of not a single-line statement that needs indenting."
+            msg < "change_this -= 1 -> #{@proper[:this_line]}."
+            log msg
+          end
+        end
+
+        def last_indent_reason_type
+          return if @indent_reasons.empty?
+
+          @indent_reasons.last[:event_type]
         end
 
         def remove_continuation_keywords
-          return if @double_tokens.empty?
+          return if @indent_reasons.empty?
 
-          while CONTINUATION_KEYWORDS.include?(@double_tokens.last[:token])
-            @double_tokens.pop
+          while CONTINUATION_KEYWORDS.include?(@indent_reasons.last[:token])
+            @indent_reasons.pop
           end
         end
 
@@ -331,7 +353,7 @@ class Tailor
 
             lineno = args.first
 
-            tokens = @double_tokens.find_all do |t|
+            tokens = @indent_reasons.find_all do |t|
               t[:token] == token
             end
 
