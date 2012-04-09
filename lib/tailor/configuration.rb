@@ -71,25 +71,28 @@ class Tailor
     def load!
       # Get config file settings
       @config_file = @options.config_file unless @options.config_file.empty?
-      load_from_config_file(config_file)
 
-      if @rc_file_config
-        # Get formatters from config file
-        unless @rc_file_config.formatters.empty?
-          @formatters = @rc_file_config.formatters
-          log "@formatters is now #{@formatters}"
-        end
+      if @config_file
+        load_from_config_file(config_file)
 
-        # Get file sets from config file
-        unless @rc_file_config.file_sets.empty?
-          @rc_file_config.file_sets.each do |label, file_set|
-            unless @file_sets[label]
-              @file_sets[label] = { style: DEFAULT_STYLE }
+        if @rc_file_config
+          # Get formatters from config file
+          unless @rc_file_config.formatters.empty?
+            @formatters = @rc_file_config.formatters
+            log "@formatters is now #{@formatters}"
+          end
+
+          # Get file sets from config file
+          unless @rc_file_config.file_sets.empty?
+            @rc_file_config.file_sets.each do |label, file_set|
+              unless @file_sets[label]
+                @file_sets[label] = { style: DEFAULT_STYLE }
+              end
+
+              @file_sets[label][:file_list].concat file_set[:file_list]
+              @file_sets[label][:file_list].uniq!
+              @file_sets[label][:style].merge! file_set[:style]
             end
-
-            @file_sets[label][:file_list].concat file_set[:file_list]
-            @file_sets[label][:file_list].uniq!
-            @file_sets[label][:style].merge! file_set[:style]
           end
         end
       end
