@@ -71,10 +71,9 @@ class Tailor
     def load!
       # Get config file settings
       @config_file = @options.config_file unless @options.config_file.empty?
-      load_from_config_file(config_file)
+      load_from_config_file(config_file) if config_file
 
       if @config_file
-
         if @rc_file_config
           # Get formatters from config file
           unless @rc_file_config.formatters.empty?
