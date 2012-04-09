@@ -1,0 +1,27 @@
+Tailor.config do
+  formatters ["text"]
+  file_set 'lib/**/*.rb' do
+    allow_camel_case_methods false
+    allow_hard_tabs false
+    allow_screaming_snake_case_classes false
+    allow_trailing_line_spaces false
+    indentation_spaces 2
+    max_code_lines_in_class 300
+    max_code_lines_in_method 30
+    max_line_length 80
+    spaces_after_comma 1
+    spaces_before_comma 0
+    spaces_before_lbrace 1
+    spaces_after_lbrace 1
+    spaces_before_rbrace 1
+    spaces_in_empty_braces 0
+    spaces_after_lbracket 0
+    spaces_before_rbracket 0
+    spaces_after_lparen 0
+    spaces_before_rparen 0
+    trailing_newlines 1
+  end
+
+  file_set 'spec/**/*.rb'
+  file_set 'features/**/*.rb'
+end
