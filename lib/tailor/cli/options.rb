@@ -32,14 +32,14 @@ class Tailor
             options.config_file = config
           end
 
-          opt.on('--create-config', 'Create a new ~/.tailorrc') do
+          opt.on('--create-config', 'Create a new .tailor file') do
             if create_config
-              msg = "Your new tailorrc file was created at "
-              msg << "#{Tailor::Configuration::DEFAULT_RC_FILE}."
+              msg = "Your new tailor config file was created at "
+              msg << "#{Dir.pwd}."
               $stdout.puts msg
               exit
             else
-              $stderr.puts "Creation of ~/.tailorrc failed."
+              $stderr.puts "Creation of .tailor failed!"
               exit 1
             end
           end
@@ -233,19 +233,17 @@ class Tailor
       end
 
       def self.create_config
-        if File.exists? Tailor::Configuration::DEFAULT_RC_FILE
+        if File.exists? Dir.pwd + '/.tailor'
           $stderr.puts "Can't create new config; it already exists."
           false
         else
           erb_file = File.expand_path(
             File.dirname(__FILE__) + '/../tailorrc.erb')
-          formatters = Tailor::Configuration.default[:formatters]
-          file_list = Tailor::Configuration.
-            default[:file_sets].first[:file_list]
-          style = Tailor::Configuration.default[:file_sets].first[:style]
+          formatters = Tailor::Configuration.default.formatters
+          file_list = 'lib/**/*.rb'
+          style = Tailor::Configuration.default.file_sets[:default][:style]
           default_config_file = ERB.new(File.read(erb_file)).result(binding)
-          File.write(
-            Tailor::Configuration::DEFAULT_RC_FILE, default_config_file)
+          File.open('.tailor', 'w') { |f| f.write default_config_file }
         end
       end
     end

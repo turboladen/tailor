@@ -16,6 +16,7 @@ class Tailor
 
     DEFAULT_GLOB = 'lib/**/*.rb'
     DEFAULT_RC_FILE = Dir.home + '/.tailorrc'
+    DEFAULT_PROJECT_CONFIG = Dir.pwd + '/.tailor'
     DEFAULT_STYLE = {
       allow_camel_case_methods: false,
       allow_hard_tabs: false,
@@ -115,7 +116,15 @@ class Tailor
 
     # @return [String] Name of the config file to use.
     def config_file
-      @config_file ||= DEFAULT_RC_FILE
+      return @config_file if @config_file
+
+      if File.exists?(DEFAULT_PROJECT_CONFIG)
+        return @config_file = DEFAULT_PROJECT_CONFIG
+      end
+
+      if File.exists?(DEFAULT_RC_FILE)
+        return @config_file = DEFAULT_RC_FILE
+      end
     end
 
     # @return [Array] The list of formatters.
