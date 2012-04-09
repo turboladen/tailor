@@ -1,3 +1,20 @@
+=== 1.0.0.alpha2 2012-04-09
+
+* Fix for when not using a config file.
+
+=== 1.0.0.alpha 2012-04-09
+
+* Complete rewrite.
+* New style checks:
+  * Indentation.
+  * LOC count in a class.
+  * LOC count in a method.
+  * Trailing newlines at EOF.
+* Other new features:
+  * Configuration file use--both .tailor and ~/.tailorrc--lets you specify
+    groups of files.
+  * Turn checks off via CLI options.
+
 === 0.1.5 2011-09-27
 
 * Fixed post install message to use heredoc instead of %w (<-wth was I thinking?)
