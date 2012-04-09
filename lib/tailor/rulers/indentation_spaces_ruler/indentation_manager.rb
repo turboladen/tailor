@@ -9,6 +9,13 @@ class Tailor
         include Tailor::LexerConstants
         include Tailor::Logger::Mixin
 
+        OPEN_EVENT_FOR = {
+          on_kw: :on_kw,
+          on_rbrace: :on_lbrace,
+          on_rbracket: :on_lbracket,
+          on_rparen: :on_lparen
+        }
+
         attr_accessor :amount_to_change_next
         attr_accessor :amount_to_change_this
         attr_accessor :embexpr_beg
@@ -34,7 +41,6 @@ class Tailor
         # @return [Fixnum] The indent level the file should currently be at.
         def should_be_at
           @proper[:this_line]
-          #@double_tokens.empty? ? @proper[:this_line] : @double_tokens.last[:should_be_at]
         end
 
         # Decreases the indentation expectation for the current line by
@@ -54,54 +60,12 @@ class Tailor
           end
         end
 
-=begin
-        # Increases the indentation expectation for the next line by
-        # +@spaces+.
-        def increase_next_line
-          if started?
-            @proper[:next_line] += @spaces
-            log "@proper[:this_line] = #{@proper[:this_line]}"
-            log "@proper[:next_line] = #{@proper[:next_line]}"
-          else
-            log "#increase_this_line called, but checking is stopped."
-          end
-        end
-
-        # Decreases the indentation expectation for the next line by
-        # +@spaces+.
-        def decrease_next_line
-          if started?
-            @proper[:next_line] -= @spaces
-
-            @proper[:next_line] = 0 if @proper[:next_line] < 0
-            log "@proper[:this_line] = #{@proper[:this_line]}"
-            log "@proper[:next_line] = #{@proper[:next_line]}"
-          else
-            log "#decrease_next_line called, but checking is stopped."
-          end
-        end
-=end
 
         # Sets up expectations in +@proper+ based on the number of +/- reasons
         # to change this and next lines, given in +@amount_to_change_this+ and
         # +@amount_to_change_next+, respectively.
         def set_up_line_transition
           log "Amount to change this line: #{@amount_to_change_this}"
-
-=begin
-          if @amount_to_change_next > 0
-            increase_next_line
-          elsif @amount_to_change_next < 0
-            decrease_next_line
-          end
-=end
-          #@proper[:next_line] = if @double_tokens.empty?
-          #  0
-          #else
-          #  @double_tokens.last[:should_be_at]
-          #end
-
-          #decrease_next_line if @amount_to_change_next < -2
           decrease_this_line if @amount_to_change_this < 0
         end
 
@@ -248,7 +212,8 @@ class Tailor
           }
 
           @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
-          log "Added indent reason; it's now: #{@indent_reasons}"
+          log "Added indent reason; it's now:"
+          @indent_reasons.each { |r| log r.to_s }
         end
 
         def update_for_opening_reason(event_type, token, lineno)
@@ -257,7 +222,7 @@ class Tailor
             return
           end
 
-          log "Keyword '#{token}' not used as a modifier."
+          log "Token '#{token}' not used as a modifier."
 
           if token.do_is_for_a_loop?
             log "Found keyword loop using optional 'do'"
@@ -289,7 +254,7 @@ class Tailor
           end
         end
 
-        def update_for_closing_reason(event_type, token, lexed_line)
+        def update_for_closing_reason(event_type, lexed_line, lineno)
           if event_type == :on_rbrace && @embexpr_beg == true
             msg = "Got :rbrace and @embexpr_beg is true. "
             msg << " Must be at an @embexpr_end."
@@ -299,8 +264,7 @@ class Tailor
           end
 
           remove_continuation_keywords
-          @indent_reasons.pop
-          log "Removed indent reason; it's now #{@indent_reasons}."
+          remove_appropriate_reason(event_type)
 
           @proper[:next_line] = if @indent_reasons.empty?
             0
@@ -318,6 +282,29 @@ class Tailor
             msg < "change_this -= 1 -> #{@proper[:this_line]}."
             log msg
           end
+        end
+
+        def remove_appropriate_reason(event_type)
+          last_opening_event = @indent_reasons.reverse.find do |r|
+            r[:event_type] == OPEN_EVENT_FOR[event_type]
+          end
+
+          if last_opening_event
+            r_index = @indent_reasons.reverse.index(last_opening_event)
+            index = @indent_reasons.size - r_index - 1
+            tmp_reasons = []
+
+            @indent_reasons.each_with_index do |r, i|
+              tmp_reasons << r unless i == index
+            end
+
+            @indent_reasons.replace(tmp_reasons)
+          else
+            @indent_reasons.pop
+          end
+
+          log "Removed indent reason; it's now:"
+          @indent_reasons.each { |r| log r.to_s }
         end
 
         def last_indent_reason_type

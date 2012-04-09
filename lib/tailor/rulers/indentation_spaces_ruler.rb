@@ -40,7 +40,7 @@ class Tailor
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
-        log "double tokens on entry: #{@manager.indent_reasons}"
+        log "indent reasons on entry: #{@manager.indent_reasons}"
         stop if @manager.tstring_nesting.size > 0
 
         if current_lexed_line.only_spaces?
@@ -58,24 +58,9 @@ class Tailor
 
             unless @manager.line_ends_with_same_as_last token_event
               log "Line ends with different type of single-token indenter: #{token_event}"
-=begin
-              @manager.amount_to_change_next += 1
-              msg = "Single-token-indent line-end; token: #{token_event[1]}. "
-              msg << "change_next += 1 -> #{@manager.amount_to_change_next}"
-              log msg
-=end
               @manager.add_indent_reason(token_event[1], token_event.last, lineno)
             end
           end
-
-=begin
-          if @manager.keyword_and_single_token_line?(lineno)
-            @manager.amount_to_change_next -= 1
-            msg = "Single-token ends a keyword-opening line.  "
-            msg << "change_next -= 1 -> #{@manager.amount_to_change_next}"
-            log msg
-          end
-=end
         end
 
         @manager.update_actual_indentation(current_lexed_line)
@@ -89,7 +74,7 @@ class Tailor
 
       def kw_update(token, lexed_line, lineno, column)
         if token == "end"
-          @manager.update_for_closing_reason(:on_kw, token, lexed_line)
+          @manager.update_for_closing_reason(:on_kw, lexed_line, lineno)
           return
         end
 
@@ -121,38 +106,19 @@ class Tailor
       end
 
       def nl_update(current_lexed_line, lineno, column)
-        log "double tokens on entry: #{@manager.indent_reasons}"
+        log "indent reasons on entry: #{@manager.indent_reasons}"
         @manager.update_actual_indentation(current_lexed_line)
 
-        #unless @manager.single_tokens.empty?
         if @manager.last_indent_reason_type != :on_kw &&
           @manager.last_indent_reason_type != :on_lbrace &&
           @manager.last_indent_reason_type != :on_lbracket &&
           @manager.last_indent_reason_type != :on_lparen &&
           !@manager.last_indent_reason_type.nil?
           log "last indent reason type: #{@manager.last_indent_reason_type}"
-          # if double tokens exist after the last single token, it's not the end
-          # of the single-token statement.
-=begin
-          double_in_a_single = @manager.indent_reasons.find do |t|
-            t[:lineno] > @manager.single_tokens.last[:lineno]
-          end
+          log "I think this is a single-token closing line..."
 
-          unless double_in_a_single.empty?
-            log "End of single-token statement."
-
-            if @manager.single_token_start_line == @manager.double_token_start_line
-              log "Single-token started at same time as double-token."
-            else
-              @manager.amount_to_change_next -= 1
-              log "change_next -= 1 -> #{@manager.amount_to_change_next}"
-            end
-
-            @manager.single_tokens.clear
-          end
-=end
           @manager.update_for_closing_reason(@manager.indent_reasons.last[:event_type],
-            @manager.indent_reasons.last[:token], current_lexed_line)
+            current_lexed_line, lineno)
         end
 
         @manager.set_up_line_transition
@@ -161,7 +127,7 @@ class Tailor
           measure(lineno, column)
         end
 
-        log "double tokens on exit: #{@manager.indent_reasons}"
+        log "indent reasons on exit: #{@manager.indent_reasons}"
         @manager.transition_lines
       end
 
@@ -175,16 +141,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rbrace, '}', current_lexed_line)
-
-        # Ripper won't match a closing } in #{} so we have to track if we're
-        # inside of one.  If we are, don't decrement then :next_line.
-        #unless @embexpr_beg
-        #  @amount_to_change_next -= 1
-        #  msg = "rbrace: "
-        #  msg << "change_next -= 1 -> #{@amount_to_change_next}"
-        #  log msg
-        #end
+        @manager.update_for_closing_reason(:on_rbrace, current_lexed_line, lineno)
       end
 
       def rbracket_update(current_lexed_line, lineno, column)
@@ -197,7 +154,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rbracket, ']', current_lexed_line)
+        @manager.update_for_closing_reason(:on_rbracket, current_lexed_line, lineno)
       end
 
       def rparen_update(current_lexed_line, lineno, column)
@@ -210,7 +167,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rparen, ')', current_lexed_line)
+        @manager.update_for_closing_reason(:on_rparen, current_lexed_line, lineno)
       end
 
       def tstring_beg_update(lineno)

@@ -191,6 +191,7 @@ Feature: Indentation check on good files without trailing newlines
     | File                                 |
     | indent/ok/combo1                     |
     | indent/ok/combo2                     |
+    | indent/ok/combo3                     |
     | indent/ok/brace_bracket_paren_combo1 |
     | indent/ok/paren_comma_combo1         |
 
