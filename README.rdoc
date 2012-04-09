@@ -147,7 +147,8 @@ File sets allow you to use different style rulers against different groups of
 files.  You may, for example, want your Rails app code to allow for longer
 lines, or fewer code lines in methods... You may want your RSpec code to be
 more lenient with curly-brace usage... You may just want to specify a few file
-globs to use the default set of rulers...  File sets allow for this.
+globs to use the default set of rulers...  File sets allow for those sorts of
+things.
 
 In the default config file, you see a single parameter being passed to
 <tt>config.file_set</tt>--this is the _label_ for that file set.  The label is
@@ -191,7 +192,7 @@ a second paramter: the file/directory/glob to apply the style to.
 
 (The MIT License)
 
-Copyright (c) 2010-2011 Steve Loveless
+Copyright (c) 2010-2012 Steve Loveless
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
