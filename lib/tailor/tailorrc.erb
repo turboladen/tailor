@@ -79,9 +79,9 @@
 #                         the file.
 #                         Default:      1
 #
-Tailor.config do
-  formatters <%= formatters %>
-  file_set '<%= file_list %>' do
+Tailor.config do |config|
+  config.formatters <%= formatters %>
+  config.file_set '<%= file_list %>' do
     <% style.each do |rule, value| %><%= rule %> <%= value %>
     <% end %>
   end
