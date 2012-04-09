@@ -623,6 +623,14 @@ INDENT_OK[:multi_line_each_block_with_op_and_parens] =
   parent_ruler.add_child_ruler(ruler)
 end}
 
+INDENT_OK[:do_end_block_in_parens] =
+  %Q{begin
+  throw(:result, sexp_line.flatten.compact.any? do |s|
+    s == MODIFIERS[self]
+  end)
+rescue NoMethodError
+end}
+
 #-------------------------------------------------------------------------------
 # Single-line keywords
 #-------------------------------------------------------------------------------

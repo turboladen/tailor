@@ -179,6 +179,7 @@ Feature: Indentation check on good files without trailing newlines
     | File                                               |
     | indent/ok/multi_line_each_block                    |
     | indent/ok/multi_line_each_block_with_op_and_parens |
+    | indent/ok/do_end_block_in_parens                   |
 
   @single_line @keywords
   Scenarios: Good use of single-line keyword statements

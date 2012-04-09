@@ -287,15 +287,6 @@ class Tailor
           else
             @proper[:next_line] = @indent_reasons.last[:should_be_at] - @spaces
           end
-          #add_indent_reason(event_type, token, lineno)
-=begin
-          unless token.continuation_keyword?
-            @amount_to_change_next += 1
-            msg = "double-token statement opening: "
-            msg << "change_next += 1 -> #{@amount_to_change_next}"
-            log msg
-          end
-=end
         end
 
         def update_for_closing_reason(event_type, token, lexed_line)
@@ -318,9 +309,9 @@ class Tailor
 
           meth = "only_#{event_type.to_s.sub("^on_", '')}?"
 
-          if lexed_line.send(meth.to_sym) || lexed_line.to_s =~ /^\s*end\n?/
+          if lexed_line.send(meth.to_sym) || lexed_line.to_s =~ /^\s*end\n?$/
             @proper[:this_line] = @proper[:this_line] - @spaces
-            msg = "End of not a single-line statement that needs indenting."
+            msg = "End multi-line statement. "
             msg < "change_this -= 1 -> #{@proper[:this_line]}."
             log msg
           end
