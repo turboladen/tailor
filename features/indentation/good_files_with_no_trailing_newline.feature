@@ -199,4 +199,5 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/case_whens_in               |
     | indent/ok/method_closing_lonely_paren |
     | indent/ok/method_lonely_args          |
+    | indent/ok/line_ends_with_label        |
 
