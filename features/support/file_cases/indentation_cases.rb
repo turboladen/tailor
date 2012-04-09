@@ -357,51 +357,65 @@ INDENT_OK[:for_with_retry_loop] =
 end}
 
 INDENT_OK[:loop_with_braces] =
-  %Q{loop {
+  %Q<loop {
   puts 'stuff'
-}}
+}>
 
 #----------- Braces ----------#
 INDENT_OK[:single_line_braces] =
-  %Q{{ one: 1, two: 2 }}
+  %Q<{ one: 1, two: 2 }>
 
 INDENT_OK[:single_line_braces_as_t_string] =
-  %Q{%Q{this is a t string!}}
+  %Q<%Q{this is a t string!}>
 
 INDENT_OK[:multi_line_braces] =
-  %Q{{ one: 1,
-  two: 2 }}
+  %Q<{ one: 1,
+  two: 2 }>
 
 INDENT_OK[:multi_line_braces_as_t_string] =
-  %Q{%Q{this is a t string!
-suckaaaaaa!}}
+  %Q<%Q{this is a t string!
+suckaaaaaa!}>
 
+# For some reason, Ruby doesn't like '%Q<> here.  Using [] instead.
 INDENT_OK[:multi_line_lonely_braces] =
-  %Q{{
+  %Q[{
   :one => 'one', :two => 'two',
   :three => 'three'
-}}
+}]
 
 INDENT_OK[:multi_line_lonely_braces_as_t_string] =
-  %Q{%Q{
+  %Q<%Q{
 this is a t string!
 suckaaaaaa!
-}}
+}>
 
 INDENT_OK[:multi_line_braces_embedded_arrays] =
-  %Q{{
+  %Q[{
   :one => ['one', 17, {}], :two => ['two'],
   :three => 'three'
-}}
+}]
+
 INDENT_OK[:braces_combo] =
-  %Q{{ three: 3 }
+  %Q<{ three: 3 }
 {
   three: 3 }
 { three: 3
 }
 {
   three: 3
-}}
+}>
+
+INDENT_OK[:deep_hash_with_rockets] =
+  %Q[im_deep =
+  { "one" =>
+    { "1" =>
+      { "a" => "A",
+        "b" => "B",
+        "c" => "C" },
+      "2" =>
+      { "d" => "D",
+        "e" => "E",
+        "f" => "F" } } }]
 
 #----------- Brackets ----------#
 INDENT_OK[:single_line_brackets] =

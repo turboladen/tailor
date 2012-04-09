@@ -119,6 +119,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_lonely_braces_as_t_string |
     | indent/ok/multi_line_braces_embedded_arrays    |
     | indent/ok/braces_combo                         |
+    | indent/ok/deep_hash_with_rockets               |
 
   @single_line @brackets
   Scenarios: Good single-line bracket uses
