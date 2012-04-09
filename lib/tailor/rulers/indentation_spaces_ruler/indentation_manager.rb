@@ -196,7 +196,6 @@ class Tailor
           return false if @indent_reasons.empty?
 
           lexed_line.ends_with_comma? &&
-            #continuing_enclosed_statement?(lineno)
             @indent_reasons.last[:event_type] == :on_lbrace ||
             @indent_reasons.last[:event_type] == :on_lbracket ||
             @indent_reasons.last[:event_type] == :on_lparen
@@ -236,12 +235,6 @@ class Tailor
           @indent_reasons.last[:lineno]
         end
 
-        def continuing_enclosed_statement?(lineno)
-          multi_line_braces?(lineno) ||
-            multi_line_brackets?(lineno) ||
-            multi_line_parens?(lineno)
-        end
-
         def double_tokens_in_line(lineno)
           @indent_reasons.find_all { |t| t[:lineno] == lineno}
         end
@@ -253,7 +246,12 @@ class Tailor
             lineno: lineno,
             should_be_at: @proper[:this_line]
           }
-          @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
+          #@proper[:next_line] = if token.continuation_keyword?
+          #  @indent_reasons.last[:should_be_at]
+          #else
+             @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
+          #end
+
           log "Added indent reason; it's now: #{@indent_reasons}"
         end
 
@@ -271,6 +269,9 @@ class Tailor
           end
 
           add_indent_reason(event_type, token, lineno)
+        end
+
+        def update_for_continuation_reason(event_type, token, lineno)
           d_tokens = @indent_reasons.dup
           d_tokens.pop
           on_line_token = d_tokens.find { |t| t[:lineno] == lineno }
@@ -281,9 +282,9 @@ class Tailor
             msg = "Continuation keyword: '#{token}'.  "
             msg << "change_this -= 1 -> #{@amount_to_change_this}"
             log msg
-            return
           end
 
+          @proper[:next_line] = @indent_reasons.last[:should_be_at] + @spaces
 =begin
           unless token.continuation_keyword?
             @amount_to_change_next += 1

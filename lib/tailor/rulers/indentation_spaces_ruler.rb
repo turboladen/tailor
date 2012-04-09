@@ -88,13 +88,20 @@ class Tailor
       end
 
       def kw_update(token, lexed_line, lineno, column)
+        if token == "end"
+          @manager.update_for_closing_reason(:on_kw, token, lexed_line)
+          return
+        end
+
+        if token.continuation_keyword?
+          log "Continuation keyword found: '#{token}'."
+          @manager.update_for_continuation_reason(:on_kw, token, lineno)
+          return
+        end
+
         if token.keyword_to_indent?
           log "Indent keyword found: '#{token}'."
           @manager.update_for_opening_reason(:on_kw, token, lineno)
-        end
-
-        if token == "end"
-          @manager.update_for_closing_reason(:on_kw, token, lexed_line)
         end
       end
 
