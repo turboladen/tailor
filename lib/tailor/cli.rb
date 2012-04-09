@@ -25,6 +25,7 @@ class Tailor
 
       if options.show_config
         @configuration.show
+        exit
       end
 
       @critic = Critic.new(@configuration.file_sets)
