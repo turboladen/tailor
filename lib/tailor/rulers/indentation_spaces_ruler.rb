@@ -9,6 +9,7 @@ class Tailor
       def initialize(config)
         super(config)
         @manager = IndentationManager.new(@config)
+        @embexpr_beg = false
       end
 
       def comment_update(token, lexed_line, file_text, lineno, column)
@@ -32,11 +33,14 @@ class Tailor
       end
 
       def embexpr_beg_update
-        @manager.embexpr_beg = true
+        @embexpr_beg = true
       end
 
+      # Due to a Ripper bug (depending on which Ruby version you have), this may
+      # or may not get triggered.
+      # More info: https://bugs.ruby-lang.org/issues/6211
       def embexpr_end_update
-        @manager.embexpr_beg = false
+        @embexpr_beg = false
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)

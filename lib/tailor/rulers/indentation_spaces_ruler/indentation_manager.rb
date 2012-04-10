@@ -18,7 +18,6 @@ class Tailor
 
         attr_accessor :amount_to_change_next
         attr_accessor :amount_to_change_this
-        attr_accessor :embexpr_beg
 
         attr_reader :actual_indentation
         attr_reader :indent_reasons
