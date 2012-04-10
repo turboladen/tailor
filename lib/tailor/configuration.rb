@@ -253,9 +253,19 @@ class Tailor
       table = Text::Table.new(horizontal_padding: 4)
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
       table.rows << :separator
-      table.rows << ['Style', @file_sets.inspect]
-      table.rows << :separator
       table.rows << ['Formatters', @formatters]
+
+      @file_sets.each do |label, file_set|
+        table.rows << :separator
+        table.rows << ['Label', label]
+        table.rows << ['Style', '']
+        file_set[:style].each do |k, v|
+          table.rows << ['', "#{k}: #{v}"]
+        end
+
+        table.rows << ['File List', '']
+        file_set[:file_list].each { |file| table.rows << ['', file] }
+      end
 
       puts table
     end
