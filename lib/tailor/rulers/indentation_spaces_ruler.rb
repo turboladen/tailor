@@ -46,7 +46,7 @@ class Tailor
 
       def ignored_nl_update(current_lexed_line, lineno, column)
         log "indent reasons on entry: #{@manager.indent_reasons}"
-        stop if @manager.tstring_nesting.size > 0
+        stop if @tstring_nesting.size > 0
 
         if current_lexed_line.only_spaces?
           log "Line of only spaces.  Moving on."
@@ -194,12 +194,12 @@ class Tailor
       end
 
       def tstring_beg_update(lineno)
-        @manager.tstring_nesting << lineno
+        @tstring_nesting << lineno
         @manager.stop
       end
 
       def tstring_end_update
-        @manager.tstring_nesting.pop
+        @tstring_nesting.pop
         @manager.start unless in_tstring?
       end
 
