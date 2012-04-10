@@ -255,14 +255,6 @@ class Tailor
         end
 
         def update_for_closing_reason(event_type, lexed_line, lineno)
-          if event_type == :on_rbrace && @embexpr_beg == true
-            msg = "Got :rbrace and @embexpr_beg is true. "
-            msg << " Must be at an @embexpr_end."
-            log msg
-            @embexpr_beg = false
-            return
-          end
-
           remove_continuation_keywords
           remove_appropriate_reason(event_type)
 

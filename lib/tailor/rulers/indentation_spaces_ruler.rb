@@ -131,7 +131,25 @@ class Tailor
         @manager.transition_lines
       end
 
+      # Since Ripper parses the } in a #{} as :on_rbrace instead of
+      # :on_embexpr_end, this works around that by using +@embexpr_beg to track
+      # the state of that event.  As such, this should only be called from
+      # #rbrace_update.
+      #
+      # @return [Boolean]
+      def in_embexpr?
+        if @embexpr_beg == true
+          msg = "Got :rbrace and @embexpr_beg is true. "
+          msg << " Must be at an @embexpr_end."
+          log msg
+          @embexpr_beg = false
+          return
+        end
+      end
+
       def rbrace_update(current_lexed_line, lineno, column)
+        return if in_embexpr?
+
         if @manager.multi_line_braces?(lineno)
           log "End of multi-line braces!"
 
