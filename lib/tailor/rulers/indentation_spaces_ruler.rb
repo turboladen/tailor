@@ -143,17 +143,17 @@ class Tailor
       #
       # @return [Boolean]
       def in_embexpr?
-        if @embexpr_beg == true
+        @embexpr_beg == true
+      end
+
+      def rbrace_update(current_lexed_line, lineno, column)
+        if in_embexpr?
           msg = "Got :rbrace and @embexpr_beg is true. "
           msg << " Must be at an @embexpr_end."
           log msg
           @embexpr_beg = false
           return
         end
-      end
-
-      def rbrace_update(current_lexed_line, lineno, column)
-        return if in_embexpr?
 
         if @manager.multi_line_braces?(lineno)
           log "End of multi-line braces!"
