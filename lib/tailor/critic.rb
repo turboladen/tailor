@@ -102,8 +102,9 @@ class Tailor
         log "Critiquing file_set: #{file_set}"
 
         file_set[:file_list].each do |file|
+          log "Critiquing file: #{file}"
+
           begin
-            log "Critiquing file: #{file}"
             problems = check_file(file, file_set[:style])
           rescue => ex
             $stderr.puts "Error while parsing file #{file}"
