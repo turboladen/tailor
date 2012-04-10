@@ -10,6 +10,7 @@ class Tailor
         super(config)
         @manager = IndentationManager.new(@config)
         @embexpr_beg = false
+        @tstring_nesting = []
       end
 
       def comment_update(token, lexed_line, file_text, lineno, column)
@@ -199,7 +200,11 @@ class Tailor
 
       def tstring_end_update
         @manager.tstring_nesting.pop
-        @manager.start unless @manager.in_tstring?
+        @manager.start unless in_tstring?
+      end
+
+      def in_tstring?
+        !@tstring_nesting.empty?
       end
 
       # Checks if the line's indentation level is appropriate.

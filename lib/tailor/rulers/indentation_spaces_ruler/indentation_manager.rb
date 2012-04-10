@@ -21,7 +21,6 @@ class Tailor
 
         attr_reader :actual_indentation
         attr_reader :indent_reasons
-        attr_reader :tstring_nesting
 
         def initialize(spaces)
           @spaces = spaces
@@ -29,10 +28,7 @@ class Tailor
           log "Setting @proper[:this_line] to 0."
           @proper = { this_line: 0, next_line: 0 }
           @actual_indentation = 0
-
           @indent_reasons = []
-          @tstring_nesting = []
-
           @amount_to_change_this = 0
           start
         end
@@ -342,10 +338,6 @@ class Tailor
           else
             super(meth, *args, &blk)
           end
-        end
-
-        def in_tstring?
-          !@tstring_nesting.empty?
         end
       end
     end
