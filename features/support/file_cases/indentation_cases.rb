@@ -132,6 +132,9 @@ INDENT_OK[:method_call_multistatement_lonely_paren_trailing_comment] =
   five
 )}
 
+#-------------------------------------------------------------------------------
+# Continuation keywords
+#-------------------------------------------------------------------------------
 INDENT_OK[:rescue_ending_with_comma] =
   %Q{begin
   ssh.upload source, dest
@@ -152,6 +155,14 @@ rescue SocketError, ArgumentError, SystemCallError,     # comment
   Net::SCP::Exception, Timeout::Error => ex
   @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
     "\#{ex.message}"
+end}
+
+INDENT_OK[:def_rescue] =
+  %Q{def some_method
+  do_something(one, two)
+rescue => e
+  log "It didn't work."
+  raise e
 end}
 
 INDENT_OK[:keyword_ending_with_period] =

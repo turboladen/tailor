@@ -51,10 +51,15 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/method_call_multistatement_trailing_comment              |
     | indent/ok/method_call_multistatement_lonely_paren                  |
     | indent/ok/method_call_multistatement_lonely_paren_trailing_comment |
-    | indent/ok/rescue_ending_with_comma                                 |
-    | indent/ok/rescue_ending_with_comma_trailing_comment                |
     | indent/ok/keyword_ending_with_period                               |
     | indent/ok/keyword_ending_with_period_trailing_comment              |
+
+  @multi_line @continuation
+  Scenarios: Good use of continuation keywords
+    | File                                                |
+    | indent/ok/rescue_ending_with_comma                  |
+    | indent/ok/rescue_ending_with_comma_trailing_comment |
+    | indent/ok/def_rescue                                |
 
   Scenarios: Good def uses
     | File                                                |
