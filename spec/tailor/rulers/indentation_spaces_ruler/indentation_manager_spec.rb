@@ -23,13 +23,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe "#next_should_be_at" do
-    it "returns @proper[:next_line]" do
-      subject.instance_variable_set(:@proper, { next_line: 123 })
-      subject.next_should_be_at.should == 123
-    end
-  end
-
   describe "#decrease_this_line" do
     let!(:spaces) { 27 }
 
@@ -76,67 +69,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe "#increase_next_line" do
-    context "#started? is true" do
-      before { subject.stub(:started?).and_return true }
-
-      it "increases @proper[:next_line] by @spaces" do
-        expect { subject.increase_next_line }.to change{subject.next_should_be_at}.
-          by(spaces)
-      end
-    end
-
-    context "#started? is false" do
-      before { subject.stub(:started?).and_return false }
-
-      it "does not increases @proper[:next_line]" do
-        expect { subject.increase_next_line }.to_not change{subject.next_should_be_at}.
-          by(spaces)
-      end
-    end
-  end
-
-  describe "#decrease_next_line" do
-    let!(:spaces) { 27 }
-
-    context "#started? is true" do
-      before { subject.stub(:started?).and_return true }
-
-      it "decrements @proper[:next_line] by @spaces" do
-        expect { subject.decrease_next_line }.to change{subject.next_should_be_at}.
-          by(-spaces)
-      end
-    end
-
-    context "#started? is false" do
-      before { subject.stub(:started?).and_return false }
-
-      it "decrements @proper[:next_line] by @spaces" do
-        expect { subject.decrease_next_line }.to_not change{subject.next_should_be_at}.
-          by(-spaces)
-      end
-    end
-  end
-
   describe "#set_up_line_transition" do
-    context "@amount_to_change_next > 0" do
-      before { subject.instance_variable_set(:@amount_to_change_next, 1) }
-
-      it "should call #increase_next_line" do
-        subject.should_receive(:increase_next_line)
-        subject.set_up_line_transition
-      end
-    end
-
-    context "@amount_to_change_next < 0" do
-      before { subject.instance_variable_set(:@amount_to_change_next, -1) }
-
-      it "should call #increase_next_line" do
-        subject.should_receive(:decrease_next_line)
-        subject.set_up_line_transition
-      end
-    end
-
     context "@amount_to_change_this < 0" do
       before { subject.instance_variable_set(:@amount_to_change_this, -1) }
 
@@ -351,64 +284,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         end
       end
     end
-  end
-
-  describe "#keyword_and_single_token_line?" do
-    context "no @double_tokens on this line" do
-      before do
-        d_tokens = [{ lineno: 12345 }]
-        subject.instance_variable_set(:@double_tokens, d_tokens)
-      end
-
-      it "returns false" do
-        subject.keyword_and_single_token_line?(1).should be_false
-      end
-    end
-
-    context "@double_tokens exist on this line" do
-      context "no kw tokens on this line" do
-        before do
-          d_tokens = [{ token: '{', lineno: 1 }]
-          subject.instance_variable_set(:@double_tokens, d_tokens)
-        end
-
-        it "returns false" do
-          subject.keyword_and_single_token_line?(1).should be_false
-        end
-      end
-
-      context "kw tokens on this line" do
-        before do
-          d_tokens = [{ token: 'class', lineno: 1 }]
-          subject.instance_variable_set(:@double_tokens, d_tokens)
-        end
-
-        context "no @single_tokens on this line" do
-          it "returns false" do
-            subject.keyword_and_single_token_line?(1).should be_false
-          end
-        end
-
-        context "@single_tokens exist on this line" do
-          before do
-            s_tokens = [{ token: '[', lineno: 1 }]
-            subject.instance_variable_set(:@single_tokens, s_tokens)
-          end
-
-          it "returns true" do
-            subject.keyword_and_single_token_line?(1).should be_true
-          end
-        end
-      end
-    end
-  end
-
-  describe "#multi_line_braces?" do
-    pending
-  end
-
-  describe "#multi_line_brackets?" do
-    pending
   end
 
   describe "#multi_line_parens?" do
