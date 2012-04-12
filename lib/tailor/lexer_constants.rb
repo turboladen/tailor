@@ -1,3 +1,5 @@
+require 'set'
+
 class Tailor
 
   # These are important tokens that key certain styling events.  They are taken
