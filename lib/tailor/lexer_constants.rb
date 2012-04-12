@@ -47,7 +47,7 @@ class Tailor
       'while' => :while_mod
     }
 
-    MULTILINE_OPERATORS = [
+    MULTILINE_OPERATORS = Set.new [
       '+', '-', '*', '**', '/', '%',    # +, -, tSTAR, tPOW, /, %
       '<', '>', '<=', '>=',             # <, >, tLEQ, tGEQ
       '=', '+=', '-=', '*=', '**=', '/=', '%=',
@@ -66,7 +66,7 @@ class Tailor
       '~>'                              # gem_version op
     ]
 
-    LOOP_KEYWORDS = [
+    LOOP_KEYWORDS = Set.new [
       'for',
       'until',
       'while'
