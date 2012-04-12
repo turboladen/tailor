@@ -174,6 +174,7 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/multi_line_method_call                        |
     | indent/ok/multi_line_method_call_ends_with_period       |
     | indent/ok/multi_line_method_call_ends_with_many_periods |
+    | indent/ok/method_lonely_args                            |
 
   @multi_line @ops
   Scenarios: Good multi-line if + logical operators
@@ -206,7 +207,6 @@ Feature: Indentation check on good files without trailing newlines
     | File                                  |
     | indent/ok/case_whens_in               |
     | indent/ok/method_closing_lonely_paren |
-    | indent/ok/method_lonely_args          |
     | indent/ok/line_ends_with_label        |
     | indent/ok/rparen_and_do_same_line     |
 
