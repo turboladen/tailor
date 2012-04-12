@@ -313,6 +313,11 @@ class Tailor
           @indent_reasons.each { |r| log r.to_s }
         end
 
+        # Returns the last matching opening event that corresponds to the
+        # +closing_event_type+.
+        #
+        # @param [Symbol] closing_event_type The closing event for which to
+        #   find its associated opening event.
         def last_opening_event(closing_event_type)
           return nil if @indent_reasons.empty?
 
