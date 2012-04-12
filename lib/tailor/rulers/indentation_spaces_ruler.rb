@@ -57,7 +57,7 @@ class Tailor
         if @manager.line_ends_with_single_token_indenter?(current_lexed_line)
           log "Line ends with single-token indent token."
 
-          unless @manager.comma_is_part_of_enclosed_statement?(current_lexed_line, lineno)
+          unless @manager.in_an_enclosure? && current_lexed_line.ends_with_comma?
             log "Line-ending single-token indenter found."
             token_event = current_lexed_line.last_non_line_feed_event
 

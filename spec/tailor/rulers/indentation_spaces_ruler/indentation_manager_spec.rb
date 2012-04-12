@@ -266,48 +266,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe "#comma_is_part_of_enclosed_statement?" do
-    context "@indent_reasons is empty" do
-      before { subject.instance_variable_set(:@indent_reasons, []) }
-
-      specify do
-        subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
-          should be_false
-      end
-    end
-
-    context "lexed_line does not end with a comma" do
-      before { lexed_line.stub(ends_with_comma?: false) }
-
-      it "returns false" do
-        subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
-          should be_false
-      end
-    end
-
-    context "lexed_line ends with a comma" do
-      before { lexed_line.stub(ends_with_comma?: true) }
-
-      context "continuing_enclosed_statement? is true" do
-        before { subject.stub(continuing_enclosed_statement?: true) }
-
-        it "returns true" do
-          subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
-            should be_true
-        end
-      end
-
-      context "continuing_enclosed_statement? is true" do
-        before { subject.stub(continuing_enclosed_statement?: false) }
-
-        it "returns false" do
-          subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
-            should be_false
-        end
-      end
-    end
-  end
-
   describe "#multi_line_parens?" do
     context "an unclosed ( exists on the previous line" do
       context "an unclosed ( does not exist on the current line" do
