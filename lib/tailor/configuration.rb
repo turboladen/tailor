@@ -249,6 +249,7 @@ class Tailor
       list_with_absolute_paths.sort
     end
 
+    # Displays the current configuration as a text table.
     def show
       table = Text::Table.new(horizontal_padding: 4)
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
