@@ -293,9 +293,7 @@ class Tailor
         end
 
         def remove_appropriate_reason(event_type)
-          last_opening_event = @indent_reasons.reverse.find do |r|
-            r[:event_type] == OPEN_EVENT_FOR[event_type]
-          end
+          last_opening_event = last_opening_event(event_type)
 
           if last_opening_event
             r_index = @indent_reasons.reverse.index(last_opening_event)
@@ -308,11 +306,19 @@ class Tailor
 
             @indent_reasons.replace(tmp_reasons)
           else
-            @indent_reasons.pop
+            log "Just popped off reason: #{@indent_reasons.pop}"
           end
 
           log "Removed indent reason; it's now:"
           @indent_reasons.each { |r| log r.to_s }
+        end
+
+        def last_opening_event(closing_event_type)
+          return nil if @indent_reasons.empty?
+
+          @indent_reasons.reverse.find do |r|
+            r[:event_type] == OPEN_EVENT_FOR[closing_event_type]
+          end
         end
 
         def last_indent_reason_type

@@ -325,5 +325,33 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
   describe "#in_tstring?" do
     pending
+  describe "#last_opening_event" do
+    context "@indent_reasons is empty" do
+      before { subject.instance_variable_set(:@indent_reasons, []) }
+      specify { subject.last_opening_event(nil).should be_nil }
+    end
+
+    context "@indent_reasons contains the corresponding opening event" do
+      let(:indent_reasons) do
+        [ { event_type: :on_lparen }, { event_type: :on_lbrace } ]
+      end
+
+      before { subject.instance_variable_set(:@indent_reasons, indent_reasons) }
+
+      context "the corresponding opening event is last" do
+        it "returns the matching opening event" do
+          subject.last_opening_event(:on_rbrace).should == indent_reasons.last
+        end
+      end
+
+      context "the corresponding opening event is not last" do
+        it "returns the matching opening event" do
+          subject.last_opening_event(:on_rparen).should == indent_reasons.first
+        end
+
+      end
+    end
+  end
+
   end
 end
