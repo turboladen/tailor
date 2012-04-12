@@ -8,7 +8,7 @@ class Tailor
         call_back = "#{name}_update".to_sym
 
         unless observer.respond_to? call_back
-          raise NoMethodError, "observer does not respond to '#{call_back}'"
+          raise NoMethodError, "observer '#{observer}' does not respond to '#{call_back}'"
         end
 
         @notifiers[name][observer] = call_back
