@@ -88,18 +88,16 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         subject.instance_variable_set(:@proper, { next_line: 33 })
 
         expect { subject.transition_lines }.to change{subject.should_be_at}.
-          from(subject.should_be_at).to(subject.next_should_be_at)
+          from(subject.should_be_at).to(33)
       end
     end
 
-    context "#started? is true" do
+    context "#started? is false" do
       before { subject.stub(:started?).and_return false }
 
       it "sets @proper[:this_line] to @proper[:next_line]" do
         subject.instance_variable_set(:@proper, { next_line: 33 })
-
-        expect { subject.transition_lines }.to_not change{subject.should_be_at}.
-          from(subject.should_be_at).to(subject.next_should_be_at)
+        expect { subject.transition_lines }.to_not change{subject.should_be_at}
       end
     end
   end
@@ -176,11 +174,12 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#line_ends_with_single_token_indenter?" do
-    context "lexed_line doesn't end with an op, comma, or period" do
+    context "lexed_line doesn't end with an op, comma, period, or kw" do
       before do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
       specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_false }
@@ -191,6 +190,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: true)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
       specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
@@ -201,6 +201,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: true)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
       specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
@@ -211,6 +212,18 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: true)
+        lexed_line.stub(ends_with_modifier_kw?: false)
+      end
+
+      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+    end
+
+    context "lexed_line ends with a modified kw" do
+      before do
+        lexed_line.stub(ends_with_op?: false)
+        lexed_line.stub(ends_with_comma?: false)
+        lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_modifier_kw?: true)
       end
 
       specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
@@ -254,6 +267,15 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#comma_is_part_of_enclosed_statement?" do
+    context "@indent_reasons is empty" do
+      before { subject.instance_variable_set(:@indent_reasons, []) }
+
+      specify do
+        subject.comma_is_part_of_enclosed_statement?(lexed_line, 1).
+          should be_false
+      end
+    end
+
     context "lexed_line does not end with a comma" do
       before { lexed_line.stub(ends_with_comma?: false) }
 
@@ -323,8 +345,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe "#in_tstring?" do
-    pending
   describe "#last_opening_event" do
     context "@indent_reasons is empty" do
       before { subject.instance_variable_set(:@indent_reasons, []) }
@@ -353,5 +373,54 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
+  describe "#remove_continuation_keywords" do
+    before do
+      subject.instance_variable_set(:@indent_reasons, indent_reasons)
+    end
+
+    context "@indent_reasons is empty" do
+      let(:indent_reasons) do
+        i = double "@indent_reasons"
+        i.stub_chain(:last, :[]).and_return []
+        i.stub(:empty?).and_return true
+
+        i
+      end
+
+      specify { subject.remove_continuation_keywords.should be_nil }
+    end
+
+    context "@indent_reasons does not contain CONTINUATION_KEYWORDS" do
+      let(:indent_reasons) do
+        i = double "@indent_reasons"
+        i.stub_chain(:last, :[]).and_return [{ token: 'if' }]
+        i.stub(:empty?).and_return false
+
+        i
+      end
+
+      it "should not call #pop on @indent_reasons" do
+        indent_reasons.should_not_receive(:pop)
+        subject.remove_continuation_keywords
+      end
+    end
+
+    context "@indent_reasons contains CONTINUATION_KEYWORDS" do
+      let(:indent_reasons) do
+        i = double "@indent_reasons"
+        i.stub_chain(:last, :[]).and_return [
+          { token: 'if' }, { token: 'elsif'}]
+        i.stub(:empty?).and_return false
+
+        i
+      end
+
+      it "should call #pop on @indent_reasons one time" do
+        i = [{ token: 'if' }, { token: 'elsif'}]
+        i.should_receive(:pop).once
+        subject.instance_variable_set(:@indent_reasons, i)
+        subject.remove_continuation_keywords
+      end
+    end
   end
 end
