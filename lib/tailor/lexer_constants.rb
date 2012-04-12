@@ -5,7 +5,7 @@ class Tailor
   # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   # https://github.com/ruby/ruby/blob/trunk/parse.y
   module LexerConstants
-    KEYWORDS_TO_INDENT = [
+    KEYWORDS_TO_INDENT = Set.new [
       'begin',
       'case',
       'class',
@@ -24,7 +24,7 @@ class Tailor
       'while'
     ]
 
-    CONTINUATION_KEYWORDS = [
+    CONTINUATION_KEYWORDS = Set.new [
       'elsif',
       'else',
       'ensure',
@@ -32,7 +32,7 @@ class Tailor
       'when'
     ]
 
-    KEYWORDS_AND_MODIFIERS = [
+    KEYWORDS_AND_MODIFIERS = Set.new [
       'if',
       'unless',
       'until',
