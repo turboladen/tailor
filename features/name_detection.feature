@@ -6,8 +6,8 @@ Feature: Name detection
     Given my configuration file ".tailor" looks like:
     """
     Tailor.config do |config|
-      config.file_set do
-        trailing_newlines 0
+      config.file_set do |style|
+        style.trailing_newlines = 0
       end
     end
     """

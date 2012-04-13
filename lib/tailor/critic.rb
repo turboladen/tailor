@@ -1,103 +1,32 @@
-require 'erb'
-require 'yaml'
-require 'fileutils'
-require_relative 'configuration'
 require_relative 'lexer'
 require_relative 'logger'
 require_relative 'ruler'
 require_relative 'rulers'
-require_relative 'runtime_error'
 
 
 class Tailor
+
+  # An object of this type provides for starting the process of critiquing
+  # files.  It handles initializing the Ruler objects it needs based on the
+  # configuration given to it.
   class Critic
     include Tailor::Logger::Mixin
     include Tailor::Rulers
 
-    RULER_OBSERVERS = {
-      spaces_before_lbrace: [:add_lbrace_observer],
-      spaces_after_lbrace: [
-        :add_comment_observer,
-        :add_ignored_nl_observer,
-        :add_lbrace_observer,
-        :add_nl_observer
-      ],
-      spaces_before_rbrace: [
-        :add_embexpr_beg_observer,
-        :add_lbrace_observer,
-        :add_rbrace_observer
-      ],
-      spaces_after_lbracket: [
-        :add_comment_observer,
-        :add_ignored_nl_observer,
-        :add_lbracket_observer,
-        :add_nl_observer
-      ],
-      spaces_before_rbracket: [:add_rbracket_observer],
-      spaces_after_lparen: [
-        :add_comment_observer,
-        :add_ignored_nl_observer,
-        :add_lparen_observer,
-        :add_nl_observer
-      ],
-      spaces_before_rparen: [:add_rparen_observer],
-      spaces_in_empty_braces: [
-        :add_embexpr_beg_observer,
-        :add_lbrace_observer,
-        :add_rbrace_observer
-      ],
-      spaces_before_comma: [
-        :add_comma_observer,
-        :add_comment_observer,
-        :add_ignored_nl_observer,
-        :add_nl_observer
-      ],
-      spaces_after_comma: [
-        :add_comma_observer,
-        :add_comment_observer,
-        :add_ignored_nl_observer,
-        :add_nl_observer
-      ],
-      max_line_length: [:add_ignored_nl_observer, :add_nl_observer],
-      indentation_spaces: [
-        :add_comment_observer,
-        :add_embexpr_beg_observer,
-        :add_embexpr_end_observer,
-        :add_ignored_nl_observer,
-        :add_kw_observer,
-        :add_lbrace_observer,
-        :add_lbracket_observer,
-        :add_lparen_observer,
-        :add_nl_observer,
-        :add_rbrace_observer,
-        :add_rbracket_observer,
-        :add_rparen_observer,
-        :add_tstring_beg_observer,
-        :add_tstring_end_observer
-      ],
-      allow_trailing_line_spaces: [:add_ignored_nl_observer, :add_nl_observer],
-      allow_hard_tabs: [:add_sp_observer],
-      allow_camel_case_methods: [:add_ident_observer],
-      allow_screaming_snake_case_classes: [:add_const_observer],
-      max_code_lines_in_class: [
-        :add_ignored_nl_observer,
-        :add_kw_observer,
-        :add_nl_observer
-      ],
-      max_code_lines_in_method: [
-        :add_ignored_nl_observer,
-        :add_kw_observer,
-        :add_nl_observer
-      ],
-      trailing_newlines: [:add_file_observer]
-    }
-
+    # @param [Hash] configuration The file sets to critique.
     def initialize(configuration)
       @file_sets = configuration
     end
 
+    # The instance method that starts the process of looking for problems in
+    # files.  It checks for problems in each file in each file set.  It yields
+    # the problems found and the label they were found for.
+    #
+    # @yieldparam [Hash] problems The problems found for the label.
+    # @yieldparam [Symbol] label The label the problems were found for.
     def critique
       log "file sets keys: #{@file_sets.keys}"
+
       @file_sets.each do |label, file_set|
         log "Critiquing file_set: #{file_set}"
 
@@ -116,27 +45,17 @@ class Tailor
       end
     end
 
-    def init_rulers(style, lexer, parent_ruler)
-      style.each do |ruler_name, value|
-        ruler =
-          instance_eval(
-            "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler.new(#{value})"
-          )
-        parent_ruler.add_child_ruler(ruler)
-        RULER_OBSERVERS[ruler_name].each do |observer|
-          log "Adding #{observer} to lexer..."
-          lexer.send(observer, ruler)
-        end
-      end
+    # @return [Hash]
+    def problems
+      @problems ||= {}
     end
 
-    # Converts a snake-case String to a camel-case String.
-    #
-    # @param [String] string The String to convert.
-    # @return [String] The converted String.
-    def camelize(string)
-      string.split(/_/).map { |word| word.capitalize }.join
+    # @return [Fixnum] The number of problems found so far.
+    def problem_count
+      problems.values.flatten.size
     end
+
+    private
 
     # Adds problems found from Lexing to the {problems} list.
     #
@@ -149,21 +68,42 @@ class Tailor
       log "Style: #{style}"
       init_rulers(style, lexer, ruler)
 
-      lexer.lex
       lexer.check_added_newline
+      lexer.lex
       problems[file] = ruler.problems
 
       { file => problems[file] }
     end
 
-    # @return [Hash]
-    def problems
-      @problems ||= {}
+    # Creates Rulers for each ruler given in +style+ and adds the Ruler's
+    # defined observers to the given +lexer+.
+    #
+    # @param [Hash] style The Hash that defines the style to be measured
+    #   against.
+    # @param [Tailor::Lexer] lexer The Lexer object the Rulers should observe.
+    # @param [Tailor::Ruler] parent_ruler The main Ruler to add the child
+    #   Rulers to.
+    def init_rulers(style, lexer, parent_ruler)
+      style.each do |ruler_name, value|
+        ruler = "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler"
+        log "Initializing ruler: #{ruler}"
+        ruler = instance_eval("#{ruler}.new(#{value})")
+        parent_ruler.add_child_ruler(ruler)
+
+        ruler.lexer_observers.each do |observer|
+          log "Adding #{observer} to lexer..."
+          meth = "add_#{observer}_observer".to_sym
+          lexer.send(meth, ruler)
+        end
+      end
     end
 
-    # @return [Fixnum] The number of problems found so far.
-    def problem_count
-      problems.values.flatten.size
+    # Converts a snake-case String to a camel-case String.
+    #
+    # @param [String] string The String to convert.
+    # @return [String] The converted String.
+    def camelize(string)
+      string.split(/_/).map { |word| word.capitalize }.join
     end
   end
 end

@@ -11,6 +11,7 @@ class Tailor
     class SpacesAfterLbraceRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers :comment, :ignored_nl, :lbrace, :nl
         @lbrace_columns = []
       end
 

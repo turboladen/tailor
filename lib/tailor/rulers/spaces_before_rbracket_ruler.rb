@@ -9,6 +9,10 @@ class Tailor
     # * it's directly preceded by a '['.
     # * it's directly preceded by spaces, then a '['.
     class SpacesBeforeRbracketRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :rbracket
+      end
 
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column

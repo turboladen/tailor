@@ -3,6 +3,11 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowHardTabsRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :sp
+      end
+
       def sp_update(token, lineno, column)
         measure(token, lineno, column)
       end

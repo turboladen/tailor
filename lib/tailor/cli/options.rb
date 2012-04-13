@@ -19,8 +19,8 @@ class Tailor
 
         opts = OptionParser.new do |opt|
           opt.banner = self.banner
-
           opt.separator ""
+          opt.separator "  " + ("-" * 73)
           opt.separator ""
           opt.separator "Config file options:"
           opt.on('-s', '--show-config', 'Show your current config.') do
@@ -35,7 +35,7 @@ class Tailor
           opt.on('--create-config', 'Create a new .tailor file') do
             if create_config
               msg = "Your new tailor config file was created at "
-              msg << "#{Dir.pwd}."
+              msg << "#{Dir.pwd}/.tailor"
               $stdout.puts msg
               exit
             else
@@ -167,9 +167,11 @@ class Tailor
           opt.separator ""
           opt.separator "Common options:"
 
+=begin
           opt.on('-f', '--format FORMATTER') do |format|
             options.formatters << format
           end
+=end
 
           opt.on('--[no-]color', "Output in color") do |color|
             @output_color = color
@@ -229,7 +231,15 @@ class Tailor
 
       # @return [String]
       def self.usage
-        "  Usage:  tailor [FILE|DIR]"
+        <<-USAGE
+Usage:  tailor [options] [FILE|DIR|GLOB]
+
+Examples:
+tailor
+tailor --no-color -d my_file.rb
+tailor --config-file tailor_config lib/**/*.rb
+tailor --show-config
+        USAGE
       end
 
       def self.create_config

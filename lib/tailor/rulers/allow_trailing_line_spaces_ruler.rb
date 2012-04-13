@@ -3,6 +3,11 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowTrailingLineSpacesRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :ignored_nl, :nl
+      end
+
       def ignored_nl_update(lexed_line, lineno, column)
         log "Last event: #{lexed_line.last_non_line_feed_event}"
         log "Line ends with space: #{lexed_line.ends_with_sp?}"
