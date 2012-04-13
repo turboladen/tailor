@@ -97,6 +97,9 @@ class Tailor
       previous_event.first.last.zero? || previous_event.first.last.nil?
     end
 
+    # Allows for calling a couple styles of methods:
+    # * #ends_with_(.+)?  - Allows for checking if the line ends with (.+)
+    # * #only_(.+)?  - Allows for checking if the line is only spaces and (.+)
     def method_missing(meth, *args, &blk)
       if meth.to_s =~ /^ends_with_(.+)\?$/
         event = "on_#{$1}".to_sym
