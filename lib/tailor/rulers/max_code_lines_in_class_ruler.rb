@@ -1,5 +1,5 @@
 require_relative '../ruler'
-require_relative '../lexer_constants'
+require_relative '../lexer/lexer_constants'
 
 class Tailor
   module Rulers

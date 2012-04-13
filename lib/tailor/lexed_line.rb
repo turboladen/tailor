@@ -1,5 +1,5 @@
 require_relative 'logger'
-require_relative 'lexer_constants'
+require_relative 'lexer/lexer_constants'
 require_relative 'lexer/token'
 require 'ripper'
 

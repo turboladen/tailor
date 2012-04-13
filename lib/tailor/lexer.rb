@@ -1,7 +1,7 @@
 require 'ripper'
 require_relative 'composite_observable'
 require_relative 'lexed_line'
-require_relative 'lexer_constants'
+require_relative 'lexer/lexer_constants'
 require_relative 'logger'
 require_relative 'lexer/token'
 
