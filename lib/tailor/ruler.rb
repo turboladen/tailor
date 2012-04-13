@@ -38,14 +38,12 @@ class Tailor
   class Ruler
     include Tailor::Logger::Mixin
 
-    attr_reader :cli_option
     attr_reader :lexer_observers
 
     def initialize(config={})
       @config = config
       @problems = []
       @child_rulers = []
-      @cli_option = ""
       @do_measurement = true
       @lexer_observers = []
       log "Ruler initialized with style setting: #{@config}"
