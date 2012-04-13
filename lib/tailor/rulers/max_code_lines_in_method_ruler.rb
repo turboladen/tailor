@@ -8,6 +8,7 @@ class Tailor
 
       def initialize(config)
         super(config)
+        add_lexer_observers(:ignored_nl, :kw, :nl)
         @method_start_lines = []
         @kw_start_lines = []
         @end_last_method = false

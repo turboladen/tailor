@@ -8,6 +8,22 @@ class Tailor
     class IndentationSpacesRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers(
+          :comment,
+          :embexpr_beg,
+          :embexpr_end,
+          :ignored_nl,
+          :kw,
+          :lbrace,
+          :lbracket,
+          :lparen,
+          :nl,
+          :rbrace,
+          :rbracket,
+          :rparen,
+          :tstring_beg,
+          :tstring_end
+        )
         @manager = IndentationManager.new(@config)
         @embexpr_beg = false
         @tstring_nesting = []

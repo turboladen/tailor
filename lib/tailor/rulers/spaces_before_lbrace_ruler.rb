@@ -11,6 +11,10 @@ class Tailor
     # * the char before it is a '['.
     # * it's only preceded by spaces.
     class SpacesBeforeLbraceRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :lbrace
+      end
 
       # Counts the spaces before the '{'.
       #

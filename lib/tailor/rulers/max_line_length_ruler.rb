@@ -3,6 +3,11 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class MaxLineLengthRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :ignored_nl, :nl
+      end
+
       def ignored_nl_update(lexed_line, lineno, column)
         log "<#{self.class}> Line length: #{lexed_line.line_length}"
         measure(lexed_line, lineno, column)

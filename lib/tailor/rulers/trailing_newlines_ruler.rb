@@ -4,6 +4,10 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class TrailingNewlinesRuler < Tailor::Ruler
+      def initialize(config)
+        super(config)
+        add_lexer_observers :file
+      end
 
       # Checks to see if the number of newlines at the end of the file is not
       # equal to the value at +@config+.

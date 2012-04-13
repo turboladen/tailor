@@ -3,10 +3,43 @@ require_relative 'problem'
 require_relative 'runtime_error'
 
 class Tailor
+
+  # This is a composite class, geared for getting at or managing the Rulers
+  # that should be used for measuring style.  To do so, create a new object of
+  # this type, then add child rulers to that object using #add_child_ruler.
+  # After using the Ruler, you'll have access to all of the problems found by
+  # all of the child rulers via #problems.
+  #
+  # Example:
+  #   ruler = Ruler.new
+  #   file_length_ruler = FileLengthRuler.new
+  #   ruler.add_child_ruler(file_length_ruler)
+  #   # use ruler
+  #   ruler.problems      # => [{ all of your file length problems... }]
+  #
+  # There's really no measuring functionality in this base class--it's merely
+  # for aggregating child data and for providing a base class to create child
+  # Rulers from.  Speaking of... if you want, you can create your own rulers.
+  # A Ruler requires a few things:
+  #
+  # First, it needs a list of Lexer events to observer.  Tailor uses its Lexer
+  # to publish events (in this case, characters or string Ruby constructs) of
+  # interest to its observers.  Rulers subscribe to those events so that they
+  # can detect the problems they're looking for.  These are defined as a Set in
+  # @lexer_observers.  Adding to that list means the Ruler will subscribe to
+  # those events.
+  #
+  # Example:
+  #   class MyRuler < Tailor::Ruler
+  #     def initialize
+  #       @lexer_observers = [:nl_observer, :kw_observer]
+  #     end
+  #   end
   class Ruler
     include Tailor::Logger::Mixin
 
     attr_reader :cli_option
+    attr_reader :lexer_observers
 
     def initialize(config={})
       @config = config
@@ -14,12 +47,13 @@ class Tailor
       @child_rulers = []
       @cli_option = ""
       @do_measurement = true
+      @lexer_observers = []
       log "Ruler initialized with style setting: #{@config}"
     end
 
     def add_child_ruler(ruler)
       @child_rulers << ruler
-      log "Added child: #{ruler}"
+      log "Added child ruler: #{ruler}"
     end
 
     def problems
@@ -34,6 +68,12 @@ class Tailor
     def measure(*args)
       raise RuntimeError,
         "Ruler#measure called, but should be redefined by a real ruler."
+    end
+
+    private
+
+    def add_lexer_observers(*lexer_observer)
+      @lexer_observers = lexer_observer
     end
   end
 end

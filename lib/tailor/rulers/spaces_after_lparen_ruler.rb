@@ -5,6 +5,7 @@ class Tailor
     class SpacesAfterLparenRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers :comment, :ignored_nl, :lparen, :nl
         @lparen_columns = []
       end
 

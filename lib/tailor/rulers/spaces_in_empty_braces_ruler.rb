@@ -8,6 +8,7 @@ class Tailor
     class SpacesInEmptyBracesRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers :embexpr_beg, :lbrace, :rbrace
         @lbrace_nesting = []
       end
 

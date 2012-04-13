@@ -11,6 +11,7 @@ class Tailor
     class SpacesAfterLbracketRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers :comment, :ignored_nl, :lbracket, :nl
         @lbracket_columns = []
       end
 

@@ -10,6 +10,7 @@ class Tailor
     class SpacesAfterCommaRuler < Tailor::Ruler
       def initialize(config)
         super(config)
+        add_lexer_observers :comma, :comment, :ignored_nl, :nl
         @comma_columns = []
       end
 
