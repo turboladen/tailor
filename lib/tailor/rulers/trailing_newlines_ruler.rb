@@ -6,7 +6,7 @@ class Tailor
     class TrailingNewlinesRuler < Tailor::Ruler
       def initialize(config)
         super(config)
-        add_lexer_observers :file
+        add_lexer_observers :file_end
       end
 
       # Checks to see if the number of newlines at the end of the file is not
@@ -32,7 +32,7 @@ class Tailor
       # final line won't ever get caught).
       #
       # @param [Fixnum] trailing_newline_count
-      def file_update(trailing_newline_count)
+      def file_end_update(trailing_newline_count)
         measure(trailing_newline_count)
       end
     end
