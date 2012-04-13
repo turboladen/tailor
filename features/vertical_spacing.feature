@@ -2,18 +2,6 @@ Feature: Vertical spacing
   As a Ruby developer
   I want to check my Ruby files for vertical spacing
 
-  Background:
-    Given my configuration file ".tailor" looks like:
-    """
-    Tailor.config do |config|
-      config.file_set do
-        max_code_lines_in_class 5
-        max_code_lines_in_method 3
-        trailing_newlines 0
-      end
-    end
-    """
-
   @bad_files
   Scenario: Detect lack of newlines
     Given a file named "not_enough_newlines.rb" with:
@@ -52,11 +40,20 @@ Feature: Vertical spacing
     When I run `tailor -d .`
     Then the output should match /Total Problems.*0/
 
-  @good_files @class_length
+  @multi_line @good_files
 
-  @multi_line
+  @class_length
   Scenario Outline: Classes/modules with <= configured lines
-    Given <File> exists without a newline at the end
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do |style|
+        style.max_code_lines_in_class = 5
+        style.trailing_newlines = 0
+      end
+    end
+    """
+    And <File> exists without a newline at the end
     When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
@@ -70,7 +67,15 @@ Feature: Vertical spacing
 
   @multi_line
   Scenario Outline: Lines with bad spacing around parens
-    Given <File> exists without a newline at the end
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do |style|
+        style.max_code_lines_in_class = 5
+      end
+    end
+    """
+    And <File> exists without a newline at the end
     When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/
@@ -86,7 +91,16 @@ Feature: Vertical spacing
 
   @multi_line
   Scenario Outline: Methods with <= configured lines
-    Given <File> exists without a newline at the end
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do |style|
+        style.max_code_lines_in_method = 3
+        style.trailing_newlines = 0
+      end
+    end
+    """
+    And <File> exists without a newline at the end
     When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*0/
     And the exit status should be 0
@@ -100,7 +114,15 @@ Feature: Vertical spacing
 
   @multi_line
   Scenario Outline: Lines with bad spacing around parens
-    Given <File> exists without a newline at the end
+    Given my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set do |style|
+        style.max_code_lines_in_method = 3
+      end
+    end
+    """
+    And <File> exists without a newline at the end
     When I run `tailor -d -c .tailor <File>`
     Then the output should match /Total Problems.*<Problems>/
     And the output should match /position:  <Position>/

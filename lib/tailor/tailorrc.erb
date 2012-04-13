@@ -80,9 +80,9 @@
 #                         Default:      1
 #
 Tailor.config do |config|
-  config.formatters <%= formatters %>
-  config.file_set '<%= file_list %>' do
-    <% style.each do |rule, value| %><%= rule %> <%= value %>
+  config.formatters "<%= formatters.join(", ") %>"
+  config.file_set '<%= file_list %>' do |style|
+    <% style.each do |rule, value| %>style.<%= rule %> = <%= value %>
     <% end %>
   end
 end

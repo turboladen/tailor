@@ -1,3 +1,4 @@
+require 'ostruct'
 require_relative '../tailor'
 require_relative 'runtime_error'
 require_relative 'logger'
@@ -145,14 +146,18 @@ class Tailor
     def file_set(file_glob=DEFAULT_GLOB, label=:default, &block)
       log "file set label #{label}"
 
-      @temp_style = {}
-      instance_eval(&block) if block_given?
+      @temp_style = OpenStruct.new
+      yield(@temp_style) if block_given?
 
       log "file sets before: #{@file_sets}"
       if @file_sets[label]
         @file_sets[label][:file_list].concat file_list(file_glob)
         @file_sets[label][:file_list].uniq!
-        @file_sets[label][:style].merge! @temp_style
+        meths = @temp_style.methods(false).delete_if { |m| m =~ /=$/ }
+
+        meths.each do |meth|
+          @file_sets[label][:style][meth.to_sym] = @temp_style.send(meth.to_sym)
+        end
       else
         @file_sets[label] = {
           file_list: file_list(file_glob),
@@ -161,7 +166,7 @@ class Tailor
       end
       log "file sets after: #{@file_sets}"
 
-      @temp_style = {}
+      @temp_style = OpenStruct.new
     end
 
     # Implemented for {file_set}, this converts the config file lines that look
@@ -187,6 +192,7 @@ class Tailor
 
       if File.exists? user_config_file
         log "Loading config from file: #{user_config_file}"
+
         begin
           config = instance_eval File.read(user_config_file)
         rescue LoadError => ex

@@ -68,6 +68,7 @@ class Tailor
       log "Style: #{style}"
       init_rulers(style, lexer, ruler)
 
+      lexer.check_added_newline
       lexer.lex
       problems[file] = ruler.problems
 

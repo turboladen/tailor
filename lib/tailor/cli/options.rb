@@ -35,7 +35,7 @@ class Tailor
           opt.on('--create-config', 'Create a new .tailor file') do
             if create_config
               msg = "Your new tailor config file was created at "
-              msg << "#{Dir.pwd}."
+              msg << "#{Dir.pwd}/.tailor"
               $stdout.puts msg
               exit
             else
