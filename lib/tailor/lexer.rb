@@ -31,6 +31,11 @@ class Tailor
       @added_newline = @file_text != @original_file_text
     end
 
+    def lex
+      check_added_newline
+      super
+    end
+
     def check_added_newline
       file_changed
       notify_file_observers(count_trailing_newlines(@original_file_text))
