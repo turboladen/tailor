@@ -1,5 +1,6 @@
 === 1.0.0.alpha3
 
+* Fix for indentation checking on nested Hashes.
 * Fix for overriding default style in config files.
 * Fix to exit after --show-config.
 
