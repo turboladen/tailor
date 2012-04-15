@@ -1,6 +1,23 @@
 class Tailor
   class Configuration
     class Style
+
+      # Adds a style property to a Style object.  If you're planning on creating
+      # your own {Ruler}, you need to register the property here.
+      #
+      # Defines a method from +name+ that takes 2 parameters: +value+ and
+      # +options+.  +value+ is the value to use for the {Ruler} of the same +name+
+      # for checking style. +options+ can include anything that's necessary for
+      # style checking.  A +:level+ option key is used to determine the
+      # {Tailor::Problem} level:
+      # * +:fail+ results in a exit status of 1.
+      # * +:warn+ results in an exit status of 0, but gets printed in the
+      #   report.
+      #
+      # Example:
+      #   Tailor::Configuration::Style.define_property(:my_style_property)
+      #   style = Tailor::Configuration::Style.new
+      #   style.my_style_property(100, level: :warn)
       def self.define_property(name)
         define_method(name) do |value, options|
           instance_variable_set("@#{name}".to_sym, [value, options])
