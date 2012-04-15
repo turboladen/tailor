@@ -1,17 +1,14 @@
 require 'text-table'
 require 'pathname'
+require_relative '../formatter'
 
 class Tailor
-  module Formatter
-    class Text
+  module Formatters
+    class Text < Tailor::Formatter
       PROBLEM_LEVEL_COLORS = {
         error: :red,
         warn: :yellow
       }
-
-      def initialize
-        @pwd = Pathname(Dir.pwd)
-      end
 
       # @return [String] A line of "#-----", with length determined by +length+.
       def line(length=79)
@@ -137,8 +134,14 @@ class Tailor
           end
 
           summary_table.rows << :separator
-          summary_table.rows << ['TOTAL', problems.values.
-            map { |v| v.size }.inject(:+)]
+
+          problem_levels(problems).inject(summary_table.rows) do |result, level|
+            result << [level.capitalize,
+              problems_at_level(problems, level).size]
+          end
+
+          summary_table.rows << :separator
+          summary_table.rows << ['TOTAL', problems.values.flatten.size]
 
           puts summary_table
         end
