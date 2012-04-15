@@ -13,21 +13,17 @@ class Tailor
     include Tailor::Logger::Mixin
     include Tailor::Rulers
 
-    # @param [Hash] file_sets The file sets to critique.
-    def initialize(file_sets)
-      @file_sets = file_sets
-    end
-
     # The instance method that starts the process of looking for problems in
     # files.  It checks for problems in each file in each file set.  It yields
     # the problems found and the label they were found for.
     #
+    # @param [Hash] file_sets The file sets to critique.
     # @yieldparam [Hash] problems The problems found for the label.
     # @yieldparam [Symbol] label The label the problems were found for.
-    def critique
-      log "file sets keys: #{@file_sets.keys}"
+    def critique(file_sets)
+      log "file sets keys: #{file_sets.keys}"
 
-      @file_sets.each do |label, file_set|
+      file_sets.each do |label, file_set|
         log "Critiquing file_set: #{file_set}"
 
         file_set[:file_list].each do |file|
