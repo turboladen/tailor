@@ -1,13 +1,19 @@
 require 'text-table'
+require 'pathname'
 
 class Tailor
   module Formatter
     class Text
+      def initialize
+        @pwd = Pathname(Dir.pwd)
+      end
+
       def line(length=79)
         "##{'-' * length}\n"
       end
 
       def file_header(file)
+        file = Pathname(file)
         message = ""
         message << if defined? Term::ANSIColor
           "# #{'File:'.underscore}\n"
@@ -15,7 +21,7 @@ class Tailor
           "# File:\n"
         end
 
-        message << "#   #{file}\n"
+        message << "#   #{file.relative_path_from(@pwd)}\n"
         message << "#\n"
 
         message
@@ -111,7 +117,10 @@ class Tailor
           summary_table.rows << :separator
 
           problems.each do |file, problem_list|
-            summary_table.rows << [file, problem_list.size]
+            file = Pathname(file)
+            summary_table.rows << [
+              file.relative_path_from(@pwd), problem_list.size
+            ]
           end
 
           summary_table.rows << :separator
