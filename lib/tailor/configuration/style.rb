@@ -19,7 +19,8 @@ class Tailor
       #   style = Tailor::Configuration::Style.new
       #   style.my_style_property(100, level: :warn)
       def self.define_property(name)
-        define_method(name) do |value, options|
+        define_method(name) do |value, *options|
+          options = options.first || { level: :fail }
           instance_variable_set("@#{name}".to_sym, [value, options])
         end
       end

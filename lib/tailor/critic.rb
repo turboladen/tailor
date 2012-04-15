@@ -83,10 +83,17 @@ class Tailor
     # @param [Tailor::Ruler] parent_ruler The main Ruler to add the child
     #   Rulers to.
     def init_rulers(style, lexer, parent_ruler)
-      style.each do |ruler_name, value|
+      style.each do |ruler_name, value, options|
         ruler = "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler"
+
+        if options[:level] == false || options[:level] == :off
+          msg = "Style option set to '#{options[:level]}'; "
+          log msg << "skipping init of '#{ruler}'"
+          next
+        end
+
         log "Initializing ruler: #{ruler}"
-        ruler = instance_eval("#{ruler}.new(#{value})")
+        ruler = instance_eval("#{ruler}.new(#{value}, #{options})")
         parent_ruler.add_child_ruler(ruler)
 
         ruler.lexer_observers.each do |observer|

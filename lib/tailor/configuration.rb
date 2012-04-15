@@ -2,6 +2,7 @@ require 'ostruct'
 require_relative '../tailor'
 require_relative 'runtime_error'
 require_relative 'logger'
+require_relative 'configuration/style'
 
 class Tailor
 
@@ -18,27 +19,6 @@ class Tailor
     DEFAULT_GLOB = 'lib/**/*.rb'
     DEFAULT_RC_FILE = Dir.home + '/.tailorrc'
     DEFAULT_PROJECT_CONFIG = Dir.pwd + '/.tailor'
-    DEFAULT_STYLE = {
-      allow_camel_case_methods: false,
-      allow_hard_tabs: false,
-      allow_screaming_snake_case_classes: false,
-      allow_trailing_line_spaces: false,
-      indentation_spaces: 2,
-      max_code_lines_in_class: 300,
-      max_code_lines_in_method: 30,
-      max_line_length: 80,
-      spaces_after_comma: 1,
-      spaces_before_comma: 0,
-      spaces_before_lbrace: 1,
-      spaces_after_lbrace: 1,
-      spaces_before_rbrace: 1,
-      spaces_in_empty_braces: 0,
-      spaces_after_lbracket: 0,
-      spaces_before_rbracket: 0,
-      spaces_after_lparen: 0,
-      spaces_before_rparen: 0,
-      trailing_newlines: 1
-    }
 
     # @return [Hash]
     def self.default
@@ -54,11 +34,12 @@ class Tailor
     # @option options [Array] formatters
     # @option options [Hash] style
     def initialize(runtime_file_list=nil, options=nil)
+      @style = Style.new
       @formatters = ['text']
       @file_sets = {
         default: {
           file_list: file_list(DEFAULT_GLOB),
-          style: DEFAULT_STYLE
+          style: @style.to_hash
         }
       }
 
@@ -86,7 +67,7 @@ class Tailor
           unless @rc_file_config.file_sets.empty?
             @rc_file_config.file_sets.each do |label, file_set|
               unless @file_sets[label]
-                @file_sets[label] = { style: DEFAULT_STYLE }
+                @file_sets[label] = { style: @style }
               end
 
               @file_sets[label][:file_list].concat file_set[:file_list]
@@ -146,41 +127,22 @@ class Tailor
     def file_set(file_glob=DEFAULT_GLOB, label=:default, &block)
       log "file set label #{label}"
 
-      @temp_style = OpenStruct.new
-      yield(@temp_style) if block_given?
+      new_style = Style.new
+      yield new_style if block_given?
 
       log "file sets before: #{@file_sets}"
       if @file_sets[label]
         @file_sets[label][:file_list].concat file_list(file_glob)
         @file_sets[label][:file_list].uniq!
-        meths = @temp_style.methods(false).delete_if { |m| m =~ /=$/ }
-
-        meths.each do |meth|
-          @file_sets[label][:style][meth.to_sym] = @temp_style.send(meth.to_sym)
-        end
+        @file_sets[label][:style] = new_style
       else
         @file_sets[label] = {
           file_list: file_list(file_glob),
-          style: DEFAULT_STYLE.merge(@temp_style)
+          style: @style.to_hash.merge(new_style)
         }
       end
+
       log "file sets after: #{@file_sets}"
-
-      @temp_style = OpenStruct.new
-    end
-
-    # Implemented for {file_set}, this converts the config file lines that look
-    # like methods into a Hash.
-    #
-    # @return [Hash] The new style as defined by the config file.
-    def method_missing(meth, *args, &blk)
-      ok_methods = DEFAULT_STYLE.keys
-
-      if ok_methods.include? meth
-        @temp_style[meth] = args.first
-      else
-        super(meth, args, blk)
-      end
     end
 
     # Tries to open the file at the path given at +config_file+ and read in
