@@ -1,6 +1,0 @@
-Tailor.config do |config|
-  config.formatters "text"
-  config.file_set 'lib/**/*.rb'
-  config.file_set 'spec/**/*.rb'
-  config.file_set 'features/**/*.rb'
-end
