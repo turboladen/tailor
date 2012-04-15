@@ -10,7 +10,7 @@ class Tailor
       # for checking style. +options+ can include anything that's necessary for
       # style checking.  A +:level+ option key is used to determine the
       # {Tailor::Problem} level:
-      # * +:fail+ results in a exit status of 1.
+      # * +:error+ results in a exit status of 1.
       # * +:warn+ results in an exit status of 0, but gets printed in the
       #   report.
       #
@@ -20,7 +20,7 @@ class Tailor
       #   style.my_style_property(100, level: :warn)
       def self.define_property(name)
         define_method(name) do |value, *options|
-          options = options.first || { level: :fail }
+          options = options.first || { level: :error }
           instance_variable_set("@#{name}".to_sym, [value, options])
         end
       end
@@ -47,25 +47,25 @@ class Tailor
 
       # Sets up default values.
       def initialize
-        allow_camel_case_methods(false, level: :fail)
-        allow_hard_tabs(false, level: :fail)
-        allow_screaming_snake_case_classes(false, level: :fail)
-        allow_trailing_line_spaces(false, level: :fail)
-        indentation_spaces(2, level: :fail)
-        max_code_lines_in_class(300, level: :fail)
-        max_code_lines_in_method(30, level: :fail)
-        max_line_length(80, level: :fail)
-        spaces_after_comma(1, level: :fail)
-        spaces_after_lbrace(1, level: :fail)
-        spaces_after_lbracket(0, level: :fail)
-        spaces_after_lparen(0, level: :fail)
-        spaces_before_comma(0, level: :fail)
-        spaces_before_lbrace(1, level: :fail)
-        spaces_before_rbrace(1, level: :fail)
-        spaces_before_rbracket(0, level: :fail)
-        spaces_before_rparen(0, level: :fail)
-        spaces_in_empty_braces(0, level: :fail)
-        trailing_newlines(1, level: :fail)
+        allow_camel_case_methods(false, level: :error)
+        allow_hard_tabs(false, level: :error)
+        allow_screaming_snake_case_classes(false, level: :error)
+        allow_trailing_line_spaces(false, level: :error)
+        indentation_spaces(2, level: :error)
+        max_code_lines_in_class(300, level: :error)
+        max_code_lines_in_method(30, level: :error)
+        max_line_length(80, level: :error)
+        spaces_after_comma(1, level: :error)
+        spaces_after_lbrace(1, level: :error)
+        spaces_after_lbracket(0, level: :error)
+        spaces_after_lparen(0, level: :error)
+        spaces_before_comma(0, level: :error)
+        spaces_before_lbrace(1, level: :error)
+        spaces_before_rbrace(1, level: :error)
+        spaces_before_rbracket(0, level: :error)
+        spaces_before_rparen(0, level: :error)
+        spaces_in_empty_braces(0, level: :error)
+        trailing_newlines(1, level: :error)
       end
 
       # Returns the current style as a Hash.
