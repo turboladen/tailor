@@ -30,9 +30,11 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on.
       def measure(actual_spaces, lineno, column)
         if actual_spaces != @config
-          @problems << Problem.new(:spaces_before_comma, lineno, column - 1,
-            @options[:level], { actual_spaces: actual_spaces,
-              should_have: @config })
+          msg = "Line has #{actual_spaces} space(s) before a comma, "
+          msg << "but should have #{@config}."
+
+          @problems << Problem.new(problem_type, lineno, column - 1, msg,
+            @options[:level])
         end
       end
 

@@ -46,7 +46,7 @@ class Tailor
       @options = options
       @do_measurement = true
       log "Ruler initialized with style setting: #{@config}"
-      log "Ruler initialized with problem level setting: #{@problem_level}"
+      log "Ruler initialized with problem level setting: #{@options[:level]}"
 
       @child_rulers = []
       @lexer_observers = []
@@ -70,6 +70,12 @@ class Tailor
     def measure(*args)
       raise RuntimeError,
         "Ruler#measure called, but should be redefined by a real ruler."
+    end
+
+    def problem_type
+      self.class.to_s =~ /^.+::(\S+)Ruler$/
+
+      $1
     end
 
     private

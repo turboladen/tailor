@@ -27,8 +27,10 @@ class Tailor
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
         if token.contains_capital_letter?
-          @problems << Problem.new(:camel_case_method, lineno, column,
-            @options[:level])
+          problem_message = "Camel-case method name found."
+
+          @problems << Problem.new(problem_type, lineno, column,
+            problem_message, @options[:level])
         end
       end
     end

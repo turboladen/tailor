@@ -28,8 +28,10 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on.
       def measure(token, lineno, column)
         if token.screaming_snake_case?
-          @problems << Problem.new(:screaming_snake_case_class_name,
-            lineno, column, @options[:level])
+          problem_message = "Screaming-snake-case class/module found."
+
+          @problems << Problem.new(problem_type, lineno, column,
+            problem_message, @options[:level])
         end
       end
     end

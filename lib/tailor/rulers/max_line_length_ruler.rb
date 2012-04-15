@@ -24,12 +24,11 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on
       def measure(lexed_line, lineno, column)
         if lexed_line.line_length > @config
-          problem_options = {
-            actual_length: lexed_line.line_length,
-            should_be_at: @config
-          }
-          @problems << Problem.new(:line_length, lineno, column,
-            @options[:level], problem_options)
+          msg = "Line is #{lexed_line.line_length} chars long, "
+          msg << "but should be #{@config}."
+
+          @problems << Problem.new(problem_type, lineno, column, msg,
+            @options[:level])
         end
       end
     end

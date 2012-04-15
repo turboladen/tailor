@@ -83,13 +83,16 @@ class Tailor
       # Checks to see if the counted spaces before an lbrace equals the value
       # at +@config+.
       #
-      # @param [Fixnum] count The number of spaces before the lbrace.
+      # @param [Fixnum] actual_spaces The number of spaces before the lbrace.
       # @param [Fixnum] lineno Line the potential problem is on.
       # @param [Fixnum] column Column the potential problem is on.
-      def measure(count, lineno, column)
-        if count != @config
-          @problems << Problem.new(:spaces_before_lbrace, lineno, column,
-            @options[:level], { actual_spaces: count, should_have: @config })
+      def measure(actual_spaces, lineno, column)
+        if actual_spaces != @config
+          msg = "Line has #{actual_spaces} space(s) before a {, "
+          msg << "but should have #{@config}."
+
+          @problems << Problem.new(problem_type, lineno, column, msg,
+            @options[:level])
         end
       end
     end

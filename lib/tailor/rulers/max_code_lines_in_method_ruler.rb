@@ -76,9 +76,11 @@ class Tailor
       # @param [Fixnum] column The column the potential problem is on.
       def measure(actual_count, lineno, column)
         if actual_count > @config
-          @problems << Problem.new(:code_lines_in_method, lineno, column,
-            @options[:level], { actual_count: actual_count,
-              should_be_at: @config })
+          msg = "Method has #{actual_count} code lines, but "
+          msg << "should have no more than #{@config}."
+
+          @problems << Problem.new(problem_type, lineno, column, msg,
+            @options[:level])
         end
       end
     end

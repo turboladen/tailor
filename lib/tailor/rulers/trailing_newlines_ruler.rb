@@ -18,11 +18,11 @@ class Tailor
         if trailing_newline_count != @config
           lineno = "<EOF>"
           column = "<EOF>"
-          @problems << Problem.new(:trailing_newlines, lineno, column,
-            @options[:level],
-            { actual_trailing_newlines: trailing_newline_count,
-              should_have: @config }
-          )
+          msg = "File has #{trailing_newline_count} trailing "
+          msg << "newlines, but should have #{@config}."
+
+          @problems << Problem.new(problem_type, lineno, column, msg,
+            @options[:level])
         end
       end
 
