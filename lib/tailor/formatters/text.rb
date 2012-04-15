@@ -65,7 +65,7 @@ class Tailor
           message << if defined? Term::ANSIColor
             %Q{#  #{(i + 1).to_s.bold}.
 #    * position:  #{position}
-#    * type:      #{problem[:type].to_s.red}
+#    * property:  #{problem[:type].to_s.red}
 #    * message:   #{problem[:message].red}
 }
           else
