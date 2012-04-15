@@ -5,6 +5,7 @@
 .yardoc/
 logic.txt
 output.txt
+test.rb
 
 .bundle/
 .idea/
