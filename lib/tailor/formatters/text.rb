@@ -4,14 +4,21 @@ require 'pathname'
 class Tailor
   module Formatter
     class Text
+      PROBLEM_LEVEL_COLORS = {
+        error: :red,
+        warn: :yellow
+      }
+
       def initialize
         @pwd = Pathname(Dir.pwd)
       end
 
+      # @return [String] A line of "#-----", with length determined by +length+.
       def line(length=79)
         "##{'-' * length}\n"
       end
 
+      # @return [String] The portion of the header that displays the file info.
       def file_header(file)
         file = Pathname(file)
         message = ""
@@ -27,6 +34,8 @@ class Tailor
         message
       end
 
+      # @return [String] The portion of the header that displays the file_set
+      #   label info.
       def file_set_header(file_set)
         message = ""
         message << if defined? Term::ANSIColor
@@ -41,6 +50,8 @@ class Tailor
         message
       end
 
+      # @return [String] The portion of the report that displays all of the
+      #   problems for the file.
       def problems_header(problem_list)
         message = ""
         message << if defined? Term::ANSIColor
@@ -50,12 +61,14 @@ class Tailor
         end
 
         problem_list.each_with_index do |problem, i|
+          color = PROBLEM_LEVEL_COLORS[problem[:level]] || :white
+
           position = if problem[:line] == '<EOF>'
             '<EOF>'
           else
             if defined? Term::ANSIColor
-              msg = "#{problem[:line].to_s.red.bold}:"
-              msg << "#{problem[:column].to_s.red.bold}"
+              msg = "#{problem[:line].to_s.send(color).bold}:"
+              msg << "#{problem[:column].to_s.send(color).bold}"
               msg
             else
               "#{problem[:line]}:#{problem[:column]}"
@@ -65,8 +78,8 @@ class Tailor
           message << if defined? Term::ANSIColor
             %Q{#  #{(i + 1).to_s.bold}.
 #    * position:  #{position}
-#    * property:  #{problem[:type].to_s.red}
-#    * message:   #{problem[:message].red}
+#    * property:  #{problem[:type].to_s.send(color)}
+#    * message:   #{problem[:message].send(color)}
 }
           else
             %Q{#  #{(i + 1)}.
