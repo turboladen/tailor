@@ -28,7 +28,7 @@ class Tailor
         exit
       end
 
-      @critic = Critic.new(@configuration.file_sets)
+      @critic = Critic.new
       @reporter = Reporter.new(@configuration.formatters)
     end
 
@@ -38,7 +38,7 @@ class Tailor
     # @return [Boolean] +true+ if no problems were detected; false if there
     #   were.
     def execute!
-      @critic.critique do |problems_for_file, label|
+      @critic.critique(@configuration.file_sets) do |problems_for_file, label|
         @reporter.file_report(problems_for_file, label)
       end
 

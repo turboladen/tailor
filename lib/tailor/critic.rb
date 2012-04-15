@@ -55,8 +55,6 @@ class Tailor
       problems.values.flatten.size
     end
 
-    private
-
     # Adds problems found from Lexing to the {problems} list.
     #
     # @param [String] file The file to open, read, and check.
@@ -74,6 +72,8 @@ class Tailor
 
       { file => problems[file] }
     end
+
+    private
 
     # Creates Rulers for each ruler given in +style+ and adds the Ruler's
     # defined observers to the given +lexer+.
