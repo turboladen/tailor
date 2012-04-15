@@ -32,7 +32,11 @@ class Tailor
     end
 
     def lex
+      file_beg_changed
+      notify_file_beg_observers(@file_name)
+
       super
+
       file_end_changed
       notify_file_end_observers(count_trailing_newlines(@original_file_text))
     end

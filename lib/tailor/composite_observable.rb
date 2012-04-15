@@ -37,6 +37,7 @@ class Tailor
     define_observer :const
     define_observer :embexpr_beg
     define_observer :embexpr_end
+    define_observer :file_beg
     define_observer :file_end
     define_observer :ident
     define_observer :ignored_nl
