@@ -10,11 +10,12 @@ class Tailor
 
     # @param [Symbol] type The problem type.
     # @param [Binding] binding The context that the problem was discovered in.
-    def initialize(type, line, column, options={})
+    def initialize(type, line, column, level, options={})
       @type = type
       @line = line
       @column = column
       @options = options
+      @level = level
       set_values
       subclass_name = self.class.to_s.sub(/^Tailor::/, '')
       msg = "<#{subclass_name}> #{self[:line]}[#{self[:column]}]: "
@@ -28,6 +29,7 @@ class Tailor
       self[:line] = @line
       self[:column] = @column
       self[:message] = message(@type)
+      self[:level] = @level
     end
 
     # Builds the message for the problem type, based on the info provided in

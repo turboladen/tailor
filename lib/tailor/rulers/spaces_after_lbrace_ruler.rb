@@ -9,8 +9,8 @@ class Tailor
     # * the next char is a '}'
     # * it's at the end of a line, followed by a trailing comment.
     class SpacesAfterLbraceRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :comment, :ignored_nl, :lbrace, :nl
         @lbrace_columns = []
       end
@@ -43,7 +43,8 @@ class Tailor
       def measure(actual_spaces, lineno, column)
         if actual_spaces != @config
           @problems << Problem.new(:spaces_after_lbrace, lineno, column + 1,
-            { actual_spaces: actual_spaces, should_have: @config })
+            @options[:level], { actual_spaces: actual_spaces,
+              should_have: @config })
         end
       end
 

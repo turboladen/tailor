@@ -6,8 +6,8 @@ class Tailor
     # Checks for spaces that exist between a '{' and '}' when there is only
     # space in between them.
     class SpacesInEmptyBracesRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :embexpr_beg, :lbrace, :rbrace
         @lbrace_nesting = []
       end
@@ -61,7 +61,7 @@ class Tailor
       def measure(count, lineno, column)
         if count != @config
           @problems << Problem.new(:spaces_in_empty_braces, lineno, column,
-            { actual_spaces: count, should_have: @config })
+            @options[:level], { actual_spaces: count, should_have: @config })
         end
       end
 

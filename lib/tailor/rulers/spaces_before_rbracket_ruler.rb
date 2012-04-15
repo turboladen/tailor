@@ -9,8 +9,8 @@ class Tailor
     # * it's directly preceded by a '['.
     # * it's directly preceded by spaces, then a '['.
     class SpacesBeforeRbracketRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :rbracket
       end
 
@@ -46,7 +46,7 @@ class Tailor
       def measure(count, lineno, column)
         if count != @config
           @problems << Problem.new(:spaces_before_rbracket, lineno, column,
-            { actual_spaces: count, should_have: @config })
+            @options[:level], { actual_spaces: count, should_have: @config })
         end
       end
 

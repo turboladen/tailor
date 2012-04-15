@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class SpacesAfterLparenRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :comment, :ignored_nl, :lparen, :nl
         @lparen_columns = []
       end
@@ -37,7 +37,8 @@ class Tailor
       def measure(actual_spaces, lineno, column)
         if actual_spaces != @config
           @problems << Problem.new(:spaces_after_lparen, lineno, column + 1,
-            { actual_spaces: actual_spaces, should_have: @config })
+            @options[:level], { actual_spaces: actual_spaces,
+              should_have: @config })
         end
       end
 

@@ -4,8 +4,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class TrailingNewlinesRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :file_end
       end
 
@@ -19,6 +19,7 @@ class Tailor
           lineno = "<EOF>"
           column = "<EOF>"
           @problems << Problem.new(:trailing_newlines, lineno, column,
+            @options[:level],
             { actual_trailing_newlines: trailing_newline_count,
               should_have: @config }
           )

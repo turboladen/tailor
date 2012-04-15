@@ -13,9 +13,9 @@ class Tailor
     include Tailor::Logger::Mixin
     include Tailor::Rulers
 
-    # @param [Hash] configuration The file sets to critique.
-    def initialize(configuration)
-      @file_sets = configuration
+    # @param [Hash] file_sets The file sets to critique.
+    def initialize(file_sets)
+      @file_sets = file_sets
     end
 
     # The instance method that starts the process of looking for problems in
@@ -65,7 +65,8 @@ class Tailor
       log "<#{self.class}> Checking style of file: #{file}."
       lexer = Tailor::Lexer.new(file)
       ruler = Ruler.new
-      log "Style: #{style}"
+      log "Style:"
+      style.each { |property, values| log "#{property}: #{values}" }
       init_rulers(style, lexer, ruler)
 
       lexer.lex
@@ -83,17 +84,17 @@ class Tailor
     # @param [Tailor::Ruler] parent_ruler The main Ruler to add the child
     #   Rulers to.
     def init_rulers(style, lexer, parent_ruler)
-      style.each do |ruler_name, value, options|
+      style.each do |ruler_name, values|
         ruler = "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler"
 
-        if options[:level] == false || options[:level] == :off
-          msg = "Style option set to '#{options[:level]}'; "
+        if values.last[:level] == false || values.last[:level] == :off
+          msg = "Style option set to '#{values.last[:level]}'; "
           log msg << "skipping init of '#{ruler}'"
           next
         end
 
         log "Initializing ruler: #{ruler}"
-        ruler = instance_eval("#{ruler}.new(#{value}, #{options})")
+        ruler = instance_eval("#{ruler}.new(#{values.first}, #{values.last})")
         parent_ruler.add_child_ruler(ruler)
 
         ruler.lexer_observers.each do |observer|

@@ -6,8 +6,8 @@ class Tailor
     class MaxCodeLinesInMethodRuler < Tailor::Ruler
       include LexerConstants
 
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers(:ignored_nl, :kw, :nl)
         @method_start_lines = []
         @kw_start_lines = []
@@ -77,7 +77,8 @@ class Tailor
       def measure(actual_count, lineno, column)
         if actual_count > @config
           @problems << Problem.new(:code_lines_in_method, lineno, column,
-            { actual_count: actual_count, should_be_at: @config })
+            @options[:level], { actual_count: actual_count,
+              should_be_at: @config })
         end
       end
     end

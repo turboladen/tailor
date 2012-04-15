@@ -11,8 +11,8 @@ class Tailor
     # * the char before it is a '['.
     # * it's only preceded by spaces.
     class SpacesBeforeLbraceRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :lbrace
       end
 
@@ -89,7 +89,7 @@ class Tailor
       def measure(count, lineno, column)
         if count != @config
           @problems << Problem.new(:spaces_before_lbrace, lineno, column,
-            { actual_spaces: count, should_have: @config })
+            @options[:level], { actual_spaces: count, should_have: @config })
         end
       end
     end

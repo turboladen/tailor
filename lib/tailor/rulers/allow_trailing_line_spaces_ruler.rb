@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowTrailingLineSpacesRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :ignored_nl, :nl
       end
 
@@ -26,11 +26,12 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on.
       def measure(lexed_line, lineno, column)
         if lexed_line.ends_with_sp?
-          options = {
+          problem_options = {
             actual_trailing_spaces:
               lexed_line.last_non_line_feed_event.last.size
           }
-          @problems << Problem.new(:trailing_spaces, lineno, column, options)
+          @problems << Problem.new(:trailing_spaces, lineno, column,
+            @options[:level], problem_options)
         end
       end
     end

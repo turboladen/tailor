@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowCamelCaseMethodsRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(style, options)
+        super(style, options)
         add_lexer_observers :ident
       end
 
@@ -27,7 +27,8 @@ class Tailor
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
         if token.contains_capital_letter?
-          @problems << Problem.new(:camel_case_method, lineno, column)
+          @problems << Problem.new(:camel_case_method, lineno, column,
+            @options[:level])
         end
       end
     end

@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowHardTabsRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :sp
       end
 
@@ -19,7 +19,7 @@ class Tailor
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
         if token.contains_hard_tab?
-          @problems << Problem.new(:hard_tab, lineno, column)
+          @problems << Problem.new(:hard_tab, lineno, column, @options[:level])
         end
       end
     end

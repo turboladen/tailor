@@ -39,14 +39,18 @@ class Tailor
     include Tailor::Logger::Mixin
 
     attr_reader :lexer_observers
+    attr_reader :level
 
-    def initialize(config={})
+    def initialize(config={}, options={ level: :fail })
       @config = config
-      @problems = []
-      @child_rulers = []
+      @options = options
       @do_measurement = true
-      @lexer_observers = []
       log "Ruler initialized with style setting: #{@config}"
+      log "Ruler initialized with problem level setting: #{@problem_level}"
+
+      @child_rulers = []
+      @lexer_observers = []
+      @problems = []
     end
 
     def add_child_ruler(ruler)

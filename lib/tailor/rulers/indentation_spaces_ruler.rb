@@ -6,8 +6,8 @@ require_relative 'indentation_spaces_ruler/indentation_manager'
 class Tailor
   module Rulers
     class IndentationSpacesRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers(
           :comment,
           :embexpr_beg,
@@ -232,7 +232,7 @@ class Tailor
 
         if @manager.actual_indentation != @manager.should_be_at
           @problems << Problem.new(:indentation, lineno, column,
-            { actual_indentation: @manager.actual_indentation,
+            @options[:level], { actual_indentation: @manager.actual_indentation,
               should_be_at: @manager.should_be_at }
           )
         end

@@ -48,8 +48,8 @@ Feature: Vertical spacing
     """
     Tailor.config do |config|
       config.file_set do |style|
-        style.max_code_lines_in_class = 5
-        style.trailing_newlines = 0
+        style.max_code_lines_in_class 5
+        style.trailing_newlines 0
       end
     end
     """
@@ -71,7 +71,7 @@ Feature: Vertical spacing
     """
     Tailor.config do |config|
       config.file_set do |style|
-        style.max_code_lines_in_class = 5
+        style.max_code_lines_in_class 5
       end
     end
     """
@@ -95,8 +95,8 @@ Feature: Vertical spacing
     """
     Tailor.config do |config|
       config.file_set do |style|
-        style.max_code_lines_in_method = 3
-        style.trailing_newlines = 0
+        style.max_code_lines_in_method 3
+        style.trailing_newlines 0
       end
     end
     """
@@ -118,7 +118,7 @@ Feature: Vertical spacing
     """
     Tailor.config do |config|
       config.file_set do |style|
-        style.max_code_lines_in_method = 3
+        style.max_code_lines_in_method 3
       end
     end
     """

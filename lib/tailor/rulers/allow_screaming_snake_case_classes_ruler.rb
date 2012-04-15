@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class AllowScreamingSnakeCaseClassesRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :const
       end
 
@@ -29,7 +29,7 @@ class Tailor
       def measure(token, lineno, column)
         if token.screaming_snake_case?
           @problems << Problem.new(:screaming_snake_case_class_name,
-            lineno, column)
+            lineno, column, @options[:level])
         end
       end
     end

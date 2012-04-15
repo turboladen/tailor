@@ -9,7 +9,7 @@ Feature: Indentation check
     """
     Tailor.config do |config|
       config.file_set do |style|
-        style.trailing_newlines = 0
+        style.trailing_newlines 0
       end
     end
     """

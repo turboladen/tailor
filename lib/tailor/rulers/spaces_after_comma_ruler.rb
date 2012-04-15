@@ -8,8 +8,8 @@ class Tailor
     # * the char after it is a '\n'.
     # * it's at the end of a line, followed by a trailing comment.
     class SpacesAfterCommaRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :comma, :comment, :ignored_nl, :nl
         @comma_columns = []
       end
@@ -42,7 +42,8 @@ class Tailor
       def measure(actual_spaces, lineno, column)
         if actual_spaces != @config
           @problems << Problem.new(:spaces_after_comma, lineno, column + 1,
-            { actual_spaces: actual_spaces, should_have: @config })
+            @options[:level], { actual_spaces: actual_spaces,
+              should_have: @config })
         end
       end
 

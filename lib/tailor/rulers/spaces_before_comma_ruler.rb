@@ -5,8 +5,8 @@ class Tailor
 
     # Checks for spaces before a ',' as given by +@config+.
     class SpacesBeforeCommaRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :comma, :comment, :ignored_nl, :nl
         @comma_columns = []
       end
@@ -31,7 +31,8 @@ class Tailor
       def measure(actual_spaces, lineno, column)
         if actual_spaces != @config
           @problems << Problem.new(:spaces_before_comma, lineno, column - 1,
-            { actual_spaces: actual_spaces, should_have: @config })
+            @options[:level], { actual_spaces: actual_spaces,
+              should_have: @config })
         end
       end
 

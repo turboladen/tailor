@@ -3,8 +3,8 @@ require_relative '../ruler'
 class Tailor
   module Rulers
     class MaxLineLengthRuler < Tailor::Ruler
-      def initialize(config)
-        super(config)
+      def initialize(config, options)
+        super(config, options)
         add_lexer_observers :ignored_nl, :nl
       end
 
@@ -24,11 +24,12 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on
       def measure(lexed_line, lineno, column)
         if lexed_line.line_length > @config
-          options = {
+          problem_options = {
             actual_length: lexed_line.line_length,
             should_be_at: @config
           }
-          @problems << Problem.new(:line_length, lineno, column, options)
+          @problems << Problem.new(:line_length, lineno, column,
+            @options[:level], problem_options)
         end
       end
     end
