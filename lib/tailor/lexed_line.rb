@@ -4,6 +4,9 @@ require_relative 'lexer/token'
 require 'ripper'
 
 class Tailor
+
+  # This class provides methods for finding info about the current line.  It
+  # works off the format that results from {Tailor::Lexer}.
   class LexedLine < Array
     include LexerConstants
 
