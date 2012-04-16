@@ -6,8 +6,8 @@ require_relative 'reporter'
 
 class Tailor
 
-  # The Command-Line Interface worker.  Execution from the command line should
-  # come through here.
+  # The Command-Line Interface worker.  Execution from the command line
+  # comes through here.
   class CLI
     include LogSwitch::Mixin
 
@@ -34,7 +34,7 @@ class Tailor
     end
 
     # This checks all of the files detected during the configuration gathering
-    # process, then hands results over to the {Reporter} to be reported.
+    # process, then hands results over to the {Tailor::Reporter} to be reported.
     #
     # @return [Boolean] +true+ if no problems were detected; false if there
     #   were.

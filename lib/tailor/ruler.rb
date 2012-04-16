@@ -7,9 +7,9 @@ class Tailor
 
   # This is a composite class, geared for getting at or managing the Rulers
   # that should be used for measuring style.  To do so, create a new object of
-  # this type, then add child rulers to that object using #add_child_ruler.
+  # this type, then add child rulers to that object using +#add_child_ruler+.
   # After using the Ruler, you'll have access to all of the problems found by
-  # all of the child rulers via #problems.
+  # all of the child rulers via +#problems+.
   #
   # Example:
   #   ruler = Ruler.new
@@ -33,7 +33,7 @@ class Tailor
   # Example:
   #   class MyRuler < Tailor::Ruler
   #     def initialize
-  #       @lexer_observers = [:nl_observer, :kw_observer]
+  #       add_lexer_observers = :nl_observer, :kw_observer
   #     end
   #   end
   class Ruler

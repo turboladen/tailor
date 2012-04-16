@@ -3,7 +3,7 @@ require_relative '../ruler'
 class Tailor
   module Rulers
 
-    # Checks for spaces before a '}' as given by +@config+.  It skips checking
+    # Checks for spaces before a +}+ as given by +@config+.  It skips checking
     # when:
     # * it's the first char in the line.
     # * it's the first char in the line, preceded by spaces.

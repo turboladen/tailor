@@ -3,7 +3,7 @@ require_relative '../ruler'
 class Tailor
   module Rulers
 
-    # Checks for spaces that exist between a '{' and '}' when there is only
+    # Checks for spaces that exist between a +{+ and +}+ when there is only
     # space in between them.
     class SpacesInEmptyBracesRuler < Tailor::Ruler
       def initialize(config, options)
@@ -69,7 +69,7 @@ class Tailor
       end
 
       # This has to keep track of '{'s and only follow through with the check
-      # if the '{' was an lbrace because Ripper doesn't scan the '}' of an
+      # if the +{+ was an lbrace because Ripper doesn't scan the +}+ of an
       # embedded expression (embexpr_end) as such.
       #
       # @param [Tailor::LexedLine] lexed_line

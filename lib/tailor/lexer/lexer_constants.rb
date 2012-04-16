@@ -4,8 +4,8 @@ class Tailor
 
   # These are important tokens that key certain styling events.  They are taken
   # from:
-  # https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
-  # https://github.com/ruby/ruby/blob/trunk/parse.y
+  # * https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
+  # * https://github.com/ruby/ruby/blob/trunk/parse.y
   module LexerConstants
     KEYWORDS_TO_INDENT = Set.new [
       'begin',

@@ -197,7 +197,7 @@ class Tailor
     end
 
     # If a trailing comment exists in the line, remove it and the spaces that
-    # come before it.  This is necessary, as {Ripper} doesn't trigger an event
+    # come before it.  This is necessary, as +Ripper+ doesn't trigger an event
     # for the end of the line when the line ends with a comment.  Without this
     # observers that key off ending the line will never get triggered, and thus
     # style won't get checked for that line.

@@ -5,7 +5,12 @@ class Tailor
   # defined here.
   module CompositeObservable
 
-    # Defines three methods that provide for observing a {Tailor::Lexer} object.
+    # Defines three instance methods that provide for observing a
+    # {Tailor::Lexer} object.  If +name+ was passed "test":
+    #
+    # * +#add_test_observer+
+    # * +#test_update+
+    # * +#notify_test_observers+
     #
     # @param [String] name The name of event to observe/subscribe to.
     def self.define_observer(name)

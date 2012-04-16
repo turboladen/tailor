@@ -51,7 +51,7 @@ class Tailor
       problems.values.flatten.size
     end
 
-    # Adds problems found from Lexing to the {problems} list.
+    # Adds problems found from Lexing to the +#problems+ list.
     #
     # @param [String] file The file to open, read, and check.
     # @return [Hash] The Problems for that file.
@@ -83,6 +83,7 @@ class Tailor
       style.each do |ruler_name, values|
         ruler = "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler"
 
+        #if values.last[:level] == false || values.last[:level] == :off
         if values.last[:level] == false || values.last[:level] == :off
           msg = "Style option set to '#{values.last[:level]}'; "
           log msg << "skipping init of '#{ruler}'"

@@ -8,7 +8,7 @@ require_relative 'lexer/token'
 
 class Tailor
 
-  # This is what provides the main file parsing for Tailor.  For every event
+  # This is what provides the main file parsing for tailor.  For every event
   # that's encountered, it calls the appropriate notifier method.  Notifier
   # methods are provided by {Tailor::CompositeObservable}.
   class Lexer < Ripper::Lexer
@@ -269,7 +269,7 @@ class Tailor
     end
 
     # Called when the lexer matches a {.  Note a #{ match calls
-    # {on_embexpr_beg}.
+    # +#on_embexpr_beg+.
     #
     # @param [String] token The token that the lexer matched.
     def on_lbrace(token)

@@ -3,8 +3,8 @@ require_relative 'runtime_error'
 
 class Tailor
 
-  # A Hashed data structure that abstracts out data (especially the error
-  # message) to build reports from.
+  # A Hashed data structure that simply defines the data needed to report a
+  # problem
   class Problem < Hash
     include LogSwitch::Mixin
 

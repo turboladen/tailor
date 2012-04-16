@@ -4,10 +4,14 @@ require_relative '../logger'
 
 class Tailor
   class Lexer < ::Ripper::Lexer
+
+    # Helper methods for tokens that are parsed by {Tailor::Lexer}.
     class Token < String
       include LexerConstants
       include Tailor::Logger::Mixin
 
+      # @param [String] the_token
+      # @param [Hash] options
       def initialize(the_token, options={})
         super(the_token)
         @options = options
