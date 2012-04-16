@@ -1,5 +1,13 @@
 class Tailor
+
+  # Used by {Tailor::Lexer} to provide publishing methods for observers.
+  # Any Ruler that wants to subscribe to Lexer events must use the methods
+  # defined here.
   module CompositeObservable
+
+    # Defines three methods that provide for observing a {Tailor::Lexer} object.
+    #
+    # @param [String] name The name of event to observe/subscribe to.
     def self.define_observer(name)
       define_method("add_#{name}_observer") do |observer|
         @notifiers = {} unless defined? @notifiers
