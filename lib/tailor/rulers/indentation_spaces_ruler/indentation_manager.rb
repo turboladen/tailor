@@ -294,8 +294,14 @@ class Tailor
           end
         end
 
-        def remove_appropriate_reason(event_type)
-          if last_opening_event = last_opening_event(event_type)
+        # Removes the last matching opening reason reason of +event_type+ from
+        # the list of indent reasons.
+        #
+        # @param [Symbol] closing_event_type The closing event for which to find
+        #   the matching opening event to remove from the list of indent
+        #   reasons.
+        def remove_appropriate_reason(closing_event_type)
+          if last_opening_event = last_opening_event(closing_event_type)
             r_index = @indent_reasons.reverse.index(last_opening_event)
             index = @indent_reasons.size - r_index - 1
             tmp_reasons = []
@@ -316,6 +322,12 @@ class Tailor
           @indent_reasons.each { |r| log r.to_s }
         end
 
+        # A "single-token" event is one that that causes indentation
+        # expectations to increase. They don't have have a paired closing
+        # reason like opening reasons.  Instead, they're determined to be done
+        # with their indenting when an :on_ignored_nl occurs.  Single-token
+        # events are operators and commas (commas that aren't used as
+        # separators in {, [, ( events).
         def last_single_token_event
           return nil if @indent_reasons.empty?
 
