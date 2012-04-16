@@ -18,7 +18,7 @@ class Tailor
       # Redefine this for your formatter...
     end
 
-    # @param [Array] problems
+    # @param [Hash<Array>] problems
     # @param [Symbol] level The level of problem to find.
     # @return [Array] Problem list at the given level.
     def problems_at_level(problems, level)
