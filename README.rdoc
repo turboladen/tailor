@@ -116,9 +116,9 @@ are > 100 chars (instead of the default of 80):
 
   $ tailor --max-line-length 100 lib/
 
-If you want to simply disable a ruler, just pass +false+ to the option:
+If you want to simply disable a ruler, just pass +off+ to the option:
 
-  $ tailor --max-line-length false lib/
+  $ tailor --max-line-length off lib/
 
 ==== Configuration File
 
@@ -183,6 +183,17 @@ rulers caused the problem to be found.
       # All other rulers will use default values
     end
   end
+
+Similarly to the CLI, if you want to turn off a default Ruler, set its problem
+level to +:off+:
+
+  # .tailor
+  Tailor.config do |config|
+    config.file_set 'lib/**/*.rb do |style|
+      style.indentation_spaces 2, level: :off
+    end
+  end
+
 
 === Define A Custom Ruler
 

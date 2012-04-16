@@ -92,7 +92,15 @@ class Tailor
       end
 
       # Get style overrides from CLI options
-      @file_sets[:default][:style].merge!(@options.style)
+      if @options.style
+        @options.style.each do |property, value|
+          if value == :off || value == "off"
+            @file_sets[:default][:style][property][1] = { level: :off }
+          else
+            @file_sets[:default][:style][property][0] = value
+          end
+        end
+      end
 
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
@@ -125,16 +133,22 @@ class Tailor
     #   can be a file, directory, or a glob.
     # @param [Symbol] label The label that represents the file set.
     def file_set(file_glob=DEFAULT_GLOB, label=:default)
+      log "file sets before: #{@file_sets}"
       log "file set label #{label}"
 
       new_style = Style.new
-      yield new_style if block_given?
-      log "file sets before: #{@file_sets}"
+
+      if block_given?
+        yield new_style
+
+        if @file_sets[label]
+          @file_sets[label][:style].merge! new_style
+        end
+      end
 
       if @file_sets[label]
         @file_sets[label][:file_list].concat file_list(file_glob)
         @file_sets[label][:file_list].uniq!
-        @file_sets[label][:style] = new_style
       else
         @file_sets[label] = {
           file_list: file_list(file_glob),
