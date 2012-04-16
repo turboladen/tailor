@@ -1,6 +1,7 @@
 require_relative 'logger'
 require_relative 'problem'
 require_relative 'runtime_error'
+require_relative '../ext/string_ext'
 
 class Tailor
 
@@ -74,8 +75,7 @@ class Tailor
 
     def problem_type
       self.class.to_s =~ /^.+::(\S+)Ruler$/
-
-      $1
+      $1.underscore
     end
 
     private
