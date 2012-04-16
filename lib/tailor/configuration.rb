@@ -1,7 +1,6 @@
-require 'ostruct'
 require_relative '../tailor'
-require_relative 'runtime_error'
 require_relative 'logger'
+require_relative 'runtime_error'
 require_relative 'configuration/style'
 
 class Tailor
@@ -98,7 +97,6 @@ class Tailor
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
       end
-
     end
 
     # @return [String] Name of the config file to use.
@@ -121,16 +119,18 @@ class Tailor
       @formatters
     end
 
+    # Adds a file set to the list of file sets in the Configuration object.
+    #
     # @param [String] file_glob The String that represents the file set.  This
     #   can be a file, directory, or a glob.
     # @param [Symbol] label The label that represents the file set.
-    def file_set(file_glob=DEFAULT_GLOB, label=:default, &block)
+    def file_set(file_glob=DEFAULT_GLOB, label=:default)
       log "file set label #{label}"
 
       new_style = Style.new
       yield new_style if block_given?
-
       log "file sets before: #{@file_sets}"
+
       if @file_sets[label]
         @file_sets[label][:file_list].concat file_list(file_glob)
         @file_sets[label][:file_list].uniq!
