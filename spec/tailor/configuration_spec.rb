@@ -30,34 +30,34 @@ describe Tailor::Configuration do
     end
     
     it "adds the set of stuff to @file_sets" do
-      subject.file_set(:bobo) do
-        trailing_newlines 2
+      subject.file_set('some_files', :bobo) do |style|
+        style.trailing_newlines 2
       end
 
       subject.instance_variable_get(:@file_sets).should == {
-        bobo: {
-          file_list: [],
-          style: {
-            :allow_camel_case_methods=>false,
-            :allow_hard_tabs=>false,
-            :allow_screaming_snake_case_classes=>false,
-            :allow_trailing_line_spaces=>false,
-            :indentation_spaces=>2,
-            :max_code_lines_in_class=>300,
-            :max_code_lines_in_method=>30,
-            :max_line_length=>80,
-            :spaces_after_comma=>1,
-            :spaces_before_comma=>0,
-            :spaces_before_lbrace=>1,
-            :spaces_after_lbrace=>1,
-            :spaces_before_rbrace=>1,
-            :spaces_in_empty_braces=>0,
-            :spaces_after_lbracket=>0,
-            :spaces_before_rbracket=>0,
-            :spaces_after_lparen=>0,
-            :spaces_before_rparen=>0,
-            :trailing_newlines=>2
-          }
+        :bobo => {
+          :file_list => [],
+          :style => {
+            :allow_camel_case_methods=>[false, {:level=>:error}],
+            :allow_hard_tabs=>[false, {:level=>:error}],
+            :allow_screaming_snake_case_classes=>[false, {:level=>:error}],
+            :allow_trailing_line_spaces=>[false, {:level=>:error}],
+            :allow_invalid_ruby=>[false, {:level=>:warn}],
+            :indentation_spaces=>[2, {:level=>:error}],
+            :max_code_lines_in_class=>[300, {:level=>:error}],
+            :max_code_lines_in_method=>[30, {:level=>:error}],
+            :max_line_length=>[80, {:level=>:error}],
+            :spaces_after_comma=>[1, {:level=>:error}],
+            :spaces_after_lbrace=>[1, {:level=>:error}],
+            :spaces_after_lbracket=>[0, {:level=>:error}],
+            :spaces_after_lparen=>[0, {:level=>:error}],
+            :spaces_before_comma=>[0, {:level=>:error}],
+            :spaces_before_lbrace=>[1, {:level=>:error}],
+            :spaces_before_rbrace=>[1, {:level=>:error}],
+            :spaces_before_rbracket=>[0, {:level=>:error}],
+            :spaces_before_rparen=>[0, {:level=>:error}],
+            :spaces_in_empty_braces=>[0, {:level=>:error}],
+            :trailing_newlines=>[2, {:level=>:error}]}
         }
       }
     end
@@ -80,10 +80,27 @@ describe Tailor::Configuration do
     end
     
     context "@config_file is nil" do
-      it "returns DEFAULT_RC_FILE" do
-        subject.config_file
-        subject.instance_variable_get(:@config_file).should ==
-          Tailor::Configuration::DEFAULT_RC_FILE
+      context "DEFAULT_PROJECT_CONFIG exists" do
+        before do
+          File.should_receive(:exists?).with(/\.tailor/).and_return true
+        end
+
+        it "returns Dir.pwd + './tailor'" do
+          subject.config_file
+        end
+      end
+
+      context "DEFAULT_PROJECT_CONFIG does not exist" do
+        before do
+          File.should_receive(:exists?).with(/\.tailor/).and_return false
+          File.should_receive(:exists?).with(/\.tailorrc/).and_return true
+        end
+
+        it "returns DEFAULT_RC_FILE" do
+          subject.config_file
+          subject.instance_variable_get(:@config_file).should ==
+            Tailor::Configuration::DEFAULT_RC_FILE
+        end
       end
     end
   end
