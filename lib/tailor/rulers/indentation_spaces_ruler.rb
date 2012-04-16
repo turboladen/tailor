@@ -95,7 +95,7 @@ class Tailor
 
       def kw_update(token, lexed_line, lineno, column)
         if token == "end"
-          @manager.update_for_closing_reason(:on_kw, lexed_line, lineno)
+          @manager.update_for_closing_reason(:on_kw, lexed_line)
           return
         end
 
@@ -139,7 +139,7 @@ class Tailor
           log "I think this is a single-token closing line..."
 
           @manager.update_for_closing_reason(@manager.indent_reasons.last[:event_type],
-            current_lexed_line, lineno)
+            current_lexed_line)
         end
 
         @manager.set_up_line_transition
@@ -180,7 +180,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rbrace, current_lexed_line, lineno)
+        @manager.update_for_closing_reason(:on_rbrace, current_lexed_line)
       end
 
       def rbracket_update(current_lexed_line, lineno, column)
@@ -193,7 +193,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rbracket, current_lexed_line, lineno)
+        @manager.update_for_closing_reason(:on_rbracket, current_lexed_line)
       end
 
       def rparen_update(current_lexed_line, lineno, column)
@@ -206,7 +206,7 @@ class Tailor
           end
         end
 
-        @manager.update_for_closing_reason(:on_rparen, current_lexed_line, lineno)
+        @manager.update_for_closing_reason(:on_rparen, current_lexed_line)
       end
 
       def tstring_beg_update(lineno)

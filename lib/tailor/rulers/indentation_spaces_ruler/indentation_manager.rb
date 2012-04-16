@@ -242,6 +242,7 @@ class Tailor
         end
 
         def update_for_closing_reason(event_type, lexed_line, lineno)
+        def update_for_closing_reason(event_type, lexed_line)
           remove_continuation_keywords
           remove_appropriate_reason(event_type)
 
