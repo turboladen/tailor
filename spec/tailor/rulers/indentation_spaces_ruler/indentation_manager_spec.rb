@@ -8,7 +8,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:lexed_line) { double "LexedLine" }
 
   before do
-    #Tailor::Logger.stub(:log)
+    Tailor::Logger.stub(:log)
     subject.instance_variable_set(:@spaces, spaces)
   end
 
@@ -231,9 +231,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#line_ends_with_same_as_last" do
-    context "@single_tokens is empty" do
+    context "@indent_reasons is empty" do
       before do
-        subject.instance_variable_set(:@single_tokens, [])
+        subject.instance_variable_set(:@indent_reasons, [])
       end
 
       it "returns false" do
@@ -241,11 +241,12 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
     end
 
-    context "@single_tokens.last[:token] != token_event.last" do
+    context "@indent_reasons.last[:token] != token_event.last" do
       let(:last_single_token) { [[1, 2], :on_comma, ','] }
 
       before do
-        subject.instance_variable_set(:@single_tokens, [{ event: :on_op }])
+        subject.instance_variable_set(:@indent_reasons,
+          [{ event_type: :on_op }])
       end
 
       it "returns false" do
@@ -253,14 +254,15 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
     end
 
-    context "@single_tokens.last[:token] == token_event.last" do
+    context "@indent_reasons.last[:token] == token_event.last" do
       let(:last_single_token) { [[1, 2], :on_comma, ','] }
 
       before do
-        subject.instance_variable_set(:@single_tokens, [{ event: :on_comma }])
+        subject.instance_variable_set(:@indent_reasons,
+          [{ event_type: :on_comma }])
       end
 
-      it "returns false" do
+      it "returns true" do
         subject.line_ends_with_same_as_last(last_single_token).should be_true
       end
     end
@@ -271,7 +273,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       context "an unclosed ( does not exist on the current line" do
         before do
           d_tokens = [{ token: '(', lineno: 1 }]
-          subject.instance_variable_set(:@double_tokens, d_tokens)
+          subject.instance_variable_set(:@indent_reasons, d_tokens)
         end
 
         it "returns true" do
@@ -282,7 +284,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       context "an unclosed ( exists on the current line" do
         before do
           d_tokens = [{ token: '(', lineno: 1 }, { token: '(', lineno: 2 }]
-          subject.instance_variable_set(:@double_tokens, d_tokens)
+          subject.instance_variable_set(:@indent_reasons, d_tokens)
         end
 
         it "returns true" do
@@ -294,7 +296,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     context "an unclosed ( does not exist on the previous line" do
       before do
         d_tokens = [{ token: '(', lineno: 1 }]
-        subject.instance_variable_set(:@double_tokens, d_tokens)
+        subject.instance_variable_set(:@indent_reasons, d_tokens)
       end
 
       it "returns true" do
@@ -326,7 +328,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         it "returns the matching opening event" do
           subject.last_opening_event(:on_rparen).should == indent_reasons.first
         end
-
       end
     end
   end
@@ -365,19 +366,14 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
     context "@indent_reasons contains CONTINUATION_KEYWORDS" do
       let(:indent_reasons) do
-        i = double "@indent_reasons"
-        i.stub_chain(:last, :[]).and_return [
-          { token: 'if' }, { token: 'elsif'}]
-        i.stub(:empty?).and_return false
-
-        i
+        [{ token: 'if' }, { token: 'elsif' }]
       end
 
       it "should call #pop on @indent_reasons one time" do
-        i = [{ token: 'if' }, { token: 'elsif'}]
-        i.should_receive(:pop).once
-        subject.instance_variable_set(:@indent_reasons, i)
+        subject.instance_variable_set(:@indent_reasons, indent_reasons)
         subject.remove_continuation_keywords
+        subject.instance_variable_get(:@indent_reasons).should ==
+          [{ token: 'if' }]
       end
     end
   end
