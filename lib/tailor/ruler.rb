@@ -42,7 +42,8 @@ class Tailor
     attr_reader :lexer_observers
     attr_reader :level
 
-    def initialize(config={}, options={ level: :error })
+    # @param []
+    def initialize(config=nil, options={ level: :error })
       @config = config
       @options = options
       @do_measurement = true
