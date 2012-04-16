@@ -2,13 +2,12 @@ require_relative '../spec_helper'
 require 'tailor/critic'
 
 describe Tailor::Critic do
-  let(:configuration) { } # empty on purpose
-  before { subject.stub(:log) }
-  subject { Tailor::Critic.new(configuration) }
+  before { Tailor::Logger.stub(:log) }
 
   describe "#check_file" do
     let(:lexer) { double "Lexer" }
     let(:ruler) { double "Ruler" }
+    let(:style) { double "Style", each: nil }
     let(:file_name) { "this_file.rb" }
 
     before do
@@ -22,7 +21,7 @@ describe Tailor::Critic do
       subject.stub_chain(:problems, :[]=)
       subject.stub_chain(:problems, :[])
 
-      subject.check_file(file_name, 1)
+      subject.check_file(file_name, style)
     end
 
     it "adds problems for the file to the main list of problems" do
@@ -31,7 +30,7 @@ describe Tailor::Critic do
       Tailor::Lexer.stub(:new).and_return lexer
       subject.problems.should_receive(:[]=).with(file_name, [])
 
-      subject.check_file(file_name, 1)
+      subject.check_file(file_name, style)
     end
   end
 
