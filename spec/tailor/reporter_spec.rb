@@ -8,14 +8,14 @@ describe Tailor::Reporter do
 
       it "creates a new Formatter object of the type passed in" do
         reporter = Tailor::Reporter.new(formats)
-        reporter.formatters.first.should be_a Tailor::Formatter::Text
+        reporter.formatters.first.should be_a Tailor::Formatters::Text
       end
     end
   end
   
   describe "#file_report" do
     let(:file_problems) { double "file problems" }
-    let(:formatter) { double "Tailor::Formatter::SomeFormatter" }
+    let(:formatter) { double "Tailor::Formatters::SomeFormatter" }
     
     subject do
       t = Tailor::Reporter.new
@@ -34,7 +34,7 @@ describe Tailor::Reporter do
 
   describe "#summary_report" do
     let(:all_problems) { double "all problems" }
-    let(:formatter) { double "Tailor::Formatter::SomeFormatter" }
+    let(:formatter) { double "Tailor::Formatters::SomeFormatter" }
 
     subject do
       t = Tailor::Reporter.new
