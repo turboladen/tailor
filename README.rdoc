@@ -122,9 +122,9 @@ If you want to simply disable a ruler, just pass +false+ to the option:
 
 ==== Configuration File
 
-Configuration files allow for some more flexibility with style rulers, file
-lists, and (eventually) report formatters.  To create one with default
-settings, do:
+While you can drive most tailor options from the command line, configuration
+files allow for some more flexibility with style rulers, file lists, and
+(eventually) report formatters.  To create one with default settings, do:
 
   $ tailor --create-config
 
@@ -154,20 +154,25 @@ globs to use the default set of rulers...  File sets allow for those sorts of
 things.
 
 In the default config file, you see a single parameter being passed to
-<tt>config.file_set</tt>--this is the _label_ for that file set.  The label is
+<tt>config.file_set</tt>--this is the glob that defines the list of files for
+that file set.  While you don't see it, +config.file_set+ takes a second
+optional parameter that allows you to _label+ your style properties, and thus
+use different sets of style properties for differet sets of files.  The label is
 simply just a name to refer to that file set by; it will show in your report
 (in the case that problems were found, of course) so you know what set of
-rulers caused the problem to be found.  <tt>config.file_set</tt> also takes
-a second paramter: the file/directory/glob to apply the style to.
+rulers caused the problem to be found.
 
   # .tailor
   Tailor.config do |config|
+    config.files_set 'lib/**/*.rb       # All defaults; implies "default" label
+
     config.file_set 'app/**/*.rb', :rails_app do |style|
       style.max_line_length 100
       # All other rulers will use default values
     end
 
-    config.file_set 'features/**/*.rb', :features     # Uses default style
+   # Uses default style, but labelled in the report with "features"
+   config.file_set 'features/**/*.rb', :features
 
     config.file_set 'spec/**/*.rb', :rspec do |style|
       style.spaces_after_lbrace false
@@ -192,13 +197,13 @@ must have:
 * the class name ends with "Ruler"
 * it inherits of {Tailor::Ruler}
 * it's defined within the {Tailor::Rulers} module
-* #initialize defines two parameters
+* +#initialize+ defines two parameters:
   # +config+ sets +@config+ to the "golden rule" value for what you're measuring
   # +options+ is a Hash, that should at least be passed the :level => you want
-    the problem to be logged as
-* #add_lexer_observers gets passed a list of {Tailor::Lexer} event types that
+  the problem to be logged as
+* +#add_lexer_observers+ gets passed a list of {Tailor::Lexer} event types that
   the ruler should get notified on
-* it calls #measure to assess if the criteria it's checking has been met
+* it calls +#measure+ to assess if the criteria it's checking has been met
 * it adds a {Tailor::Problem} to +@problems+
 
 ==== Add the Ruler to the list of Styles
