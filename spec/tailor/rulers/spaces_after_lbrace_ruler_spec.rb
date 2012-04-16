@@ -2,7 +2,7 @@ require_relative '../../spec_helper'
 require 'tailor/rulers/spaces_after_lbrace_ruler'
 
 describe Tailor::Rulers::SpacesAfterLbraceRuler do
-  subject { Tailor::Rulers::SpacesAfterLbraceRuler.new('')}
+  subject { Tailor::Rulers::SpacesAfterLbraceRuler.new('', {})}
   
   describe "#comment_update" do
     context "token has a trailing newline" do

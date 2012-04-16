@@ -2,7 +2,7 @@ require_relative '../../spec_helper'
 require 'tailor/rulers/spaces_after_comma_ruler'
 
 describe Tailor::Rulers::SpacesAfterCommaRuler do
-  subject { Tailor::Rulers::SpacesAfterCommaRuler.new({}) }
+  subject { Tailor::Rulers::SpacesAfterCommaRuler.new(nil, {}) }
   
   describe "#comma_update" do
     it "adds the column number to @comma_columns" do
