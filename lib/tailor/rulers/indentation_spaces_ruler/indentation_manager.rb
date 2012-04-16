@@ -357,6 +357,8 @@ class Tailor
           @indent_reasons.last[:event_type]
         end
 
+        # Removes all continuation keywords from the list of
+        # indentation reasons.
         def remove_continuation_keywords
           return if @indent_reasons.empty?
 
