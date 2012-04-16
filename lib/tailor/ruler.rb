@@ -42,7 +42,8 @@ class Tailor
     attr_reader :lexer_observers
     attr_reader :level
 
-    # @param []
+    # @param [Object] config
+    # @param [Hash] options
     def initialize(config=nil, options={ level: :error })
       @config = config
       @options = options
@@ -55,11 +56,17 @@ class Tailor
       @problems = []
     end
 
+    # Adds the {Tailor::Ruler} object to the list of child rulers.
+    #
+    # @param [Tailor::Ruler] ruler
     def add_child_ruler(ruler)
       @child_rulers << ruler
       log "Added child ruler: #{ruler}"
     end
 
+    # Gets all of the problems from all child rulers.
+    #
+    # @return [Array] The list of problems.
     def problems
       @problems = @child_rulers.inject(@problems) do |problems, ruler|
         problems + ruler.problems
@@ -74,8 +81,13 @@ class Tailor
         "Ruler#measure called, but should be redefined by a real ruler."
     end
 
+    # Converts the {Tailor::Ruler} name to snake case.
+    #
+    # @return [String] The ruler name as snake-case that represents the problem
+    #   that was found.
     def problem_type
       self.class.to_s =~ /^.+::(\S+)Ruler$/
+
       $1.underscore
     end
 
