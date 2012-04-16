@@ -2,6 +2,8 @@ require_relative 'spec_helper'
 require 'tailor'
 
 describe Tailor do
+  before { Tailor::Logger.log = false }
+
   describe "::config" do
     it "creates a new Configuration object" do
       Tailor::Configuration.should_receive(:new)
