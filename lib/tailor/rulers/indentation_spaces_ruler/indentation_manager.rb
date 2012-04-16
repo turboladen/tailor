@@ -186,6 +186,15 @@ class Tailor
             i_reasons.last[:event_type] == :on_lparen
         end
 
+        # Adds to the list of reasons to indent the next line, then increases
+        # the expectation for the next line by +@spaces+.
+        #
+        # @param [Symbol] event_type The event type that caused the reason for
+        #   indenting.
+        # @param [Tailor::Token,String] token The token that caused the reason
+        #   for indenting.
+        # @param [Fixnum] lineno The line number the reason for indenting was
+        #   discovered on.
         def add_indent_reason(event_type, token, lineno)
           @indent_reasons << {
             event_type: event_type,
@@ -199,6 +208,14 @@ class Tailor
           @indent_reasons.each { |r| log r.to_s }
         end
 
+        # An "opening reason" is a reason for indenting that also has a "closing
+        # reason", such as a +def+, +{+, +[+, +(+.
+        #
+        # @param [Symbol] event_type The event type that is the opening reason.
+        # @param [Tailor::Token,String] token The token that is the opening
+        #   reasons.
+        # @param [Fixnum] lineno The line number the opening reason was found
+        #   on.
         def update_for_opening_reason(event_type, token, lineno)
           if token.modifier_keyword?
             log "Found modifier in line: '#{token}'"
@@ -215,6 +232,14 @@ class Tailor
           add_indent_reason(event_type, token, lineno)
         end
 
+        # A "continuation reason" is a reason for indenting & outdenting that's
+        # not an opening or closing reason, such as +elsif+, +rescue+, +when+
+        # (in a +case+ statement), etc.
+        #
+        # @param [Symbol] event_type The event type that is the opening reason.
+        # @param [Tailor::LexedLine] lexed_line
+        # @param [Fixnum] lineno The line number the opening reason was found
+        #   on.
         def update_for_continuation_reason(token, lexed_line, lineno)
           d_tokens = @indent_reasons.dup
           d_tokens.pop
@@ -241,7 +266,12 @@ class Tailor
           end
         end
 
-        def update_for_closing_reason(event_type, lexed_line, lineno)
+        # A "closing reason" is a reason for indenting that also has an "opening
+        # reason", such as a +end+, +}+, +]+, +)+.
+        #
+        # @param [Symbol] event_type The event type that is the closing reason.
+        # @param [Tailor::Token,String] token The token that is the closing
+        #   reason.
         def update_for_closing_reason(event_type, lexed_line)
           remove_continuation_keywords
           remove_appropriate_reason(event_type)
