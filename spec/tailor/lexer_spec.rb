@@ -45,67 +45,11 @@ describe Tailor::Lexer do
     end
   end
 
-  describe "#on_ignored_nl" do
-    it "calls #current_line_lex" do
-      pending
-      subject.stub(:only_spaces?).and_return true
-      subject.should_receive(:current_line_lex)
-      subject.on_ignored_nl("\n")
-    end
-
-    context "#only_spaces? is true" do
-      pending
-      before { subject.stub(:only_spaces?).and_return true }
-
-      it "does not call #update_actual_indentation" do
-        pending
-      end
-    end
-  end
-
   describe "#on_sp" do
-    context "@config says to disallow hard tabs" do
-      before do
-        config = { horizontal_spacing: { allow_hard_tabs: false } }
-        subject.instance_variable_set(:@config, config)
-      end
-
-      context "token contains a hard tab" do
-        it "adds a new problem to @problems" do
-          pending "This behavior moved to indent_sp_ruler--move there."
-
-          subject.instance_variable_set(:@problems, [])
-
-          expect { subject.on_sp("\t") }.
-            to change{subject.instance_variable_get(:@problems).size}.
-            from(0).to 1
-        end
-      end
-
-      context "token does not contain a hard tab" do
-        it "does not add a new problem to @problems" do
-          pending "This behavior moved to indent_sp_ruler--move there."
-
-          subject.instance_variable_set(:@problems, [])
-
-          expect { subject.on_sp("\x20") }.
-            to_not change{subject.instance_variable_get(:@problems).size}.
-            from(0).to 1
-        end
-      end
-    end
-
-    context "@config says to allow hard tabs" do
-      before do
-        config = { horizontal_spacing: { allow_hard_tabs: true } }
-        subject.instance_variable_set(:@config, config)
-      end
-
-      it "does not check the token" do
-        token = double "token"
-        token.stub(:size)
-        token.should_not_receive(:=~)
-        subject.on_sp(token)
+    context "token is a backslash then newline" do
+      it "calls #notify_ignored_nl_observers" do
+        subject.should_receive(:notify_ignored_nl_observers)
+        subject.on_sp("\\\n")
       end
     end
   end
