@@ -31,6 +31,8 @@ class Tailor
       @added_newline = @file_text != @original_file_text
     end
 
+    # This kicks off the process of parsing the file and publishing events
+    # as the events are discovered.
     def lex
       file_beg_changed
       notify_file_beg_observers(@file_name)
