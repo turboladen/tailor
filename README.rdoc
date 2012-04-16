@@ -164,15 +164,17 @@ rulers caused the problem to be found.
 
   # .tailor
   Tailor.config do |config|
-    config.files_set 'lib/**/*.rb       # All defaults; implies "default" label
+
+    # All defaults; implies "default" label
+    config.file_set 'lib/**/*.rb
 
     config.file_set 'app/**/*.rb', :rails_app do |style|
       style.max_line_length 100
       # All other rulers will use default values
     end
 
-   # Uses default style, but labelled in the report with "features"
-   config.file_set 'features/**/*.rb', :features
+    # Uses default style, but labelled in the report with "features"
+    config.file_set 'features/**/*.rb', :features
 
     config.file_set 'spec/**/*.rb', :rspec do |style|
       style.spaces_after_lbrace false
@@ -191,20 +193,20 @@ do this, you need to do the following.
 ==== Create the Ruler
 
 Before jumping in to this, take a look at {Tailor::Ruler} and any of the
-existing Rulers in +lib/tailor/rulers+.  There are some key things a new Ruler
+existing Rulers in +lib/tailor/rulers/+.  There are some key things a new Ruler
 must have:
 
 * the class name ends with "Ruler"
-* it inherits of {Tailor::Ruler}
+* it inherits {Tailor::Ruler}
 * it's defined within the {Tailor::Rulers} module
 * +#initialize+ defines two parameters:
-  # +config+ sets +@config+ to the "golden rule" value for what you're measuring
-  # +options+ is a Hash, that should at least be passed the :level => you want
-  the problem to be logged as
+  1. +config+ sets +@config+ to the "golden rule" value for what you're measuring
+  2. +options+ is a Hash, that should at least be passed the :level => you want
+     the problem to be logged as
 * +#add_lexer_observers+ gets passed a list of {Tailor::Lexer} event types that
   the ruler should get notified on
 * it calls +#measure+ to assess if the criteria it's checking has been met
-* it adds a {Tailor::Problem} to +@problems+
+* it adds a {Tailor::Problem} to +@problems+ when one is found in +#measure+
 
 ==== Add the Ruler to the list of Styles
 
@@ -221,10 +223,10 @@ add infomation about your ruler to your config file.  If you created a Ruler:
         end
 
         def measure
-          ...
+          # ...
         end
 
-        ...
+        # ...
       end
     end
   end
