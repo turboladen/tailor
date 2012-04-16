@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 require 'tailor/ruler'
 
 describe Tailor::Ruler do
-  before { subject.stub(:log) }
+  before { Tailor::Logger.stub(:log) }
 
   describe "#add_child_ruler" do
     it "adds new rulers to @child_rulers" do
