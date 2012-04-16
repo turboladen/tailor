@@ -8,8 +8,9 @@ require_relative 'lexer/token'
 
 class Tailor
 
-  # https://github.com/svenfuchs/ripper2ruby/blob/303d7ac4dfc2d8dbbdacaa6970fc41ff56b31d82/notes/scanner_events
-  # https://github.com/ruby/ruby/blob/trunk/test/ripper/test_scanner_events.rb
+  # This is what provides the main file parsing for Tailor.  For every event
+  # that's encountered, it calls the appropriate notifier method.  Notifier
+  # methods are provided by {Tailor::CompositeObservable}.
   class Lexer < Ripper::Lexer
     include CompositeObservable
     include LexerConstants
@@ -48,11 +49,18 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches the first ` in a `` statement (the second
+    # matches :on_tstring_end; this may or may not be a Ruby bug).
+    #
+    # @param [String] token The token that the lexer matched.
     def on_backtick(token)
       log "BACKTICK: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches a comma.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_comma(token)
       log "COMMA: #{token}"
       log "Line length: #{current_line_of_text.length}"
@@ -63,6 +71,10 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a #.  The token includes the # as well as
+    # the content after it.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_comment(token)
       log "COMMENT: '#{token}'"
 
@@ -74,6 +86,10 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a constant (including class names, of
+    # course).
+    #
+    # @param [String] token The token that the lexer matched.
     def on_const(token)
       log "CONST: '#{token}'"
 
@@ -85,27 +101,41 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a class variable.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_cvar(token)
       log "CVAR: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the content inside a =begin/=end.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_embdoc(token)
       log "EMBDOC: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches =begin.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_embdoc_beg(token)
       log "EMBDOC_BEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches =end.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_embdoc_end(token)
       log "EMBDOC_BEG: '#{token}'"
       super(token)
     end
 
-    # Matches the { in an expression embedded in a string.
+    # Called when the lexer matches a #{.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_embexpr_beg(token)
       log "EMBEXPR_BEG: '#{token}'"
       embexpr_beg_changed
@@ -113,6 +143,11 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches the } that closes a #{.  Note that as of
+    # MRI 1.9.3-p125, this never gets called.  Logged as a bug and fixed, but
+    # not yet released: https://bugs.ruby-lang.org/issues/6211.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_embexpr_end(token)
       log "EMBEXPR_END: '#{token}'"
       embexpr_end_changed
@@ -125,27 +160,42 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a Float.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_float(token)
       log "FLOAT: '#{token}'"
       super(token)
     end
 
-    # Global variable
+    # Called when the lexer matches a global variable.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_gvar(token)
       log "GVAR: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the beginning of a heredoc.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_heredoc_beg(token)
       log "HEREDOC_BEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the end of a heredoc.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_heredoc_end(token)
       log "HEREDOC_END: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches an identifier (method name, variable, the
+    # text part of a Symbol, etc.).
+    #
+    # @param [String] token The token that the lexer matched.
     def on_ident(token)
       log "IDENT: '#{token}'"
       l_token = Tailor::Lexer::Token.new(token)
@@ -170,18 +220,23 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches an Integer.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_int(token)
       log "INT: '#{token}'"
       super(token)
     end
 
-    # Instance variable
+    # Called when the lexer matches an instance variable.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_ivar(token)
       log "IVAR: '#{token}'"
       super(token)
     end
 
-    # Called when the lexer matches a Ruby keyword
+    # Called when the lexer matches a Ruby keyword.
     #
     # @param [String] token The token that the lexer matched.
     def on_kw(token)
@@ -201,6 +256,13 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a label (the first part in a non-rocket
+    # style Hash).
+    #
+    # Example:
+    #   one: 1     # Matches one:
+    #
+    # @param [String] token The token that the lexer matched.
     def on_label(token)
       log "LABEL: '#{token}'"
       super(token)
@@ -229,6 +291,9 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a (.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_lparen(token)
       log "LPAREN: '#{token}'"
       lparen_changed
@@ -247,12 +312,17 @@ class Tailor
       super(token)
     end
 
-    # Operators
+    # Called when the lexer matches an operator.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_op(token)
       log "OP: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches a period.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_period(token)
       log "PERIOD: '#{token}'"
 
@@ -262,6 +332,10 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches '%w'.  Statement is ended by a
+    # +:on_words_end+.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_qwords_beg(token)
       log "QWORDS_BEG: '#{token}'"
       super(token)
@@ -293,16 +367,25 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches the beginning of a Regexp.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_regexp_beg(token)
       log "REGEXP_BEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the end of a Regexp.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_regexp_end(token)
       log "REGEXP_END: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches a ).
+    #
+    # @param [String] token The token that the lexer matched.
     def on_rparen(token)
       log "RPAREN: '#{token}'"
 
@@ -313,11 +396,17 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches a ;.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_semicolon(token)
       log "SEMICOLON: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches any type of space character.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_sp(token)
       log "SP: '#{token}'; size: #{token.size}"
       l_token = Tailor::Lexer::Token.new(token)
@@ -333,21 +422,34 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches the : at the beginning of a Symbol.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_symbeg(token)
       log "SYMBEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the -> as a lambda.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_tlambda(token)
       log "TLAMBDA: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the { that represents the beginning of a
+    # -> lambda.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_tlambeg(token)
       log "TLAMBEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the beginning of a String.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
       tstring_beg_changed
@@ -355,11 +457,17 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches the content of any String.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_tstring_content(token)
       log "TSTRING_CONTENT: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the end of a String.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
       tstring_end_changed
@@ -367,21 +475,34 @@ class Tailor
       super(token)
     end
 
+    # Called when the lexer matches '%W'.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_words_beg(token)
       log "WORDS_BEG: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches the separators in a %w or %W (by default,
+    # this is a single space).
+    #
+    # @param [String] token The token that the lexer matched.
     def on_words_sep(token)
       log "WORDS_SEP: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches __END__.
+    #
+    # @param [String] token The token that the lexer matched.
     def on___end__(token)
       log "__END__: '#{token}'"
       super(token)
     end
 
+    # Called when the lexer matches CHAR.
+    #
+    # @param [String] token The token that the lexer matched.
     def on_CHAR(token)
       log "CHAR: '#{token}'"
       super(token)
