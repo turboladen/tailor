@@ -656,6 +656,18 @@ INDENT_OK[:do_end_block_in_parens] =
 rescue NoMethodError
 end}
 
+INDENT_OK[:block_in_block_ends_on_same_line] =
+  %Q{%w{
+  foo
+  bar
+  baz
+}.each do |thing|
+  function thing do
+    puts "stuff"
+  end end
+
+puts "post ends"}
+
 INDENT_OK[:rparen_and_do_same_line] =
   %Q{opt.on('-c', '--config-file FILE',
   "Use a specific config file.") do |config|
