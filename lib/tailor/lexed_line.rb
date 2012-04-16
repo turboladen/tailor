@@ -243,6 +243,26 @@ class Tailor
         self.none? { |e| e[1] == :on_tstring_beg }
     end
 
+    # When Ripper lexes a Symbol, it generates one event for :on_symbeg, which
+    # is the ':' token, and one for the name of the Symbol.  Since your Symbol
+    # name can be anything, the second event could be something like "class", in
+    # which case :on_kw will get called and probably result in unexpected
+    # behavior.
+    #
+    # This assumes the keyword in question is the last event in the line.
+    #
+    # @return [Boolean]
+    def keyword_is_symbol?
+      current_index = self.index(self.last)
+      previous_event = self.at(current_index - 1)
+
+      return false if previous_event.nil?
+      return false unless self.last[1] == :on_kw
+      return false unless previous_event[1] == :on_symbeg
+
+      true
+    end
+
     #---------------------------------------------------------------------------
     # Privates!
     #---------------------------------------------------------------------------

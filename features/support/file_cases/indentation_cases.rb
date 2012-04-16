@@ -1,6 +1,6 @@
 INDENT_OK = {}
 
-INDENT_OK[:class] = 
+INDENT_OK[:class] =
 %Q{class MyClass
 end}
 
@@ -205,6 +205,16 @@ INDENT_OK[:require_class_singlestatement] =
 class MyClass
   include Stuff
 end}
+
+INDENT_OK[:class_as_symbol] =
+  %Q{INDENT_OK = {}
+
+INDENT_OK[:class] =
+  %Q{class MyClass
+end}
+
+INDENT_OK[:one_line_class] =
+  %Q{class MyClass; end}}
 
 INDENT_OK[:require_class_singlestatement_def] =
 %Q{require 'time'

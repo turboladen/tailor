@@ -94,6 +94,11 @@ class Tailor
       end
 
       def kw_update(token, lexed_line, lineno, column)
+        if lexed_line.keyword_is_symbol?
+          log "Keyword is prefaced by a :, indicating it's really a Symbol."
+          return
+        end
+
         if token == "end"
           @manager.update_for_closing_reason(:on_kw, lexed_line)
           return

@@ -28,10 +28,12 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/one_line_subclass                     |
     | indent/ok/one_line_subclass_with_inheritance    |
 
+  @single_line
   Scenarios: Good single-line statement uses
     | File                                    |
     | indent/ok/class_singlestatement         |
     | indent/ok/require_class_singlestatement |
+    | indent/ok/class_as_symbol               |
 
   @multi_line
   Scenarios: Good multi-line statement uses

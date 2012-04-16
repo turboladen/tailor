@@ -599,4 +599,61 @@ describe Tailor::LexedLine do
       end
     end
   end
+
+  describe "#keyword_is_symbol?" do
+    context "last event in line is not a keyword" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_sp, "        "],
+            [[1, 8], :on_ident, "one"],
+            [[1, 11], :on_comma, ","],
+            [[1, 12], :on_nl, "\n"]]
+      end
+
+      it "returns false" do
+        subject.keyword_is_symbol?.should be_false
+      end
+    end
+
+    context "last event in line is a keyword" do
+      context "previous event is nil" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_kw, "class"]
+          ]
+        end
+
+        it "returns false" do
+          subject.keyword_is_symbol?.should be_false
+        end
+      end
+
+      context "previous event is not :on_symbeg" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_sp, "  "],
+            [[1, 2], :on_kw, "class"]
+          ]
+        end
+
+        it "returns false" do
+          subject.keyword_is_symbol?.should be_false
+        end
+      end
+
+      context "previous event is :on_symbeg" do
+        let(:lexed_output) do
+          [
+            [[1, 0], :on_const, "INDENT_OK"],
+            [[1, 9], :on_lbracket, "["],
+            [[1, 10], :on_symbeg, ":"],
+            [[1, 11], :on_kw, "class"]]
+        end
+
+        it "returns true" do
+          subject.keyword_is_symbol?.should be_true
+        end
+      end
+    end
+  end
 end
