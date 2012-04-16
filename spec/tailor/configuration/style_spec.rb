@@ -21,133 +21,133 @@ describe Tailor::Configuration::Style do
       describe "allow_camel_case_methods" do
         specify do
           subject.instance_variable_get(:@allow_camel_case_methods).should == [
-            false, { level: :fail }]
+            false, { level: :error }]
         end
       end
 
       describe "allow_hard_tabs" do
         specify do
           subject.instance_variable_get(:@allow_hard_tabs).should == [
-            false, { level: :fail }]
+            false, { level: :error }]
         end
       end
 
       describe "allow_screaming_snake_case_classes" do
         specify do
           subject.instance_variable_get(:@allow_screaming_snake_case_classes).
-            should == [false, { level: :fail }]
+            should == [false, { level: :error }]
         end
       end
 
       describe "allow_trailing_line_spaces" do
         specify do
           subject.instance_variable_get(:@allow_trailing_line_spaces).should == [
-            false, { level: :fail }]
+            false, { level: :error }]
         end
       end
 
       describe "indentation_spaces" do
         specify do
           subject.instance_variable_get(:@indentation_spaces).should == [
-            2, { level: :fail }]
+            2, { level: :error }]
         end
       end
 
       describe "max_code_lines_in_class" do
         specify do
           subject.instance_variable_get(:@max_code_lines_in_class).should == [
-            300, { level: :fail }]
+            300, { level: :error }]
         end
       end
 
       describe "max_code_lines_in_method" do
         specify do
           subject.instance_variable_get(:@max_code_lines_in_method).should == [
-            30, { level: :fail }]
+            30, { level: :error }]
         end
       end
 
       describe "max_line_length" do
         specify do
           subject.instance_variable_get(:@max_line_length).should == [
-            80, { level: :fail }]
+            80, { level: :error }]
         end
       end
 
       describe "spaces_after_comma" do
         specify do
           subject.instance_variable_get(:@spaces_after_comma).should == [
-            1, { level: :fail }]
+            1, { level: :error }]
         end
       end
 
       describe "spaces_after_lbrace" do
         specify do
           subject.instance_variable_get(:@spaces_after_lbrace).should == [
-            1, { level: :fail }]
+            1, { level: :error }]
         end
       end
 
       describe "spaces_after_lbracket" do
         specify do
           subject.instance_variable_get(:@spaces_after_lbracket).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "spaces_after_lparen" do
         specify do
           subject.instance_variable_get(:@spaces_after_lparen).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "spaces_before_comma" do
         specify do
           subject.instance_variable_get(:@spaces_before_comma).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "spaces_before_lbrace" do
         specify do
           subject.instance_variable_get(:@spaces_before_lbrace).should == [
-            1, { level: :fail }]
+            1, { level: :error }]
         end
       end
 
       describe "spaces_before_rbrace" do
         specify do
           subject.instance_variable_get(:@spaces_before_rbrace).should == [
-            1, { level: :fail }]
+            1, { level: :error }]
         end
       end
 
       describe "spaces_before_rbracket" do
         specify do
           subject.instance_variable_get(:@spaces_before_rbracket).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "spaces_before_rparen" do
         specify do
           subject.instance_variable_get(:@spaces_before_rparen).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "spaces_in_empty_braces" do
         specify do
           subject.instance_variable_get(:@spaces_in_empty_braces).should == [
-            0, { level: :fail }]
+            0, { level: :error }]
         end
       end
 
       describe "trailing_newlines" do
         specify do
           subject.instance_variable_get(:@trailing_newlines).should == [
-            1, { level: :fail }]
+            1, { level: :error }]
         end
       end
     end
@@ -156,25 +156,26 @@ describe Tailor::Configuration::Style do
   describe "#to_hash" do
     let(:default_values) do
       {
-        :allow_camel_case_methods => [false, { :level => :fail }],
-        :allow_hard_tabs => [false, { :level => :fail }],
-        :allow_screaming_snake_case_classes => [false, { :level => :fail }],
-        :allow_trailing_line_spaces => [false, { :level => :fail }],
-        :indentation_spaces => [2, { :level => :fail }],
-        :max_code_lines_in_class => [300, { :level => :fail }],
-        :max_code_lines_in_method => [30, { :level => :fail }],
-        :max_line_length => [80, { :level => :fail }],
-        :spaces_after_comma => [1, { :level => :fail }],
-        :spaces_after_lbrace => [1, { :level => :fail }],
-        :spaces_after_lbracket => [0, { :level => :fail }],
-        :spaces_after_lparen => [0, { :level => :fail }],
-        :spaces_before_comma => [0, { :level => :fail }],
-        :spaces_before_lbrace => [1, { :level => :fail }],
-        :spaces_before_rbrace => [1, { :level => :fail }],
-        :spaces_before_rbracket => [0, { :level => :fail }],
-        :spaces_before_rparen => [0, { :level => :fail }],
-        :spaces_in_empty_braces => [0, { :level => :fail }],
-        :trailing_newlines => [1, { :level => :fail }]
+        :allow_camel_case_methods => [false, { :level => :error }],
+        :allow_hard_tabs => [false, { :level => :error }],
+        :allow_screaming_snake_case_classes => [false, { :level => :error }],
+        :allow_trailing_line_spaces => [false, { :level => :error }],
+        :allow_invalid_ruby => [false, { :level => :warn }],
+        :indentation_spaces => [2, { :level => :error }],
+        :max_code_lines_in_class => [300, { :level => :error }],
+        :max_code_lines_in_method => [30, { :level => :error }],
+        :max_line_length => [80, { :level => :error }],
+        :spaces_after_comma => [1, { :level => :error }],
+        :spaces_after_lbrace => [1, { :level => :error }],
+        :spaces_after_lbracket => [0, { :level => :error }],
+        :spaces_after_lparen => [0, { :level => :error }],
+        :spaces_before_comma => [0, { :level => :error }],
+        :spaces_before_lbrace => [1, { :level => :error }],
+        :spaces_before_rbrace => [1, { :level => :error }],
+        :spaces_before_rbracket => [0, { :level => :error }],
+        :spaces_before_rparen => [0, { :level => :error }],
+        :spaces_in_empty_braces => [0, { :level => :error }],
+        :trailing_newlines => [1, { :level => :error }]
       }
     end
 
