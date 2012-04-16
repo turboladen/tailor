@@ -323,6 +323,13 @@ class Tailor
       l_token = Tailor::Lexer::Token.new(token)
       sp_changed
       notify_sp_observers(l_token, lineno, column)
+
+      # Deal with lines that end with \
+      if token == "\\\n"
+        current_line = LexedLine.new(super, lineno)
+        ignored_nl_changed
+        notify_ignored_nl_observers(current_line, lineno, column)
+      end
       super(token)
     end
 

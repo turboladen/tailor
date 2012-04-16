@@ -88,6 +88,9 @@ H_SPACING_OK[:trailing_comma_with_trailing_comment] =
 end}
 
 H_SPACING_OK[:no_before_comma_in_array] = %Q{[1, 2]}
+H_SPACING_OK[:line_ends_with_backslash] =
+  %Q{{ :thing => a_thing,\\
+  :thing2 => another_thing }}
 
 #-------------------------------------------------------------------------------
 # Braces
@@ -241,7 +244,7 @@ H_SPACING_2[:two_d_array_space_before_rbrackets] =
 #-------------------------------------------------------------------------------
 # Parens
 #-------------------------------------------------------------------------------
-H_SPACING_OK[:empty_parens] = %Q{def thing()}
+H_SPACING_OK[:empty_parens] = %Q{def thing(); end}
 H_SPACING_OK[:simple_method_call] = %Q{thing(one, two)}
 H_SPACING_OK[:multi_line_method_call] = %Q{thing(one,
   two)}

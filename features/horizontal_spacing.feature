@@ -104,6 +104,7 @@ Feature: Horizontal spacing detection
     | h_spacing/ok/space_after_comma_in_array           |
     | h_spacing/ok/trailing_comma                       |
     | h_spacing/ok/trailing_comma_with_trailing_comment |
+    | h_spacing/ok/line_ends_with_backslash             |
 
   @good_files @braces
 

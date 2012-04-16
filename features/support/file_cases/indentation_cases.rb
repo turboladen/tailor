@@ -81,7 +81,7 @@ INDENT_OK[:assignment_twolevel_hash_multistatement] =
 %Q{thing = {
   :one => {
     :a => 'a',
-    b: => 'b'
+    b: 'b'
   },
   two: {
     x: 'x',

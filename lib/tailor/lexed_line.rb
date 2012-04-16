@@ -148,10 +148,17 @@ class Tailor
     end
 
     # @return [Array] The lexed event that represents the last event in the
-    #   line that's not a +\n+.
+    #   line that's not a line-feed.  Line-feed events are signified by
+    #   +:on_nl+ and +on_ignored_nl+ events, and by +:on_sp+ events when they
+    #   equal +"\\\n" (which occurs when a line is broken by a backslash).
     def last_non_line_feed_event
-      self.find_all { |e| e[1] != :on_nl && e[1] != :on_ignored_nl }.last ||
-        [[]]
+      events = self.find_all do |e|
+        e[1] != :on_nl &&
+          e[1] != :on_ignored_nl &&
+          e.last != "\\\n"
+      end
+
+      events.last || [[]]
     end
 
     # @return [Fixnum] The length of the line minus the +\n+.

@@ -71,6 +71,11 @@ class Tailor
           end
 
           second_next_event = lexed_line.at(event_index + 2)
+          if second_next_event.nil?
+            log "Second next event is nil."
+            next
+          end
+
           if second_next_event[1] == :on_comment
             log "Event + 2 is a comment."
             next
