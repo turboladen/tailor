@@ -6,18 +6,8 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   let!(:spaces) { 5 }
 
   subject do
-    Tailor::Rulers::IndentationSpacesRuler.new(spaces)
+    Tailor::Rulers::IndentationSpacesRuler.new(spaces, level: :error)
   end
-
-  describe "#initialize" do
-    it "sets @proper to an Hash with :this_line and :next_line keys = 0" do
-      proper_indentation = subject.instance_variable_get(:@proper)
-      proper_indentation.should be_a Hash
-      proper_indentation[:this_line].should be_zero
-      proper_indentation[:next_line].should be_zero
-    end
-  end
-
 
   describe "#comment_update" do
     pending
@@ -102,8 +92,10 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   end
 
   describe "#tstring_beg_update" do
-    it "calls #stop" do
-      subject.should_receive(:stop)
+    it "calls #stop on the indentation_manager object" do
+      manager = double "IndentationManager"
+      manager.should_receive(:stop)
+      subject.instance_variable_set(:@manager, manager)
       subject.tstring_beg_update 1
     end
     
@@ -115,7 +107,9 @@ describe Tailor::Rulers::IndentationSpacesRuler do
 
   describe "#tstring_end_update" do
     it "calls #start" do
-      subject.should_receive(:start)
+      manager = double "IndentationManager"
+      manager.should_receive(:start)
+      subject.instance_variable_set(:@manager, manager)
       subject.tstring_end_update
     end
 
