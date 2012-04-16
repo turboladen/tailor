@@ -8,7 +8,7 @@ describe Tailor::CLI do
 
   let(:config) do
     double "Tailor::Configuration",
-      file_sets: nil, formatters: nil
+      file_sets: nil, formatters: nil, load!: nil
   end
 
   before do
