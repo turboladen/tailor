@@ -1,4 +1,6 @@
 class Tailor
+
+  # This is really just a base class for defining other Formatter types.
   class Formatter
     def initialize
       @pwd = Pathname(Dir.pwd)
