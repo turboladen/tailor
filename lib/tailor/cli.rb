@@ -16,6 +16,7 @@ class Tailor
       new(args).execute!
     end
 
+    # @param [Array] args Arguments from the command-line.
     def initialize(args)
       Tailor::Logger.log = false
       options = Options.parse!(args)
