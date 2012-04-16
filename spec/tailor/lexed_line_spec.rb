@@ -225,6 +225,39 @@ describe Tailor::LexedLine do
     end
   end
 
+  describe "#last_non_line_feed_event" do
+    context "line ends with a space" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_kw, "def"],
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_nl, "\n"]
+        ]
+      end
+
+      it "returns the space" do
+        subject.last_non_line_feed_event.should == [[1, 9], :on_sp, " "]
+      end
+    end
+
+    context "line ends with a backslash" do
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_kw, "def"],
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, "\\\n"]
+        ]
+      end
+
+      it "returns the event before it" do
+        subject.last_non_line_feed_event.should == [[1, 4], :on_ident, "thing"]
+      end
+    end
+  end
+
   describe "#loop_with_do?" do
     context "line is 'while true do\\n'" do
       let(:lexed_output) do
