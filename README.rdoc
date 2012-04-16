@@ -33,12 +33,15 @@ http://wiki.github.com/turboladen/tailor.
   * Name cases
     * Snake case class & module names
     * Camel case method names
+  * Valid Ruby (warns by default)
 * Configurable
   * Specify style in
     * ~./tailorrc
     * PROJECT_ROOT + .tailor
     * as CLI options
   * "File sets" allow for applying different styles to different sets of files
+  * Set problems to :warn instead of :fail
+* Define custom "Rulers"
 * CI/Build Integration
   * (Well, this may be stretching things a bit, but...) Exit 1 on failures
 
@@ -130,12 +133,12 @@ straightforward (if they're not, please let me know!).  You don't have to specif
 all of those settings in your config file--those are just rendered so you have
 a starting ground to tweak with.  If you only want to override a single value,
 you can delete the rest of the code from your config.  This would accomplish
-the same as the --max-line-length example above:
+the same as the <tt>--max-line-length</tt> example above:
 
   # .tailor
   Tailor.config do |config|
-    config.file_set 'lib/**/*.rb' do
-      max_line_length 100
+    config.file_set 'lib/**/*.rb' do |style|
+      style.max_line_length 100
     end
   end
 
@@ -159,20 +162,83 @@ a second paramter: the file/directory/glob to apply the style to.
 
   # .tailor
   Tailor.config do |config|
-    config.file_set :rails_app, 'app/**/*.rb' do
-      max_line_length 100
+    config.file_set 'app/**/*.rb', :rails_app do |style|
+      style.max_line_length 100
       # All other rulers will use default values
     end
 
-    config.file_set :features, 'features/**/*.rb'     # Uses default style
+    config.file_set 'features/**/*.rb', :features     # Uses default style
 
-    config.file_set :rspec, 'spec/**/*.rb' do
-      spaces_after_lbrace false
-      spaces_before_lbrace false
-      spaces_before_rbrace false
+    config.file_set 'spec/**/*.rb', :rspec do |style|
+      style.spaces_after_lbrace false
+      style.spaces_before_lbrace false
+      style.spaces_before_rbrace false
       # All other rulers will use default values
     end
   end
+
+=== Define A Custom Ruler
+
+While tailor provides a number of Rulers for checking style, it also provides a
+way for you to add your own rulers without having to delve into its innards.  To
+do this, you need to do the following.
+
+==== Create the Ruler
+
+Before jumping in to this, take a look at {Tailor::Ruler} and any of the
+existing Rulers in +lib/tailor/rulers+.  There are some key things a new Ruler
+must have:
+
+* the class name ends with "Ruler"
+* it inherits of {Tailor::Ruler}
+* it's defined within the {Tailor::Rulers} module
+* #initialize defines two parameters
+  # +config+ sets +@config+ to the "golden rule" value for what you're measuring
+  # +options+ is a Hash, that should at least be passed the :level => you want
+    the problem to be logged as
+* #add_lexer_observers gets passed a list of {Tailor::Lexer} event types that
+  the ruler should get notified on
+* it calls #measure to assess if the criteria it's checking has been met
+* it adds a {Tailor::Problem} to +@problems+
+
+==== Add the Ruler to the list of Styles
+
+Internally, this all happens in +lib/tailor/configuration/style.rb+, but you can
+add infomation about your ruler to your config file.  If you created a Ruler:
+
+  # max_lines_in_block.rb
+  class Tailor
+    module Rulers
+      class MaxLinesInBlockRuler < Tailor::Ruler
+        def initialize(config, options)
+          super(config, options)
+          add_lexer_observers :ignored_nl, :kw, :nl
+        end
+
+        def measure
+          ...
+        end
+
+        ...
+      end
+    end
+  end
+
+...then require this and add it to the Style list of properties:
+
+  # .tailor
+  require 'tailor/configuration/style'
+  require 'max_lines_in_block'
+
+  Tailor::Configuration::Style.define_property :max_lines_in_block
+
+  Tailor.config do |config|
+    config.file_set 'lib/**/*.rb' do |style|
+      style.max_lines_in_block 10, level: :error
+    end
+  end
+
+Next time you run tailor, your Ruler will get initialized and used.
 
 == REQUIREMENTS:
 
