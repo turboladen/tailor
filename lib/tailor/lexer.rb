@@ -452,8 +452,9 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_tstring_beg(token)
       log "TSTRING_BEG: '#{token}'"
+      current_line = LexedLine.new(super, lineno)
       tstring_beg_changed
-      notify_tstring_beg_observers(lineno)
+      notify_tstring_beg_observers(current_line, lineno)
       super(token)
     end
 
@@ -471,7 +472,7 @@ class Tailor
     def on_tstring_end(token)
       log "TSTRING_END: '#{token}'"
       tstring_end_changed
-      notify_tstring_end_observers
+      notify_tstring_end_observers(lineno)
       super(token)
     end
 

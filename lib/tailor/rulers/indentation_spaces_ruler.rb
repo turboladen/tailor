@@ -62,7 +62,6 @@ class Tailor
 
       def ignored_nl_update(current_lexed_line, lineno, column)
         log "indent reasons on entry: #{@manager.indent_reasons}"
-        stop if @tstring_nesting.size > 0
 
         if current_lexed_line.only_spaces?
           log "Line of only spaces.  Moving on."
@@ -214,13 +213,22 @@ class Tailor
         @manager.update_for_closing_reason(:on_rparen, current_lexed_line)
       end
 
-      def tstring_beg_update(lineno)
+      def tstring_beg_update(lexed_line, lineno)
         @tstring_nesting << lineno
+        @manager.update_actual_indentation(lexed_line)
+        log "tstring_nesting is now: #{@tstring_nesting}"
         @manager.stop
       end
 
-      def tstring_end_update
-        @tstring_nesting.pop
+      def tstring_end_update(current_line)
+        unless @tstring_nesting.empty?
+          tstring_start_line = @tstring_nesting.pop
+
+          if tstring_start_line < current_line
+            measure(tstring_start_line, @manager.actual_indentation)
+          end
+        end
+
         @manager.start unless in_tstring?
       end
 

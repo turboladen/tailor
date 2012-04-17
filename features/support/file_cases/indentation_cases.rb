@@ -967,6 +967,11 @@ INDENT_1[:multi_line_string_first_line_indented_trailing_comment] =
   end
 end}
 
+INDENT_1[:multi_line_tstring] =
+  %Q{INDENT_OK[:class] =
+%Q{class MyClass
+end}}
+
 #-------------------------------------------------------------------------------
 # Operators
 #-------------------------------------------------------------------------------

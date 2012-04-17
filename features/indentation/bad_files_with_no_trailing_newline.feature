@@ -69,6 +69,7 @@ Feature: Indentation check on bad fails without trailing newlines
     | File                                                            | Position |
     | indent/1/multi_line_string_first_line_indented                  | 2:3      |
     | indent/1/multi_line_string_first_line_indented_trailing_comment | 2:3      |
+    | indent/1/multi_line_tstring                                     | 2:0      |
 
   @multi_line
   Scenarios: 1 problem with multi-line operator use
