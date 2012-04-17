@@ -7,8 +7,16 @@ Gem::Specification.new do |s|
   s.version = Tailor::VERSION
 
   s.author = "Steve Loveless"
-  s.summary = "ruby style checking tool"
-  s.description = "Utility for checking style of Ruby files."
+  s.summary = "A Ruby style & complexity measurer"
+  s.description = <<-DESC
+tailor parses Ruby files and measures them with some style and static analysis
+"rulers".  Default values for the Rulers are based on a number of style guides
+in the Ruby community as well as what seems to be common.  More on this here
+http://wiki.github.com/turboladen/tailor.
+
+tailor's goal is to help you be consistent with your code, throughout your
+project, whatever style that may be.
+  DESC
   s.email = "steve.loveless@gmail.com"
   s.homepage = "http://github.com/turboladen/tailor"
 

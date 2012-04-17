@@ -4,9 +4,9 @@
 
 == DESCRIPTION:
 
-tailor parses Ruby files and measures them with some style "rulers".  Default
-values for the Rulers are based on a number of style guides in the Ruby
-community as well as what seems to be common.  More on this here
+tailor parses Ruby files and measures them with some style and static analysis
+"rulers".  Default values for the Rulers are based on a number of style guides
+in the Ruby community as well as what seems to be common.  More on this here
 http://wiki.github.com/turboladen/tailor.
 
 tailor's goal is to help you be consistent with your style, throughout your
