@@ -72,13 +72,17 @@ class Tailor
         if @manager.line_ends_with_single_token_indenter?(current_lexed_line)
           log "Line ends with single-token indent token."
 
-          unless @manager.in_an_enclosure? && current_lexed_line.ends_with_comma?
+          unless @manager.in_an_enclosure? &&
+            current_lexed_line.ends_with_comma?
             log "Line-ending single-token indenter found."
             token_event = current_lexed_line.last_non_line_feed_event
 
             unless @manager.line_ends_with_same_as_last token_event
-              log "Line ends with different type of single-token indenter: #{token_event}"
-              @manager.add_indent_reason(token_event[1], token_event.last, lineno)
+              msg = "Line ends with different type of single-token "
+              msg << "indenter: #{token_event}"
+              log msg
+              @manager.add_indent_reason(token_event[1], token_event.last,
+                lineno)
             end
           end
         end
@@ -142,8 +146,8 @@ class Tailor
           log "last indent reason type: #{@manager.last_indent_reason_type}"
           log "I think this is a single-token closing line..."
 
-          @manager.update_for_closing_reason(@manager.indent_reasons.last[:event_type],
-            current_lexed_line)
+          @manager.update_for_closing_reason(@manager.indent_reasons.
+            last[:event_type], current_lexed_line)
         end
 
         @manager.set_up_line_transition
@@ -180,7 +184,9 @@ class Tailor
 
           if current_lexed_line.only_rbrace?
             @manager.amount_to_change_this -= 1
-            log "lonely rbrace.  change_this -= 1 -> #{@manager.amount_to_change_this}"
+            msg = "lonely rbrace.  "
+            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
+            log msg
           end
         end
 
@@ -193,7 +199,9 @@ class Tailor
 
           if current_lexed_line.only_rbracket?
             @manager.amount_to_change_this -= 1
-            log "lonely rbracket.  change_this -= 1 -> #{@manager.amount_to_change_this}"
+            msg = "lonely rbracket.  "
+            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
+            log msg
           end
         end
 
@@ -206,7 +214,9 @@ class Tailor
 
           if current_lexed_line.only_rparen?
             @manager.amount_to_change_this -= 1
-            log "lonely rparen.  change_this -= 1 -> #{@manager.amount_to_change_this}"
+            msg = "lonely rparen.  "
+            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
+            log msg
           end
         end
 

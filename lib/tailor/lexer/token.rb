@@ -82,7 +82,7 @@ class Tailor
 
           if sexp_line.nil?
             log "sexp line was nil again."
-            log "Trying one more time with the last char removed from the line..."
+            log "Trying 1 more time with the last char removed from the line..."
             line_of_text.chop!
             sexp_line = Ripper.sexp(line_of_text)
           end

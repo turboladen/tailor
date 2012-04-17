@@ -26,8 +26,8 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on.
       def measure(lexed_line, lineno, column)
         if lexed_line.ends_with_sp?
-          problem_message =
-            "Line has #{lexed_line.last_non_line_feed_event.last.size} trailing spaces."
+          actual = lexed_line.last_non_line_feed_event.last.size
+          problem_message = "Line has #{actual} trailing spaces."
 
           @problems << Problem.new(problem_type, lineno, column,
             problem_message, @options[:level])
