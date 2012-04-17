@@ -1,6 +1,10 @@
 Tailor.config do |config|
   config.formatters "text"
   config.file_set 'lib/**/*.rb'
-  config.file_set 'spec/**/*.rb'
   config.file_set 'features/**/*.rb'
+  config.file_set 'spec/**/*.rb', :spec do |style|
+    style.spaces_after_lbrace 1, level: :warn
+    style.spaces_before_lbrace 1, level: :warn
+    style.spaces_before_rbrace 1, level: :warn
+  end
 end
