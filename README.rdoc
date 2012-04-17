@@ -212,7 +212,7 @@ things.
 In the default config file, you see a single parameter being passed to
 <tt>config.file_set</tt>--this is the glob that defines the list of files for
 that file set.  While you don't see it, +config.file_set+ takes a second
-optional parameter that allows you to _label+ your style properties, and thus
+optional parameter that allows you to _label_ your style properties, and thus
 use different sets of style properties for differet sets of files.  The label is
 simply just a name to refer to that file set by; it will show in your report
 (in the case that problems were found, of course) so you know what set of
