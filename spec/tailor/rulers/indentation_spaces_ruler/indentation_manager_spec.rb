@@ -182,7 +182,10 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
-      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_false }
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).
+          should be_false
+      end
     end
 
     context "lexed_line ends with an op" do
@@ -193,7 +196,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
-      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+      end
     end
 
     context "lexed_line ends with a comma" do
@@ -204,7 +209,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
-      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+      end
     end
 
     context "lexed_line ends with a period" do
@@ -215,7 +222,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
-      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+      end
     end
 
     context "lexed_line ends with a modified kw" do
@@ -226,7 +235,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_modifier_kw?: true)
       end
 
-      specify { subject.line_ends_with_single_token_indenter?(lexed_line).should be_true }
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+      end
     end
   end
 
@@ -313,7 +324,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
     context "@indent_reasons contains the corresponding opening event" do
       let(:indent_reasons) do
-        [ { event_type: :on_lparen }, { event_type: :on_lbrace } ]
+        [{ event_type: :on_lparen }, { event_type: :on_lbrace }]
       end
 
       before { subject.instance_variable_set(:@indent_reasons, indent_reasons) }
