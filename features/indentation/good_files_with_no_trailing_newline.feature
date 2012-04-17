@@ -19,14 +19,14 @@ Feature: Indentation check on good files without trailing newlines
     And the exit status should be 0
 
   Scenarios: Good class uses
-    | File                                            |
-    | indent/ok/class                                 |
-    | indent/ok/nested_class                          |
-    | indent/ok/class_empty                           |
-    | indent/ok/class_empty_trailing_comment          |
-    | indent/ok/one_line_class                        |
-    | indent/ok/one_line_subclass                     |
-    | indent/ok/one_line_subclass_with_inheritance    |
+    | File                                         |
+    | indent/ok/class                              |
+    | indent/ok/nested_class                       |
+    | indent/ok/class_empty                        |
+    | indent/ok/class_empty_trailing_comment       |
+    | indent/ok/one_line_class                     |
+    | indent/ok/one_line_subclass                  |
+    | indent/ok/one_line_subclass_with_inheritance |
 
   @single_line
   Scenarios: Good single-line statement uses
@@ -205,11 +205,15 @@ Feature: Indentation check on good files without trailing newlines
     | indent/ok/brace_bracket_paren_combo1 |
     | indent/ok/paren_comma_combo1         |
 
+  @multi_line @labels
+  Scenarios: Use of labels
+    | File                           |
+    | indent/ok/line_ends_with_label |
+
   @wip
   Scenarios: WIPs
     | File                                  |
     | indent/ok/case_whens_in               |
     | indent/ok/method_closing_lonely_paren |
-    | indent/ok/line_ends_with_label        |
     | indent/ok/rparen_and_do_same_line     |
 

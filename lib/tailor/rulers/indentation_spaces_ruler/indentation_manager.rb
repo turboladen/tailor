@@ -149,6 +149,7 @@ class Tailor
           lexed_line.ends_with_op? ||
             lexed_line.ends_with_comma? ||
             lexed_line.ends_with_period? ||
+            lexed_line.ends_with_label? ||
             lexed_line.ends_with_modifier_kw?
         end
 
