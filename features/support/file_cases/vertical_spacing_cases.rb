@@ -67,4 +67,3 @@ V_SPACING_1[:parent_method_too_long] =
   def inner_thing; print '1'; end
   puts
 end}
-

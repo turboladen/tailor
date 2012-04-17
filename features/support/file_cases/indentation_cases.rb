@@ -1,11 +1,11 @@
 INDENT_OK = {}
 
 INDENT_OK[:class] =
-%Q{class MyClass
+  %Q{class MyClass
 end}
 
 INDENT_OK[:one_line_class] =
-%Q{class MyClass; end}
+  %Q{class MyClass; end}
 
 INDENT_OK[:one_line_subclass] =
   %Q{class MyClass < RuntimeError; end}
@@ -17,7 +17,7 @@ INDENT_OK[:one_line_subclass_with_inheritance] =
 end}
 
 INDENT_OK[:class_empty] =
-%Q{class MyClass
+  %Q{class MyClass
 
 end}
 
@@ -27,12 +27,12 @@ INDENT_OK[:class_empty_trailing_comment] =
 end}
 
 INDENT_OK[:class_singlestatement] =
-%Q{class MyClass
+  %Q{class MyClass
   include Stuff
 end}
 
 INDENT_OK[:assignment_addition_multistatement] =
-%Q{thing = 1 +
+  %Q{thing = 1 +
   2 + 3 + 4 +
   5}
 
@@ -42,7 +42,7 @@ INDENT_OK[:assignment_addition_multistatement_trailing_comment] =
   5}
 
 INDENT_OK[:assignment_hash_multistatement] =
-%Q{thing = {
+  %Q{thing = {
   :one => 'one',
   two: 'two'
 }}
@@ -54,7 +54,7 @@ INDENT_OK[:assignment_hash_multistatement_trailing_comment] =
 }}
 
 INDENT_OK[:assignment_array_multistatement] =
-%Q{thing = [
+  %Q{thing = [
   :one,
   :two
 ]}
@@ -78,7 +78,7 @@ INDENT_OK[:assignment_paren_multistatement_trailing_comment] =
   5)}
 
 INDENT_OK[:assignment_twolevel_hash_multistatement] =
-%Q{thing = {
+  %Q{thing = {
   :one => {
     :a => 'a',
     b: 'b'
@@ -90,7 +90,7 @@ INDENT_OK[:assignment_twolevel_hash_multistatement] =
 }}
 
 INDENT_OK[:assignment_twolevel_array_multistatement] =
-%Q{thing = [
+  %Q{thing = [
   [:one],
   [
     :two,
@@ -99,7 +99,7 @@ INDENT_OK[:assignment_twolevel_array_multistatement] =
 ]}
 
 INDENT_OK[:assignment_twolevel_paren_multistatement] =
-%Q{result = Integer(
+  %Q{result = Integer(
   String.new(
     "1"
   ).to_i,
@@ -107,7 +107,7 @@ INDENT_OK[:assignment_twolevel_paren_multistatement] =
 )}
 
 INDENT_OK[:method_call_multistatement] =
-%Q{my_method_with_many_params(one, two,
+  %Q{my_method_with_many_params(one, two,
   three,
   four,
   five)}
@@ -178,29 +178,29 @@ INDENT_OK[:keyword_ending_with_period_trailing_comment] =
 end}
 
 INDENT_OK[:def] =
-%Q{def a_method
+  %Q{def a_method
 end}
 
 INDENT_OK[:def_empty] =
-%Q{def a_method
+  %Q{def a_method
 
 end}
 
 INDENT_OK[:nested_def] =
-%Q{def first_method
+  %Q{def first_method
   def second_method
     puts "hi"
   end
 end}
 
 INDENT_OK[:nested_class] =
-%Q{class MyClass
+  %Q{class MyClass
   class AnotherClass
   end
 end}
 
 INDENT_OK[:require_class_singlestatement] =
-%Q{require 'time'
+  %Q{require 'time'
 
 class MyClass
   include Stuff
@@ -217,7 +217,7 @@ INDENT_OK[:one_line_class] =
   %Q{class MyClass; end}}
 
 INDENT_OK[:require_class_singlestatement_def] =
-%Q{require 'time'
+  %Q{require 'time'
 
 class MyClass
   include Stuff
@@ -227,7 +227,7 @@ class MyClass
 end}
 
 INDENT_OK[:require_class_singlestatement_def_content] =
-%Q{require 'time'
+  %Q{require 'time'
 
 class MyClass
   include Stuff
@@ -238,21 +238,21 @@ class MyClass
 end}
 
 INDENT_OK[:if_modifier] =
-%Q{puts "hi" if nil.nil?}
+  %Q{puts "hi" if nil.nil?}
 
 INDENT_OK[:if_modifier2] =
   %Q{start_key_registration_server if @profiles.values.include? :SM5000}
 
 INDENT_OK[:def_return_if_modifier] =
-%Q{def a_method
+  %Q{def a_method
   return @something if @something
 end}
 
 INDENT_OK[:unless_modifier] =
-%Q{puts "hi" unless nil.nil?}
+  %Q{puts "hi" unless nil.nil?}
 
 INDENT_OK[:def_return_unless_modifier] =
-%Q{def a_method
+  %Q{def a_method
   return @something unless @something
 end}
 
@@ -710,7 +710,7 @@ INDENT_OK[:combo1] =
 end}
 
 INDENT_OK[:combo2] =
-%Q{class C
+  %Q{class C
 
   send :each do
     def foo
@@ -762,11 +762,11 @@ INDENT_OK[:line_ends_with_label] =
 INDENT_1 = {}
 
 INDENT_1[:class_indented_end] =
-%Q{class MyClass
+  %Q{class MyClass
  end}
 
 INDENT_1[:class_indented_singlestatement] =
-%Q{class MyClass
+  %Q{class MyClass
    include Something
 end}
 
@@ -776,42 +776,42 @@ INDENT_1[:class_indented_singlestatement_trailing_comment] =
 end}
 
 INDENT_1[:class_outdented_singlestatement] =
-%Q{class MyClass
+  %Q{class MyClass
  include Something
 end}
 
 INDENT_1[:def_indented_end] =
-%Q{def a
+  %Q{def a
  end}
 
 INDENT_1[:def_content_indented_end] =
-%Q{def a
+  %Q{def a
   puts "stuff"
  end}
 
 INDENT_1[:class_def_content_outdented_end] =
-%Q{class A
+  %Q{class A
   def a
     puts "stuff"
  end
 end}
 
 INDENT_1[:class_def_outdented_content] =
-%Q{class A
+  %Q{class A
   def a
    puts "stuff"
   end
 end}
 
 INDENT_1[:class_method_def_using_self_outdented] =
-%Q{class A
+  %Q{class A
  self.my_method
     puts 'stuff'
   end
 end}
 
 INDENT_1[:case_indented_whens_level] =
-%Q{def my_method
+  %Q{def my_method
    case true
   when true
     puts "stuff"
@@ -831,7 +831,7 @@ INDENT_1[:case_indented_whens_level_trailing_comment] =
 end}
 
 INDENT_1[:case_outdented_whens_level] =
-%Q{def my_method
+  %Q{def my_method
  case true
   when true
     puts "stuff"
@@ -1021,4 +1021,3 @@ INDENT_1[:multi_line_method_call_ends_with_many_periods_last_in_trailing_comment
   %Q{my_hashie.first_level.
   second_level.
     third_level  # comment}
-

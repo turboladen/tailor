@@ -9,7 +9,7 @@ describe Tailor do
       Tailor::Configuration.should_receive(:new)
       Tailor.config
     end
-    
+
     it "returns a Configuration object" do
       Tailor.config.should be_a Tailor::Configuration
     end

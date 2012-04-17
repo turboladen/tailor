@@ -133,4 +133,3 @@ Feature: Vertical spacing
     | File                               | Position | Position 2 | Problems |
     | v_spacing/1/method_too_long        | 1:0      |            | 1        |
     | v_spacing/1/parent_method_too_long | 1:0      |            | 1        |
-

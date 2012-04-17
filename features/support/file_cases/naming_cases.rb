@@ -49,4 +49,3 @@ end}
 NAMING_1[:two_screaming_snake_module_class] =
   %Q{module Thing_One_Again
 end}
-

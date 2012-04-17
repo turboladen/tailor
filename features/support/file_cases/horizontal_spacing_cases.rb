@@ -185,7 +185,7 @@ H_SPACING_1[:single_line_block_0_spaces_before_lbrace] =
   %Q{1..10.times{ |n| puts n }}
 
 H_SPACING_1[:two_line_braces_block_2_spaces_before_lbrace] =
-%Q{1..10.times  { |n|
+  %Q{1..10.times  { |n|
 puts n}}
 
 H_SPACING_1[:two_line_braces_block_0_spaces_before_lbrace_trailing_comment] =
@@ -264,5 +264,3 @@ H_SPACING_1[:multi_line_method_call_space_after_lparen] = %Q{thing( one,
 H_SPACING_1[:multi_line_method_call_space_after_lparen_trailing_comment] =
   %Q{thing( one,
   two)}
-
-
