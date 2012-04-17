@@ -19,14 +19,14 @@ Feature: Indentation check on bad fails without trailing newlines
     And the output should match /position:  <Position>/
     And the exit status should be 1
 
-  @multi_line
+  @multi_line @keywords
   Scenarios: 1 problem with classes
     | File                                           | Position |
     | indent/1/class_indented_end                    | 2:1      |
     | indent/1/class_method_def_using_self_outdented | 2:1      |
 
 
-  @multi_line
+  @single_line @keywords
   Scenarios: 1 problem with single-line statement
     | File                                                     | Position |
     | indent/1/class_indented_singlestatement                  | 2:3      |
@@ -34,14 +34,14 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/class_outdented_singlestatement                 | 2:1      |
     | indent/1/class_def_outdented_content                     | 3:3      |
 
-  @multi_line
+  @multi_line @keywords
   Scenarios: 1 problem with def
     | File                                     | Position |
     | indent/1/def_indented_end                | 2:1      |
     | indent/1/def_content_indented_end        | 3:1      |
     | indent/1/class_def_content_outdented_end | 4:1      |
 
-  @multi_line
+  @multi_line @keywords @continuations
   Scenarios: 1 problem with case
     | File                                                | Position |
     | indent/1/case_indented_whens_level                  | 2:3      |
@@ -51,7 +51,7 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/case_when_outdented_whens_level            | 3:1      |
     | indent/1/case_indented_whens_in                     | 2:3      |
 
-  @multi_line
+  @multi_line @keywords
   Scenarios: 1 problem with 'do' loop
     | File                                         | Position |
     | indent/1/while_do_indented                   | 1:1      |
@@ -64,7 +64,7 @@ Feature: Indentation check on bad fails without trailing newlines
     | indent/1/for_do_indented                     | 1:1      |
     | indent/1/loop_do_indented                    | 1:1      |
 
-  @multi_line
+  @multi_line @strings
   Scenarios: 1 problem with multi-line string
     | File                                                            | Position |
     | indent/1/multi_line_string_first_line_indented                  | 2:3      |
