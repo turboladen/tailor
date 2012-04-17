@@ -50,9 +50,9 @@ describe Tailor::Critic do
     context "#problems contains valid values" do
       it "adds the number of each problem together" do
         probs = {
-           one: { type: :indentation, line: 1, message: "" },
-           two: { type: :indentation, line: 2, message: "" },
-           thre: { type: :indentation, line: 27, message: "" }
+          one: { type: :indentation, line: 1, message: "" },
+          two: { type: :indentation, line: 2, message: "" },
+          thre: { type: :indentation, line: 27, message: "" }
         }
         subject.instance_variable_set(:@problems, probs)
         subject.problem_count.should == 3

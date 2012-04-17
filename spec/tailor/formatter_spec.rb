@@ -4,13 +4,16 @@ require 'tailor/formatter'
 describe Tailor::Formatter do
   describe "#problems_at_level" do
     let(:problems) do
+      msg = "File contains invalid Ruby; "
+      msg << "run `ruby -c [your_file.rb]` for more details."
+
       {
         "some_file.rb" => [
           {
             :type => "allow_invalid_ruby",
             :line => 0,
             :column => 0,
-            :message => "File contains invalid Ruby; run `ruby -c [your_file.rb]` for more details.",
+            :message => msg,
             :level => :warn
           }
         ]
@@ -25,12 +28,15 @@ describe Tailor::Formatter do
 
     context "the level asked for exists in the problems" do
       it "returns the problem" do
+        msg = "File contains invalid Ruby; "
+        msg << "run `ruby -c [your_file.rb]` for more details."
+
         subject.problems_at_level(problems, :warn).should == [
           {
             :type => "allow_invalid_ruby",
             :line => 0,
             :column => 0,
-            :message => "File contains invalid Ruby; run `ruby -c [your_file.rb]` for more details.",
+            :message => msg,
             :level => :warn
           }
         ]

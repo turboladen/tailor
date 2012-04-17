@@ -22,7 +22,7 @@ describe Tailor::Reporter do
       t.instance_variable_set(:@formatters, [formatter])
 
       t
-    end 
+    end
 
     it "calls #file_report on each @formatters" do
       label = :some_label

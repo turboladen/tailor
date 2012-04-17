@@ -34,7 +34,7 @@ describe Tailor::CLI do
 
   describe "#initialize" do
     let(:args) { ['last'] }
-    
+
     it "uses Options to parse the args" do
       Tailor::Configuration.stub(:new).and_return config
       Tailor::Critic.stub(:new)
@@ -52,15 +52,14 @@ describe Tailor::CLI do
 
       Tailor::CLI.new(args)
     end
-    
+
     context "options.show_config is true" do
-      
+
     end
-    
+
     context "options.show_config is false" do
-      
+
     end
-    
   end
 
   describe "#execute!" do
@@ -73,7 +72,7 @@ describe Tailor::CLI do
       subject.instance_variable_set(:@critic, critic)
       subject.instance_variable_set(:@reporter, reporter)
     end
-    
+
     after do
       Tailor::Critic.unstub(:new)
       Tailor::Reporter.unstub(:new)
@@ -87,7 +86,7 @@ describe Tailor::CLI do
       critic.stub(:critique).and_yield(problems_for_file, label)
       reporter.stub(:summary_report)
       reporter.should_receive(:file_report).with(problems_for_file, label)
-      
+
       subject.execute!
     end
   end

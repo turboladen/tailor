@@ -12,17 +12,17 @@ describe Tailor::LexedLine do
     let(:lexed_output) do
       [
         [[1, 0], :on_ident, "require"],
-          [[1, 7], :on_sp, " "],
-          [[1, 8], :on_tstring_beg, "'"],
-          [[1, 9], :on_tstring_content, "log_switch"],
-          [[1, 19], :on_tstring_end, "'"],
-          [[1, 20], :on_nl, "\n"],
-          [[2, 0], :on_ident, "require_relative"],
-          [[2, 16], :on_sp, " "],
-          [[2, 17], :on_tstring_beg, "'"],
-          [[2, 18], :on_tstring_content, "tailor/runtime_error"],
-          [[2, 38], :on_tstring_end, "'"],
-          [[2, 39], :on_nl, "\n"]
+        [[1, 7], :on_sp, " "],
+        [[1, 8], :on_tstring_beg, "'"],
+        [[1, 9], :on_tstring_content, "log_switch"],
+        [[1, 19], :on_tstring_end, "'"],
+        [[1, 20], :on_nl, "\n"],
+        [[2, 0], :on_ident, "require_relative"],
+        [[2, 16], :on_sp, " "],
+        [[2, 17], :on_tstring_beg, "'"],
+        [[2, 18], :on_tstring_content, "tailor/runtime_error"],
+        [[2, 38], :on_tstring_end, "'"],
+        [[2, 39], :on_nl, "\n"]
       ]
     end
 
@@ -140,11 +140,11 @@ describe Tailor::LexedLine do
       let(:lexed_output) do
         [
           [[1, 0], :on_ident, "thing"],
-            [[1, 5], :on_sp, " "],
-            [[1, 6], :on_op, "="],
-            [[1, 7], :on_sp, " "],
-            [[1, 8], :on_int, "1"],
-            [[1, 9], :on_ignored_nl, "\n"]
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_op, "="],
+          [[1, 7], :on_sp, " "],
+          [[1, 8], :on_int, "1"],
+          [[1, 9], :on_ignored_nl, "\n"]
         ]
       end
 
@@ -159,13 +159,13 @@ describe Tailor::LexedLine do
       let(:lexed_output) do
         [
           [[1, 0], :on_ident, "thing"],
-            [[1, 5], :on_sp, " "],
-            [[1, 6], :on_op, "="],
-            [[1, 7], :on_sp, " "],
-            [[1, 8], :on_int, "1"],
-            [[1, 9], :on_sp, " "],
-            [[1, 10], :on_kw, "if"],
-            [[1, 12], :on_ignored_nl, "\n"]
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_op, "="],
+          [[1, 7], :on_sp, " "],
+          [[1, 8], :on_int, "1"],
+          [[1, 9], :on_sp, " "],
+          [[1, 10], :on_kw, "if"],
+          [[1, 12], :on_ignored_nl, "\n"]
         ]
       end
 
@@ -205,10 +205,10 @@ describe Tailor::LexedLine do
     let(:lexed_output) do
       [
         [[1, 0], :on_kw, "def"],
-          [[1, 3], :on_sp, " "],
-          [[1, 4], :on_ident, "thing"],
-          [[1, 9], :on_sp, " "],
-          [[1, 10], :on_nl, "\n"]
+        [[1, 3], :on_sp, " "],
+        [[1, 4], :on_ident, "thing"],
+        [[1, 9], :on_sp, " "],
+        [[1, 10], :on_nl, "\n"]
       ]
     end
 
@@ -230,10 +230,10 @@ describe Tailor::LexedLine do
       let(:lexed_output) do
         [
           [[1, 0], :on_kw, "def"],
-            [[1, 3], :on_sp, " "],
-            [[1, 4], :on_ident, "thing"],
-            [[1, 9], :on_sp, " "],
-            [[1, 10], :on_nl, "\n"]
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "thing"],
+          [[1, 9], :on_sp, " "],
+          [[1, 10], :on_nl, "\n"]
         ]
       end
 
@@ -246,9 +246,9 @@ describe Tailor::LexedLine do
       let(:lexed_output) do
         [
           [[1, 0], :on_kw, "def"],
-            [[1, 3], :on_sp, " "],
-            [[1, 4], :on_ident, "thing"],
-            [[1, 9], :on_sp, "\\\n"]
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "thing"],
+          [[1, 9], :on_sp, "\\\n"]
         ]
       end
 
@@ -261,7 +261,14 @@ describe Tailor::LexedLine do
   describe "#loop_with_do?" do
     context "line is 'while true do\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "while"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_kw, "do"], [[1, 13], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "while"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "true"],
+          [[1, 10], :on_sp, " "],
+          [[1, 11], :on_kw, "do"],
+          [[1, 13], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns true" do
@@ -271,7 +278,13 @@ describe Tailor::LexedLine do
 
     context "line is 'while true\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "while"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "while"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "true"],
+          [[1, 10], :on_sp, " "],
+          [[1, 11], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns false" do
@@ -281,7 +294,14 @@ describe Tailor::LexedLine do
 
     context "line is 'until true do\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "until"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_kw, "do"], [[1, 13], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "until"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "true"],
+          [[1, 10], :on_sp, " "],
+          [[1, 11], :on_kw, "do"],
+          [[1, 13], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns true" do
@@ -291,7 +311,13 @@ describe Tailor::LexedLine do
 
     context "line is 'until true\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "until"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "true"], [[1, 10], :on_sp, " "], [[1, 11], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "until"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "true"],
+          [[1, 10], :on_sp, " "],
+          [[1, 11], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns false" do
@@ -301,7 +327,20 @@ describe Tailor::LexedLine do
 
     context "line is 'for i in 1..5 do\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "for"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "i"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "in"], [[1, 8], :on_sp, " "], [[1, 9], :on_int, "1"], [[1, 10], :on_op, ".."], [[1, 12], :on_int, "5"], [[1, 13], :on_sp, " "], [[1, 14], :on_kw, "do"], [[1, 16], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "for"],
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "i"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "in"],
+          [[1, 8], :on_sp, " "],
+          [[1, 9], :on_int, "1"],
+          [[1, 10], :on_op, ".."],
+          [[1, 12], :on_int, "5"],
+          [[1, 13], :on_sp, " "],
+          [[1, 14], :on_kw, "do"],
+          [[1, 16], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns true" do
@@ -311,7 +350,19 @@ describe Tailor::LexedLine do
 
     context "line is 'for i in 1..5\\n'" do
       let(:lexed_output) do
-        [[[1, 0], :on_kw, "for"], [[1, 3], :on_sp, " "], [[1, 4], :on_ident, "i"], [[1, 5], :on_sp, " "], [[1, 6], :on_kw, "in"], [[1, 8], :on_sp, " "], [[1, 9], :on_int, "1"], [[1, 10], :on_op, ".."], [[1, 12], :on_int, "5"], [[1, 13], :on_sp, " "], [[1, 14], :on_ignored_nl, "\n"]]
+        [
+          [[1, 0], :on_kw, "for"],
+          [[1, 3], :on_sp, " "],
+          [[1, 4], :on_ident, "i"],
+          [[1, 5], :on_sp, " "],
+          [[1, 6], :on_kw, "in"],
+          [[1, 8], :on_sp, " "],
+          [[1, 9], :on_int, "1"],
+          [[1, 10], :on_op, ".."],
+          [[1, 12], :on_int, "5"],
+          [[1, 13], :on_sp, " "],
+          [[1, 14], :on_ignored_nl, "\n"]
+        ]
       end
 
       it "returns false" do
@@ -338,7 +389,13 @@ describe Tailor::LexedLine do
     end
 
     context "lexed line contains '  }\\n'" do
-      let(:lexed_output) { [[[1, 0], :on_sp, "  "], [[1, 2], :on_rbrace, "}"], [[1, 3], :on_nl, "\n"]] }
+      let(:lexed_output) do
+        [
+          [[1, 0], :on_sp, "  "],
+          [[1, 2], :on_rbrace, "}"],
+          [[1, 3], :on_nl, "\n"]
+        ]
+      end
 
       it "returns nil" do
         subject.first_non_space_element.should == [[1, 2], :on_rbrace, "}"]
@@ -381,10 +438,10 @@ describe Tailor::LexedLine do
     let(:lexed_output) do
       [
         [[1, 0], :on_kw, "def"],
-          [[1, 3], :on_sp, " "],
-          [[1, 4], :on_ident, "thing"],
-          [[1, 9], :on_sp, " "],
-          [[1, 10], :on_nl, "\n"]
+        [[1, 3], :on_sp, " "],
+        [[1, 4], :on_ident, "thing"],
+        [[1, 9], :on_sp, " "],
+        [[1, 10], :on_nl, "\n"]
       ]
     end
 
@@ -399,13 +456,13 @@ describe Tailor::LexedLine do
         let(:lexed_output) do
           [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_comma, ","],
-              [[1, 14], :on_sp, "  "],
-              [[1, 16], :on_comment, "# comment\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_comma, ","],
+            [[1, 14], :on_sp, "  "],
+            [[1, 16], :on_comment, "# comment\n"]
           ]
         end
 
@@ -416,26 +473,26 @@ describe Tailor::LexedLine do
         it "replaces the comment with an :on_ignored_nl" do
           subject.remove_trailing_comment(file_text).should == [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_comma, ","],
-              [[1, 14], :on_ignored_nl, "\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_comma, ","],
+            [[1, 14], :on_ignored_nl, "\n"]
           ]
         end
       end
-      
+
       context "no spaces before comment" do
         let(:lexed_output) do
           [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_comma, ","],
-              [[1, 14], :on_comment, "# comment\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_comma, ","],
+            [[1, 14], :on_comment, "# comment\n"]
           ]
         end
 
@@ -446,28 +503,28 @@ describe Tailor::LexedLine do
         it "replaces the comment with an :on_ignored_nl" do
           subject.remove_trailing_comment(file_text).should == [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_comma, ","],
-              [[1, 14], :on_ignored_nl, "\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_comma, ","],
+            [[1, 14], :on_ignored_nl, "\n"]
           ]
         end
       end
     end
-    
+
     context "stuff before comment is a complete statement" do
       context "spaces before comment" do
         let(:lexed_output) do
           [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_sp, "  "],
-              [[1, 15], :on_comment, "# comment\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_sp, "  "],
+            [[1, 15], :on_comment, "# comment\n"]
           ]
         end
 
@@ -478,11 +535,11 @@ describe Tailor::LexedLine do
         it "replaces the comment with an :on_nl" do
           subject.remove_trailing_comment(file_text).should == [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_nl, "\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_nl, "\n"]
           ]
         end
       end
@@ -491,11 +548,11 @@ describe Tailor::LexedLine do
         let(:lexed_output) do
           [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_comment, "# comment\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_comment, "# comment\n"]
           ]
         end
 
@@ -506,16 +563,17 @@ describe Tailor::LexedLine do
         it "replaces the comment with an :on_nl" do
           subject.remove_trailing_comment(file_text).should == [
             [[1, 0], :on_kw, "def"],
-              [[1, 3], :on_sp, " "],
-              [[1, 4], :on_ident, "thing"],
-              [[1, 9], :on_sp, " "],
-              [[1, 10], :on_ident, "one"],
-              [[1, 13], :on_nl, "\n"]
+            [[1, 3], :on_sp, " "],
+            [[1, 4], :on_ident, "thing"],
+            [[1, 9], :on_sp, " "],
+            [[1, 10], :on_ident, "one"],
+            [[1, 13], :on_nl, "\n"]
           ]
         end
-        
+
         it "returns a LexedLine" do
-          subject.remove_trailing_comment(file_text).should be_a Tailor::LexedLine
+          subject.remove_trailing_comment(file_text).
+            should be_a Tailor::LexedLine
         end
       end
     end
@@ -605,9 +663,9 @@ describe Tailor::LexedLine do
       let(:lexed_output) do
         [
           [[1, 0], :on_sp, "        "],
-            [[1, 8], :on_ident, "one"],
-            [[1, 11], :on_comma, ","],
-            [[1, 12], :on_nl, "\n"]]
+          [[1, 8], :on_ident, "one"],
+          [[1, 11], :on_comma, ","],
+          [[1, 12], :on_nl, "\n"]]
       end
 
       it "returns false" do

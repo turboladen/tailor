@@ -41,8 +41,8 @@ describe Tailor::Configuration::Style do
 
       describe "allow_trailing_line_spaces" do
         specify do
-          subject.instance_variable_get(:@allow_trailing_line_spaces).should == [
-            false, { level: :error }]
+          subject.instance_variable_get(:@allow_trailing_line_spaces).
+            should == [false, { level: :error }]
         end
       end
 

@@ -28,36 +28,37 @@ describe Tailor::Configuration do
     before do
       subject.instance_variable_set(:@file_sets, {})
     end
-    
+
     it "adds the set of stuff to @file_sets" do
       subject.file_set('some_files', :bobo) do |style|
         style.trailing_newlines 2
       end
 
       subject.instance_variable_get(:@file_sets).should == {
-        :bobo => {
-          :file_list => [],
-          :style => {
-            :allow_camel_case_methods=>[false, {:level=>:error}],
-            :allow_hard_tabs=>[false, {:level=>:error}],
-            :allow_screaming_snake_case_classes=>[false, {:level=>:error}],
-            :allow_trailing_line_spaces=>[false, {:level=>:error}],
-            :allow_invalid_ruby=>[false, {:level=>:warn}],
-            :indentation_spaces=>[2, {:level=>:error}],
-            :max_code_lines_in_class=>[300, {:level=>:error}],
-            :max_code_lines_in_method=>[30, {:level=>:error}],
-            :max_line_length=>[80, {:level=>:error}],
-            :spaces_after_comma=>[1, {:level=>:error}],
-            :spaces_after_lbrace=>[1, {:level=>:error}],
-            :spaces_after_lbracket=>[0, {:level=>:error}],
-            :spaces_after_lparen=>[0, {:level=>:error}],
-            :spaces_before_comma=>[0, {:level=>:error}],
-            :spaces_before_lbrace=>[1, {:level=>:error}],
-            :spaces_before_rbrace=>[1, {:level=>:error}],
-            :spaces_before_rbracket=>[0, {:level=>:error}],
-            :spaces_before_rparen=>[0, {:level=>:error}],
-            :spaces_in_empty_braces=>[0, {:level=>:error}],
-            :trailing_newlines=>[2, {:level=>:error}]}
+        bobo: {
+          file_list: [],
+          style: {
+            allow_camel_case_methods: [false, { level: :error }],
+            allow_hard_tabs: [false, { level: :error }],
+            allow_screaming_snake_case_classes: [false, { level: :error }],
+            allow_trailing_line_spaces: [false, { level: :error }],
+            allow_invalid_ruby: [false, { level: :warn }],
+            indentation_spaces: [2, { level: :error }],
+            max_code_lines_in_class: [300, { level: :error }],
+            max_code_lines_in_method: [30, { level: :error }],
+            max_line_length: [80, { level: :error }],
+            spaces_after_comma: [1, { level: :error }],
+            spaces_after_lbrace: [1, { level: :error }],
+            spaces_after_lbracket: [0, { level: :error }],
+            spaces_after_lparen: [0, { level: :error }],
+            spaces_before_comma: [0, { level: :error }],
+            spaces_before_lbrace: [1, { level: :error }],
+            spaces_before_rbrace: [1, { level: :error }],
+            spaces_before_rbracket: [0, { level: :error }],
+            spaces_before_rparen: [0, { level: :error }],
+            spaces_in_empty_braces: [0, { level: :error }],
+            trailing_newlines: [2, { level: :error }]
+          }
         }
       }
     end
@@ -78,7 +79,7 @@ describe Tailor::Configuration do
         subject.instance_variable_get(:@config_file).should == 'pants'
       end
     end
-    
+
     context "@config_file is nil" do
       context "DEFAULT_PROJECT_CONFIG exists" do
         before do
@@ -104,7 +105,7 @@ describe Tailor::Configuration do
       end
     end
   end
-  
+
   describe "#file_list" do
     before do
       FileUtils.mkdir_p 'one/two'
@@ -118,7 +119,7 @@ describe Tailor::Configuration do
           results.last.should match /one\/two\/three.rb/
         end
       end
-      
+
       context "the Array has a directory" do
         context "the directory has files" do
           it "returns all files in the directory" do
@@ -126,7 +127,7 @@ describe Tailor::Configuration do
             results.last.should match /one\/two\/three.rb/
           end
         end
-        
+
         context "the directory is empty" do
           before do
             FileUtils.mkdir 'empty'
@@ -140,7 +141,7 @@ describe Tailor::Configuration do
         end
       end
     end
-    
+
     context "glob is a glob" do
       it "returns all files in the glob" do
         results = subject.file_list('one/**/*.rb')
@@ -154,10 +155,11 @@ describe Tailor::Configuration do
         results.last.should match /one\/two\/three.rb/
       end
     end
-    
+
     context "glob is a file" do
       it "returns all files in the glob" do
-        subject.file_list('one/two/three.rb').last.should match /one\/two\/three.rb/
+        subject.file_list('one/two/three.rb').last.
+          should match /one\/two\/three.rb/
       end
     end
   end

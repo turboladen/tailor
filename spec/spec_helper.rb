@@ -6,4 +6,3 @@ SimpleCov.start
 RSpec.configure do |conf|
   conf.include FakeFS::SpecHelpers
 end
-
