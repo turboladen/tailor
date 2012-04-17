@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
 
-  s.add_runtime_dependency(%q<log_switch>, ">= 0.2.0")
+  s.add_runtime_dependency(%q<log_switch>, ">= 0.3.0")
   s.add_runtime_dependency(%q<term-ansicolor>, ">= 1.0.5")
   s.add_runtime_dependency(%q<text-table>, ">= 1.2.2")
 
