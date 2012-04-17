@@ -92,31 +92,45 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   end
 
   describe "#tstring_beg_update" do
+    let(:lexed_line) { double "LexedLine" }
+    let(:manager) { double "IndentationManager" }
+
     it "calls #stop on the indentation_manager object" do
-      manager = double "IndentationManager"
+      manager.should_receive(:update_actual_indentation).with lexed_line
       manager.should_receive(:stop)
       subject.instance_variable_set(:@manager, manager)
-      subject.tstring_beg_update 1
+      subject.tstring_beg_update(lexed_line, 1)
     end
 
     it "adds the lineno to @tstring_nesting" do
-      subject.tstring_beg_update 1
+      manager.stub(:update_actual_indentation)
+      manager.stub(:stop)
+      subject.instance_variable_set(:@manager, manager)
+      subject.tstring_beg_update(lexed_line, 1)
       subject.instance_variable_get(:@tstring_nesting).should == [1]
     end
   end
 
   describe "#tstring_end_update" do
-    it "calls #start" do
-      manager = double "IndentationManager"
-      manager.should_receive(:start)
-      subject.instance_variable_set(:@manager, manager)
-      subject.tstring_end_update
-    end
+    context "@tstring_nesting is not empty" do
+      let(:lexed_line) { double "LexedLine" }
+      let(:manager) { double "IndentationManager" }
 
-    it "removes the lineno to @tstring_nesting" do
-      subject.instance_variable_set(:@tstring_nesting, [1])
-      subject.tstring_end_update
-      subject.instance_variable_get(:@tstring_nesting).should be_empty
+      it "calls #start" do
+        manager.should_receive(:start)
+        subject.instance_variable_set(:@manager, manager)
+        subject.tstring_end_update(2)
+      end
+
+      it "removes the lineno to @tstring_nesting then calls @manager.start" do
+        manager.should_receive(:actual_indentation)
+        manager.should_receive(:start)
+        subject.instance_variable_set(:@manager, manager)
+        subject.instance_variable_set(:@tstring_nesting, [1])
+        subject.should_receive(:measure)
+        subject.tstring_end_update(2)
+        subject.instance_variable_get(:@tstring_nesting).should be_empty
+      end
     end
   end
 end
