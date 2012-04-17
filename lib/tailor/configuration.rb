@@ -77,7 +77,6 @@ class Tailor
                   style: @style.to_hash.merge(file_set[:style])
                 }
               end
-
             end
           end
         end
