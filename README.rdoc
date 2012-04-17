@@ -4,10 +4,13 @@
 
 == DESCRIPTION:
 
-tailor recursively parses Ruby files in a directory and checks them for bad 
-style.  Rules for judging style are based on a number of style guides that are
-popular in the Ruby community.  More on this here
+tailor parses Ruby files and measures them with some style "rulers".  Default
+values for the Rulers are based on a number of style guides in the Ruby
+community as well as what seems to be common.  More on this here
 http://wiki.github.com/turboladen/tailor.
+
+tailor's goal is to help you be consistent with your style, throughout your
+project, whatever style that may be.
 
 == FEATURES/PROBLEMS:
 
@@ -39,8 +42,8 @@ http://wiki.github.com/turboladen/tailor.
     * ~./tailorrc
     * PROJECT_ROOT + .tailor
     * as CLI options
-  * "File sets" allow for applying different styles to different sets of files
-  * Set problems to :warn instead of :fail
+  * "File sets" allow for applying different styles to different groups of files
+  * Set problems to :warn or :off instead of :fail
 * Define custom "Rulers"
 * CI/Build Integration
   * (Well, this may be stretching things a bit, but...) Exit 1 on failures
@@ -59,8 +62,8 @@ At tailor's inception, there were some other static analysis tools for Ruby,
 but none which checked style stuff; tailor started off as a means to fill this
 gap.  Since then, a number of those tools have dropped by the wayside due to
 various Ruby 1.9 incompatibilities, and left a bigger tool gap for Rubyists.
-Right now it's mostly a style-checker, but might also have a future role in
-analyzing other aspects of your Ruby code.
+Right now it's mostly a style-checker, but might into a tool for analyzing other
+aspects of your Ruby code.
 
 === Since 0.x...
 
@@ -88,8 +91,61 @@ Run tailor like:
 
   $ tailor
 
-There are still a number of false-positives and false-negatives in detection of
-the above rules, so please don't expect perfection in this detection.  :)
+==== On style...
+
+The features list, above, shows some aspects of style that should be fairly
+straightforward (as to their meaning and reason), however, others make some big
+assumptions--particularly the indentation checking "ruler".  There are a number
+of popular indenting conventions...  In the case of multi-line parameters to a
+method, some like do this:
+
+  def a_really_freakin_long_method_name(my_really_long_first_parameter,
+    my_next_param)
+    # ...
+  end
+
+...while others prefer:
+
+  def a_really_freakin_long_method_name(my_really_long_first_parameter,
+      my_next_param)
+    # ...
+  end
+
+...and yet some others prefer:
+
+  def a_really_freakin_long_method_name(my_really_long_first_parameter,
+                                        my_next_param)
+    # ...
+  end
+
+At this point, tailor only supports the style used in the first example.  If
+this style isn't to your liking, then definitely take a look at the
+Configurable section here to see how to turn this off.  Other styles will
+probably be supported in the future.
+
+All that to say, though, that this isn't the only case where tailor makes style
+assumptions.  Another discrepancy in popular styles is with regard to aligning
+operators in different lines.  Some like:
+
+  my_hash[:first][:thing] = 1
+  my_hash[:eleventy][:thing] = 2
+
+...while others prefer:
+
+  my_hash[:first][:thing]    = 1
+  my_hash[:eleventy][:thing] = 2
+
+...and yet some others prefer:
+
+  my_hash[:first][:thing] =    1
+  my_hash[:eleventy][:thing] = 2
+
+Again, tailor only supports the first example here.
+
+The goal is certainly not to force you to use the style that tailor currently
+uses; it just might not support your style yet.  If tailor doesn't support your
+style, please feel free to take a look at the issues list and make a request.
+...or fork away!
 
 === Configurable:
 
