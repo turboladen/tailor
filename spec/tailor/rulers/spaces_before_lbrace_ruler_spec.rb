@@ -2,7 +2,7 @@ require_relative '../../spec_helper'
 require 'tailor/rulers/spaces_before_lbrace_ruler'
 
 describe Tailor::Rulers::SpacesBeforeLbraceRuler do
-  subject { Tailor::Rulers::SpacesBeforeLbraceRuler.new(nil, {})  }
+  subject { Tailor::Rulers::SpacesBeforeLbraceRuler.new(nil, {}) }
   before { Tailor::Logger.stub(:log) }
 
   describe "#count_spaces" do

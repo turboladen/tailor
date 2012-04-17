@@ -12,24 +12,24 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   describe "#comment_update" do
     pending
     context "token does not contain a trailing newline" do
-      
+
     end
-    
+
     context "token contains a trailing newline" do
       context "lexed_line is spaces then a comment" do
-        
+
       end
-      
+
       context "lexed_line is no spaces and a comment" do
-        
+
       end
-      
+
       context "lexed_line ends with an operator" do
-        
+
       end
-      
+
       context "lexed_line ends with a comma" do
-        
+
       end
     end
   end
@@ -98,7 +98,7 @@ describe Tailor::Rulers::IndentationSpacesRuler do
       subject.instance_variable_set(:@manager, manager)
       subject.tstring_beg_update 1
     end
-    
+
     it "adds the lineno to @tstring_nesting" do
       subject.tstring_beg_update 1
       subject.instance_variable_get(:@tstring_nesting).should == [1]
