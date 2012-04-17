@@ -1,8 +1,20 @@
-=== 1.0.0.alpha3
+=== 1.0.0 2012-04-17
 
+* Big update to config file.
 * Fix for indentation checking on nested Hashes.
 * Fix for overriding default style in config files.
 * Fix to exit after --show-config.
+* gh-99[https://github.com/turboladen/tailor/issues/99]
+  * Now warns by default if `ruby -c [file]` fails.
+* gh-93[https://github.com/turboladen/tailor/issues/93]
+  * 2 'end's on the same line don't cause an indentation error.
+* gh-92[https://github.com/turboladen/tailor/issues/92]
+  * Users can now turn off a ruler...
+    * CLI: <tt>--my-option off</tt>
+    * Config file: <tt>my_option 1, level: :off</tt>
+* gh-68[https://github.com/turboladen/tailor/issues/68]
+  * Spaces aren't improperly detected after a token when the line ends with a
+    backslash.
 
 === 1.0.0.alpha2 2012-04-09
 
