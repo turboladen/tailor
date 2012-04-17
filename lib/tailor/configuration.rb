@@ -56,47 +56,47 @@ class Tailor
 
       if @config_file
         if @rc_file_config
-          # Get formatters from config file
-          unless @rc_file_config.formatters.empty?
-            @formatters = @rc_file_config.formatters
-            log "@formatters is now #{@formatters}"
-          end
-
-          # Get file sets from config file
-          unless @rc_file_config.file_sets.empty?
-            @rc_file_config.file_sets.each do |label, file_set|
-              log "file set: #{file_set}"
-
-              if @file_sets[label]
-                @file_sets[label][:file_list].concat file_set[:file_list]
-                @file_sets[label][:file_list].uniq!
-                @file_sets[label][:style].merge! file_set[:style]
-              else
-                @file_sets[label] = {
-                  file_list: file_set[:file_list],
-                  style: @style.to_hash.merge(file_set[:style])
-                }
-              end
-            end
-          end
+          get_formatters_from_config_file
+          get_files_sets_from_config_file
         end
       end
 
-      # Get formatters from CLI options
-      unless @options.formatters.empty? || @options.formatters.nil?
-        @formatters = @options.formatters
+      get_formatters_from_cli_opts
+      get_files_sets_from_cli_opts
+      get_style_from_cli_opts
+
+      if @file_sets[:default][:file_list].empty?
+        @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
+      end
+    end
+
+    def get_files_sets_from_config_file
+      unless @rc_file_config.file_sets.empty?
+        @rc_file_config.file_sets.each do |label, file_set|
+          log "file set: #{file_set}"
+
+          if @file_sets[label]
+            @file_sets[label][:file_list].concat file_set[:file_list]
+            @file_sets[label][:file_list].uniq!
+            @file_sets[label][:style].merge! file_set[:style]
+          else
+            @file_sets[label] = {
+              file_list: file_set[:file_list],
+              style: @style.to_hash.merge(file_set[:style])
+            }
+          end
+        end
+      end
+    end
+
+    def get_formatters_from_config_file
+      unless @rc_file_config.formatters.empty?
+        @formatters = @rc_file_config.formatters
         log "@formatters is now #{@formatters}"
       end
+    end
 
-      # Get file sets from CLI options
-      unless @runtime_file_list.nil? || @runtime_file_list.empty?
-        # Only use options set for the :default file set because the user gave
-        # a different set of files to measure.
-        @file_sets.delete_if { |k, v| k != :default }
-        @file_sets[:default][:file_list] = file_list(@runtime_file_list)
-      end
-
-      # Get style overrides from CLI options
+    def get_style_from_cli_opts
       if @options.style
         @options.style.each do |property, value|
           if value == :off || value == "off"
@@ -106,9 +106,21 @@ class Tailor
           end
         end
       end
+    end
 
-      if @file_sets[:default][:file_list].empty?
-        @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
+    def get_files_sets_from_cli_opts
+      unless @runtime_file_list.nil? || @runtime_file_list.empty?
+        # Only use options set for the :default file set because the user gave
+        # a different set of files to measure.
+        @file_sets.delete_if { |k, v| k != :default }
+        @file_sets[:default][:file_list] = file_list(@runtime_file_list)
+      end
+    end
+
+    def get_formatters_from_cli_opts
+      unless @options.formatters.empty? || @options.formatters.nil?
+        @formatters = @options.formatters
+        log "@formatters is now #{@formatters}"
       end
     end
 
