@@ -5,7 +5,7 @@ describe Tailor::Problem do
   before do
     Tailor::Problem.any_instance.stub(:log)
   end
-  
+
   let(:lineno) { 10 }
   let(:column) { 11 }
 

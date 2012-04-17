@@ -12,18 +12,18 @@ describe Tailor::Reporter do
       end
     end
   end
-  
+
   describe "#file_report" do
     let(:file_problems) { double "file problems" }
     let(:formatter) { double "Tailor::Formatters::SomeFormatter" }
-    
+
     subject do
       t = Tailor::Reporter.new
       t.instance_variable_set(:@formatters, [formatter])
-      
+
       t
     end 
-    
+
     it "calls #file_report on each @formatters" do
       label = :some_label
       formatter.should_receive(:file_report).with(file_problems, label)

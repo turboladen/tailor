@@ -16,7 +16,8 @@ describe Tailor::Lexer do
   end
 
   before do
-    Tailor::Lexer.any_instance.stub(:ensure_trailing_newline).and_return(file_text)
+    Tailor::Lexer.any_instance.stub(:ensure_trailing_newline).
+      and_return(file_text)
   end
 
   describe "#initialize" do
@@ -101,10 +102,10 @@ describe Tailor::Lexer do
     before do
       Tailor::Lexer.any_instance.unstub(:ensure_trailing_newline)
     end
-    
+
     context "text contains a trailing newline already" do
       let!(:text) { "text\n" }
-      
+
       before do
         subject.stub(:count_trailing_newlines).and_return 1
       end
