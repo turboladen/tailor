@@ -254,7 +254,7 @@ class Tailor
         log "Measuring..."
 
         if @manager.actual_indentation != @manager.should_be_at
-          msg = "Line is indented to #{@manager.actual_indentation}, "
+          msg = "Line is indented to column #{@manager.actual_indentation}, "
           msg << "but should be at #{@manager.should_be_at}."
 
           @problems << Problem.new(problem_type, lineno,
