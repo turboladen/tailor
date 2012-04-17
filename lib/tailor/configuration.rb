@@ -65,13 +65,19 @@ class Tailor
           # Get file sets from config file
           unless @rc_file_config.file_sets.empty?
             @rc_file_config.file_sets.each do |label, file_set|
-              unless @file_sets[label]
-                @file_sets[label] = { style: @style }
+              log "file set: #{file_set}"
+
+              if @file_sets[label]
+                @file_sets[label][:file_list].concat file_set[:file_list]
+                @file_sets[label][:file_list].uniq!
+                @file_sets[label][:style].merge! file_set[:style]
+              else
+                @file_sets[label] = {
+                  file_list: file_set[:file_list],
+                  style: @style.to_hash.merge(file_set[:style])
+                }
               end
 
-              @file_sets[label][:file_list].concat file_set[:file_list]
-              @file_sets[label][:file_list].uniq!
-              @file_sets[label][:style].merge! file_set[:style]
             end
           end
         end
