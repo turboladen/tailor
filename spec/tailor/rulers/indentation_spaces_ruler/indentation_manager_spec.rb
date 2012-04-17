@@ -174,11 +174,12 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   end
 
   describe "#line_ends_with_single_token_indenter?" do
-    context "lexed_line doesn't end with an op, comma, period, or kw" do
+    context "lexed_line doesn't end with an op, comma, period, label, or kw" do
       before do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_label?: false)
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
@@ -193,6 +194,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: true)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_label?: false)
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
@@ -206,6 +208,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: true)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_label?: false)
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
@@ -219,6 +222,21 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: true)
+        lexed_line.stub(ends_with_label?: false)
+        lexed_line.stub(ends_with_modifier_kw?: false)
+      end
+
+      specify do
+        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+      end
+    end
+
+    context "lexed_line ends with a label" do
+      before do
+        lexed_line.stub(ends_with_op?: false)
+        lexed_line.stub(ends_with_comma?: false)
+        lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_label?: true)
         lexed_line.stub(ends_with_modifier_kw?: false)
       end
 
@@ -232,6 +250,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         lexed_line.stub(ends_with_op?: false)
         lexed_line.stub(ends_with_comma?: false)
         lexed_line.stub(ends_with_period?: false)
+        lexed_line.stub(ends_with_label?: false)
         lexed_line.stub(ends_with_modifier_kw?: true)
       end
 
