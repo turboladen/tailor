@@ -77,19 +77,19 @@ that whole process much easier.
 
 === Measure Stuff
 
-Run tailor like:
+Check _all_ files in a directory:
 
   $ tailor path/to/check/
 
-...or...
+Check a single file:
 
   $ tailor file_to_check.rb
 
-...or...
+Check only files ending in .rb under the 'test' directory:
 
   $ tailor test/**/*.rb
 
-...or... (defaults to lib/**/*.rb):
+Check defaults (lib/**/*.rb):
 
   $ tailor
 
