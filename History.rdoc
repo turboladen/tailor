@@ -1,3 +1,8 @@
+=== 1.0.1 2012-04-23
+
+* gh-104: Fixed incorrect rendering of config file when using
+  `tailor --create-config`.
+
 === 1.0.0 2012-04-17
 
 * Big update to config file.
