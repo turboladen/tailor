@@ -51,7 +51,10 @@ class Tailor
     # Call this to load settings from the config file and from CLI options.
     def load!
       # Get config file settings
-      @config_file = @options.config_file unless @options.config_file.empty?
+      unless @options.nil?
+        @config_file = @options.config_file unless @options.config_file.empty?
+      end
+
       load_from_config_file(config_file) if config_file
 
       if @config_file
@@ -97,7 +100,7 @@ class Tailor
     end
 
     def get_style_from_cli_opts
-      if @options.style
+      if @options && @options.style
         @options.style.each do |property, value|
           if value == :off || value == "off"
             @file_sets[:default][:style][property][1] = { level: :off }
@@ -118,7 +121,7 @@ class Tailor
     end
 
     def get_formatters_from_cli_opts
-      unless @options.formatters.empty? || @options.formatters.nil?
+      unless @options.nil? || @options.formatters.empty? || @options.formatters.nil?
         @formatters = @options.formatters
         log "@formatters is now #{@formatters}"
       end
