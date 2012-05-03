@@ -63,7 +63,7 @@ class Tailor
       if @config_file
         if @rc_file_config
           get_formatters_from_config_file
-          get_files_sets_from_config_file
+          get_file_sets_from_config_file
         end
       end
 
@@ -78,7 +78,7 @@ class Tailor
 =end
     end
 
-    def get_files_sets_from_config_file
+    def get_file_sets_from_config_file
       unless @rc_file_config.file_sets.empty?
         @rc_file_config.file_sets.each do |label, file_set|
           log "file set: #{file_set}"
