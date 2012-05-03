@@ -164,7 +164,7 @@ class Tailor
     # @param [String] file_glob The String that represents the file set.  This
     #   can be a file, directory, or a glob.
     # @param [Symbol] label The label that represents the file set.
-    def file_set(file_glob=DEFAULT_GLOB, label=:default)
+    def file_set(file_glob='lib/**/*.rb', label=:default)
       log "file sets before: #{@file_sets}"
       log "file set label #{label}"
 
