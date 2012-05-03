@@ -26,6 +26,27 @@ class Tailor
         self[:file_list] = @file_list
       end
 
+      def update_file_list(file_expression)
+        new_list = build_file_list(file_expression)
+        @file_list.concat(new_list).uniq!
+      end
+
+      def update_style(new_style)
+        @style.to_hash.merge!(new_style)
+      end
+
+      def [](key)
+        if key == :style
+          @style.to_hash
+        elsif key == :file_list
+          @file_list
+        else
+          raise Tailor::RuntimeError, "Invalid key requested: #{key}"
+        end
+      end
+
+      private
+
       # The list of the files in the project to check.
       #
       # @param [String] file_expression Path to the file, directory or file_expression to check.
@@ -68,27 +89,6 @@ class Tailor
 
         list_with_absolute_paths.sort
       end
-
-      def update_file_list(file_expression)
-        new_list = build_file_list(file_expression)
-        @file_list.concat(new_list).uniq!
-      end
-
-      def update_style(new_style)
-        @style.to_hash.merge!(new_style)
-      end
-
-      def [](key)
-        if key == :style
-          @style.to_hash
-        elsif key == :file_list
-          @file_list
-        else
-          raise Tailor::RuntimeError, "Invalid key requested: #{key}"
-        end
-      end
-
-      private
 
       # Gets a list of only files that are in +base_dir+.
       #

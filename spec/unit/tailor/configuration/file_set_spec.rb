@@ -11,7 +11,7 @@ describe Tailor::Configuration::FileSet do
         end
 
         it 'builds an Array with that file\'s expanded path' do
-          new_list = subject.build_file_list('./test.rb')
+          new_list = subject.instance_eval { build_file_list('./test.rb') }
           new_list.should be_an Array
           new_list.first.should match /.+\/test.rb$/
         end
@@ -19,7 +19,7 @@ describe Tailor::Configuration::FileSet do
 
       context 'the file does not exist' do
         it "returns an empty Array" do
-          subject.build_file_list('test.rb').should == []
+          subject.instance_eval { build_file_list('test.rb') }.should == []
         end
       end
     end
@@ -30,7 +30,8 @@ describe Tailor::Configuration::FileSet do
       end
 
       it 'returns the Array with expanded file paths' do
-        subject.build_file_list(['test.rb']).first.should match /.+\/test.rb$/
+        subject.instance_eval { build_file_list(['test.rb']) }.
+          first.should match /.+\/test.rb$/
       end
     end
 
@@ -41,7 +42,7 @@ describe Tailor::Configuration::FileSet do
       end
 
       it 'returns the expanded file paths in that directory' do
-        list = subject.build_file_list('test')
+        list = subject.instance_eval { build_file_list('test') }
         list.size.should be 1
         list.first.should match /.+\/test.rb/
       end
