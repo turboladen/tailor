@@ -4,7 +4,7 @@ require_relative 'style'
 
 class Tailor
   class Configuration
-    class FileSet
+    class FileSet < Hash
       include Tailor::Logger::Mixin
 
       DEFAULT_GLOB = 'lib/**/*.rb'
@@ -19,8 +19,11 @@ class Tailor
           Style.new.to_hash
         end
 
+        self[:style] = @style
+
         file_expression ||= DEFAULT_GLOB
         @file_list = build_file_list(file_expression)
+        self[:file_list] = @file_list
       end
 
       # The list of the files in the project to check.
