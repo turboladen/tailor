@@ -69,19 +69,6 @@ class Tailor
         list_with_absolute_paths.sort
       end
 
-
-      # Gets a list of only files that are in +base_dir+.
-      #
-      # @param [String] base_dir The directory to get the file list for.
-      # @return [Array<String>] The List of files.
-      def all_files_in_dir(base_dir)
-        files = Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
-          file if File.file?(file)
-        end
-
-        files
-      end
-
       def update_file_list(file_expression)
         new_list = build_file_list(file_expression)
         @file_list.concat(new_list).uniq!
@@ -99,6 +86,20 @@ class Tailor
         else
           raise Tailor::RuntimeError, "Invalid key requested: #{key}"
         end
+      end
+
+      private
+
+      # Gets a list of only files that are in +base_dir+.
+      #
+      # @param [String] base_dir The directory to get the file list for.
+      # @return [Array<String>] The List of files.
+      def all_files_in_dir(base_dir)
+        files = Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
+          file if File.file?(file)
+        end
+
+        files
       end
     end
   end
