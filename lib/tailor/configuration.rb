@@ -2,6 +2,7 @@ require_relative '../tailor'
 require_relative 'logger'
 require_relative 'runtime_error'
 require_relative 'configuration/style'
+require_relative 'configuration/file_set'
 
 class Tailor
 
@@ -15,7 +16,6 @@ class Tailor
   class Configuration
     include Tailor::Logger::Mixin
 
-    DEFAULT_GLOB = 'lib/**/*.rb'
     DEFAULT_RC_FILE = Dir.home + '/.tailorrc'
     DEFAULT_PROJECT_CONFIG = Dir.pwd + '/.tailor'
 
@@ -33,14 +33,17 @@ class Tailor
     # @option options [Array] formatters
     # @option options [Hash] style
     def initialize(runtime_file_list=nil, options=nil)
-      @style = Style.new
+      #@style = Style.new
       @formatters = ['text']
+=begin
       @file_sets = {
         default: {
           file_list: file_list(DEFAULT_GLOB),
           style: @style.to_hash
         }
       }
+=end
+      @file_sets = { default: FileSet.new }
 
       @runtime_file_list = runtime_file_list
       log "Got runtime file list: #{@runtime_file_list}"
@@ -67,10 +70,12 @@ class Tailor
       get_formatters_from_cli_opts
       get_files_sets_from_cli_opts
       get_style_from_cli_opts
+=begin
 
       if @file_sets[:default][:file_list].empty?
         @file_sets[:default][:file_list] = file_list(DEFAULT_GLOB)
       end
+=end
     end
 
     def get_files_sets_from_config_file
@@ -79,14 +84,20 @@ class Tailor
           log "file set: #{file_set}"
 
           if @file_sets[label]
-            @file_sets[label][:file_list].concat file_set[:file_list]
-            @file_sets[label][:file_list].uniq!
-            @file_sets[label][:style].merge! file_set[:style]
+            #@file_sets[label][:file_list].concat file_set[:file_list]
+            #@file_sets[label][:file_list].uniq!
+            @file_sets[label].update_file_list(file_set[:file_list])
+            #@file_sets[label][:style].merge! file_set[:style]
+            @file_sets[label].update_style(file_set[:style])
           else
+=begin
             @file_sets[label] = {
               file_list: file_set[:file_list],
               style: @style.to_hash.merge(file_set[:style])
             }
+=end
+            @file_sets[label] =
+              FileSet.new(file_set[:style], file_set[:file_list])
           end
         end
       end
@@ -116,7 +127,8 @@ class Tailor
         # Only use options set for the :default file set because the user gave
         # a different set of files to measure.
         @file_sets.delete_if { |k, v| k != :default }
-        @file_sets[:default][:file_list] = file_list(@runtime_file_list)
+        #@file_sets[:default][:file_list] = file_list(@runtime_file_list)
+        @file_sets[:default].update_file_list(@runtime_file_list)
       end
     end
 
@@ -162,18 +174,24 @@ class Tailor
         yield new_style
 
         if @file_sets[label]
-          @file_sets[label][:style].merge! new_style
+          #@file_sets[label][:style].merge! new_style
+          @file_sets[label].update_style(new_style)
         end
       end
 
       if @file_sets[label]
+=begin
         @file_sets[label][:file_list].concat file_list(file_glob)
         @file_sets[label][:file_list].uniq!
+=end
       else
+=begin
         @file_sets[label] = {
           file_list: file_list(file_glob),
           style: @style.to_hash.merge(new_style)
         }
+=end
+        @file_sets[label] = FileSet.new(new_style)
       end
 
       log "file sets after: #{@file_sets}"
@@ -205,23 +223,13 @@ class Tailor
       end
     end
 
-    # Gets a list of only files that are in +base_dir+.
-    #
-    # @param [String] base_dir The directory to get the file list for.
-    # @return [Array<String>] The List of files.
-    def all_files_in_dir(base_dir)
-      files = Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
-        file if File.file?(file)
-      end
-
-      files
-    end
 
     # The list of the files in the project to check.
     #
     # @param [String] glob Path to the file, directory or glob to check.
     # @return [Array] The list of files to check.
     def file_list(glob)
+=begin
       files_in_project = if glob.is_a? Array
         log "Configured glob is an Array: #{glob}"
 
@@ -249,6 +257,8 @@ class Tailor
       log "All files: #{list_with_absolute_paths}"
 
       list_with_absolute_paths.sort
+=end
+
     end
 
     # Displays the current configuration as a text table.
