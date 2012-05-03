@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require_relative '../../../spec_helper'
 require 'tailor/lexer/token'
 
 describe Tailor::Lexer::Token do

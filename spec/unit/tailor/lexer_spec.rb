@@ -1,5 +1,4 @@
-require 'fakefs/spec_helpers'
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 require 'tailor/lexer'
 
 describe Tailor::Lexer do

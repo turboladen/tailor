@@ -1,5 +1,5 @@
 require 'ripper'
-require_relative '../../../spec_helper'
+require_relative '../../../../spec_helper'
 require 'tailor/rulers/indentation_spaces_ruler/indentation_manager'
 
 

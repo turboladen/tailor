@@ -1,4 +1,4 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 require 'tailor/ruler'
 
 describe Tailor::Ruler do

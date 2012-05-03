@@ -1,4 +1,4 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 require 'tailor/lexed_line'
 
 describe Tailor::LexedLine do

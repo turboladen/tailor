@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require_relative '../../../spec_helper'
 require 'tailor/rulers/spaces_before_lbrace_ruler'
 
 describe Tailor::Rulers::SpacesBeforeLbraceRuler do
