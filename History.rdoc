@@ -1,3 +1,9 @@
+=== 1.1.0 xxxx-xx-xx
+
+* Configuration files now don't force you to use the :default file set.  If you
+  don't specify any file sets, then the default is used; if you specify file
+  sets, it uses what you specify.
+
 === 1.0.1 2012-04-23
 
 * gh-104: Fixed incorrect rendering of config file when using
