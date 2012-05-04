@@ -13,10 +13,41 @@ rescue LoadError
 end
 
 class Tailor
+
+  # This class lets you define Rake tasks to drive tailor.  Specifying options
+  # is similar to specifying options in a configuration file.
+  #
+  # @example Use Tailor CLI Options
+  #   Tailor::RakeTask.new do |task|
+  #     task.tailor_opts = %w(--no-color --max-line-length=100)
+  #   end
+  #
+  # @example A task specifically for features
+  #   Tailor::RakeTask.new(:tailor_features) do |task|
+  #     task.file_set 'features/**/*.rb', :features do |style|
+  #       style.max_line_length 100, level: :warn
+  #       style.trailing_newlines 2
+  #     end
+  #   end
+  #
+  # @example Use and override a configuration file
+  #   Tailor::RakeTask.new do |task|
+  #     task.config_file = 'hardcore_stylin.rb'
+  #     task.file_set 'lib/**/*.rb' do |style|
+  #       style.indentation_spaces 2, level: :warn
+  #     end
+  #   end
   class RakeTask < ::Rake::TaskLib
     include ::Rake::DSL if defined? ::Rake::DSL
 
+    # Use a specific configuration file.  If you have a .tailor file, your
+    # RakeTask will automatically use that.
+    #
+    # @return [String] The path to the configuration file.
     attr_accessor :config_file
+
+    # Specify any extra options (CLI options).  These will override any options
+    # set in your config file.
     attr_accessor :tailor_opts
 
     attr_accessor :formatters
