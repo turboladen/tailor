@@ -12,6 +12,9 @@ class Tailor
       attr_reader :style
       attr_accessor :file_list
 
+      # @param [Hash] style Style options to merge into the default Style
+      #   settings.
+      # @param [String,Array] file_expression
       def initialize(style=nil, file_expression=nil)
         @style = if style
           Style.new.to_hash.merge(style)
@@ -73,19 +76,16 @@ class Tailor
           Dir.glob file_expression
         end
 
-        log "files: #{files_in_project}"
         list_with_absolute_paths = []
 
         files_in_project.each do |file|
-          log "file: #{file}"
           new_file = File.expand_path(file)
+          log "file: #{new_file}"
 
           if File.exists? new_file
             list_with_absolute_paths <<  new_file
           end
         end
-
-        log "All files: #{list_with_absolute_paths}"
 
         list_with_absolute_paths.sort
       end
