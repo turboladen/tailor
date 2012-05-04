@@ -112,18 +112,9 @@ class Tailor
 
           if @file_sets[label]
             log "label already exists.  Updating..."
-            #@file_sets[label][:file_list].concat file_set[:file_list]
-            #@file_sets[label][:file_list].uniq!
             @file_sets[label].update_file_list(file_set[:file_list])
-            #@file_sets[label][:style].merge! file_set[:style]
             @file_sets[label].update_style(file_set[:style])
           else
-=begin
-            @file_sets[label] = {
-              file_list: file_set[:file_list],
-              style: @style.to_hash.merge(file_set[:style])
-            }
-=end
             log "Creating new label..."
             @file_sets[label] =
               FileSet.new(file_set[:style], file_set[:file_list])
@@ -140,12 +131,14 @@ class Tailor
     end
 
     def get_style_from_cli_opts
-      if @options && @options.style
-        @options.style.each do |property, value|
+      return unless @options && @options.style
+
+      @options.style.each do |property, value|
+        @file_sets.keys.each do |label|
           if value == :off || value == "off"
-            @file_sets[:default][:style][property][1] = { level: :off }
+            @file_sets[label].style[property][1] = { level: :off }
           else
-            @file_sets[:default][:style][property][0] = value
+            @file_sets[label].style[property][0] = value
           end
         end
       end
@@ -156,7 +149,6 @@ class Tailor
         # Only use options set for the :default file set because the user gave
         # a different set of files to measure.
         @file_sets.delete_if { |k, v| k != :default }
-        #@file_sets[:default][:file_list] = file_list(@runtime_file_list)
         @file_sets[:default].update_file_list(@runtime_file_list)
       end
     end

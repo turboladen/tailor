@@ -1,8 +1,12 @@
 === 1.1.0 xxxx-xx-xx
 
+* gh-89[https://github.com/turboladen/tailor/issues/89]
+  * You can now use Tailor::RakeTask to create a Rake task.
 * Configuration files now don't force you to use the :default file set.  If you
   don't specify any file sets, then the default is used; if you specify file
   sets, it uses what you specify.
+* CLI options now override config file options for all file sets (previously,
+  only the :default file set's option would get overridden by the CLI option).
 
 === 1.0.1 2012-04-23
 
