@@ -94,4 +94,30 @@ end
       config.file_sets.should include :features
     end
   end
+
+  context '.tailor defines a single recursive file set' do
+    let(:config_file) do
+      <<-CONFIG
+Tailor.config do |config|
+  config.recursive_file_set '*spec.rb' do |style|
+    style.max_line_length 90, level: :warn
+  end
+end
+      CONFIG
+    end
+
+    before do
+      File.should_receive(:read).and_return config_file
+    end
+
+    it 'creates a :default file set' do
+      config.file_sets.keys.should == [:default]
+    end
+
+    it 'has files in the file list levels deep' do
+      config.file_sets[:default].file_list.all? do |file|
+        file =~ /spec\.rb$/
+      end.should be_true
+    end
+  end
 end

@@ -1,7 +1,26 @@
 === 1.1.0 xxxx-xx-xx
 
 * gh-89[https://github.com/turboladen/tailor/issues/89]
-  * You can now use Tailor::RakeTask to create a Rake task.
+  * You can now use {Tailor::RakeTask} to create a Rake task.
+* gh-100[https://github.com/turboladen/tailor/issues/100]
+  * Added {Tailor::Configuration#recursive_file_set}.  This lets you do the
+    following in your config file, which will recursively match all files in
+    your current path that end with '_spec.rb':
+
+      Tailor.config do |config|
+        config.recursive_file_set '*_spec.rb', :unit_tests do |style|
+          style.max_line_length 90, level: :warn
+        end
+      end
+
+    ...which is equivalent to:
+
+      Tailor.config do |config|
+        config.file_set '*/**/*_spec.rb', :unit_tests do |style|
+          style.max_line_length 90, level: :warn
+        end
+      end
+
 * Configuration files now don't force you to use the :default file set.  If you
   don't specify any file sets, then the default is used; if you specify file
   sets, it uses what you specify.
