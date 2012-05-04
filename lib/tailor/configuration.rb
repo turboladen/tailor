@@ -68,7 +68,7 @@ class Tailor
       end
 
       get_formatters_from_cli_opts
-      get_files_sets_from_cli_opts
+      get_file_sets_from_cli_opts
       get_style_from_cli_opts
 =begin
 
@@ -122,7 +122,7 @@ class Tailor
       end
     end
 
-    def get_files_sets_from_cli_opts
+    def get_file_sets_from_cli_opts
       unless @runtime_file_list.nil? || @runtime_file_list.empty?
         # Only use options set for the :default file set because the user gave
         # a different set of files to measure.
