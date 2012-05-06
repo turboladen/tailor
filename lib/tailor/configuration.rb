@@ -13,6 +13,10 @@ class Tailor
   #
   # It then basically represents a list of "file sets" and the rulers that
   # should be applied against each file set.
+  #
+  # If a file list is given from the CLI _and_ a configuration file is
+  # given/found, tailor uses the style settings for the default file set and
+  # only checks the default file set.
   class Configuration
     include Tailor::Logger::Mixin
 
@@ -35,7 +39,6 @@ class Tailor
     def initialize(runtime_file_list=nil, options=nil)
       @formatters = ['text']
       @file_sets = {}
-
       @runtime_file_list = runtime_file_list
       log "Got runtime file list: #{@runtime_file_list}"
 
@@ -49,17 +52,17 @@ class Tailor
 
     # Call this to load settings from the config file and from CLI options.
     def load!
-      # Get config file settings
       if config_file
         load_from_config_file(config_file)
 
-        if @rc_file_config
+        if @config_from_file
           get_formatters_from_config_file
+          #get_file_sets_from_config_file unless @runtime_file_list
           get_file_sets_from_config_file
         end
       else
         log "Creating default file set..."
-        @file_sets = { default: FileSet.new }
+        @file_sets = { default: FileSet.new(@runtime_file_list) }
       end
 
       get_formatters_from_cli_opts
@@ -78,9 +81,9 @@ class Tailor
         log "Loading config from file: #{user_config_file}"
 
         begin
-          @rc_file_config = instance_eval(File.read(user_config_file), user_config_file)
+          @config_from_file = instance_eval(File.read(user_config_file), user_config_file)
           log "Got new config from file: #{user_config_file}"
-          log @rc_file_config.inspect
+          log @config_from_file.inspect
         rescue LoadError => ex
           raise Tailor::RuntimeError,
             "Couldn't load config file: #{user_config_file}"
@@ -104,30 +107,30 @@ class Tailor
     end
 
     def get_file_sets_from_config_file
-      unless @rc_file_config.file_sets.empty?
-        @rc_file_config.file_sets.each do |label, file_set|
-          log "label: #{label}"
-          log "file set file list: #{file_set[:file_list]}"
-          log "file set style: #{file_set[:style]}"
+      return if @config_from_file.file_sets.empty?
 
-          if @file_sets[label]
-            log "label already exists.  Updating..."
-            @file_sets[label].update_file_list(file_set[:file_list])
-            @file_sets[label].update_style(file_set[:style])
-          else
-            log "Creating new label..."
-            @file_sets[label] =
-              FileSet.new(file_set[:style], file_set[:file_list])
-          end
+      @config_from_file.file_sets.each do |label, file_set|
+        log "label: #{label}"
+        log "file set file list: #{file_set[:file_list]}"
+        log "file set style: #{file_set[:style]}"
+
+        if @file_sets[label]
+          log "label already exists.  Updating..."
+          @file_sets[label].update_file_list(file_set[:file_list])
+          @file_sets[label].update_style(file_set[:style])
+        else
+          log "Creating new label..."
+          @file_sets[label] =
+            FileSet.new(file_set[:file_list], file_set[:style])
         end
       end
     end
 
     def get_formatters_from_config_file
-      unless @rc_file_config.formatters.empty?
-        @formatters = @rc_file_config.formatters
-        log "@formatters is now #{@formatters}"
-      end
+      return if @config_from_file.formatters.empty?
+
+      @formatters = @config_from_file.formatters
+      log "@formatters is now #{@formatters}"
     end
 
     def get_style_from_cli_opts
@@ -144,12 +147,19 @@ class Tailor
       end
     end
 
+    # If any files are given from the CLI, this gets that list of files and
+    # replaces those in any :default file set.
     def get_file_sets_from_cli_opts
-      unless @runtime_file_list.nil? || @runtime_file_list.empty?
-        # Only use options set for the :default file set because the user gave
-        # a different set of files to measure.
-        @file_sets.delete_if { |k, v| k != :default }
-        @file_sets[:default].update_file_list(@runtime_file_list)
+      return if @runtime_file_list.nil? || @runtime_file_list.empty?
+
+      # Only use options set for the :default file set because the user gave
+      # a different set of files to measure.
+      @file_sets.delete_if { |k, v| k != :default }
+
+      if @file_sets.include? :default
+        @file_sets[:default].file_list = @runtime_file_list
+      else
+        @file_sets = { default: FileSet.new(@runtime_file_list) }
       end
     end
 
@@ -179,7 +189,7 @@ class Tailor
 
       yield new_style if block_given?
 
-      @file_sets[label] = FileSet.new(new_style, file_expression)
+      @file_sets[label] = FileSet.new(file_expression, new_style)
       log "file sets after: #{@file_sets}"
     end
 

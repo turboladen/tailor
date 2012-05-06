@@ -15,7 +15,7 @@ class Tailor
       # @param [Hash] style Style options to merge into the default Style
       #   settings.
       # @param [String,Array] file_expression
-      def initialize(style=nil, file_expression=nil)
+      def initialize(file_expression=nil, style=nil)
         @style = if style
           Style.new.to_hash.merge(style)
         else
@@ -46,6 +46,10 @@ class Tailor
         else
           raise Tailor::RuntimeError, "Invalid key requested: #{key}"
         end
+      end
+
+      def file_list=(file_expression)
+        @file_list = build_file_list(file_expression)
       end
 
       private
