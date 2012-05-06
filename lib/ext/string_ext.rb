@@ -1,8 +1,4 @@
-require 'term/ansicolor'
-
 class String
-  include Term::ANSIColor
-
   # Borrowed from ActiveSupport, this converts camel-case Strings to
   # snake-case.
   #

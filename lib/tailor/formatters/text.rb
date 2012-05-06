@@ -1,13 +1,17 @@
-require 'text-table'
 require 'pathname'
+require 'term/ansicolor'
+require 'text-table'
 require_relative '../formatter'
+
 
 class Tailor
   module Formatters
     class Text < Tailor::Formatter
+      include Term::ANSIColor
+
       PROBLEM_LEVEL_COLORS = {
-        error: :red,
-        warn: :yellow
+        error: 'red',
+        warn: 'yellow'
       }
 
       # @return [String] A line of "#-----", with length determined by +length+.
@@ -18,13 +22,8 @@ class Tailor
       # @return [String] The portion of the header that displays the file info.
       def file_header(file)
         file = Pathname(file)
-        message = ""
-        message << if defined? Term::ANSIColor
-          "# #{'File:'.underscore}\n"
-        else
-          "# File:\n"
-        end
-
+        message = "# "
+        message << underscore { "File:\n" }
         message << "#   #{file.relative_path_from(@pwd)}\n"
         message << "#\n"
 
@@ -34,13 +33,8 @@ class Tailor
       # @return [String] The portion of the header that displays the file_set
       #   label info.
       def file_set_header(file_set)
-        message = ""
-        message << if defined? Term::ANSIColor
-          "# #{'File Set:'.underscore}\n"
-        else
-          "# File Set:\n"
-        end
-
+        message = "# "
+        message << underscore { "File Set:\n" }
         message << "#   #{file_set}\n"
         message << "#\n"
 
@@ -50,44 +44,30 @@ class Tailor
       # @return [String] The portion of the report that displays all of the
       #   problems for the file.
       def problems_header(problem_list)
-        message = ""
-        message << if defined? Term::ANSIColor
-          "# #{'Problems:'.underscore}\n"
-        else
-          "# Problems:\n"
-        end
+        message = "# "
+        message << underscore { "Problems:\n" }
 
         problem_list.each_with_index do |problem, i|
-          color = PROBLEM_LEVEL_COLORS[problem[:level]] || :white
+          color = PROBLEM_LEVEL_COLORS[problem[:level]] || 'white'
 
-          position = if problem[:line] == '<EOF>'
-            '<EOF>'
-          else
-            if defined? Term::ANSIColor
-              msg = "#{problem[:line].to_s.send(color).bold}:"
-              msg << "#{problem[:column].to_s.send(color).bold}"
-              msg
-            else
-              "#{problem[:line]}:#{problem[:column]}"
-            end
-          end
-
-          message << if defined? Term::ANSIColor
-            %Q{#  #{(i + 1).to_s.bold}.
-#    * position:  #{position}
-#    * property:  #{problem[:type].to_s.send(color)}
-#    * message:   #{problem[:message].send(color)}
-}
-          else
-            %Q{#  #{(i + 1)}.
-#    * position:  #{position}
-#    * type:      #{problem[:type]}
-#    * message:   #{problem[:message]}
-}
-          end
+          position = position(problem[:line], problem[:column])
+          message << "#  " + bold { "#{(i + 1)}." } + "\n"
+          message << "#    * position:  "
+          message << bold { instance_eval("#{color} position") } + "\n"
+          message << "#    * property:  "
+          message << instance_eval("#{color} problem[:type].to_s") + "\n"
+          message << "#    * message:   "
+          message << instance_eval("#{color} problem[:message].to_s") + "\n"
         end
 
         message
+      end
+
+      # @param [Fixnum] line
+      # @param [Fixnum] column
+      # @return [String] The position the problem was found at.
+      def position(line, column)
+        line == '<EOF>' ? '<EOF>' : "#{line}:#{column}"
       end
 
       # Prints the report on the file that just got checked.

@@ -1,6 +1,7 @@
 require 'erb'
 require 'optparse'
 require 'ostruct'
+require 'term/ansicolor'
 require 'text-table'
 require_relative '../version'
 require_relative '../configuration'
@@ -193,9 +194,15 @@ class Tailor
         end
 
         opts.parse!(args)
-        require_relative '../../ext/string_ext' if @output_color
+        colorize
 
         options
+      end
+
+      # Sets colors based on --[no-]color.  If the terminal doesn't support
+      # colors, it turns colors off, despite the CLI setting.
+      def self.colorize
+        Term::ANSIColor.coloring = @output_color ? STDOUT.isatty : false
       end
 
       # @return [String]
