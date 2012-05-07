@@ -1,6 +1,5 @@
 require 'pathname'
 require 'term/ansicolor'
-require 'text-table'
 require_relative '../formatter'
 
 
@@ -92,6 +91,8 @@ class Tailor
         puts message
       end
 
+      MAX_STRING_SIZE = 68
+
       # Prints the report on all of the files that just got checked.
       #
       # @param [Hash] problems Values are filenames; keys are problems for each
@@ -100,31 +101,50 @@ class Tailor
         if problems.empty?
           puts "Your files are in style."
         else
-          summary_table = ::Text::Table.new
-          summary_table.head = [{ value: "Tailor Summary", colspan: 2 }]
-          summary_table.rows << [{ value: "File", align: :center },
-            { value: "Total Problems", align: :center }]
-          summary_table.rows << :separator
+          summary_table = line
+          summary_table << "# " + 'Tailor Summary'.rjust(40) + "|\n".rjust(39)
+          summary_table << line
+          summary_table << '#   ' + 'File'.ljust(58) + '| Total Problems'.rjust(1) + " |\n".rjust(2)
+          summary_table << line
+
+          i = 0
 
           problems.each do |file, problem_list|
             file = Pathname(file)
-            summary_table.rows << [
-              file.relative_path_from(@pwd), problem_list.size
-            ]
+            relative_path = file.relative_path_from(@pwd)
+            problem_count = problem_list.size
+
+            report_line = "#{file_path(relative_path)} | " + problem_count.to_s.rjust(5) + " "
+
+            if i % 2 == 0
+              report_line = black { on_intense_black { report_line } }
+            end
+
+            summary_table << "# " << report_line << "|\n"
+            i += 1
           end
 
-          summary_table.rows << :separator
+          summary_table << line
 
-          problem_levels(problems).inject(summary_table.rows) do |result, level|
-            result << [level.capitalize,
-              problems_at_level(problems, level).size]
+          problem_levels(problems).inject(summary_table) do |result, level|
+            result << "# #{level.capitalize}" + problems_at_level(problems, level).size.to_s.rjust(6) + "\n"
           end
 
-          summary_table.rows << :separator
-          summary_table.rows << ['TOTAL', problems.values.flatten.size]
+          summary_table << line
+          summary_table << "#  TOTAL         #{problems.values.flatten.size}"
+          summary_table << line
 
           puts summary_table
         end
+      end
+
+      def file_path(path)
+        fp = path.to_s.ljust(MAX_STRING_SIZE)
+        offset = fp.size - MAX_STRING_SIZE
+        end_of_string = fp[offset..-1]
+        end_of_string.sub!(/^.{3}/, '...') unless offset.zero?
+
+        end_of_string
       end
     end
   end
