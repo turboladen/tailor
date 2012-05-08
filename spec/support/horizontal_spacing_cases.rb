@@ -5,12 +5,14 @@ H_SPACING_OK[:short_line_newline_at_81] =
   %Q{'#{'#' * 78}'
 }
 
+=begin
 H_SPACING_OK[:line_split_by_backslash] =
   %Q{execute 'myscript' do
   command \\
     '/some/really/long/path/that/would/be/over/eight/chars.sh'
   only_if { something }
 end}
+=end
 
 #-------------------------------------------------------------------------------
 # Comma spacing
