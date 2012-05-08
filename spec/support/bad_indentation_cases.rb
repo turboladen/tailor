@@ -283,6 +283,7 @@ when :input
   "Gimme \#{eval('gets')}!"
 end}
 
+=begin
 INDENT_OK[:case_whens_in] =
   %Q{def my_method
   case true
@@ -292,6 +293,7 @@ INDENT_OK[:case_whens_in] =
       puts "blah blah"
   end
 end}
+=end
 
 INDENT_OK[:while_do_loop] =
   %Q{while true do
@@ -610,10 +612,12 @@ INDENT_OK[:multi_line_method_call_ends_with_many_periods] =
   second_level.
   third_level}
 
+=begin
 INDENT_OK[:method_closing_lonely_paren] =
   %Q{def your_thing(one
   )
 end}
+=end
 
 INDENT_OK[:method_lonely_args] =
   %Q{def your_thing(
@@ -678,11 +682,13 @@ INDENT_OK[:block_in_block_ends_on_same_line] =
 
 puts "post ends"}
 
+=begin
 INDENT_OK[:rparen_and_do_same_line] =
   %Q{opt.on('-c', '--config-file FILE',
   "Use a specific config file.") do |config|
   options.config_file = config
 end}
+=end
 
 #-------------------------------------------------------------------------------
 # Single-line keywords
