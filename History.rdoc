@@ -1,4 +1,4 @@
-=== 1.1.0 xxxx-xx-xx
+=== 1.1.0 2012-05-07
 
 * gh-89[https://github.com/turboladen/tailor/issues/89]
   * You can now use {Tailor::RakeTask} to create a Rake task.
@@ -23,6 +23,9 @@
 
 * gh-107[https://github.com/turboladen/tailor/issues/107]
   * Fixed --no-color option.
+* gh-108[https://github.com/turboladen/tailor/issues/108]
+  * Fixed --create-config, which created style level options with a missing ':'
+    for the Hash value.
 * Configuration files now don't force you to use the :default file set.  If you
   don't specify any file sets, then the default is used; if you specify file
   sets, it uses what you specify.
