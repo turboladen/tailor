@@ -13,5 +13,5 @@ Feature: Valid Ruby
 
     """
     When I run `tailor -d extra_end.rb`
-    Then the output should match /Total Problems.*1/
+    Then the output should match /TOTAL.*1/
     And the output should match /File contains invalid Ruby/
