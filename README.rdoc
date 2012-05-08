@@ -92,6 +92,12 @@ Check only files ending in .rb under the 'test' directory:
 Check defaults (lib/**/*.rb):
 
   $ tailor
+  
+Use defaults via a Rake task:
+
+  require 'tailor/rake_task'
+  
+  Tailor::RakeTask.new
 
 ==== On style...
 
@@ -224,7 +230,7 @@ rulers caused the problem to be found.
   Tailor.config do |config|
 
     # All defaults; implies "default" label
-    config.file_set 'lib/**/*.rb
+    config.file_set 'lib/**/*.rb'
 
     config.file_set 'app/**/*.rb', :rails_app do |style|
       style.max_line_length 100
@@ -240,6 +246,16 @@ rulers caused the problem to be found.
       style.spaces_before_rbrace false
       # All other rulers will use default values
     end
+  end
+
+If it suits you better, use "recursive file sets" to get all matching files
+in your current path.  If you wanted to critique all .rb files:
+
+  # .tailor
+  Tailor.config do |config|
+
+    # All defaults; implies "default" label
+    config.recursive_file_set '*.rb'
   end
 
 Similarly to the CLI, if you want to turn off a default Ruler, set its problem
