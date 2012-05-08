@@ -1,6 +1,4 @@
 H_SPACING_OK = {}
-H_SPACING_1 = {}
-H_SPACING_2 = {}
 
 H_SPACING_OK[:short_line_no_newline] = '#' * 79
 H_SPACING_OK[:short_line_newline_at_81] =
