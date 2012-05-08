@@ -14,7 +14,6 @@ CAMEL_CASE_METHODS[:one_caps_camel_case_method_trailing_comment] =
 end}
 
 
-
 describe "Detection of camel case methods" do
   before do
     Tailor::Logger.stub(:log)
