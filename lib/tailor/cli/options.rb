@@ -258,7 +258,7 @@ tailor --show-config
             File.dirname(__FILE__) + '/../tailorrc.erb')
           formatters = Tailor::Configuration.default.formatters
           file_list = 'lib/**/*.rb'
-          style = Tailor::Configuration.default.file_sets[:default][:style]
+          style = Tailor::Configuration::Style.new.to_hash
           default_config_file = ERB.new(File.read(erb_file)).result(binding)
           File.open('.tailor', 'w') { |f| f.write default_config_file }
         end

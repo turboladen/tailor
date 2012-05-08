@@ -82,6 +82,6 @@
 Tailor.config do |config|
   config.formatters "<%= formatters.join(", ") %>"
   config.file_set '<%= file_list %>' do |style|<% style.each do |rule, value| %>
-    style.<%= rule %> <%= value.first %>, <% value.last.each { |k, v| %><%= k %>: <%= v %><% } end %>
+    style.<%= rule %> <%= value.first %>, <% value.last.each { |k, v| %><%= k %>: :<%= v %><% } end %>
   end
 end
