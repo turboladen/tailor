@@ -13,9 +13,9 @@ namespace :spec do
     t.pattern = "./spec/unit/**/*_spec.rb"
   end
 
-  desc "Run integration tests"
-  RSpec::Core::RakeTask.new(:integration) do |t|
-    t.pattern = "./spec/integration/**/*_spec.rb"
+  desc "Run functional tests"
+  RSpec::Core::RakeTask.new(:functional) do |t|
+    t.pattern = "./spec/functional/**/*_spec.rb"
   end
 end
 
