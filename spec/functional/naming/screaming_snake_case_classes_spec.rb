@@ -53,7 +53,7 @@ describe "Detection of camel case methods" do
     specify { critic.problems[file_name.to_s].first[:column].should be 6 }
     specify { critic.problems[file_name.to_s].first[:level].should be :error }
   end
-  
+
   context "standard screaming snake case module" do
     let(:file_name) { :one_screaming_snake_case_module }
     specify { critic.problems[file_name.to_s].size.should be 1 }

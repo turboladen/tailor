@@ -28,7 +28,7 @@ describe "Spacing around comma detection" do
   let(:critic) do
     Tailor::Critic.new
   end
-  
+
   let(:contents) { COMMA_SPACING[file_name]}
 
   let(:style) do

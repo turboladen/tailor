@@ -63,7 +63,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "simple methods" do
     context "empty with an indented end" do
       let(:file_name) { :def_indented_end }
@@ -115,7 +115,7 @@ describe "Detection of method length" do
 =end
     end
   end
-  
+
   context "case statements" do
     context "case extra indented" do
       let(:file_name) { :case_indented_whens_level }
@@ -125,7 +125,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 3 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "case extra indented, trailing comment" do
       let(:file_name) { :case_indented_whens_level_trailing_comment }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -134,7 +134,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 3 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "case extra outdented" do
       let(:file_name) { :case_outdented_whens_level }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -175,7 +175,7 @@ describe "Detection of method length" do
 =end
     end
   end
-  
+
   context "while/do loops" do
     context "while/do indented" do
       let(:file_name) { :while_do_indented }
@@ -194,7 +194,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 1 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "while/do content outdented" do
       let(:file_name) { :while_do_content_outdented }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -212,7 +212,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 5 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "another while/do indented" do
       let(:file_name) { :while_do_indented2 }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -264,7 +264,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "if statements" do
     context "first line extra indented" do
       let(:file_name) { :if_line_indented }
@@ -284,7 +284,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "multi_line_tstring" do
     let(:file_name) { :multi_line_tstring }
     specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -293,7 +293,7 @@ describe "Detection of method length" do
     specify { critic.problems[file_name.to_s].first[:column].should be 0 }
     specify { critic.problems[file_name.to_s].first[:level].should be :error }
   end
-  
+
   context "operators" do
     context "multi-line &&, first line indented" do
       let(:file_name) { :multi_line_andop_first_line_indented }
@@ -312,7 +312,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 3 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "multi-line &&, second line indented" do
       let(:file_name) { :multi_line_andop_second_line_indented }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -321,7 +321,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 5 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "multi-line string concat, second line outdented" do
       let(:file_name) { :multi_line_string_concat_with_plus_out }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -331,7 +331,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "combinations of stuff" do
     context "multi-line if with end in" do
       let(:file_name) { :multi_line_method_call_end_in }
@@ -341,7 +341,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 3 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "multi-line chained methods with 2nd line in" do
       let(:file_name) { :multi_line_method_call_ends_with_period_2nd_line_in }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -350,7 +350,7 @@ describe "Detection of method length" do
       specify { critic.problems[file_name.to_s].first[:column].should be 5 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "multi-line chained methods with 3rd line in" do
       let(:file_name) { :multi_line_method_call_ends_with_many_periods_last_in }
       specify { critic.problems[file_name.to_s].size.should be 1 }

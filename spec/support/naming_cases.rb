@@ -24,4 +24,3 @@ end}
 NAMING_OK[:two_word_module] =
   %Q{module ThingOne
 end}
-

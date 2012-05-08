@@ -32,10 +32,10 @@ describe "Horizontal Space problem detection" do
       critic.problems.should == { file_name.to_s =>  [] }
     end
   end
-  
+
   context "line ends with a backslash" do
     let(:file_name) { :line_split_by_backslash }
-    
+
     let(:contents) do
       %Q{execute 'myscript' do
   command \\
@@ -43,15 +43,15 @@ describe "Horizontal Space problem detection" do
   only_if { something }
 end}
     end
-      
+
     before do
       FileUtils.touch file_name.to_s
       File.open(file_name.to_s, 'w') { |f| f.write contents }
     end
-    
+
     it "is OK" do
       pending "Fix of gh-101"
-      
+
       critic.check_file(file_name.to_s, style.to_hash)
       critic.problems.should == { file_name.to_s =>  [] }
     end

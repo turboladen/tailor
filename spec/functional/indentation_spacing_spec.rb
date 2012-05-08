@@ -20,7 +20,7 @@ describe "Indentation spacing problem detection" do
 
     style
   end
-  
+
   let(:contents) { INDENT_1[file_name] }
 
   INDENT_OK.each do |file_name, contents|
@@ -34,7 +34,7 @@ describe "Indentation spacing problem detection" do
       critic.problems.should == { file_name.to_s =>  [] }
     end
   end
-  
+
   context "case statement with indented whens" do
     let(:file_name) { :case_whens_in }
 
@@ -53,7 +53,7 @@ end}
       pending "Implementation of the option to allow for this"
     end
   end
-  
+
   context "method with rparen on following line" do
     let(:file_name) { :method_closing_lonely_paren }
 

@@ -761,4 +761,3 @@ INDENT_OK[:line_ends_with_label] =
   actual_trailing_spaces:
     lexed_line.last_non_line_feed_event.last.size
 }}
-

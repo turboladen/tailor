@@ -84,7 +84,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:column].should be 7 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "2 spaces before lbrace" do
       let(:file_name) { :single_line_hash_2_spaces_before_lbrace }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -122,7 +122,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:column].should be 12 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "2 spaces before rbrace" do
       let(:file_name) { :two_line_hash_2_spaces_before_rbrace }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -141,7 +141,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "single-line block" do
     context "space in empty Hash" do
       let(:file_name) { :space_in_empty_hash_in_string_in_block }
@@ -160,7 +160,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:column].should be 11 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "2 spaces before lbrace" do
       let(:file_name) { :single_line_block_2_spaces_before_lbrace }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -169,7 +169,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:column].should be 13 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "in String interpolation, 2 spaces before lbrace" do
       let(:file_name) { :single_line_block_in_string_interp_2_spaces_before_lbrace }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -179,7 +179,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
   end
-  
+
   context "multi-line block" do
     context "2 spaces before lbrace" do
       let(:file_name) { :two_line_braces_block_2_spaces_before_lbrace }
@@ -207,7 +207,7 @@ describe "Detection of spacing around braces" do
       specify { critic.problems[file_name.to_s].last[:level].should be :error }
     end
   end
-  
+
   context "String interpolation" do
     context "0 spaces after lbrace or before rbrace" do
       let(:file_name) { :no_space_after_l_before_r_after_string_interp }

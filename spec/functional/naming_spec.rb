@@ -32,4 +32,4 @@ describe "Naming problem detection" do
       critic.problems.should == { file_name.to_s =>  [] }
     end
   end
-end 
+end

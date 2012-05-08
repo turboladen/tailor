@@ -48,7 +48,7 @@ describe "Detection of spaces around brackets" do
       specify { critic.problems[file_name.to_s].first[:column].should be 6 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "space before rparen" do
       let(:file_name) { :simple_method_call_space_before_rparen }
       specify { critic.problems[file_name.to_s].size.should be 1 }
@@ -57,7 +57,7 @@ describe "Detection of spaces around brackets" do
       specify { critic.problems[file_name.to_s].first[:column].should be 15 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
     end
-    
+
     context "space after lparen, trailing comment" do
       let(:file_name) { :method_call_space_after_lparen_trailing_comment }
       specify { critic.problems[file_name.to_s].size.should be 1 }

@@ -134,5 +134,3 @@ H_SPACING_OK[:multi_line_method_call] = %Q{thing(one,
 H_SPACING_OK[:multi_line_method_call_lonely_parens] = %Q{thing(
   one, two
 )}
-
-

@@ -22,7 +22,7 @@ describe "Long line detection" do
   end
 
   let(:contents) { LONG_LINE[file_name]}
-  
+
   let(:style) do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off

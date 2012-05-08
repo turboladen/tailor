@@ -28,7 +28,7 @@ describe "Trailing whitespace detection" do
   end
 
   let(:contents) { TRAILING_WHITESPACE[file_name]}
-  
+
   let(:style) do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off

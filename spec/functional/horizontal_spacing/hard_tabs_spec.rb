@@ -51,7 +51,7 @@ describe "Hard tab detection" do
   end
 
   let(:contents) { HARD_TABS[file_name]}
-  
+
   let(:style) do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off

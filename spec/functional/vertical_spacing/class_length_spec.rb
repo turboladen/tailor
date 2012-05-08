@@ -55,7 +55,7 @@ describe "Detection of class length" do
     specify { critic.problems[file_name.to_s].first[:column].should be 0 }
     specify { critic.problems[file_name.to_s].first[:level].should be :error }
   end
-  
+
   context "class in a class" do
     let(:file_name) { :parent_class_too_long }
     specify { critic.problems[file_name.to_s].size.should be 1 }
