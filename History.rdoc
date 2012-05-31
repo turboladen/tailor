@@ -1,4 +1,4 @@
-=== 1.1.1 xxxx-xx-xx
+=== 1.1.1 2012-05-31
 
 * gh-110[https://github.com/turboladen/tailor/issues/110]
   * Tailor now exits with 0 if non-error problems are found.
