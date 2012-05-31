@@ -45,7 +45,7 @@ class Tailor
 
       @reporter.summary_report(@critic.problems)
 
-      @critic.problem_count > 0
+      @critic.problem_count(:error) > 0
     end
   end
 end

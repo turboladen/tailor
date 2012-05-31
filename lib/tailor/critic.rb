@@ -47,8 +47,12 @@ class Tailor
     end
 
     # @return [Fixnum] The number of problems found so far.
-    def problem_count
-      problems.values.flatten.size
+    def problem_count(type=nil)
+      if type.nil?
+        problems.values.flatten.size
+      else
+        problems.values.flatten.find_all { |v| v[:level] == :error }.size
+      end
     end
 
     # Adds problems found from Lexing to the +#problems+ list.
