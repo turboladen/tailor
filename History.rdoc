@@ -8,6 +8,9 @@
     indentation tracking, tailor replaces the backslash with a special comment
     that it can detect and handle accordingly.  While this isn't ideal, given
     the current design, it seemed like the way to deal with this.
+* gh-103[https://github.com/turboladen/tailor/issues/103]
+  * Tailor now properly handles string interpolation inside string
+    interpolation.
   
 === 1.1.1 2012-05-31
 

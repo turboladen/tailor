@@ -440,6 +440,17 @@ INDENT_OK[:deep_hash_with_rockets] =
         "e" => "E",
         "f" => "F" } } }]
 
+INDENT_OK[:embedded_strings_in_embedded_strings] =
+  %q[def friendly_time(time)
+  if hours < 24
+    "#{(hours > 0) ? "#{hours} hour" : '' }#{(hours > 1) ? 's' : ''}" +
+      " #{(mins > 0) ? "#{mins} minute" : '' }#{(mins > 1) ? 's' : ''}" +
+      " #{seconds} second#{(seconds > 1) ? "s" : ''} ago"
+  else
+    time.to_s
+  end
+end]
+
 #----------- Brackets ----------#
 INDENT_OK[:single_line_brackets] =
   %Q{['one', 'two', 'three']}

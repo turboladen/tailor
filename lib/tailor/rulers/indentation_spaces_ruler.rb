@@ -25,7 +25,7 @@ class Tailor
           :tstring_end
         )
         @manager = IndentationManager.new(@config)
-        @embexpr_beg = false
+        @embexpr_nesting = []
         @tstring_nesting = []
       end
 
@@ -56,14 +56,14 @@ class Tailor
       end
 
       def embexpr_beg_update
-        @embexpr_beg = true
+        @embexpr_nesting << true
       end
 
       # Due to a Ripper bug (depending on which Ruby version you have), this may
       # or may not get triggered.
       # More info: https://bugs.ruby-lang.org/issues/6211
       def embexpr_end_update
-        @embexpr_beg = false
+        @embexpr_nesting.pop
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
@@ -173,7 +173,7 @@ class Tailor
       #
       # @return [Boolean]
       def in_embexpr?
-        @embexpr_beg == true
+        !@embexpr_nesting.empty?
       end
 
       def rbrace_update(current_lexed_line, lineno, column)
@@ -181,7 +181,7 @@ class Tailor
           msg = "Got :rbrace and @embexpr_beg is true. "
           msg << " Must be at an @embexpr_end."
           log msg
-          @embexpr_beg = false
+          @embexpr_nesting.pop
           return
         end
 
