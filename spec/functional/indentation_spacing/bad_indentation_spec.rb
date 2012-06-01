@@ -103,16 +103,14 @@ describe "Detection of method length" do
 
     context "class method outdented, in a class" do
       let(:file_name) { :class_method_def_using_self_outdented }
+      
       specify do
-        pending "Fix of gh-109"
         critic.problems[file_name.to_s].size.should be 1
       end
-=begin
       specify { critic.problems[file_name.to_s].first[:type].should == "indentation_spaces" }
       specify { critic.problems[file_name.to_s].first[:line].should be 2 }
       specify { critic.problems[file_name.to_s].first[:column].should be 1 }
       specify { critic.problems[file_name.to_s].first[:level].should be :error }
-=end
     end
   end
 
