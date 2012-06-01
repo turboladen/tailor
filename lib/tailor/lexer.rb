@@ -554,6 +554,11 @@ class Tailor
     #---------------------------------------------------------------------------
     private
 
+    # Used internally as part of the hack to deal with Ripper's lack of dealing
+    # with line-ending backslashes that break up statements.
+    #
+    # @param [String] file_text The file test to check.
+    # @param [String] The altered file text.
     def sub_line_ending_backslashes(file_text)
       backslash_replacement = "# TAILOR REMOVED BACKSLASH"
       file_text.gsub!(/\\\s*\n?$/, backslash_replacement)
