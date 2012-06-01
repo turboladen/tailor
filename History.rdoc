@@ -1,3 +1,14 @@
+=== 1.1.2 xxxx-xx-xx
+
+* gh-101[https://github.com/turboladen/tailor/issues/101]
+  * Tailor now handles code that uses backslashes to break up statements to
+    multiple lines.  Note that this is somewhat of a hack, since Ripper does not
+    tokenize these backslashes--it actually just treats what we see as 2 lines
+    of code as a single line of code.  In order to preserve line numbering and
+    indentation tracking, tailor replaces the backslash with a special comment
+    that it can detect and handle accordingly.  While this isn't ideal, given
+    the current design, it seemed like the way to deal with this.
+  
 === 1.1.1 2012-05-31
 
 * gh-110[https://github.com/turboladen/tailor/issues/110]

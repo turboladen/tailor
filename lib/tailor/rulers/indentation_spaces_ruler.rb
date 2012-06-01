@@ -30,6 +30,12 @@ class Tailor
       end
 
       def comment_update(token, lexed_line, file_text, lineno, column)
+        if token.fake_backslash_line_end?
+          log "Line was altered by tailor to accommodate trailing backslash"
+          @manager.add_indent_reason(:trailing_backslash, :trailing_backslash,
+            lineno)
+        end
+
         # trailing comment?
         if token.ends_with_newline?
           log "Comment ends with newline.  Removing comment..."

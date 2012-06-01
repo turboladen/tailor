@@ -333,8 +333,7 @@ class Tailor
           return nil if @indent_reasons.empty?
 
           @indent_reasons.reverse.find do |r|
-            !ENCLOSERS.include? r[:event_type] &&
-              r[:event_type] != :on_kw
+            !ENCLOSERS.include?(r[:event_type]) && r[:event_type] != :on_kw
           end
         end
 

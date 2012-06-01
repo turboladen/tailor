@@ -102,6 +102,11 @@ class Tailor
 
         result
       end
+      
+      # @return [Boolean]
+      def fake_backslash_line_end?
+        self =~ /^# TAILOR REMOVED BACKSLASH\n?$/
+      end
     end
   end
 end

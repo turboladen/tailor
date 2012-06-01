@@ -36,24 +36,49 @@ describe "Horizontal Space problem detection" do
   context "line ends with a backslash" do
     let(:file_name) { :line_split_by_backslash }
 
-    let(:contents) do
-      %Q{execute 'myscript' do
-  command \\
-    '/some/really/long/path/that/would/be/over/eighty/chars.sh'
-  only_if { something }
-end}
-    end
-
     before do
       FileUtils.touch file_name.to_s
       File.open(file_name.to_s, 'w') { |f| f.write contents }
     end
 
-    it "is OK" do
-      pending "Fix of gh-101"
+    context "no problems" do
+      let(:contents) do
+        %Q{execute 'myscript' do
+  command \\
+    '/some/line/that/is/not/over/eighty/chars.sh'
+  only_if { something }
+end}
+      end
 
-      critic.check_file(file_name.to_s, style.to_hash)
-      critic.problems.should == { file_name.to_s =>  [] }
+      it "is OK" do
+        critic.check_file(file_name.to_s, style.to_hash)
+        critic.problems.should == { file_name.to_s => [] }
+      end
+    end
+    
+    context "line after backslash is too long" do
+      let(:contents) do
+        %Q{execute 'myscript' do
+  command \\
+    '#{'*' * 75}'
+  only_if { something }
+end}
+      end
+
+      it "is OK" do
+        critic.check_file(file_name.to_s, style.to_hash)
+        critic.problems.should == {
+          file_name.to_s => [
+            {
+              :type => "max_line_length",
+              :line => 3,
+              :column => 81,
+              :message => "Line is 81 chars long, but should be 80.",
+              :level=>:error
+            }
+          ]
+        }
+      end
     end
   end
 end

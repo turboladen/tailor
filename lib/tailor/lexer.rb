@@ -28,6 +28,7 @@ class Tailor
       end
 
       @file_text = ensure_trailing_newline(@original_file_text)
+      @file_text = sub_line_ending_backslashes(@file_text)
       super @file_text
       @added_newline = @file_text != @original_file_text
     end
@@ -553,6 +554,13 @@ class Tailor
     #---------------------------------------------------------------------------
     private
 
+    def sub_line_ending_backslashes(file_text)
+      backslash_replacement = "# TAILOR REMOVED BACKSLASH"
+      file_text.gsub!(/\\\s*\n?$/, backslash_replacement)
+      
+      file_text
+    end
+    
     def log(*args)
       l = begin; lineno; rescue; "<EOF>"; end
       c = begin; column; rescue; "<EOF>"; end
