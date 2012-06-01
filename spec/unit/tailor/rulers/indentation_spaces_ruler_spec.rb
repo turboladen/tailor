@@ -35,19 +35,18 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   end
 
   describe "#embexpr_beg_update" do
-    it "sets @embexpr_beg to true" do
-      subject.instance_variable_set(:@embexpr_beg, false)
+    it "sets @embexpr_nesting to [true]" do
+      subject.instance_variable_set(:@embexpr_nesting, [])
       subject.embexpr_beg_update
-      subject.instance_variable_get(:@embexpr_beg).should be_true
+      subject.instance_variable_get(:@embexpr_nesting).should == [true]
     end
   end
 
-
   describe "#embexpr_end_update" do
-    it "sets @embexpr_beg to false" do
-      subject.instance_variable_set(:@embexpr_beg, true)
+    it "pops @embexpr_nesting" do
+      subject.instance_variable_set(:@embexpr_nesting, [true])
       subject.embexpr_end_update
-      subject.instance_variable_get(:@embexpr_beg).should be_false
+      subject.instance_variable_get(:@embexpr_nesting).should == []
     end
   end
 
