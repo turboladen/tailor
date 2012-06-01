@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tailor (1.1.1)
+    tailor (1.1.2)
       log_switch (>= 0.3.0)
       term-ansicolor (>= 1.0.5)
       text-table (>= 1.2.2)

@@ -1,4 +1,4 @@
-=== 1.1.2 xxxx-xx-xx
+=== 1.1.2 2012-06-01
 
 * gh-101[https://github.com/turboladen/tailor/issues/101]
   * Tailor now handles code that uses backslashes to break up statements to
