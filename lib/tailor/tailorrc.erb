@@ -79,6 +79,13 @@
 #                         the file.
 #                         Default:      1
 #
+#------------------------------------------------------------------------------
+# Other
+#------------------------------------------------------------------------------
+# quotes                  Type of the quotes that should be used consistently 
+#                         across a whole project ("single" or "double")
+#                         Default:      off
+#
 Tailor.config do |config|
   config.formatters "<%= formatters.join(", ") %>"
   config.file_set '<%= file_list %>' do |style|<% style.each do |rule, value| %>
