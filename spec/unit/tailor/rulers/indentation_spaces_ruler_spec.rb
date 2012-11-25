@@ -98,14 +98,14 @@ describe Tailor::Rulers::IndentationSpacesRuler do
       manager.should_receive(:update_actual_indentation).with lexed_line
       manager.should_receive(:stop)
       subject.instance_variable_set(:@manager, manager)
-      subject.tstring_beg_update(lexed_line, 1)
+      subject.tstring_beg_update(lexed_line, 1, nil, nil)
     end
 
     it "adds the lineno to @tstring_nesting" do
       manager.stub(:update_actual_indentation)
       manager.stub(:stop)
       subject.instance_variable_set(:@manager, manager)
-      subject.tstring_beg_update(lexed_line, 1)
+      subject.tstring_beg_update(lexed_line, 1, nil, nil)
       subject.instance_variable_get(:@tstring_nesting).should == [1]
     end
   end

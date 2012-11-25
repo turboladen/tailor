@@ -455,7 +455,7 @@ class Tailor
       log "TSTRING_BEG: '#{token}'"
       current_line = LexedLine.new(super, lineno)
       tstring_beg_changed
-      notify_tstring_beg_observers(current_line, lineno)
+      notify_tstring_beg_observers(current_line, lineno, column, token)
       super(token)
     end
 

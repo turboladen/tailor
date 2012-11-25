@@ -77,6 +77,11 @@ class Tailor
             options.style[:max_line_length] = c
           end
 
+          opt.on('--quotes type',
+            'Type of quotes that should be used (default: off)') do |c|
+            options.style[:quotes] = c
+          end
+
           opt.on('--spaces-after-comma NUMBER',
             'Spaces to expect after a comma.  (default: 1)') do |c|
             options.style[:spaces_after_comma] = c

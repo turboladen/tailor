@@ -94,7 +94,9 @@ class Tailor
         end
 
         log "Initializing ruler: #{ruler}"
-        ruler = instance_eval("#{ruler}.new(#{values.first}, #{values.last})")
+        first_argument, second_argument = values.first, values.last
+        first_argument = "'#{first_argument}'" if first_argument.is_a? String
+        ruler = instance_eval("#{ruler}.new(#{first_argument}, #{second_argument})")
         parent_ruler.add_child_ruler(ruler)
 
         ruler.lexer_observers.each do |observer|

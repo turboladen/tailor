@@ -229,7 +229,7 @@ class Tailor
         @manager.update_for_closing_reason(:on_rparen, current_lexed_line)
       end
 
-      def tstring_beg_update(lexed_line, lineno)
+      def tstring_beg_update(lexed_line, lineno, column, token)
         @tstring_nesting << lineno
         @manager.update_actual_indentation(lexed_line)
         log "tstring_nesting is now: #{@tstring_nesting}"

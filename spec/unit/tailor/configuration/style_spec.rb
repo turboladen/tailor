@@ -165,6 +165,7 @@ describe Tailor::Configuration::Style do
         :max_code_lines_in_class => [300, { :level => :error }],
         :max_code_lines_in_method => [30, { :level => :error }],
         :max_line_length => [80, { :level => :error }],
+        :quotes => ["off", { :level => :error }],
         :spaces_after_comma => [1, { :level => :error }],
         :spaces_after_lbrace => [1, { :level => :error }],
         :spaces_after_lbracket => [0, { :level => :error }],
