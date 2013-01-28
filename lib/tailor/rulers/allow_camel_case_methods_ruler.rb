@@ -10,12 +10,9 @@ class Tailor
 
       def ident_update(token, lexed_line, lineno, column)
         ident_index = lexed_line.event_index(column)
-        previous_event = lexed_line.event_at(ident_index - 2)
-        log "previous event: #{previous_event}"
+        find_event = lexed_line.find { |e| e[1] == :on_kw && e.last == "def" }
 
-        return if previous_event.nil?
-
-        if previous_event[1] == :on_kw && previous_event.last == "def"
+        if find_event.any?
           measure(token, lineno, column)
         end
       end
