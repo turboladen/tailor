@@ -25,20 +25,20 @@ project, whatever style that may be.
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
 
-  s.add_runtime_dependency(%q<log_switch>, ">= 0.3.0")
-  s.add_runtime_dependency(%q<term-ansicolor>, ">= 1.0.5")
-  s.add_runtime_dependency(%q<text-table>, ">= 1.2.2")
+  s.add_runtime_dependency %q<log_switch>, ">= 0.3.0"
+  s.add_runtime_dependency %q<term-ansicolor>, ">= 1.0.5"
+  s.add_runtime_dependency %q<text-table>, ">= 1.2.2"
 
-  s.add_development_dependency(%q<aruba>, ">=0")
-  s.add_development_dependency(%q<bundler>, ">=0")
-  s.add_development_dependency(%q<code_statistics>, ">=0")
-  s.add_development_dependency(%q<cucumber>, ">= 1.0.2")
-  s.add_development_dependency(%q<fakefs>, ">= 0.4.0")
-  s.add_development_dependency(%q<rake>, ">= 0")
-  s.add_development_dependency(%q<roodi>, ">= 2.1.0")
-  s.add_development_dependency(%q<rspec>, ">= 2.5.0")
-  s.add_development_dependency(%q<simplecov>, ">= 0.4.0")
-  s.add_development_dependency(%q<yard>, ">= 0.7.0")
-  s.add_development_dependency(%q<yard-cucumber>, ">= 2.1.7")
+  s.add_development_dependency %q<aruba>
+  s.add_development_dependency %q<bundler>
+  s.add_development_dependency %q<code_statistics>
+  s.add_development_dependency %q<cucumber>, ">= 1.0.2"
+  s.add_development_dependency %q<fakefs>, ">= 0.4.0"
+  s.add_development_dependency %q<rake>
+  s.add_development_dependency %q<roodi>, ">= 2.1.0"
+  s.add_development_dependency %q<rspec>, ">= 2.5.0"
+  s.add_development_dependency %q<simplecov>, ">= 0.4.0"
+  s.add_development_dependency %q<yard>, ">= 0.7.0"
+  s.add_development_dependency %q<yard-cucumber>, ">= 2.1.7"
 end
 
