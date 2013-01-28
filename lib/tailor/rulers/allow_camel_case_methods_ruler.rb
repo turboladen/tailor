@@ -12,7 +12,7 @@ class Tailor
         ident_index = lexed_line.event_index(column)
         find_event = lexed_line.find { |e| e[1] == :on_kw && e.last == "def" }
 
-        if find_event.any?
+        if find_event && find_event.any?
           measure(token, lineno, column)
         end
       end
