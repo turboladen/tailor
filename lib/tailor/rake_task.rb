@@ -97,6 +97,8 @@ class Tailor
         rescue Tailor::RuntimeError => ex
           STDERR.puts ex.message
           STDERR.puts ex.backtrace.join("\n")
+        rescue SystemExit => ex
+          exit(ex.status)
         rescue Exception => ex
           STDERR.puts("#{ex.message} (#{ex.class})")
           STDERR.puts(ex.backtrace.join("\n"))
