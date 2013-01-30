@@ -93,7 +93,7 @@ Check defaults (lib/**/*.rb):
 
   $ tailor
   
-Use defaults via a Rake task:
+Use defaults via a Rake task (if you have a .tailor file, it'll use those settings):
 
   require 'tailor/rake_task'
   
