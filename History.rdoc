@@ -1,3 +1,11 @@
+=== 1.1.4 2013-01-29
+
+* gh-127[https://github.com/turboladen/tailor/issues/127]
+  * RakeTask now actually does something (works).
+* tailor should now abort (and let you know) when it can't find the config file
+  that you told it to use.  Previously, it would just fall back to default
+  settings.
+
 === 1.1.3 2013-01-28
 
 * gh-121[https://github.com/turboladen/tailor/issues/121]
