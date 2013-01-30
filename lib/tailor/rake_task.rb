@@ -55,8 +55,6 @@ class Tailor
     # @param [String] name The task name.
     # @param [String] desc Description of the task.
     def initialize(name = "tailor", desc = "Check style")
-      Tailor::Logger.log = false
-
       @name, @desc = name, desc
       @tailor_opts = []
       @file_sets = []
