@@ -31,14 +31,11 @@ project, whatever style that may be.
 
   s.add_development_dependency %q<aruba>
   s.add_development_dependency %q<bundler>
-  s.add_development_dependency %q<code_statistics>
   s.add_development_dependency %q<cucumber>, ">= 1.0.2"
-  s.add_development_dependency %q<fakefs>, ">= 0.4.0"
+  s.add_development_dependency %q<fakefs>, ">= 0.4.2"
   s.add_development_dependency %q<rake>
-  s.add_development_dependency %q<roodi>, ">= 2.1.0"
   s.add_development_dependency %q<rspec>, ">= 2.5.0"
   s.add_development_dependency %q<simplecov>, ">= 0.4.0"
   s.add_development_dependency %q<yard>, ">= 0.7.0"
-  s.add_development_dependency %q<yard-cucumber>, ">= 2.1.7"
 end
 
