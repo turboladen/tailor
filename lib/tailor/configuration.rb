@@ -88,7 +88,7 @@ class Tailor
             "Couldn't load config file: #{user_config_file}"
         end
       else
-        log "No config file found at #{user_config_file}."
+        abort "No config file found at #{user_config_file}."
       end
     end
 
