@@ -3,8 +3,7 @@ require 'rake/tasklib'
 require_relative 'critic'
 require_relative 'configuration'
 require_relative 'logger'
-require_relative 'reporter'
-require_relative 'cli/options'
+require_relative 'cli'
 
 begin
   # Support Rake > 0.8.7
@@ -50,6 +49,7 @@ class Tailor
     # set in your config file.
     attr_accessor :tailor_opts
 
+    # @return [Array] The list of formatters to use.  (not really used yet)
     attr_accessor :formatters
 
     # @param [String] name The task name.
@@ -93,55 +93,17 @@ class Tailor
           @tailor_opts.concat %W(--config-file=#{config_file})
         end
 
-        configuration = create_config
-        @reporter = Tailor::Reporter.new(configuration.formatters)
-
-        create_file_sets_for configuration
-        create_recursive_file_sets_for configuration
-        check_default_file_set_in configuration
-
-        critic = Tailor::Critic.new
-
-        critic.critique(configuration.file_sets) do |problems_for_file, label|
-          @reporter.file_report(problems_for_file, label)
+        begin
+          failure = Tailor::CLI.run(@tailor_opts)
+          exit(1) if failure
+        rescue Tailor::RuntimeError => ex
+          STDERR.puts ex.message
+          STDERR.puts ex.backtrace.join("\n")
+        rescue Exception => ex
+          STDERR.puts("#{ex.message} (#{ex.class})")
+          STDERR.puts(ex.backtrace.join("\n"))
+          exit(1)
         end
-
-        @reporter.summary_report(critic.problems)
-
-        critic.problem_count > 0
-      end
-    end
-
-    # @return [Tailor::Configuration]
-    def create_config
-      configuration = Tailor::Configuration.new([],
-        Tailor::CLI::Options.parse!(@tailor_opts))
-      configuration.load!
-      configuration.formatters(formatters) if formatters
-
-      configuration
-    end
-
-    # @param [Tailor::Configuration] config
-    def create_recursive_file_sets_for config
-      unless @recursive_file_sets.empty?
-        @recursive_file_sets.each do |fs|
-          config.recursive_file_set(fs[0], fs[1], &fs[2])
-        end
-      end
-    end
-
-    # @param [Tailor::Configuration] config
-    def create_file_sets_for config
-      unless @file_sets.empty?
-        @file_sets.each { |fs| config.file_set(fs[0], fs[1], &fs[2]) }
-      end
-    end
-
-    # @param [Tailor::Configuration] config
-    def check_default_file_set_in config
-      if @file_sets.none? { |fs| fs[1] == :default }
-        config.file_sets.delete(:default)
       end
     end
   end
