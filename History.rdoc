@@ -1,3 +1,11 @@
+=== 1.1.5 2013-01-30
+
+* gh-127[https://github.com/turboladen/tailor/issues/127]
+  * The last fix had SystemExit being displayed to the user at all times (since
+    it should've been getting rescued from when the program exits).  Properly
+    rescuing this now for Rake tasks, so it now behaves just like bin/tailor in
+    this respect.
+
 === 1.1.4 2013-01-29
 
 * gh-127[https://github.com/turboladen/tailor/issues/127]
