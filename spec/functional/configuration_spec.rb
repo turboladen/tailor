@@ -240,5 +240,42 @@ end
         config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
       end
     end
+
+    context '.tailor defines a yaml formatter' do
+      let(:config_file) do
+        <<-CONFIG
+Tailor.config do |config|
+  config.formatters 'yaml'
+end
+        CONFIG
+      end
+
+      before do
+        File.should_receive(:read).and_return config_file
+      end
+
+      it "sets formatters to 'yaml'" do
+        config.formatters.should == %w(yaml)
+      end
+    end
+
+    context '.tailor defines a more than one formatter' do
+      let(:config_file) do
+        <<-CONFIG
+Tailor.config do |config|
+  config.formatters 'yaml', 'text'
+end
+        CONFIG
+      end
+
+      before do
+        File.should_receive(:read).and_return config_file
+      end
+
+      it "sets formatters to the defined" do
+        config.formatters.should == %w(yaml text)
+      end
+
+    end
   end
 end

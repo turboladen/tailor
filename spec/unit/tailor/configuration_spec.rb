@@ -1,5 +1,6 @@
 require_relative '../../spec_helper'
 require 'tailor/configuration'
+require 'tailor/cli'
 
 describe Tailor::Configuration do
   before { Tailor::Logger.stub(:log) }
@@ -103,6 +104,23 @@ describe Tailor::Configuration do
             Tailor::Configuration::DEFAULT_RC_FILE
         end
       end
+    end
+  end
+
+  describe "output file" do
+    context "defined" do
+      subject do
+        parser = Tailor::CLI::Options
+        args = %w(--output-file=tailor-result.yaml)
+        Tailor::Configuration.new(args, parser.parse!(args))
+      end
+
+      before { subject.load! }
+      its(:output_file) { should eq "tailor-result.yaml" }
+    end
+
+    context "not defined" do
+      its(:output_file) { should eq "" }
     end
   end
 end
