@@ -30,6 +30,7 @@ class Tailor
 
     attr_reader :file_sets
     attr_reader :formatters
+    attr_reader :output_file
 
     # @param [Array] runtime_file_list
     # @param [OpenStruct] options
@@ -39,6 +40,7 @@ class Tailor
     def initialize(runtime_file_list=nil, options=nil)
       @formatters = ['text']
       @file_sets = {}
+      @output_file = ""
       @runtime_file_list = runtime_file_list
       log "Got runtime file list: #{@runtime_file_list}"
 
@@ -65,6 +67,7 @@ class Tailor
         @file_sets = { default: FileSet.new(@runtime_file_list) }
       end
 
+      get_output_file_from_cli_opts
       get_formatters_from_cli_opts
       get_file_sets_from_cli_opts
       get_style_from_cli_opts
@@ -162,6 +165,13 @@ class Tailor
       end
     end
 
+    def get_output_file_from_cli_opts
+      unless @options.nil? || @options.output_file.nil?
+        @output_file = @options.output_file
+        log "@output_file is now #{@output_file}"
+      end
+    end
+
     def get_formatters_from_cli_opts
       unless @options.nil? || @options.formatters.empty? || @options.formatters.nil?
         @formatters = @options.formatters
@@ -207,6 +217,7 @@ class Tailor
       table.head = [{ value: 'Configuration', colspan: 2, align: :center }]
       table.rows << :separator
       table.rows << ['Formatters', @formatters]
+      table.rows << ['Output File', @output_file]
 
       @file_sets.each do |label, file_set|
         table.rows << :separator

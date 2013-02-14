@@ -81,6 +81,7 @@ describe Tailor::CLI do
     it "calls @critic.critique and yields file problems and the label" do
       problems_for_file = {}
       label = :test
+      config.should_receive(:output_file)
       critic.stub(:problem_count).and_return 1
       critic.stub(:problems)
       critic.stub(:critique).and_yield(problems_for_file, label)
@@ -88,6 +89,27 @@ describe Tailor::CLI do
       reporter.should_receive(:file_report).with(problems_for_file, label)
 
       subject.execute!
+    end
+  end
+
+  describe "#result" do
+    let(:critic) { double "Tailor::Critic", problem_count: 0 }
+
+    before do
+      Tailor::Critic.stub(:new).and_return(critic)
+      subject.instance_variable_set(:@critic, critic)
+    end
+
+    after do
+      Tailor::Critic.unstub(:new)
+    end
+
+    it "calls @critic.critique and return @critique.problems hash" do
+      problems = {}
+      critic.should_receive(:critique)
+      critic.should_receive(:problems).and_return(problems)
+
+      subject.result.should == problems
     end
   end
 end

@@ -38,10 +38,15 @@ class Tailor
     # Sends the data to each +@formatters+ to generate the reports of problems
     # for all files that were just critiqued.
     #
-    # @param [Hash] all_problems 
-    def summary_report(all_problems)
+    # @param [Hash] all_problems
+    def summary_report(all_problems, opts={})
       @formatters.each do |formatter|
-        formatter.summary_report(all_problems)
+        summary = formatter.summary_report(all_problems)
+        if formatter.respond_to?(:accepts_output_file) &&
+                         formatter.accepts_output_file &&
+                         !opts[:output_file].empty?
+          File.open(opts[:output_file], "w") { |f| f.puts summary }
+        end
       end
     end
   end
