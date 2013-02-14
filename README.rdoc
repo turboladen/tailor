@@ -93,11 +93,16 @@ Check only files ending in .rb under the 'test' directory:
 Check defaults (lib/**/*.rb):
 
   $ tailor
-  
+
+Printing the results in a output file (if using a formatter that accepts output files, like 'yaml'):
+
+  $ tailor path/to/check --output-file=my-results.yaml
+  $ tailor --output-file=my-results-from-defaults.yaml
+
 Use defaults via a Rake task (if you have a .tailor file, it'll use those settings):
 
   require 'tailor/rake_task'
-  
+
   Tailor::RakeTask.new
 
 ==== On style...
@@ -270,6 +275,21 @@ level to +:off+:
   end
 
 
+===== Formatters
+
+By default Tailor uses the text formatter, printing the results on console. Tailor
+also provides a 'yaml' formatter, that accepts an output file if using the option
+--output-file=*.yaml
+
+  #.tailor
+  Tailor.config do |config|
+    config.formatters 'text', 'yaml'
+
+    # just ones
+    config.formatters 'text'
+  end
+
+
 === Define A Custom Ruler
 
 While tailor provides a number of Rulers for checking style, it also provides a
@@ -342,6 +362,25 @@ add infomation about your ruler to your config file.  If you created a Ruler:
   end
 
 Next time you run tailor, your Ruler will get initialized and used.
+
+=== Using the lib
+
+Sometimes you could use tailor as a lib, getting the results as a hash
+and manipulate them according your domain.
+
+  require 'tailor/cli'
+
+  # only results from a specific path
+  tailor = Tailor::CLI.new %w(app/controllers)
+  tailor.result # result should be a hash {"filename" => [problems]}
+
+  # using other file config (hiding path, it'll use from default config)
+  Tailor::CLI.new %w(--config-file=.other-config)
+  Tailor::CLI.new [] # uses file set from .tailor file config
+
+  # printing the results in a output file
+  tailor = Tailor::CLI.new %w(--output-file=results.yaml)
+  tailor.execute!
 
 == REQUIREMENTS:
 

@@ -43,11 +43,30 @@ describe Tailor::Reporter do
       t
     end
 
-    it "calls #file_report on each @formatters" do
-      label = :some_label
-      formatter.should_receive(:summary_report).with(all_problems)
+    context "without output file" do
+      it "calls #file_report on each @formatters" do
+        label = :some_label
+        formatter.should_receive(:summary_report).with(all_problems)
+        File.should_not_receive(:open)
 
-      subject.summary_report(all_problems)
+        subject.summary_report(all_problems)
+      end
     end
+
+    context "with output file" do
+      let(:output_file) { "output.whatever" }
+      before do
+        formatter.should_receive(:respond_to?).with(:accepts_output_file).and_return(true)
+        formatter.should_receive(:accepts_output_file).and_return(true)
+      end
+
+      it "calls #summary_report on each @formatters" do
+        formatter.should_receive(:summary_report).with(all_problems)
+        File.should_receive(:open).with(output_file, "w")
+
+        subject.summary_report(all_problems, output_file: output_file)
+      end
+    end
+
   end
 end

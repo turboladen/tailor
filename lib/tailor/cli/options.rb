@@ -14,6 +14,7 @@ class Tailor
       def self.parse!(args)
         options = OpenStruct.new
         options.config_file = ''
+        options.output_file = ''
         options.formatters = []
         options.show_config = false
         options.style = {}
@@ -31,6 +32,11 @@ class Tailor
           opt.on('-c', '--config-file FILE',
             "Use a specific config file.") do |config|
             options.config_file = config
+          end
+
+          opt.on('-o', '--output-file FILE',
+            "Print result in a output file if using the proper formatter.") do |output|
+            options.output_file = output
           end
 
           opt.on('--create-config', 'Create a new .tailor file') do
