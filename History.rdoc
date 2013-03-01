@@ -1,5 +1,7 @@
 === x.x.x 2013-03-01
 
+* gh-130[https://github.com/turboladen/tailor/issues/130]
+  * AllowInvalidRubyRuler now handles file names with spaces in them.
 * gh-131[https://github.com/turboladen/tailor/issues/131]
   * Added YAML output formatter.  Thanks @leandronsp!
 
