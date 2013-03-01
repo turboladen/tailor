@@ -1,3 +1,8 @@
+=== x.x.x 2013-03-01
+
+* gh-131[https://github.com/turboladen/tailor/issues/131]
+  * Added YAML output formatter.  Thanks @leandronsp!
+
 === 1.1.5 2013-01-30
 
 * gh-127[https://github.com/turboladen/tailor/issues/127]
