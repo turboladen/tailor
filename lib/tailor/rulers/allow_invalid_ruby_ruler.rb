@@ -17,7 +17,7 @@ class Tailor
       # @return [Boolean]
       def invalid_ruby?
         log "Checking for valid Ruby..."
-        result = `ruby -c "#{@file_name}"`
+        result = `"#{Gem.ruby}" -c "#{@file_name}"`
 
         result.size.zero?
       end
@@ -26,8 +26,8 @@ class Tailor
         if invalid_ruby? && @config == false
           lineno = 0
           column = 0
-          msg = "File contains invalid Ruby; run `ruby -c [your_file.rb]` "
-          msg << "for more details."
+          msg = 'File contains invalid Ruby; run `ruby -c [your_file.rb]` '
+          msg << 'for more details.'
 
           @problems << Problem.new(problem_type, lineno, column, msg,
             @options[:level])

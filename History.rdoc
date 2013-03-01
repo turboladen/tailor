@@ -1,5 +1,8 @@
 === x.x.x 2013-03-01
 
+* gh-119[https://github.com/turboladen/tailor/issues/119]
+  * AllowInvalidRubyRuler now uses Gem.ruby to use the ruby that tailor was
+    run with.
 * gh-130[https://github.com/turboladen/tailor/issues/130]
   * AllowInvalidRubyRuler now handles file names with spaces in them.
 * gh-131[https://github.com/turboladen/tailor/issues/131]
