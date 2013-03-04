@@ -271,8 +271,8 @@ class Tailor
         # reason", such as a +end+, +}+, +]+, +)+.
         #
         # @param [Symbol] event_type The event type that is the closing reason.
-        # @param [Tailor::Token,String] token The token that is the closing
-        #   reason.
+        # @param [Tailor::LexedLine] lexed_line The line that contains the
+        #   closing reason.
         def update_for_closing_reason(event_type, lexed_line)
           remove_continuation_keywords
           remove_appropriate_reason(event_type)
