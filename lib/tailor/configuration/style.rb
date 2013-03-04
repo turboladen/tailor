@@ -80,6 +80,13 @@ class Tailor
           result
         end
       end
+
+      # Yields each property and values.
+      def each
+        to_hash.each do |property, values|
+          yield property, values
+        end
+      end
     end
   end
 end
