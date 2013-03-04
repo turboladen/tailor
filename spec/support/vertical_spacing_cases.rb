@@ -3,7 +3,7 @@ V_SPACING_OK = {}
 #-------------------------------------------------------------------------------
 # Class length
 #-------------------------------------------------------------------------------
-V_SPACING_OK[:class_five_code_lines] =
+V_SPACING_OK['class_five_code_lines'] =
   %Q{class Party
   include Clowns
 
@@ -11,7 +11,7 @@ V_SPACING_OK[:class_five_code_lines] =
   end
 end}
 
-V_SPACING_OK[:embedded_class_five_code_lines] =
+V_SPACING_OK['embedded_class_five_code_lines'] =
   %Q{class Party
   class Pizza
     include Cheese
@@ -21,14 +21,14 @@ end}
 #-------------------------------------------------------------------------------
 # Method length
 #-------------------------------------------------------------------------------
-V_SPACING_OK[:method_3_code_lines] =
+V_SPACING_OK['method_3_code_lines'] =
   %Q{def thing
 
 
   puts 'hi'
 end}
 
-V_SPACING_OK[:embedded_method_3_code_lines] =
+V_SPACING_OK['embedded_method_3_code_lines'] =
   %Q{def outter_thing
   def thing; puts 'hi'; end
 

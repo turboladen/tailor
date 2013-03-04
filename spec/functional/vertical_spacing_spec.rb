@@ -3,6 +3,7 @@ require_relative '../support/vertical_spacing_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
+
 describe "Vertical Space problem detection" do
   before do
     Tailor::Logger.stub(:log)
@@ -23,13 +24,13 @@ describe "Vertical Space problem detection" do
 
   V_SPACING_OK.each do |file_name, contents|
     before do
-      FileUtils.touch file_name.to_s
-      File.open(file_name.to_s, 'w') { |f| f.write contents }
+      FileUtils.touch file_name
+      File.open(file_name, 'w') { |f| f.write contents }
     end
 
     it "should be OK" do
-      critic.check_file(file_name.to_s, style.to_hash)
-      critic.problems.should == { file_name.to_s =>  [] }
+      critic.check_file(file_name, style.to_hash)
+      critic.problems.should == { file_name =>  [] }
     end
   end
 end

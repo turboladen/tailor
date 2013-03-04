@@ -3,6 +3,7 @@ require_relative '../support/good_indentation_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
+
 describe "Indentation spacing problem detection" do
   before do
     Tailor::Logger.stub(:log)
@@ -25,18 +26,18 @@ describe "Indentation spacing problem detection" do
 
   INDENT_OK.each do |file_name, contents|
     before do
-      FileUtils.touch file_name.to_s
-      File.open(file_name.to_s, 'w') { |f| f.write contents }
+      FileUtils.touch file_name
+      File.open(file_name, 'w') { |f| f.write contents }
     end
 
     it "should be OK" do
-      critic.check_file(file_name.to_s, style.to_hash)
-      critic.problems.should == { file_name.to_s =>  [] }
+      critic.check_file(file_name, style.to_hash)
+      critic.problems.should == { file_name =>  [] }
     end
   end
 
   context "case statement with indented whens" do
-    let(:file_name) { :case_whens_in }
+    let(:file_name) { 'case_whens_in' }
 
     let(:contents) do
       %Q{def my_method
@@ -55,7 +56,7 @@ end}
   end
 
   context "method with rparen on following line" do
-    let(:file_name) { :method_closing_lonely_paren }
+    let(:file_name) { 'method_closing_lonely_paren' }
 
     let(:contents) do
       %Q{def your_thing(one
@@ -69,7 +70,7 @@ end}
   end
 
   context "lonely rparen and do on the same line" do
-    let(:file_name) { :rparen_and_do_same_line }
+    let(:file_name) { 'rparen_and_do_same_line' }
 
     let(:contents) do
       %Q{opt.on('-c', '--config-file FILE',

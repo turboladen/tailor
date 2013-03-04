@@ -23,22 +23,22 @@ describe "Horizontal Space problem detection" do
 
   H_SPACING_OK.each do |file_name, contents|
     before do
-      FileUtils.touch file_name.to_s
-      File.open(file_name.to_s, 'w') { |f| f.write contents }
+      FileUtils.touch file_name
+      File.open(file_name, 'w') { |f| f.write contents }
     end
 
     it "should be OK" do
-      critic.check_file(file_name.to_s, style.to_hash)
-      critic.problems.should == { file_name.to_s =>  [] }
+      critic.check_file(file_name, style.to_hash)
+      critic.problems.should == { file_name =>  [] }
     end
   end
 
   context "line ends with a backslash" do
-    let(:file_name) { :line_split_by_backslash }
+    let(:file_name) { 'line_split_by_backslash' }
 
     before do
-      FileUtils.touch file_name.to_s
-      File.open(file_name.to_s, 'w') { |f| f.write contents }
+      FileUtils.touch file_name
+      File.open(file_name, 'w') { |f| f.write contents }
     end
 
     context "no problems" do
@@ -51,8 +51,8 @@ end}
       end
 
       it "is OK" do
-        critic.check_file(file_name.to_s, style.to_hash)
-        critic.problems.should == { file_name.to_s => [] }
+        critic.check_file(file_name, style.to_hash)
+        critic.problems.should == { file_name => [] }
       end
     end
     
@@ -66,9 +66,9 @@ end}
       end
 
       it "is OK" do
-        critic.check_file(file_name.to_s, style.to_hash)
+        critic.check_file(file_name, style.to_hash)
         critic.problems.should == {
-          file_name.to_s => [
+          file_name => [
             {
               :type => "max_line_length",
               :line => 3,
