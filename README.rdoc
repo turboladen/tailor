@@ -386,6 +386,7 @@ and manipulate them according your domain.
 
 * Rubies (tested)
   * 1.9.3
+  * 2.0.0
 * Gems
   * log_switch
   * term-ansicolor
