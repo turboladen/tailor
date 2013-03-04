@@ -58,7 +58,7 @@ describe "Detection of spacing around braces" do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
     File.open(file_name, 'w') { |f| f.write contents }
-    critic.check_file(file_name.to_s, style.to_hash)
+    critic.check_file(file_name, style.to_hash)
   end
 
   let(:critic) do
