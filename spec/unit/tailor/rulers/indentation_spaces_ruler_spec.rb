@@ -4,32 +4,32 @@ require 'ripper'
 
 describe Tailor::Rulers::IndentationSpacesRuler do
   let!(:spaces) { 5 }
+  let(:lexed_line) { double "LexedLine" }
 
   subject do
     Tailor::Rulers::IndentationSpacesRuler.new(spaces, level: :error)
   end
 
   describe "#comment_update" do
-    pending
     context "token does not contain a trailing newline" do
-
+      pending
     end
 
     context "token contains a trailing newline" do
       context "lexed_line is spaces then a comment" do
-
+        pending
       end
 
       context "lexed_line is no spaces and a comment" do
-
+        pending
       end
 
       context "lexed_line ends with an operator" do
-
+        pending
       end
 
       context "lexed_line ends with a comma" do
-
+        pending
       end
     end
   end
@@ -37,15 +37,19 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   describe "#embexpr_beg_update" do
     it "sets @embexpr_nesting to [true]" do
       subject.instance_variable_set(:@embexpr_nesting, [])
-      subject.embexpr_beg_update
+      subject.embexpr_beg_update(lexed_line, 1, 1)
       subject.instance_variable_get(:@embexpr_nesting).should == [true]
     end
   end
 
   describe "#embexpr_end_update" do
+    before do
+      lexed_line.should_receive(:only_on_embexpr_end?).and_return(false)
+    end
+
     it "pops @embexpr_nesting" do
       subject.instance_variable_set(:@embexpr_nesting, [true])
-      subject.embexpr_end_update
+      subject.embexpr_end_update(lexed_line, 1, 1)
       subject.instance_variable_get(:@embexpr_nesting).should == []
     end
   end
@@ -91,7 +95,6 @@ describe Tailor::Rulers::IndentationSpacesRuler do
   end
 
   describe "#tstring_beg_update" do
-    let(:lexed_line) { double "LexedLine" }
     let(:manager) { double "IndentationManager" }
 
     it "calls #stop on the indentation_manager object" do
@@ -112,7 +115,6 @@ describe Tailor::Rulers::IndentationSpacesRuler do
 
   describe "#tstring_end_update" do
     context "@tstring_nesting is not empty" do
-      let(:lexed_line) { double "LexedLine" }
       let(:manager) { double "IndentationManager" }
 
       it "calls #start" do

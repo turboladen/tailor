@@ -13,6 +13,7 @@ class Tailor
         super(config, options)
         add_lexer_observers :embexpr_beg, :lbrace, :rbrace
         @lbrace_nesting = []
+        @embexpr_nesting = []
       end
 
       # @param [LexedLine] lexed_line
@@ -47,8 +48,10 @@ class Tailor
         previous_event.last.size
       end
 
-      def embexpr_beg_update
-        @lbrace_nesting << :embexpr_beg
+      def embexpr_beg_update(lexed_line, lineno, column)
+        if RUBY_VERSION < '2.0.0'
+          @lbrace_nesting << :embexpr_beg
+        end
       end
 
       def lbrace_update(lexed_line, lineno, column)
@@ -71,15 +74,15 @@ class Tailor
         end
       end
 
-      # This has to keep track of '{'s and only follow through with the check
-      # if the '{' was an lbrace because Ripper doesn't scan the '}' of an
-      # embedded expression (embexpr_end) as such.
+      # For Ruby versions < 2.0.0-p0, this has to keep track of '{'s and only
+      # follow through with the check if the '{' was an lbrace because Ripper
+      # doesn't scan the '}' of an embedded expression (embexpr_end) as such.
       #
       # @param [Tailor::LexedLine] lexed_line
       # @param [Fixnum] lineno
       # @param [Fixnum] column
       def rbrace_update(lexed_line, lineno, column)
-        if @lbrace_nesting.last == :embexpr_beg
+        if RUBY_VERSION < '2.0.0' && @lbrace_nesting.last == :embexpr_beg
           @lbrace_nesting.pop
           return
         end

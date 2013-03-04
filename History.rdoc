@@ -7,6 +7,10 @@
   * AllowInvalidRubyRuler now handles file names with spaces in them.
 * gh-131[https://github.com/turboladen/tailor/issues/131]
   * Added YAML output formatter.  Thanks @leandronsp!
+* gh-133[https://github.com/turboladen/tailor/issues/133]
+  * Added support for Ruby 2.0.0-p0.  ...which is actually just accounting for
+    a {fix to Ripper}[https://bugs.ruby-lang.org/issues/6211] that finally got
+    merged in to a Ruby release.
 
 === 1.1.5 2013-01-30
 

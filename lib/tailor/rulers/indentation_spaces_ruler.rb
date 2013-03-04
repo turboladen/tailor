@@ -55,15 +55,31 @@ class Tailor
         end
       end
 
-      def embexpr_beg_update
+      def embexpr_beg_update(lexed_line, lineno, column)
         @embexpr_nesting << true
+
+        token = Tailor::Lexer::Token.new('{')
+        @manager.update_for_opening_reason(:on_embexpr_beg, token, lineno)
       end
 
-      # Due to a Ripper bug (depending on which Ruby version you have), this may
-      # or may not get triggered.
+      # Due to a Ripper bug that was fixed in ruby 2.0.0-p0, this will not get
+      # triggered if you're using 1.9.x.
       # More info: https://bugs.ruby-lang.org/issues/6211
-      def embexpr_end_update
+      def embexpr_end_update(current_lexed_line, lineno, column)
         @embexpr_nesting.pop
+
+        if @manager.multi_line_braces?(lineno)
+          log "End of multi-line braces!"
+
+          if current_lexed_line.only_embexpr_end?
+            @manager.amount_to_change_this -= 1
+            msg = "lonely embexpr_end.  "
+            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
+            log msg
+          end
+        end
+
+        @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
@@ -166,7 +182,7 @@ class Tailor
         @manager.transition_lines
       end
 
-      # Since Ripper parses the } in a #{} as :on_rbrace instead of
+      # Since Ripper in Ruby 1.9.x parses the } in a #{} as :on_rbrace instead of
       # :on_embexpr_end, this works around that by using +@embexpr_beg to track
       # the state of that event.  As such, this should only be called from
       # #rbrace_update.
@@ -177,11 +193,13 @@ class Tailor
       end
 
       def rbrace_update(current_lexed_line, lineno, column)
-        if in_embexpr?
+        # Is this an rbrace that should've been parsed as an embexpr_end?
+        if in_embexpr? && RUBY_VERSION < '2.0.0'
           msg = "Got :rbrace and @embexpr_beg is true. "
           msg << " Must be at an @embexpr_end."
           log msg
           @embexpr_nesting.pop
+          @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
           return
         end
 

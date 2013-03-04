@@ -139,20 +139,22 @@ class Tailor
     # @param [String] token The token that the lexer matched.
     def on_embexpr_beg(token)
       log "EMBEXPR_BEG: '#{token}'"
+      current_line = LexedLine.new(super, lineno)
       embexpr_beg_changed
-      notify_embexpr_beg_observers
+      notify_embexpr_beg_observers(current_line, lineno, column)
       super(token)
     end
 
     # Called when the lexer matches the } that closes a #{.  Note that as of
-    # MRI 1.9.3-p125, this never gets called.  Logged as a bug and fixed, but
-    # not yet released: https://bugs.ruby-lang.org/issues/6211.
+    # MRI 1.9.3-p125, this never gets called.  Logged as a bug and fixed in
+    # ruby 2.0.0-p0: https://bugs.ruby-lang.org/issues/6211.
     #
     # @param [String] token The token that the lexer matched.
     def on_embexpr_end(token)
       log "EMBEXPR_END: '#{token}'"
+      current_line = LexedLine.new(super, lineno)
       embexpr_end_changed
-      notify_embexpr_end_observers
+      notify_embexpr_end_observers(current_line, lineno, column)
       super(token)
     end
 
