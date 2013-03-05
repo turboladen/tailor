@@ -121,7 +121,7 @@ class Tailor
           @file_sets[label].update_file_list(file_set[:file_list])
           @file_sets[label].update_style(file_set[:style])
         else
-          log "Creating new label..."
+          log "Creating new label: #{label}"
           @file_sets[label] =
             FileSet.new(file_set[:file_list], file_set[:style])
         end
