@@ -166,7 +166,7 @@ class Tailor
     end
 
     def get_output_file_from_cli_opts
-      unless @options.nil? || @options.output_file.nil?
+      unless @options.nil? || @options.output_file.empty? || @options.output_file.nil?
         @output_file = @options.output_file
         log "@output_file is now: '#{@output_file}'"
       end
