@@ -3,7 +3,7 @@ require 'tailor/formatters/yaml'
 require 'yaml'
 
 
-describe Tailor::Formatters::YAML do
+describe Tailor::Formatters::Yaml do
   describe '#summary_report' do
     let(:problems) do
       {

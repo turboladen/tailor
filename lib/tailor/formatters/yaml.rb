@@ -4,7 +4,7 @@ require_relative '../formatter'
 
 class Tailor
   module Formatters
-    class YAML < Tailor::Formatter
+    class Yaml < Tailor::Formatter
       attr_reader :accepts_output_file
 
       def initialize
