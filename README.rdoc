@@ -278,14 +278,14 @@ level to +:off+:
 ===== Formatters
 
 By default Tailor uses the text formatter, printing the results on console. Tailor
-also provides a 'yaml' formatter, that accepts an output file if using the option
+also provides a YAML formatter, that accepts an output file if using the option
 --output-file=*.yaml
 
-  #.tailor
+  # .tailor
   Tailor.config do |config|
     config.formatters 'text', 'yaml'
 
-    # just ones
+    # just one
     config.formatters 'text'
   end
 
