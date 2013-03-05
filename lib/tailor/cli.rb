@@ -47,6 +47,7 @@ class Tailor
       @critic.problem_count(:error) > 0
     end
 
+    # @todo Remove; doesn't get used anywhere.
     def result
       @critic.critique(@configuration.file_sets)
       @critic.problems
