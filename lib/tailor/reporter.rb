@@ -12,6 +12,7 @@ class Tailor
     # @param [Array] formats A list of formatters to use for generating reports.
     def initialize(*formats)
       @formatters = []
+      formats = %w[text] if formats.nil? || formats.empty?
 
       formats.flatten.each do |formatter|
         require_relative "formatters/#{formatter}"

@@ -11,6 +11,8 @@ begin
 rescue LoadError
 end
 
+Tailor::Logger.log = false
+
 class Tailor
 
   # This class lets you define Rake tasks to drive tailor.  Specifying options
@@ -29,13 +31,17 @@ class Tailor
   #     end
   #   end
   #
-  # @example Use and override a configuration file
+  # @example Use a configuration file
   #   Tailor::RakeTask.new do |task|
   #     task.config_file = 'hardcore_stylin.rb'
-  #     task.file_set 'lib/**/*.rb' do |style|
-  #       style.indentation_spaces 2, level: :warn
-  #     end
   #   end
+  #
+  # Note that prior to 1.1.4, you could use the #config_file option _and_
+  # specify file_sets or recursive_file_sets; this caused problems (and
+  # confusion), so the combination of these was removed in 1.2.0.  If you use
+  # #config_file, then all file_sets and recursive_file_sets that you specify
+  # in the Rake task will be ignored; only those specified in the given config
+  # file will be used.
   class RakeTask < ::Rake::TaskLib
     include ::Rake::DSL if defined? ::Rake::DSL
 
@@ -54,11 +60,12 @@ class Tailor
 
     # @param [String] name The task name.
     # @param [String] desc Description of the task.
-    def initialize(name = "tailor", desc = "Check style")
+    def initialize(name = 'tailor', desc = 'Check style')
       @name, @desc = name, desc
       @tailor_opts = []
       @file_sets = []
       @recursive_file_sets = []
+      @config_file = nil
 
       yield self if block_given?
 
@@ -89,10 +96,15 @@ class Tailor
       task @name do
         if config_file
           @tailor_opts.concat %W(--config-file=#{config_file})
+          configuration = nil
+        else
+          configuration = create_config
+          create_file_sets_for configuration
+          create_recursive_file_sets_for configuration
         end
 
         begin
-          failure = Tailor::CLI.run(@tailor_opts)
+          failure = Tailor::CLI.run(@tailor_opts, configuration)
           exit(1) if failure
         rescue Tailor::RuntimeError => ex
           STDERR.puts ex.message
@@ -104,6 +116,32 @@ class Tailor
           STDERR.puts(ex.backtrace.join("\n"))
           exit(1)
         end
+      end
+    end
+
+    # @return [Tailor::Configuration]
+    def create_config
+      configuration = Tailor::Configuration.new([],
+        Tailor::CLI::Options.parse!(@tailor_opts))
+      configuration.load!
+      configuration.formatters(formatters) unless formatters.nil? || formatters.empty?
+
+      configuration
+    end
+
+    # @param [Tailor::Configuration] config
+    def create_recursive_file_sets_for config
+      unless @recursive_file_sets.empty?
+        @recursive_file_sets.each do |fs|
+          config.recursive_file_set(fs[0], fs[1], &fs[2])
+        end
+      end
+    end
+
+    # @param [Tailor::Configuration] config
+    def create_file_sets_for config
+      unless @file_sets.empty?
+        @file_sets.each { |fs| config.file_set(fs[0], fs[1], &fs[2]) }
       end
     end
   end

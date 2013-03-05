@@ -10,7 +10,7 @@ class Tailor
   # files.  It handles initializing the Ruler objects it needs based on the
   # configuration given to it.
   class Critic
-    include Tailor::Logger::Mixin
+    include LogSwitch::Mixin
     include Tailor::Rulers
 
     # The instance method that starts the process of looking for problems in

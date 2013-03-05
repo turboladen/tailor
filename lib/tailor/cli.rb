@@ -12,17 +12,27 @@ class Tailor
     include LogSwitch::Mixin
 
     # The main method of execution from the command line.
-    def self.run(args)
-      new(args).execute!
+    #
+    # @param [Array] args Arguments from the command-line.
+    # @param [Tailor::Configuration] configuration An optional Configuration to
+    #   override loading one from config files.  Useful for RakeTask.
+    def self.run(args, configuration=nil)
+      new(args, configuration).execute!
     end
 
     # @param [Array] args Arguments from the command-line.
-    def initialize(args)
-      Tailor::Logger.log = false
+    # @param [Tailor::Configuration] configuration An optional Configuration to
+    #   override loading one from config files.  Useful for RakeTask.
+    def initialize(args, configuration=nil)
       options = Options.parse!(args)
 
-      @configuration = Configuration.new(args, options)
-      @configuration.load!
+      if configuration.nil?
+        @configuration = Configuration.new(args, options)
+        @configuration.load!
+      else
+        log "<#{self.class}> Configuration passed in: #{configuration.inspect}"
+        @configuration = configuration
+      end
 
       if options.show_config
         @configuration.show

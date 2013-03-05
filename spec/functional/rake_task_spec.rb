@@ -80,4 +80,50 @@ describe Tailor::RakeTask do
       }.to_not raise_error
     end
   end
+
+  context 'adding tailor file sets within the task' do
+    let(:test_dir) do
+      File.expand_path(File.dirname(__FILE__) + '/../dir')
+    end
+
+    before do
+      require 'fileutils'
+
+      unless File.exists?(test_dir)
+        FileUtils.mkdir(test_dir)
+      end
+
+      File.directory?(test_dir).should be_true
+
+      File.open(test_dir + '/test.rb', 'w') do |f|
+        f.write <<-CONTENTS
+puts 'I no have end quote
+        CONTENTS
+      end
+
+      File.exists?(test_dir + '/test.rb').should be_true
+    end
+
+    after do
+      FileUtils.rm_rf test_dir
+    end
+
+    subject do
+      Tailor::RakeTask.new do |t|
+        t.config_file = File.expand_path 'spec/support/rake_task_config_problems.rb'
+
+        t.file_set('dir/**/*.rb', 'dir') do |style|
+          style.max_line_length 1, level: :error
+        end
+      end
+    end
+
+    it 'uses the options from the rake task' do
+      subject
+
+      expect {
+        rake['tailor'].invoke
+      }.to raise_error
+    end
+  end
 end
