@@ -38,9 +38,9 @@ class Tailor
     # @option options [Array] formatters
     # @option options [Hash] style
     def initialize(runtime_file_list=nil, options=nil)
-      @formatters = ['text']
+      @formatters = %w[text]
       @file_sets = {}
-      @output_file = ""
+      @output_file = ''
       @runtime_file_list = runtime_file_list
       log "Got runtime file list: #{@runtime_file_list}"
 
