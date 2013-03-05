@@ -3,6 +3,13 @@ require 'cucumber'
 require 'cucumber/rake/task'
 require 'rspec/core/rake_task'
 require 'yard'
+require_relative 'lib/tailor/rake_task'
+
+
+Tailor::RakeTask.new do |task|
+  task.formatters = %w[yaml]
+  task.tailor_opts = %w[--output-file=output.yml]
+end
 
 
 #------------------------------------------------------------------------------
