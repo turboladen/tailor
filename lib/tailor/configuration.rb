@@ -168,14 +168,14 @@ class Tailor
     def get_output_file_from_cli_opts
       unless @options.nil? || @options.output_file.nil?
         @output_file = @options.output_file
-        log "@output_file is now #{@output_file}"
+        log "@output_file is now: '#{@output_file}'"
       end
     end
 
     def get_formatters_from_cli_opts
       unless @options.nil? || @options.formatters.empty? || @options.formatters.nil?
         @formatters = @options.formatters
-        log "@formatters is now #{@formatters}"
+        log "@formatters is now: '#{@formatters}'"
       end
     end
 
