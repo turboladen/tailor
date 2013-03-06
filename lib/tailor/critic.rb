@@ -41,7 +41,9 @@ class Tailor
       end
     end
 
-    # @return [Hash]
+    # @return [Hash{String => Array}] The list of problems, where the keys are
+    #   the file names in which the problems were found, and the values are the
+    #   respective lists of problems for each file.
     def problems
       @problems ||= {}
     end
