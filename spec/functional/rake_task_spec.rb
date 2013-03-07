@@ -1,5 +1,5 @@
-require "spec_helper"
-require "tailor/rake_task"
+require 'spec_helper'
+require 'tailor/rake_task'
 
 
 describe Tailor::RakeTask do
@@ -13,14 +13,14 @@ describe Tailor::RakeTask do
   end
 
   describe 'rake tailor' do
-    context "with problematic files" do
+    context 'with problematic files' do
       subject do
         Tailor::RakeTask.new do |t|
           t.config_file = File.expand_path 'spec/support/rake_task_config_problems.rb'
         end
       end
 
-      it "finds problems" do
+      it 'finds problems' do
         subject
 
         expect {
@@ -29,14 +29,14 @@ describe Tailor::RakeTask do
       end
     end
 
-    context "with OK files" do
+    context 'with OK files' do
       subject do
         Tailor::RakeTask.new do |t|
           t.config_file = File.expand_path 'spec/support/rake_task_config_no_problems.rb'
         end
       end
 
-      it "doesn't find problems" do
+      it 'does not find problems' do
         subject
 
         expect {
@@ -46,7 +46,7 @@ describe Tailor::RakeTask do
     end
   end
 
-  context "using a custom task name" do
+  context 'using a custom task name' do
     subject do
       Tailor::RakeTask.new(task_name) do |t|
         t.config_file = File.expand_path 'spec/support/rake_task_config_problems.rb'
@@ -55,7 +55,7 @@ describe Tailor::RakeTask do
 
     let(:task_name) { 'my_neat_task' }
 
-    it "runs the task" do
+    it 'runs the task' do
       subject
 
       expect {
@@ -64,7 +64,7 @@ describe Tailor::RakeTask do
     end
   end
 
-  context "overriding tailor opts within the task" do
+  context 'overriding tailor opts within the task' do
     subject do
       Tailor::RakeTask.new do |t|
         t.config_file = File.expand_path 'spec/support/rake_task_config_problems.rb'
@@ -72,7 +72,7 @@ describe Tailor::RakeTask do
       end
     end
 
-    it "uses the options from the rake task" do
+    it 'uses the options from the rake task' do
       subject
 
       expect {
