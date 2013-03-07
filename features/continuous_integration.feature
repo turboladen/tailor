@@ -92,6 +92,34 @@ Feature: Continuous Integration
     And the output should not match /SystemExit/
     And the exit status should be 1
 
+  Scenario: Rake task, override config file
+    Given a file named "errors.rb" with:
+    """
+    puts 'hi'
+
+
+    """
+    And my configuration file ".tailor" looks like:
+    """
+    Tailor.config do |config|
+      config.file_set 'errors.rb' do |style|
+        style.trailing_newlines 0, level: :error
+      end
+    end
+    """
+    And a file named "Rakefile" with:
+    """
+    require 'tailor/rake_task'
+
+    Tailor::RakeTask.new do |task|
+      task.file_set 'errors.rb' do |style|
+        style.trailing_newlines 2, level: :error
+      end
+    end
+    """
+    When I successfully run `rake tailor`
+    Then the output should match /errors\.rb\s+|\s+0/
+
   Scenario: Rake task, missing config file
     Given a file named "errors.rb" with:
     """

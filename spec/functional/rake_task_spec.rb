@@ -81,7 +81,7 @@ describe Tailor::RakeTask do
     end
   end
 
-  context 'adding tailor file sets within the task' do
+  context 'adding file sets within the task' do
     let(:test_dir) do
       File.expand_path(File.dirname(__FILE__) + '/../dir')
     end

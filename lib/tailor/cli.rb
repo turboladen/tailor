@@ -4,6 +4,7 @@ require_relative 'cli/options'
 require_relative 'logger'
 require_relative 'reporter'
 
+
 class Tailor
 
   # The Command-Line Interface worker.  Execution from the command line
@@ -11,28 +12,21 @@ class Tailor
   class CLI
     include LogSwitch::Mixin
 
+    # @return [Tailor::Configuration]
+    attr_reader :configuration
+
     # The main method of execution from the command line.
     #
     # @param [Array] args Arguments from the command-line.
-    # @param [Tailor::Configuration] configuration An optional Configuration to
-    #   override loading one from config files.  Useful for RakeTask.
-    def self.run(args, configuration=nil)
-      new(args, configuration).execute!
+    def self.run(args)
+      new(args).execute!
     end
 
     # @param [Array] args Arguments from the command-line.
-    # @param [Tailor::Configuration] configuration An optional Configuration to
-    #   override loading one from config files.  Useful for RakeTask.
-    def initialize(args, configuration=nil)
+    def initialize(args)
       options = Options.parse!(args)
-
-      if configuration.nil?
-        @configuration = Configuration.new(args, options)
-        @configuration.load!
-      else
-        log "<#{self.class}> Configuration passed in: #{configuration.inspect}"
-        @configuration = configuration
-      end
+      @configuration = Configuration.new(args, options)
+      @configuration.load!
 
       if options.show_config
         @configuration.show

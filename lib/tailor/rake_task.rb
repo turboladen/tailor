@@ -96,15 +96,15 @@ class Tailor
       task @name do
         if config_file
           @tailor_opts.concat %W(--config-file=#{config_file})
-          configuration = nil
-        else
-          configuration = create_config
-          create_file_sets_for configuration
-          create_recursive_file_sets_for configuration
         end
 
+        cli = Tailor::CLI.new(@tailor_opts)
+        cli.configuration.file_sets
+        create_file_sets_for cli.configuration
+        create_recursive_file_sets_for cli.configuration
+
         begin
-          failure = Tailor::CLI.run(@tailor_opts, configuration)
+          failure = cli.execute!
           exit(1) if failure
         rescue Tailor::RuntimeError => ex
           STDERR.puts ex.message
