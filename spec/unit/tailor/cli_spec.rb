@@ -4,10 +4,10 @@ require 'tailor/cli'
 
 describe Tailor::CLI do
   let(:args) { [] }
-  let(:options) { double "Options", show_config: false }
+  let(:options) { double 'Options', show_config: false }
 
   let(:config) do
-    double "Tailor::Configuration",
+    double 'Tailor::Configuration',
       file_sets: nil, formatters: nil, load!: nil
   end
 
@@ -23,7 +23,7 @@ describe Tailor::CLI do
 
   subject { Tailor::CLI.new(args) }
 
-  describe "::run" do
+  describe '::run' do
     it "creates an instance of Tailor::CLI and calls that object's #execute!" do
       cli = double "Tailor::CLI"
       cli.should_receive(:execute!)
@@ -32,10 +32,10 @@ describe Tailor::CLI do
     end
   end
 
-  describe "#initialize" do
+  describe '#initialize' do
     let(:args) { ['last'] }
 
-    it "uses Options to parse the args" do
+    it 'uses Options to parse the args' do
       Tailor::Configuration.stub(:new).and_return config
       Tailor::Critic.stub(:new)
       Tailor::Reporter.stub(:new)
@@ -44,7 +44,7 @@ describe Tailor::CLI do
       Tailor::CLI.new(args)
     end
 
-    it "creates a new Configuration from the file/dir and options" do
+    it 'creates a new Configuration from the file/dir and options' do
       Tailor::CLI::Options.stub(:parse!).and_return(options)
       Tailor::Configuration.should_receive(:new).
         with(args, options).and_return config
@@ -53,18 +53,18 @@ describe Tailor::CLI do
       Tailor::CLI.new(args)
     end
 
-    context "options.show_config is true" do
+    context 'options.show_config is true' do
 
     end
 
-    context "options.show_config is false" do
+    context 'options.show_config is false' do
 
     end
   end
 
-  describe "#execute!" do
-    let(:reporter) { double "Tailor::Reporter" }
-    let(:critic) { double "Tailor::Critic", problem_count: 0 }
+  describe '#execute!' do
+    let(:reporter) { double 'Tailor::Reporter' }
+    let(:critic) { double 'Tailor::Critic', problem_count: 0 }
 
     before do
       Tailor::Critic.stub(:new).and_return(critic)
@@ -78,7 +78,7 @@ describe Tailor::CLI do
       Tailor::Reporter.unstub(:new)
     end
 
-    it "calls @critic.critique and yields file problems and the label" do
+    it 'calls @critic.critique and yields file problems and the label' do
       problems_for_file = {}
       label = :test
       config.should_receive(:output_file)
@@ -92,8 +92,8 @@ describe Tailor::CLI do
     end
   end
 
-  describe "#result" do
-    let(:critic) { double "Tailor::Critic", problem_count: 0 }
+  describe '#result' do
+    let(:critic) { double 'Tailor::Critic', problem_count: 0 }
 
     before do
       Tailor::Critic.stub(:new).and_return(critic)
@@ -104,7 +104,7 @@ describe Tailor::CLI do
       Tailor::Critic.unstub(:new)
     end
 
-    it "calls @critic.critique and return @critique.problems hash" do
+    it 'calls @critic.critique and return @critique.problems hash' do
       problems = {}
       critic.should_receive(:critique)
       critic.should_receive(:problems).and_return(problems)
