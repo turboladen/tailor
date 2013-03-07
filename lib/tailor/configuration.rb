@@ -28,8 +28,13 @@ class Tailor
       new
     end
 
+    # @return [Hash]
     attr_reader :file_sets
+
+    # @return [Array]
     attr_reader :formatters
+
+    # @return [String]
     attr_reader :output_file
 
     # @param [Array] runtime_file_list
