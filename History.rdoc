@@ -1,4 +1,4 @@
-=== x.x.x 2013-03-01
+=== 1.2.0 2013-03-06
 
 * gh-119[https://github.com/turboladen/tailor/issues/119]
   * AllowInvalidRubyRuler now uses Gem.ruby to use the ruby that tailor was
