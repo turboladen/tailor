@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tailor (1.2.0)
+    tailor (1.2.1)
       log_switch (>= 0.3.0)
       term-ansicolor (>= 1.0.5)
       text-table (>= 1.2.2)
@@ -46,7 +46,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    term-ansicolor (1.0.7)
+    term-ansicolor (1.1.1)
     text-table (1.2.2)
     yard (0.8.5.2)
 
