@@ -4,6 +4,8 @@ require_relative '../lib/tailor/cli'
 require_relative '../lib/tailor/runtime_error'
 
 
+Tailor::Logger.log = false
+
 begin
   failure = Tailor::CLI.run(ARGV.dup)
   exit(1) if failure

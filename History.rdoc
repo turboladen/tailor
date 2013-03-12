@@ -1,3 +1,9 @@
+=== 1.2.1 2013-03-12
+
+* gh-134[https://github.com/turboladen/tailor/issues/134]
+  * Turned logging off by default when using bin/tailor.  This was a regression
+    introduced in 1.2.0.
+
 === 1.2.0 2013-03-06
 
 * gh-119[https://github.com/turboladen/tailor/issues/119]
