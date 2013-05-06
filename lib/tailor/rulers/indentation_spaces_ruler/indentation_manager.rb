@@ -74,7 +74,7 @@ class Tailor
             log "@proper[:this_line] = #{@proper[:this_line]}"
             log "@proper[:next_line] = #{@proper[:next_line]}"
           else
-            log "#decrease_this_line called, but checking is stopped."
+            log '#decrease_this_line called, but checking is stopped.'
           end
         end
 
@@ -90,20 +90,20 @@ class Tailor
         # +@proper[:this_line]+.
         def transition_lines
           if started?
-            log "Resetting change_this to 0."
+            log 'Resetting change_this to 0.'
             @amount_to_change_this = 0
-            log "Setting @proper[:this_line] = that of :next_line"
+            log 'Setting @proper[:this_line] = that of :next_line'
             @proper[:this_line] = @proper[:next_line]
             log "Transitioning @proper[:this_line] to #{@proper[:this_line]}"
           else
-            log "Skipping #transition_lines; checking is stopped."
+            log 'Skipping #transition_lines; checking is stopped.'
           end
         end
 
         # Starts the process of increasing/decreasing line indentation
         # expectations.
         def start
-          log "Starting indentation ruling."
+          log 'Starting indentation ruling.'
           log "Next check should be at #{should_be_at}"
           @do_measurement = true
         end
@@ -132,7 +132,7 @@ class Tailor
         # @param [Array] lexed_line_output The lexed output for the current line.
         def update_actual_indentation(lexed_line_output)
           if lexed_line_output.end_of_multi_line_string?
-            log "Found end of multi-line string."
+            log 'Found end of multi-line string.'
             return
           end
 
@@ -375,9 +375,9 @@ class Tailor
         def method_missing(meth, *args, &blk)
           if meth.to_s =~ /^multi_line_(.+)\?$/
             token = case $1
-            when "brackets" then '['
-            when "braces" then '{'
-            when "parens" then '('
+            when 'brackets' then '['
+            when 'braces' then '{'
+            when 'parens' then '('
             else
               super(meth, *args, &blk)
             end
