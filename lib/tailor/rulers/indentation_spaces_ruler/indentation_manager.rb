@@ -2,6 +2,7 @@ require_relative '../../ruler'
 require_relative '../../logger'
 require_relative '../../lexer/lexer_constants'
 
+
 class Tailor
   module Rulers
     class IndentationSpacesRuler < Tailor::Ruler
@@ -237,7 +238,7 @@ class Tailor
         # not an opening or closing reason, such as +elsif+, +rescue+, +when+
         # (in a +case+ statement), etc.
         #
-        # @param [Symbol] event_type The event type that is the opening reason.
+        # @param [Symbol] token
         # @param [Tailor::LexedLine] lexed_line
         # @param [Fixnum] lineno The line number the opening reason was found
         #   on.
@@ -336,7 +337,6 @@ class Tailor
             !ENCLOSERS.include?(r[:event_type]) && r[:event_type] != :on_kw
           end
         end
-
 
         # Returns the last matching opening event that corresponds to the
         # +closing_event_type+.
