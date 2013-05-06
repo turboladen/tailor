@@ -4,107 +4,107 @@ require 'ripper'
 
 describe Tailor::Rulers::IndentationSpacesRuler do
   let!(:spaces) { 5 }
-  let(:lexed_line) { double "LexedLine" }
+  let(:lexed_line) { double 'LexedLine' }
 
   subject do
     Tailor::Rulers::IndentationSpacesRuler.new(spaces, level: :error)
   end
 
-  describe "#comment_update" do
-    context "token does not contain a trailing newline" do
+  describe '#comment_update' do
+    context 'token does not contain a trailing newline' do
       pending
     end
 
-    context "token contains a trailing newline" do
-      context "lexed_line is spaces then a comment" do
+    context 'token contains a trailing newline' do
+      context 'lexed_line is spaces then a comment' do
         pending
       end
 
-      context "lexed_line is no spaces and a comment" do
+      context 'lexed_line is no spaces and a comment' do
         pending
       end
 
-      context "lexed_line ends with an operator" do
+      context 'lexed_line ends with an operator' do
         pending
       end
 
-      context "lexed_line ends with a comma" do
+      context 'lexed_line ends with a comma' do
         pending
       end
     end
   end
 
-  describe "#embexpr_beg_update" do
-    it "sets @embexpr_nesting to [true]" do
+  describe '#embexpr_beg_update' do
+    it 'sets @embexpr_nesting to [true]' do
       subject.instance_variable_set(:@embexpr_nesting, [])
       subject.embexpr_beg_update(lexed_line, 1, 1)
       subject.instance_variable_get(:@embexpr_nesting).should == [true]
     end
   end
 
-  describe "#embexpr_end_update" do
+  describe '#embexpr_end_update' do
     before do
       lexed_line.should_receive(:only_on_embexpr_end?).and_return(false)
     end
 
-    it "pops @embexpr_nesting" do
+    it 'pops @embexpr_nesting' do
       subject.instance_variable_set(:@embexpr_nesting, [true])
       subject.embexpr_end_update(lexed_line, 1, 1)
       subject.instance_variable_get(:@embexpr_nesting).should == []
     end
   end
 
-  describe "#ignored_nl_update" do
+  describe '#ignored_nl_update' do
     pending
   end
 
-  describe "#kw_update" do
+  describe '#kw_update' do
     pending
   end
 
-  describe "#lbrace_update" do
+  describe '#lbrace_update' do
     pending
   end
 
-  describe "#lbracket_update" do
+  describe '#lbracket_update' do
     pending
   end
 
-  describe "#lparen_update" do
+  describe '#lparen_update' do
     pending
   end
 
-  describe "#nl_update" do
+  describe '#nl_update' do
     pending
   end
 
-  describe "#period_update" do
+  describe '#period_update' do
     pending
   end
 
-  describe "#rbrace_update" do
+  describe '#rbrace_update' do
     pending
   end
 
-  describe "#rbracket_update" do
+  describe '#rbracket_update' do
     pending
   end
 
-  describe "#rparen_update" do
+  describe '#rparen_update' do
     pending
   end
 
-  describe "#tstring_beg_update" do
-    let(:manager) { double "IndentationManager" }
+  describe '#tstring_beg_update' do
+    let(:manager) { double 'IndentationManager' }
 
-    it "calls #stop on the indentation_manager object" do
+    it 'calls #stop on the indentation_manager object' do
       manager.should_receive(:update_actual_indentation).with lexed_line
       manager.should_receive(:stop)
       subject.instance_variable_set(:@manager, manager)
       subject.tstring_beg_update(lexed_line, 1)
     end
 
-    it "adds the lineno to @tstring_nesting" do
+    it 'adds the lineno to @tstring_nesting' do
       manager.stub(:update_actual_indentation)
       manager.stub(:stop)
       subject.instance_variable_set(:@manager, manager)
@@ -113,17 +113,17 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     end
   end
 
-  describe "#tstring_end_update" do
-    context "@tstring_nesting is not empty" do
-      let(:manager) { double "IndentationManager" }
+  describe '#tstring_end_update' do
+    context '@tstring_nesting is not empty' do
+      let(:manager) { double 'IndentationManager' }
 
-      it "calls #start" do
+      it 'calls #start' do
         manager.should_receive(:start)
         subject.instance_variable_set(:@manager, manager)
         subject.tstring_end_update(2)
       end
 
-      it "removes the lineno to @tstring_nesting then calls @manager.start" do
+      it 'removes the lineno to @tstring_nesting then calls @manager.start' do
         manager.should_receive(:actual_indentation)
         manager.should_receive(:start)
         subject.instance_variable_set(:@manager, manager)
