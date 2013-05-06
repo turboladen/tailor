@@ -31,14 +31,14 @@ class Tailor
 
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token.fake_backslash_line_end?
-          log "Line was altered by tailor to accommodate trailing backslash"
+          log 'Line was altered by tailor to accommodate trailing backslash'
           @manager.add_indent_reason(:trailing_backslash, :trailing_backslash,
             lineno)
         end
 
         # trailing comment?
         if token.ends_with_newline?
-          log "Comment ends with newline.  Removing comment..."
+          log 'Comment ends with newline.  Removing comment...'
           log "Old lexed line: #{lexed_line.inspect}"
 
           new_lexed_line = lexed_line.remove_trailing_comment(file_text)
@@ -46,10 +46,10 @@ class Tailor
           log "New lexed line: #{new_lexed_line.inspect}"
 
           if new_lexed_line.ends_with_ignored_nl?
-            log "New lexed line ends with :on_ignored_nl."
+            log 'New lexed line ends with :on_ignored_nl.'
             ignored_nl_update(new_lexed_line, lineno, column)
           elsif new_lexed_line.ends_with_nl?
-            log "New lexed line ends with :on_nl."
+            log 'New lexed line ends with :on_nl.'
             nl_update(new_lexed_line, lineno, column)
           end
         end
@@ -69,11 +69,11 @@ class Tailor
         @embexpr_nesting.pop
 
         if @manager.multi_line_braces?(lineno)
-          log "End of multi-line braces!"
+          log 'End of multi-line braces!'
 
           if current_lexed_line.only_embexpr_end?
             @manager.amount_to_change_this -= 1
-            msg = "lonely embexpr_end.  "
+            msg = 'lonely embexpr_end.  '
             msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
             log msg
           end
@@ -86,21 +86,21 @@ class Tailor
         log "indent reasons on entry: #{@manager.indent_reasons}"
 
         if current_lexed_line.only_spaces?
-          log "Line of only spaces.  Moving on."
+          log 'Line of only spaces.  Moving on.'
           # todo: maybe i shouldn't return here? ...do transitions?
           return
         end
 
         if @manager.line_ends_with_single_token_indenter?(current_lexed_line)
-          log "Line ends with single-token indent token."
+          log 'Line ends with single-token indent token.'
 
           unless @manager.in_an_enclosure? &&
             current_lexed_line.ends_with_comma?
-            log "Line-ending single-token indenter found."
+            log 'Line-ending single-token indenter found.'
             token_event = current_lexed_line.last_non_line_feed_event
 
             unless @manager.line_ends_with_same_as_last token_event
-              msg = "Line ends with different type of single-token "
+              msg = 'Line ends with different type of single-token '
               msg << "indenter: #{token_event}"
               log msg
               @manager.add_indent_reason(token_event[1], token_event.last,
@@ -124,7 +124,7 @@ class Tailor
           return
         end
 
-        if token == "end"
+        if token == 'end'
           @manager.update_for_closing_reason(:on_kw, lexed_line)
           return
         end
@@ -166,7 +166,7 @@ class Tailor
           @manager.last_indent_reason_type != :on_lparen &&
           !@manager.last_indent_reason_type.nil?
           log "last indent reason type: #{@manager.last_indent_reason_type}"
-          log "I think this is a single-token closing line..."
+          log 'I think this is a single-token closing line...'
 
           @manager.update_for_closing_reason(@manager.indent_reasons.
             last[:event_type], current_lexed_line)
@@ -195,8 +195,8 @@ class Tailor
       def rbrace_update(current_lexed_line, lineno, column)
         # Is this an rbrace that should've been parsed as an embexpr_end?
         if in_embexpr? && RUBY_VERSION < '2.0.0'
-          msg = "Got :rbrace and @embexpr_beg is true. "
-          msg << " Must be at an @embexpr_end."
+          msg = 'Got :rbrace and @embexpr_beg is true. '
+          msg << ' Must be at an @embexpr_end.'
           log msg
           @embexpr_nesting.pop
           @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
@@ -204,11 +204,11 @@ class Tailor
         end
 
         if @manager.multi_line_braces?(lineno)
-          log "End of multi-line braces!"
+          log 'End of multi-line braces!'
 
           if current_lexed_line.only_rbrace?
             @manager.amount_to_change_this -= 1
-            msg = "lonely rbrace.  "
+            msg = 'lonely rbrace.  '
             msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
             log msg
           end
@@ -219,11 +219,11 @@ class Tailor
 
       def rbracket_update(current_lexed_line, lineno, column)
         if @manager.multi_line_brackets?(lineno)
-          log "End of multi-line brackets!"
+          log 'End of multi-line brackets!'
 
           if current_lexed_line.only_rbracket?
             @manager.amount_to_change_this -= 1
-            msg = "lonely rbracket.  "
+            msg = 'lonely rbracket.  '
             msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
             log msg
           end
@@ -234,11 +234,11 @@ class Tailor
 
       def rparen_update(current_lexed_line, lineno, column)
         if @manager.multi_line_parens?(lineno)
-          log "End of multi-line parens!"
+          log 'End of multi-line parens!'
 
           if current_lexed_line.only_rparen?
             @manager.amount_to_change_this -= 1
-            msg = "lonely rparen.  "
+            msg = 'lonely rparen.  '
             msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
             log msg
           end
