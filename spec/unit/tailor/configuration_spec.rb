@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/configuration'
 require 'tailor/cli'
 
@@ -9,28 +9,28 @@ describe Tailor::Configuration do
     Tailor::Configuration.new('.')
   end
 
-  describe "#formatters" do
-    context "param is nil" do
-      it "returns the pre-exisiting @formatters" do
+  describe '#formatters' do
+    context 'param is nil' do
+      it 'returns the pre-exisiting @formatters' do
         subject.instance_variable_set(:@formatters, [:blah])
         subject.formatters.should == [:blah]
       end
     end
 
-    context "param is some value" do
-      it "sets @formatters to that value" do
-        subject.formatters "blah"
-        subject.instance_variable_get(:@formatters).should == ["blah"]
+    context 'param is some value' do
+      it 'sets @formatters to that value' do
+        subject.formatters 'blah'
+        subject.instance_variable_get(:@formatters).should == ['blah']
       end
     end
   end
 
-  describe "#file_set" do
+  describe '#file_set' do
     before do
       subject.instance_variable_set(:@file_sets, {})
     end
 
-    it "adds the set of stuff to @file_sets" do
+    it 'adds the set of stuff to @file_sets' do
       subject.file_set('some_files', :bobo) do |style|
         style.trailing_newlines 2
       end
@@ -64,25 +64,25 @@ describe Tailor::Configuration do
       }
     end
 
-    context "first param is nil" do
-      it "uses :default as the label" do
+    context 'first param is nil' do
+      it 'uses :default as the label' do
         subject.file_set
         subject.instance_variable_get(:@file_sets).should include(:default)
       end
     end
   end
 
-  describe "#confg_file" do
-    context "@config_file is already set" do
-      it "returns @config_file" do
+  describe '#confg_file' do
+    context '@config_file is already set' do
+      it 'returns @config_file' do
         subject.instance_variable_set(:@config_file, 'pants')
         subject.config_file
         subject.instance_variable_get(:@config_file).should == 'pants'
       end
     end
 
-    context "@config_file is nil" do
-      context "DEFAULT_PROJECT_CONFIG exists" do
+    context '@config_file is nil' do
+      context 'DEFAULT_PROJECT_CONFIG exists' do
         before do
           File.should_receive(:exists?).with(/\.tailor/).and_return true
         end
@@ -92,13 +92,13 @@ describe Tailor::Configuration do
         end
       end
 
-      context "DEFAULT_PROJECT_CONFIG does not exist" do
+      context 'DEFAULT_PROJECT_CONFIG does not exist' do
         before do
           File.should_receive(:exists?).with(/\.tailor/).and_return false
           File.should_receive(:exists?).with(/\.tailorrc/).and_return true
         end
 
-        it "returns DEFAULT_RC_FILE" do
+        it 'returns DEFAULT_RC_FILE' do
           subject.config_file
           subject.instance_variable_get(:@config_file).should ==
             Tailor::Configuration::DEFAULT_RC_FILE
@@ -107,8 +107,8 @@ describe Tailor::Configuration do
     end
   end
 
-  describe "output file" do
-    context "defined" do
+  describe 'output file' do
+    context 'defined' do
       subject do
         parser = Tailor::CLI::Options
         args = %w(--output-file=tailor-result.yaml)
@@ -116,11 +116,11 @@ describe Tailor::Configuration do
       end
 
       before { subject.load! }
-      its(:output_file) { should eq "tailor-result.yaml" }
+      its(:output_file) { should eq 'tailor-result.yaml' }
     end
 
-    context "not defined" do
-      its(:output_file) { should eq "" }
+    context 'not defined' do
+      its(:output_file) { should eq '' }
     end
   end
 end

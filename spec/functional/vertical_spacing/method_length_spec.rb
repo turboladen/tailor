@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -18,7 +18,7 @@ METHOD_LENGTH['parent_method_too_long'] =
 end}
 
 
-describe "Detection of method length" do
+describe 'Detection of method length' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -41,19 +41,19 @@ describe "Detection of method length" do
     style
   end
 
-  context "single class too long" do
+  context 'single class too long' do
     let(:file_name) { 'method_too_long' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_code_lines_in_method" }
+    specify { critic.problems[file_name].first[:type].should == 'max_code_lines_in_method' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "method in a method" do
+  context 'method in a method' do
     let(:file_name) { 'method_too_long' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_code_lines_in_method" }
+    specify { critic.problems[file_name].first[:type].should == 'max_code_lines_in_method' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }

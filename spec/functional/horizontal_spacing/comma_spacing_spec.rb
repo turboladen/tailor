@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -17,7 +17,7 @@ COMMA_SPACING['spaces_before_with_trailing_comments'] = %Q{[
 }
 
 
-describe "Spacing around comma detection" do
+describe 'Spacing around comma detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -39,28 +39,28 @@ describe "Spacing around comma detection" do
     style
   end
 
-  context "no space after a comma" do
+  context 'no space after a comma' do
     let(:file_name) { 'no_space_after_comma' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "spaces_after_comma" }
+    specify { critic.problems[file_name].first[:type].should == 'spaces_after_comma' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 3 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "two spaces after a comma" do
+  context 'two spaces after a comma' do
     let(:file_name) { 'two_spaces_after_comma' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "spaces_after_comma" }
+    specify { critic.problems[file_name].first[:type].should == 'spaces_after_comma' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 3 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "one space before comma" do
+  context 'one space before comma' do
     let(:file_name) { 'one_space_before_comma' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "spaces_before_comma" }
+    specify { critic.problems[file_name].first[:type].should == 'spaces_before_comma' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 2 }
     specify { critic.problems[file_name].first[:level].should be :error }

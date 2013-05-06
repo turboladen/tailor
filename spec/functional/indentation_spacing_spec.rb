@@ -1,10 +1,10 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 require_relative '../support/good_indentation_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
 
-describe "Indentation spacing problem detection" do
+describe 'Indentation spacing problem detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -30,13 +30,13 @@ describe "Indentation spacing problem detection" do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it "should be OK" do
+    it 'should be OK' do
       critic.check_file(file_name, style.to_hash)
       critic.problems.should == { file_name =>  [] }
     end
   end
 
-  context "case statement with indented whens" do
+  context 'case statement with indented whens' do
     let(:file_name) { 'case_whens_in' }
 
     let(:contents) do
@@ -50,12 +50,12 @@ describe "Indentation spacing problem detection" do
 end}
     end
 
-    it "is OK" do
-      pending "Implementation of the option to allow for this"
+    it 'is OK' do
+      pending 'Implementation of the option to allow for this'
     end
   end
 
-  context "method with rparen on following line" do
+  context 'method with rparen on following line' do
     let(:file_name) { 'method_closing_lonely_paren' }
 
     let(:contents) do
@@ -64,12 +64,12 @@ end}
 end}
     end
 
-    it "is OK" do
+    it 'is OK' do
       pending
     end
   end
 
-  context "lonely rparen and do on the same line" do
+  context 'lonely rparen and do on the same line' do
     let(:file_name) { 'rparen_and_do_same_line' }
 
     let(:contents) do
@@ -79,7 +79,7 @@ end}
 end}
     end
 
-    it "is OK" do
+    it 'is OK' do
       pending
     end
   end

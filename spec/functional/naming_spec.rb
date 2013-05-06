@@ -1,10 +1,10 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 require_relative '../support/naming_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
 
-describe "Naming problem detection" do
+describe 'Naming problem detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -28,7 +28,7 @@ describe "Naming problem detection" do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it "should be OK" do
+    it 'should be OK' do
       critic.check_file(file_name, style.to_hash)
       critic.problems.should == { file_name =>  [] }
     end

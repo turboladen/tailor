@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require_relative '../../support/horizontal_spacing_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
@@ -15,7 +15,7 @@ TRAILING_WHITESPACE['trailing_spaces_on_def'] = %Q{def thing
   puts 'something'
 end}
 
-describe "Trailing whitespace detection" do
+describe 'Trailing whitespace detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -37,28 +37,28 @@ describe "Trailing whitespace detection" do
     style
   end
 
-  context "line is empty spaces" do
+  context 'line is empty spaces' do
     let(:file_name) { 'empty_line_with_spaces' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_trailing_line_spaces" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_trailing_line_spaces' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 2 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "method contains an empty line with spaces" do
+  context 'method contains an empty line with spaces' do
     let(:file_name) { 'empty_line_with_spaces_in_method' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_trailing_line_spaces" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_trailing_line_spaces' }
     specify { critic.problems[file_name].first[:line].should be 2 }
     specify { critic.problems[file_name].first[:column].should be 2 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "def line ends with spaces" do
+  context 'def line ends with spaces' do
     let(:file_name) { 'trailing_spaces_on_def' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_trailing_line_spaces" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_trailing_line_spaces' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 11 }
     specify { critic.problems[file_name].first[:level].should be :error }

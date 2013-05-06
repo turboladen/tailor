@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -38,7 +38,7 @@ HARD_TABS['hard_tab_with_2_indented_spaces'] =
   end
 end}
 
-describe "Hard tab detection" do
+describe 'Hard tab detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -60,49 +60,49 @@ describe "Hard tab detection" do
     style
   end
 
-  context "1 hard tab" do
+  context '1 hard tab' do
     let(:file_name) { 'hard_tab' }
     specify { critic.problems[file_name].size.should be 2 }
-    specify { critic.problems[file_name].first[:type].should == "allow_hard_tabs"  }
+    specify { critic.problems[file_name].first[:type].should == 'allow_hard_tabs' }
     specify { critic.problems[file_name].first[:line].should be 2 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
-    specify { critic.problems[file_name].last[:type].should == "indentation_spaces"  }
+    specify { critic.problems[file_name].last[:type].should == 'indentation_spaces' }
     specify { critic.problems[file_name].last[:line].should be 2 }
     specify { critic.problems[file_name].last[:column].should be 1 }
     specify { critic.problems[file_name].last[:level].should be :error }
   end
 
-  context "1 hard tab with 2 spaces after it" do
+  context '1 hard tab with 2 spaces after it' do
     let(:file_name) { 'hard_tab_with_spaces' }
     specify { critic.problems[file_name].size.should be 2 }
-    specify { critic.problems[file_name].first[:type].should == "allow_hard_tabs"  }
+    specify { critic.problems[file_name].first[:type].should == 'allow_hard_tabs' }
     specify { critic.problems[file_name].first[:line].should be 3 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
-    specify { critic.problems[file_name].last[:type].should == "indentation_spaces"  }
+    specify { critic.problems[file_name].last[:type].should == 'indentation_spaces' }
     specify { critic.problems[file_name].last[:line].should be 3 }
     specify { critic.problems[file_name].last[:column].should be 3 }
     specify { critic.problems[file_name].last[:level].should be :error }
   end
 
-  context "1 hard tab with 3 spaces after it" do
+  context '1 hard tab with 3 spaces after it' do
     let(:file_name) { 'hard_tab_with_1_indented_space' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_hard_tabs"  }
+    specify { critic.problems[file_name].first[:type].should == 'allow_hard_tabs' }
     specify { critic.problems[file_name].first[:line].should be 3 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "1 hard tab with 4 spaces after it" do
+  context '1 hard tab with 4 spaces after it' do
     let(:file_name) { 'hard_tab_with_2_indented_spaces' }
     specify { critic.problems[file_name].size.should be 2 }
-    specify { critic.problems[file_name].first[:type].should == "allow_hard_tabs"  }
+    specify { critic.problems[file_name].first[:type].should == 'allow_hard_tabs' }
     specify { critic.problems[file_name].first[:line].should be 3 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
-    specify { critic.problems[file_name].last[:type].should == "indentation_spaces"  }
+    specify { critic.problems[file_name].last[:type].should == 'indentation_spaces' }
     specify { critic.problems[file_name].last[:line].should be 3 }
     specify { critic.problems[file_name].last[:column].should be 5 }
     specify { critic.problems[file_name].last[:level].should be :error }

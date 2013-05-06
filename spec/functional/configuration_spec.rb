@@ -1,7 +1,8 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 require 'tailor/configuration'
 
-describe "Config File" do
+
+describe 'Config File' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.deactivate!
@@ -11,7 +12,7 @@ describe "Config File" do
     FakeFS.activate!
   end
 
-  context "files aren't given at runtime" do
+  context 'files are not given at runtime' do
     let(:config) do
       config = Tailor::Configuration.new
       config.load!
@@ -19,7 +20,7 @@ describe "Config File" do
       config
     end
 
-    context ".tailor does not exist" do
+    context '.tailor does not exist' do
       before do
         Tailor::Configuration.any_instance.stub(:config_file).and_return false
       end
@@ -28,20 +29,20 @@ describe "Config File" do
         config.formatters.should == %w(text)
       end
 
-      it "sets file_sets[:default].style to the default style" do
+      it 'sets file_sets[:default].style to the default style' do
         config.file_sets[:default].style.should_not be_nil
         config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
       end
 
-      it "sets file_sets[:default].file_list to the files in lib/**/*.rb" do
+      it 'sets file_sets[:default].file_list to the files in lib/**/*.rb' do
         config.file_sets[:default].file_list.all? do |path|
           path =~ /tailor\/lib/
         end.should be_true
       end
     end
 
-    context ".tailor defines the default file set" do
-      context "and another file set" do
+    context '.tailor defines the default file set' do
+      context 'and another file set' do
         let(:config_file) do
           <<-CONFIG
 Tailor.config do |config|
@@ -58,14 +59,14 @@ end
           File.should_receive(:read).and_return config_file
         end
 
-        it "creates the default file set" do
+        it 'creates the default file set' do
           config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
           config.file_sets[:default].file_list.all? do |path|
             path =~ /tailor\/lib/
           end.should be_true
         end
 
-        it "creates the :features file set" do
+        it 'creates the :features file set' do
           style = Tailor::Configuration::Style.new
           style.max_line_length(90, level: :warn)
           config.file_sets[:features].style.should == style.to_hash
@@ -76,7 +77,7 @@ end
       end
     end
 
-    context ".tailor defines NO default file set" do
+    context '.tailor defines NO default file set' do
       let(:config_file) do
         <<-CONFIG
 Tailor.config do |config|
@@ -91,11 +92,11 @@ end
         File.should_receive(:read).and_return config_file
       end
 
-      it "does not create a :default file set" do
+      it 'does not create a :default file set' do
         config.file_sets.should_not include :default
       end
 
-      it "creates the non-default file set" do
+      it 'creates the non-default file set' do
         config.file_sets.should include :features
       end
     end
@@ -135,7 +136,7 @@ end
       config
     end
 
-    context ".tailor does not exist" do
+    context '.tailor does not exist' do
       before do
         Tailor::Configuration.any_instance.stub(:config_file).and_return false
       end
@@ -144,19 +145,19 @@ end
         config.formatters.should == %w(text)
       end
 
-      it "sets file_sets[:default].style to the default style" do
+      it 'sets file_sets[:default].style to the default style' do
         config.file_sets[:default].style.should_not be_nil
         config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
       end
 
-      it "sets file_sets[:default].file_list to the runtime files" do
+      it 'sets file_sets[:default].file_list to the runtime files' do
         config.file_sets[:default].file_list.size.should be 1
         config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
       end
     end
 
-    context ".tailor defines the default file set" do
-      context "and another file set" do
+    context '.tailor defines the default file set' do
+      context 'and another file set' do
         let(:config_file) do
           <<-CONFIG
 Tailor.config do |config|
@@ -175,7 +176,7 @@ end
           File.should_receive(:read).and_return config_file
         end
 
-        it "creates the default file set using the runtime files" do
+        it 'creates the default file set using the runtime files' do
           style = Tailor::Configuration::Style.new
           style.max_line_length 85
           config.file_sets[:default].style.should == style.to_hash
@@ -183,13 +184,13 @@ end
           config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
         end
 
-        it "does not create the :features file set" do
+        it 'does not create the :features file set' do
           config.file_sets.should_not include :features
         end
       end
     end
 
-    context ".tailor defines NO default file set" do
+    context '.tailor defines NO default file set' do
       let(:config_file) do
         <<-CONFIG
 Tailor.config do |config|
@@ -204,13 +205,13 @@ end
         File.should_receive(:read).and_return config_file
       end
 
-      it "creates a :default file set with the runtime file and default style" do
+      it 'creates a :default file set with the runtime file and default style' do
         config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
         config.file_sets[:default].file_list.size.should be 1
         config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
       end
 
-      it "does not create the non-default file set" do
+      it 'does not create the non-default file set' do
         config.file_sets.should_not include :features
       end
     end
@@ -234,7 +235,7 @@ end
         config.file_sets.keys.should == [:default]
       end
 
-      it "creates a :default file set with the runtime file and default style" do
+      it 'creates a :default file set with the runtime file and default style' do
         config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
         config.file_sets[:default].file_list.size.should be 1
         config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
@@ -272,7 +273,7 @@ end
         File.should_receive(:read).and_return config_file
       end
 
-      it "sets formatters to the defined" do
+      it 'sets formatters to the defined' do
         config.formatters.should == %w(yaml text)
       end
 

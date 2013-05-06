@@ -1,10 +1,10 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 require_relative '../support/vertical_spacing_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
 
-describe "Vertical Space problem detection" do
+describe 'Vertical Space problem detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -28,7 +28,7 @@ describe "Vertical Space problem detection" do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it "should be OK" do
+    it 'should be OK' do
       critic.check_file(file_name, style.to_hash)
       critic.problems.should == { file_name =>  [] }
     end

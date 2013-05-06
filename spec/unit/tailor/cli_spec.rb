@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/cli'
 
 
@@ -25,7 +25,7 @@ describe Tailor::CLI do
 
   describe '::run' do
     it "creates an instance of Tailor::CLI and calls that object's #execute!" do
-      cli = double "Tailor::CLI"
+      cli = double 'Tailor::CLI'
       cli.should_receive(:execute!)
       Tailor::CLI.should_receive(:new).and_return cli
       Tailor::CLI.run([])

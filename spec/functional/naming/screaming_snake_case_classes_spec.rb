@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -23,7 +23,7 @@ end}
 
 
 
-describe "Detection of camel case methods" do
+describe 'Detection of camel case methods' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -45,37 +45,37 @@ describe "Detection of camel case methods" do
     style
   end
 
-  context "standard screaming snake case class" do
+  context 'standard screaming snake case class' do
     let(:file_name) { 'one_screaming_snake_case_class' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_screaming_snake_case_classes" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 6 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "standard screaming snake case module" do
+  context 'standard screaming snake case module' do
     let(:file_name) { 'one_screaming_snake_case_module' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_screaming_snake_case_classes" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 7 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "double screaming snake case class" do
+  context 'double screaming snake case class' do
     let(:file_name) { 'double_screaming_snake_case_class' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_screaming_snake_case_classes" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 6 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "double screaming snake case module" do
+  context 'double screaming snake case module' do
     let(:file_name) { 'double_screaming_snake_case_module' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "allow_screaming_snake_case_classes" }
+    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 7 }
     specify { critic.problems[file_name].first[:level].should be :error }

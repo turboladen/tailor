@@ -1,4 +1,4 @@
-require_relative '../../../spec_helper'
+require 'spec_helper'
 require 'tailor/configuration/file_set'
 
 
@@ -18,7 +18,7 @@ describe Tailor::Configuration::FileSet do
       end
 
       context 'the file does not exist' do
-        it "returns an empty Array" do
+        it 'returns an empty Array' do
           subject.instance_eval { build_file_list('test.rb') }.should == []
         end
       end

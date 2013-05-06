@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -9,7 +9,7 @@ LONG_LINE['long_line_newline_at_82'] = %Q{'#{'#' * 79}'
 }
 
 
-describe "Long line detection" do
+describe 'Long line detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -31,19 +31,19 @@ describe "Long line detection" do
     style
   end
 
-  context "line is 81 chars, no newline" do
+  context 'line is 81 chars, no newline' do
     let(:file_name) { 'long_line_no_newline' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_line_length" }
+    specify { critic.problems[file_name].first[:type].should == 'max_line_length' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 81 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "line is 81 chars, plus a newline" do
+  context 'line is 81 chars, plus a newline' do
     let(:file_name) { 'long_line_newline_at_82' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_line_length" }
+    specify { critic.problems[file_name].first[:type].should == 'max_line_length' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 81 }
     specify { critic.problems[file_name].first[:level].should be :error }

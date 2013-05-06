@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
@@ -24,7 +24,7 @@ CLASS_LENGTH['parent_class_too_long'] =
 end}
 
 
-describe "Detection of class length" do
+describe 'Detection of class length' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -47,19 +47,19 @@ describe "Detection of class length" do
     style
   end
 
-  context "single class" do
+  context 'single class' do
     let(:file_name) { 'class_too_long' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_code_lines_in_class" }
+    specify { critic.problems[file_name].first[:type].should == 'max_code_lines_in_class' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }
   end
 
-  context "class in a class" do
+  context 'class in a class' do
     let(:file_name) { 'parent_class_too_long' }
     specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == "max_code_lines_in_class" }
+    specify { critic.problems[file_name].first[:type].should == 'max_code_lines_in_class' }
     specify { critic.problems[file_name].first[:line].should be 1 }
     specify { critic.problems[file_name].first[:column].should be 0 }
     specify { critic.problems[file_name].first[:level].should be :error }

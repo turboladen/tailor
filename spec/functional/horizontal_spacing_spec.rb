@@ -1,9 +1,9 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 require_relative '../support/horizontal_spacing_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-describe "Horizontal Space problem detection" do
+describe 'Horizontal Space problem detection' do
   before do
     Tailor::Logger.stub(:log)
     FakeFS.activate!
@@ -27,13 +27,13 @@ describe "Horizontal Space problem detection" do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it "should be OK" do
+    it 'should be OK' do
       critic.check_file(file_name, style.to_hash)
       critic.problems.should == { file_name =>  [] }
     end
   end
 
-  context "line ends with a backslash" do
+  context 'line ends with a backslash' do
     let(:file_name) { 'line_split_by_backslash' }
 
     before do
@@ -41,7 +41,7 @@ describe "Horizontal Space problem detection" do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    context "no problems" do
+    context 'no problems' do
       let(:contents) do
         %Q{execute 'myscript' do
   command \\
@@ -50,13 +50,13 @@ describe "Horizontal Space problem detection" do
 end}
       end
 
-      it "is OK" do
+      it 'is OK' do
         critic.check_file(file_name, style.to_hash)
         critic.problems.should == { file_name => [] }
       end
     end
     
-    context "line after backslash is too long" do
+    context 'line after backslash is too long' do
       let(:contents) do
         %Q{execute 'myscript' do
   command \\
@@ -65,15 +65,15 @@ end}
 end}
       end
 
-      it "is OK" do
+      it 'is OK' do
         critic.check_file(file_name, style.to_hash)
         critic.problems.should == {
           file_name => [
             {
-              :type => "max_line_length",
+              :type => 'max_line_length',
               :line => 3,
               :column => 81,
-              :message => "Line is 81 chars long, but should be 80.",
+              :message => 'Line is 81 chars long, but should be 80.',
               :level=>:error
             }
           ]
