@@ -75,32 +75,32 @@ class Tailor
             options.style[:allow_trailing_line_spaces] = c
           end
 
-          opt.on('--indentation-spaces NUMBER',
+          opt.on('--indentation-spaces NUMBER', IntegerOrOff,
             'Spaces to expect indentation.  (default: 2)') do |c|
             options.style[:indentation_spaces] = c
           end
 
-          opt.on('--max-line-length NUMBER',
+          opt.on('--max-line-length NUMBER', IntegerOrOff,
             'Max characters in a line. (default: 80)') do |c|
             options.style[:max_line_length] = c
           end
 
-          opt.on('--spaces-after-comma NUMBER',
+          opt.on('--spaces-after-comma NUMBER', IntegerOrOff,
             'Spaces to expect after a comma.  (default: 1)') do |c|
             options.style[:spaces_after_comma] = c
           end
 
-          opt.on('--spaces-before-comma NUMBER',
+          opt.on('--spaces-before-comma NUMBER', IntegerOrOff,
             'Spaces to expect before a comma.  (default: 0)') do |c|
             options.style[:spaces_before_comma] = c
           end
 
-          opt.on('--spaces-after-lbrace NUMBER',
+          opt.on('--spaces-after-lbrace NUMBER', IntegerOrOff,
             'Spaces to expect after a {.  (default: 1)') do |c|
             options.style[:spaces_after_lbrace] = c
           end
 
-          opt.on('--spaces-before-lbrace NUMBER',
+          opt.on('--spaces-before-lbrace NUMBER', IntegerOrOff,
             'Spaces to expect before a {.  (default: 1)') do |c|
             options.style[:spaces_before_lbrace] = c
           end

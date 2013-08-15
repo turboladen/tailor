@@ -15,10 +15,16 @@ describe Tailor::CLI::Options do
   include OptionHelpers
   describe "#parse!" do
     [
+      :indentation_spaces,
       :max_code_lines_in_class,
       :max_code_lines_in_method,
+      :max_line_length,
+      :spaces_after_comma,
+      :spaces_after_lbrace,
       :spaces_after_lbracket,
       :spaces_after_lparen,
+      :spaces_before_comma,
+      :spaces_before_lbrace,
       :spaces_before_rbrace,
       :spaces_before_rbracket,
       :spaces_before_rparen,
