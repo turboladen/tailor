@@ -375,7 +375,7 @@ end}
 
 INDENT_OK['for_with_retry_loop'] =
   %Q{for i in 1..5
-  retry if  i > 2
+  retry if i > 2
   puts "Value of local variable is \#{i}"
 end}
 

@@ -93,6 +93,11 @@ class Tailor
             options.style[:spaces_before_comma] = c
           end
 
+          opt.on('--spaces-after-conditional NUMBER',
+            'Spaces to expect after a conditional.  (default: 1)') do |c|
+            options.style[:spaces_after_conditional] = c
+          end
+
           opt.on('--spaces-after-lbrace NUMBER',
             'Spaces to expect after a {.  (default: 1)') do |c|
             options.style[:spaces_after_lbrace] = c
