@@ -57,7 +57,6 @@ class Tailor
         end
 
         def build_xml(node, doc = nil, xml_node=nil)
-          is_params = node.first == :params
           doc, xml_node = xml_document(doc, xml_node)
 
           if node.respond_to?(:each)
