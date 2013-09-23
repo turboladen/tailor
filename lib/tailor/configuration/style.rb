@@ -35,6 +35,7 @@ class Tailor
       define_property :max_code_lines_in_method
       define_property :max_line_length
       define_property :spaces_after_comma
+      define_property :spaces_after_conditional
       define_property :spaces_after_lbrace
       define_property :spaces_after_lbracket
       define_property :spaces_after_lparen
@@ -58,6 +59,7 @@ class Tailor
         max_code_lines_in_method(30, level: :error)
         max_line_length(80, level: :error)
         spaces_after_comma(1, level: :error)
+        spaces_after_conditional(1, level: :error)
         spaces_after_lbrace(1, level: :error)
         spaces_after_lbracket(0, level: :error)
         spaces_after_lparen(0, level: :error)
