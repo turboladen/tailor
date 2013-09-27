@@ -16,8 +16,8 @@ class Tailor
       #   of the file.
       def measure(trailing_newline_count)
         if trailing_newline_count != @config
-          lineno = "<EOF>"
-          column = "<EOF>"
+          lineno = '<EOF>'
+          column = '<EOF>'
           msg = "File has #{trailing_newline_count} trailing "
           msg << "newlines, but should have #{@config}."
 

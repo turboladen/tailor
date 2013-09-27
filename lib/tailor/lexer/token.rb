@@ -40,7 +40,7 @@ class Tailor
       #
       # @return [Boolean]
       def do_is_for_a_loop?
-        self == "do" && @options[:loop_with_do]
+        self == 'do' && @options[:loop_with_do]
       end
 
       # @return [Boolean]
@@ -72,17 +72,17 @@ class Tailor
           sexp_line = Ripper.sexp(line_of_text)
 
           if sexp_line.nil?
-            msg = "sexp line was nil.  "
-            msg << "Perhaps that line is part of a multi-line statement?"
+            msg = 'sexp line was nil.  '
+            msg << 'Perhaps that line is part of a multi-line statement?'
             log msg
-            log "Trying again with the last char removed from the line..."
+            log 'Trying again with the last char removed from the line...'
             line_of_text.chop!
             sexp_line = Ripper.sexp(line_of_text)
           end
 
           if sexp_line.nil?
-            log "sexp line was nil again."
-            log "Trying 1 more time with the last char removed from the line..."
+            log 'sexp line was nil again.'
+            log 'Trying 1 more time with the last char removed from the line...'
             line_of_text.chop!
             sexp_line = Ripper.sexp(line_of_text)
           end

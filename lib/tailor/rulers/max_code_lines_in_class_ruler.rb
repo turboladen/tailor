@@ -34,7 +34,7 @@ class Tailor
       end
 
       def kw_update(token, lexed_line, lineno, column)
-        if token == "class" || token == "module"
+        if token == 'class' || token == 'module'
           @class_start_lines << { lineno: lineno, column: column, count: 0 }
           log "Class start lines: #{@class_start_lines}"
         end
@@ -47,7 +47,7 @@ class Tailor
           log "Keyword start lines: #{@kw_start_lines}"
         end
 
-        if token == "end"
+        if token == 'end'
           log "Got 'end' of class/module."
 
           unless @class_start_lines.empty?

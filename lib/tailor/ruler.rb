@@ -78,7 +78,7 @@ class Tailor
     # Each ruler should redefine this for its needs.
     def measure(*args)
       raise RuntimeError,
-        "Ruler#measure called, but should be redefined by a real ruler."
+        'Ruler#measure called, but should be redefined by a real ruler.'
     end
 
     # Converts the {Tailor::Ruler} name to snake case.

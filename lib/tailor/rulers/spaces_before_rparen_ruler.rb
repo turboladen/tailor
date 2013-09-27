@@ -64,7 +64,7 @@ class Tailor
         count = count_spaces(lexed_line, column)
 
         if count.nil?
-          log "rparen must be at the beginning of the line."
+          log 'rparen must be at the beginning of the line.'
           return
         else
           log "Found #{count} space(s) before rparen."

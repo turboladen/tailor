@@ -26,7 +26,7 @@ class Tailor
         log "Previous event: #{previous_event}"
 
         if column.zero? || previous_event.nil?
-          log "rbrace is at the beginning of the line."
+          log 'rbrace is at the beginning of the line.'
           @do_measurement = false
           return 0
         end
@@ -40,7 +40,7 @@ class Tailor
         return 0 if previous_event[1] != :on_sp
 
         if current_index - 2 < 0
-          log "rbrace is at the beginning of an indented line.  Moving on."
+          log 'rbrace is at the beginning of an indented line.  Moving on.'
           @do_measurement = false
           return previous_event.last.size
         end
@@ -93,7 +93,7 @@ class Tailor
         log "Found #{count} space(s) before rbrace."
 
         if !@do_measurement
-          log "Skipping measurement."
+          log 'Skipping measurement.'
         else
           measure(count, lineno, column)
         end
