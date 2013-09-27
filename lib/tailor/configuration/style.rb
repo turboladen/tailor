@@ -26,6 +26,7 @@ class Tailor
       end
 
       define_property :allow_camel_case_methods
+      define_property :allow_conditional_parentheses
       define_property :allow_hard_tabs
       define_property :allow_screaming_snake_case_classes
       define_property :allow_trailing_line_spaces
@@ -50,6 +51,7 @@ class Tailor
       # Sets up default values.
       def initialize
         allow_camel_case_methods(false, level: :error)
+        allow_conditional_parentheses(false, level: :warn)
         allow_hard_tabs(false, level: :error)
         allow_screaming_snake_case_classes(false, level: :error)
         allow_trailing_line_spaces(false, level: :error)
