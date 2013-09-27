@@ -20,7 +20,7 @@ project, whatever style that may be.
   s.email = "steve.loveless@gmail.com"
   s.homepage = "http://github.com/turboladen/tailor"
 
-  s.extra_rdoc_files = %w(History.md README.rdoc)
+  s.extra_rdoc_files = %w(History.md README.md)
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
