@@ -6,8 +6,8 @@ class Tailor
     # Checks for spaces before a +)+ as given by +@config+.  It skips checking
     # when:
     # * it's the first char in the line.
-    # * it's directly preceded by a '('.
-    # * it's directly preceded by spaces, then a '('.
+    # * it's directly preceded by a +(+.
+    # * it's directly preceded by spaces, then a +(+.
     class SpacesBeforeRparenRuler < Tailor::Ruler
       def initialize(config, options)
         super(config, options)
@@ -16,7 +16,7 @@ class Tailor
 
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column
-      # @return [Fixnum] The number of spaces before the rparen.
+      # @return [Fixnum] the number of spaces before the rparen.
       def count_spaces(lexed_line, column)
         current_index = lexed_line.event_index(column)
         log "Current event index: #{current_index}"
@@ -53,8 +53,8 @@ class Tailor
         end
       end
 
-      # This has to keep track of '{'s and only follow through with the check
-      # if the '{' was an lbrace because Ripper doesn't scan the '}' of an
+      # This has to keep track of +{+s and only follow through with the check
+      # if the +{+ was an lbrace because Ripper doesn't scan the +}+ of an
       # embedded expression (embexpr_end) as such.
       #
       # @param [Tailor::LexedLine] lexed_line
@@ -64,7 +64,7 @@ class Tailor
         count = count_spaces(lexed_line, column)
 
         if count.nil?
-          log "rparen must be at the beginning of the line."
+          log 'rparen must be at the beginning of the line.'
           return
         else
           log "Found #{count} space(s) before rparen."

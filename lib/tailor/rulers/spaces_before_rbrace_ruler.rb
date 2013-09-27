@@ -7,7 +7,7 @@ class Tailor
     # when:
     # * it's the first char in the line.
     # * it's the first char in the line, preceded by spaces.
-    # * it's directly preceded by a '{'.
+    # * it's directly preceded by a +{+.
     class SpacesBeforeRbraceRuler < Tailor::Ruler
       def initialize(config, options)
         super(config, options)
@@ -18,7 +18,7 @@ class Tailor
 
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column
-      # @return [Fixnum] The number of spaces before the rbrace.
+      # @return [Fixnum] the number of spaces before the rbrace.
       def count_spaces(lexed_line, column)
         current_index = lexed_line.event_index(column)
         log "Current event index: #{current_index}"
@@ -26,7 +26,7 @@ class Tailor
         log "Previous event: #{previous_event}"
 
         if column.zero? || previous_event.nil?
-          log "rbrace is at the beginning of the line."
+          log 'rbrace is at the beginning of the line.'
           @do_measurement = false
           return 0
         end
@@ -40,7 +40,7 @@ class Tailor
         return 0 if previous_event[1] != :on_sp
 
         if current_index - 2 < 0
-          log "rbrace is at the beginning of an indented line.  Moving on."
+          log 'rbrace is at the beginning of an indented line.  Moving on.'
           @do_measurement = false
           return previous_event.last.size
         end
@@ -74,9 +74,9 @@ class Tailor
         end
       end
 
-      # For Ruby versions < 2.0.0-p0, this has to keep track of '{'s and only
-      # follow through with the check if the '{' was an lbrace because Ripper
-      # doesn't scan the '}' of an embedded expression (embexpr_end) as such.
+      # For Ruby versions < 2.0.0-p0, this has to keep track of +{+'s and only
+      # follow through with the check if the +{+ was an lbrace because Ripper
+      # doesn't scan the +}+ of an embedded expression (embexpr_end) as such.
       #
       # @param [Tailor::LexedLine] lexed_line
       # @param [Fixnum] lineno
@@ -92,8 +92,8 @@ class Tailor
         count = count_spaces(lexed_line, column)
         log "Found #{count} space(s) before rbrace."
 
-        if @do_measurement == false
-          log "Skipping measurement."
+        if !@do_measurement
+          log 'Skipping measurement.'
         else
           measure(count, lineno, column)
         end

@@ -19,7 +19,7 @@ class Tailor
       # @param [Fixnum] column Column the problem was found on.
       def measure(token, lineno, column)
         if token.contains_hard_tab?
-          problem_message = "Hard tab found."
+          problem_message = 'Hard tab found.'
 
           @problems << Problem.new(problem_type, lineno, column,
             problem_message, @options[:level])

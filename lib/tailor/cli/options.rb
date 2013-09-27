@@ -9,7 +9,7 @@ require_relative '../configuration'
 class Tailor
   class CLI
     class Options
-      IntegerOrOff = /^(\d+|false|off)$/
+      INTEGER_OR_OFF = /^(\d+|false|off)$/
       @output_color = true
 
       def self.parse!(args)
@@ -23,32 +23,32 @@ class Tailor
 
         opts = OptionParser.new do |opt|
           opt.banner = self.banner
-          opt.separator ""
-          opt.separator "  " + ("-" * 73)
-          opt.separator ""
-          opt.separator "Config file options:"
+          opt.separator ''
+          opt.separator '  ' + ('-' * 73)
+          opt.separator ''
+          opt.separator 'Config file options:'
           opt.on('-s', '--show-config', 'Show your current config.') do
             options.show_config = true
           end
 
           opt.on('-c', '--config-file FILE',
-            "Use a specific config file.") do |config|
+            'Use a specific config file.') do |config|
             options.config_file = config
           end
 
           opt.on('-o', '--output-file FILE',
-            "Print result in a output file if using the proper formatter.") do |output|
+            'Print result in a output file if using the proper formatter.') do |output|
             options.output_file = output
           end
 
           opt.on('--create-config', 'Create a new .tailor file') do
             if create_config
-              msg = "Your new tailor config file was created at "
+              msg = 'Your new tailor config file was created at '
               msg << "#{Dir.pwd}/.tailor"
               $stdout.puts msg
               exit
             else
-              $stderr.puts "Creation of .tailor failed!"
+              $stderr.puts 'Creation of .tailor failed!'
               exit 1
             end
           end
@@ -56,14 +56,14 @@ class Tailor
           #---------------------------------------------------------------------
           # Style options
           #---------------------------------------------------------------------
-          opt.separator ""
-          opt.separator "Style Options:"
+          opt.separator ''
+          opt.separator 'Style Options:'
           opt.separator "  (Any option that doesn't have an explicit way of"
-          opt.separator "  turning it off can be done so simply by passing"
+          opt.separator '  turning it off can be done so simply by passing'
           opt.separator "  passing it 'false'.)"
 
-          opt.separator ""
-          opt.separator "  * Horizontal Spacing:"
+          opt.separator ''
+          opt.separator '  * Horizontal Spacing:'
           opt.on('--allow-hard-tabs BOOL',
             'Check for hard tabs?  (default: true)') do |c|
             options.style[:allow_hard_tabs] = c
@@ -75,75 +75,75 @@ class Tailor
             options.style[:allow_trailing_line_spaces] = c
           end
 
-          opt.on('--indentation-spaces NUMBER', IntegerOrOff,
+          opt.on('--indentation-spaces NUMBER', INTEGER_OR_OFF,
             'Spaces to expect indentation.  (default: 2)') do |c|
             options.style[:indentation_spaces] = c
           end
 
-          opt.on('--max-line-length NUMBER', IntegerOrOff,
+          opt.on('--max-line-length NUMBER', INTEGER_OR_OFF,
             'Max characters in a line. (default: 80)') do |c|
             options.style[:max_line_length] = c
           end
 
-          opt.on('--spaces-after-comma NUMBER', IntegerOrOff,
+          opt.on('--spaces-after-comma NUMBER', INTEGER_OR_OFF,
             'Spaces to expect after a comma.  (default: 1)') do |c|
             options.style[:spaces_after_comma] = c
           end
 
-          opt.on('--spaces-before-comma NUMBER', IntegerOrOff,
+          opt.on('--spaces-before-comma NUMBER', INTEGER_OR_OFF,
             'Spaces to expect before a comma.  (default: 0)') do |c|
             options.style[:spaces_before_comma] = c
           end
 
-          opt.on('--spaces-after-conditional NUMBER', IntegerOrOff,
+          opt.on('--spaces-after-conditional NUMBER', INTEGER_OR_OFF,
             'Spaces to expect after a conditional.  (default: 1)') do |c|
             options.style[:spaces_after_conditional] = c
           end
 
-          opt.on('--spaces-after-lbrace NUMBER', IntegerOrOff,
+          opt.on('--spaces-after-lbrace NUMBER', INTEGER_OR_OFF,
             'Spaces to expect after a {.  (default: 1)') do |c|
             options.style[:spaces_after_lbrace] = c
           end
 
-          opt.on('--spaces-before-lbrace NUMBER', IntegerOrOff,
+          opt.on('--spaces-before-lbrace NUMBER', INTEGER_OR_OFF,
             'Spaces to expect before a {.  (default: 1)') do |c|
             options.style[:spaces_before_lbrace] = c
           end
 
-          opt.on('--spaces-before-rbrace NUMBER', IntegerOrOff,
+          opt.on('--spaces-before-rbrace NUMBER', INTEGER_OR_OFF,
             'Spaces to expect before a }.  (default: 1)') do |c|
             options.style[:spaces_before_rbrace] = c
           end
 
-          opt.on('--spaces-in-empty-braces NUMBER', IntegerOrOff,
+          opt.on('--spaces-in-empty-braces NUMBER', INTEGER_OR_OFF,
             'Spaces to expect between a { and }.  (default: 0)') do |c|
             options.style[:spaces_in_empty_braces] = c
           end
 
-          opt.on('--spaces-after-lbracket NUMBER', IntegerOrOff,
+          opt.on('--spaces-after-lbracket NUMBER', INTEGER_OR_OFF,
             'Spaces to expect after a [.  (default: 0)') do |c|
             options.style[:spaces_after_lbracket] = c
           end
 
-          opt.on('--spaces-before-rbracket NUMBER', IntegerOrOff,
+          opt.on('--spaces-before-rbracket NUMBER', INTEGER_OR_OFF,
             'Spaces to expect before a ].  (default: 0)') do |c|
             options.style[:spaces_before_rbracket] = c
           end
 
-          opt.on('--spaces-after-lparen NUMBER', IntegerOrOff,
+          opt.on('--spaces-after-lparen NUMBER', INTEGER_OR_OFF,
             'Spaces to expect after a (.  (default: 0)') do |c|
             options.style[:spaces_after_lparen] = c
           end
 
-          opt.on('--spaces-before-rparen NUMBER', IntegerOrOff,
+          opt.on('--spaces-before-rparen NUMBER', INTEGER_OR_OFF,
             'Spaces to expect before a ).  (default: 0)') do |c|
             options.style[:spaces_before_rparen] = c
           end
 
-          opt.separator ""
-          opt.separator ""
+          opt.separator ''
+          opt.separator ''
 
-          opt.separator "  * Naming:"
+          opt.separator '  * Naming:'
 
           opt.on('--allow-camel-case-methods BOOL',
             'Check for camel-case method names?', '(default: true)') do |c|
@@ -156,21 +156,21 @@ class Tailor
               instance_eval(c)
           end
 
-          opt.separator ""
-          opt.separator ""
-          opt.separator "  * Vertical Spacing"
+          opt.separator ''
+          opt.separator ''
+          opt.separator '  * Vertical Spacing'
 
-          opt.on('--max-code-lines-in-class NUMBER', IntegerOrOff,
+          opt.on('--max-code-lines-in-class NUMBER', INTEGER_OR_OFF,
             'Max number lines of code in a class.', '(default: 300)') do |c|
             options.style[:max_code_lines_in_class] = c
           end
 
-          opt.on('--max-code-lines-in-method NUMBER', IntegerOrOff,
+          opt.on('--max-code-lines-in-method NUMBER', INTEGER_OR_OFF,
             'Max number lines of code in a method.', '(default: 30)') do |c|
             options.style[:max_code_lines_in_method] = c
           end
 
-          opt.on('--trailing-newlines NUMBER', IntegerOrOff,
+          opt.on('--trailing-newlines NUMBER', INTEGER_OR_OFF,
             'Newlines to expect at the end of the file.', '(default: 1)') do |c|
             options.style[:trailing_newlines] = c
           end
@@ -178,8 +178,8 @@ class Tailor
           #---------------------------------------------------------------------
           # Common options
           #---------------------------------------------------------------------
-          opt.separator ""
-          opt.separator "Common options:"
+          opt.separator ''
+          opt.separator 'Common options:'
 
 =begin
           opt.on('-f', '--format FORMATTER') do |format|
@@ -187,16 +187,16 @@ class Tailor
           end
 =end
 
-          opt.on('--[no-]color', "Output in color") do |color|
+          opt.on('--[no-]color', 'Output in color') do |color|
             @output_color = color
           end
 
-          opt.on_tail('-v', '--version', "Show the version") do
+          opt.on_tail('-v', '--version', 'Show the version') do
             puts version
             exit
           end
 
-          opt.on_tail('-d', '--debug', "Turn on debug logging") do
+          opt.on_tail('-d', '--debug', 'Turn on debug logging') do
             Tailor::Logger.log = true
           end
 
@@ -280,8 +280,8 @@ tailor --show-config
       def self.register_custom_option_types
         # We need to be able to mark integer options as :off as zero may be a
         # valid value.
-        OptionParser.accept(IntegerOrOff) do |s|
-          raise OptionParser::InvalidArgument unless s =~ IntegerOrOff
+        OptionParser.accept(INTEGER_OR_OFF) do |s|
+          raise OptionParser::InvalidArgument unless s =~ INTEGER_OR_OFF
           if s == false.to_s || s == 'off'
             :off
           else

@@ -17,7 +17,7 @@ class Tailor
 
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
-          log "Found comment with trailing newline."
+          log 'Found comment with trailing newline.'
           ignored_nl_update(lexed_line, lineno, column)
         end
       end
@@ -59,8 +59,8 @@ class Tailor
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
 
-          if @do_measurement == false
-            log "Skipping measurement."
+          if !@do_measurement
+            log 'Skipping measurement.'
           else
             measure(actual_spaces, lineno, column)
           end
@@ -81,7 +81,7 @@ class Tailor
         event_index = lexed_line.event_index(column)
 
         if event_index.nil?
-          log "No lbracket in this line.  Moving on..."
+          log 'No lbracket in this line.  Moving on...'
           @do_measurement = false
           return
         end
@@ -90,7 +90,7 @@ class Tailor
         log "Next event: #{next_event}"
 
         if next_event.nil?
-          log "lbracket must be at the end of the line."
+          log 'lbracket must be at the end of the line.'
           @do_measurement = false
           return 0
         end
@@ -104,7 +104,7 @@ class Tailor
         end
 
         if next_event[1] == :on_rbracket
-          log "lbracket is followed by a rbracket.  Moving on."
+          log 'lbracket is followed by a rbracket.  Moving on.'
           @do_measurement = false
           return 0
         end

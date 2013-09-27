@@ -65,7 +65,7 @@ class Tailor
       log "<#{self.class}> Checking style of file: #{file}."
       lexer = Tailor::Lexer.new(file)
       ruler = Ruler.new
-      log "Style:"
+      log 'Style:'
       style.each { |property, values| log "#{property}: #{values}" }
       init_rulers(style, lexer, ruler)
 
@@ -89,7 +89,7 @@ class Tailor
       style.each do |ruler_name, values|
         ruler = "Tailor::Rulers::#{camelize(ruler_name.to_s)}Ruler"
 
-        if values.last[:level] == :off || values.last[:level] == "off"
+        if values.last[:level] == :off || values.last[:level] == 'off'
           msg = "Style option set to '#{values.last[:level]}'; "
           log msg << "skipping init of '#{ruler}'"
           next

@@ -202,7 +202,6 @@ class Tailor
     # observers that key off ending the line will never get triggered, and thus
     # style won't get checked for that line.
     #
-    # @param [Fixnum] column The column that the comment is at.
     # @param [String] file_text The whole file's worth of text.  Required in
     #   order to be able to reconstruct the context in which the line exists.
     # @return [LexedLine] The current lexed line, but with the trailing comment
@@ -235,7 +234,6 @@ class Tailor
 
     # Determines if the current lexed line is just the end of a tstring.
     #
-    # @param [Array] lexed_line_output The lexed output for the current line.
     # @return [Boolean] +true+ if the line contains a +:on_tstring_end+ and
     #   not a +:on_tstring_beg+.
     def end_of_multi_line_string?
@@ -269,8 +267,10 @@ class Tailor
     private
 
     def log(*args)
-      l = begin; lineno; rescue; "<EOF>"; end
-      c = begin; column; rescue; "<EOF>"; end
+      l = begin; lineno; rescue; '<EOF>'
+      ; end
+      c = begin; column; rescue; '<EOF>'
+      ; end
       subclass_name = self.class.to_s.sub(/^Tailor::/, '')
       args.first.insert(0, "<#{subclass_name}> #{l}[#{c}]: ")
       Tailor::Logger.log(*args)

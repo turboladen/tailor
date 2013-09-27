@@ -3,5 +3,5 @@ require 'tailor/version'
 
 
 describe Tailor::VERSION do
-  it { should == '1.2.1' }
+  it { should == '1.3.0' }
 end

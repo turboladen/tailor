@@ -11,7 +11,7 @@ class Tailor
       @logger ||= ::Logger.new $stdout
 
       def @logger.format_message(level, time, progname, msg)
-        "[#{time.strftime("%Y-%m-%d %H:%M:%S")}]  #{msg}\n"
+        "[#{time.strftime('%Y-%m-%d %H:%M:%S')}]  #{msg}\n"
       end
 
       @logger

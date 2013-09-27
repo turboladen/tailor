@@ -23,7 +23,7 @@ class Tailor
         @file_name = file
         File.open(@file_name, 'r').read
       else
-        @file_name = "<notafile>"
+        @file_name = '<notafile>'
         file
       end
 
@@ -214,7 +214,7 @@ class Tailor
     #
     # @param [String] token The token that the lexer matched.
     def on_ignored_nl(token)
-      log "IGNORED_NL"
+      log 'IGNORED_NL'
 
       current_line = LexedLine.new(super, lineno)
       ignored_nl_changed
@@ -306,7 +306,7 @@ class Tailor
 
     # This is the first thing that exists on a new line--NOT the last!
     def on_nl(token)
-      log "NL"
+      log 'NL'
       current_line = LexedLine.new(super, lineno)
 
       nl_changed
@@ -560,17 +560,19 @@ class Tailor
     # with line-ending backslashes that break up statements.
     #
     # @param [String] file_text The file test to check.
-    # @param [String] The altered file text.
+    # @return [String] The altered file text.
     def sub_line_ending_backslashes(file_text)
-      backslash_replacement = "# TAILOR REMOVED BACKSLASH"
+      backslash_replacement = '# TAILOR REMOVED BACKSLASH'
       file_text.gsub!(/\\\s*\n?$/, backslash_replacement)
-      
+
       file_text
     end
-    
+
     def log(*args)
-      l = begin; lineno; rescue; "<EOF>"; end
-      c = begin; column; rescue; "<EOF>"; end
+      l = begin; lineno; rescue; '<EOF>'
+      ; end
+      c = begin; column; rescue; '<EOF>'
+      ; end
       subclass_name = self.class.to_s.sub(/^Tailor::/, '')
       args.first.insert(0, "<#{subclass_name}> #{l}[#{c}]: ")
       Tailor::Logger.log(*args)

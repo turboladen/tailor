@@ -68,7 +68,7 @@ class Tailor
         end
       end
 
-      # This has to keep track of '{'s and only follow through with the check
+      # This has to keep track of +{+s and only follow through with the check
       # if the +{+ was an lbrace because Ripper doesn't scan the +}+ of an
       # embedded expression (embexpr_end) as such.
       #

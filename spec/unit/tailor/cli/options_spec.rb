@@ -13,7 +13,7 @@ end
 
 describe Tailor::CLI::Options do
   include OptionHelpers
-  describe "#parse!" do
+  describe '#parse!' do
     [
       :indentation_spaces,
       :max_code_lines_in_class,

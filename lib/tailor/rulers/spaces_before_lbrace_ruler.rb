@@ -28,7 +28,7 @@ class Tailor
         log "Previous event: #{previous_event}"
 
         if column.zero? || previous_event.nil?
-          log "lbrace must be at the beginning of the line."
+          log 'lbrace must be at the beginning of the line.'
           @do_measurement = false
           return 0
         end
@@ -54,7 +54,7 @@ class Tailor
         return 0 if previous_event[1] != :on_sp
 
         if current_index - 2 < 0
-          log "lbrace comes at the beginning of an indented line."
+          log 'lbrace comes at the beginning of an indented line.'
           @do_measurement = false
           return previous_event.last.size
         end
@@ -71,8 +71,8 @@ class Tailor
         count = count_spaces(lexed_line, column)
         log "Found #{count} space(s) before lbrace."
 
-        if @do_measurement == false
-          log "Skipping measurement."
+        if !@do_measurement
+          log 'Skipping measurement.'
         else
           measure(count, lineno, column)
         end
