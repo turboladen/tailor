@@ -234,7 +234,6 @@ class Tailor
 
     # Determines if the current lexed line is just the end of a tstring.
     #
-    # @param [Array] lexed_line_output The lexed output for the current line.
     # @return [Boolean] +true+ if the line contains a +:on_tstring_end+ and
     #   not a +:on_tstring_beg+.
     def end_of_multi_line_string?
