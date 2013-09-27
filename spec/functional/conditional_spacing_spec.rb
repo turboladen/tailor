@@ -37,27 +37,30 @@ describe 'Conditional spacing' do
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 0,
-        :message=> '0 spaces after conditional at column 0, expected 1.',
-        :level=> :error
+        :column => 0,
+        :message => '0 spaces after conditional at column 0, expected 1.',
+        :level => :error
       }]
     end
+
     it 'warns with the correct number of expected spaces' do
       style.spaces_after_conditional 2, level: :error
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 0,
-        :message=> '0 spaces after conditional at column 0, expected 2.',
-        :level=> :error
+        :column => 0,
+        :message => '0 spaces after conditional at column 0, expected 2.',
+        :level => :error
       }]
     end
+
     it 'does not warn if spaces are set to zero' do
       style.spaces_after_conditional 0, level: :error
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn if spaces are disabled' do
       style.spaces_after_conditional 2, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -70,15 +73,16 @@ describe 'Conditional spacing' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'warns if spaces has been set to zero' do
       style.spaces_after_conditional 0, level: :error
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 0,
-        :message=> '1 spaces after conditional at column 0, expected 0.',
-        :level=> :error
+        :column => 0,
+        :message => '1 spaces after conditional at column 0, expected 0.',
+        :level => :error
       }]
     end
   end
@@ -96,9 +100,9 @@ describe 'Conditional spacing' do
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 0,
-        :message=> '0 spaces after conditional at column 0, expected 1.',
-        :level=> :error
+        :column => 0,
+        :message => '0 spaces after conditional at column 0, expected 1.',
+        :level => :error
       }]
     end
   end
@@ -109,9 +113,9 @@ describe 'Conditional spacing' do
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 0,
-        :message=> '0 spaces after conditional at column 0, expected 1.',
-        :level=> :error
+        :column => 0,
+        :message => '0 spaces after conditional at column 0, expected 1.',
+        :level => :error
       }]
     end
   end
@@ -129,9 +133,9 @@ describe 'Conditional spacing' do
       expect(critic.problems[file_name]).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
-        :column=> 5,
-        :message=> '0 spaces after conditional at column 5, expected 1.',
-        :level=> :error
+        :column => 5,
+        :message => '0 spaces after conditional at column 5, expected 1.',
+        :level => :error
       }]
     end
   end
@@ -142,5 +146,4 @@ describe 'Conditional spacing' do
       expect(critic.problems[file_name]).to be_empty
     end
   end
-
 end
