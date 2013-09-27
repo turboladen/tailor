@@ -560,14 +560,14 @@ class Tailor
     # with line-ending backslashes that break up statements.
     #
     # @param [String] file_text The file test to check.
-    # @param [String] The altered file text.
+    # @return [String] The altered file text.
     def sub_line_ending_backslashes(file_text)
       backslash_replacement = "# TAILOR REMOVED BACKSLASH"
       file_text.gsub!(/\\\s*\n?$/, backslash_replacement)
-      
+
       file_text
     end
-    
+
     def log(*args)
       l = begin; lineno; rescue; "<EOF>"; end
       c = begin; column; rescue; "<EOF>"; end

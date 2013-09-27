@@ -7,7 +7,7 @@ class Tailor
     # when:
     # * it's the first char in the line.
     # * it's the first char in the line, preceded by spaces.
-    # * it's directly preceded by a '{'.
+    # * it's directly preceded by a +{+.
     class SpacesBeforeRbraceRuler < Tailor::Ruler
       def initialize(config, options)
         super(config, options)
@@ -18,7 +18,7 @@ class Tailor
 
       # @param [LexedLine] lexed_line
       # @param [Fixnum] column
-      # @return [Fixnum] The number of spaces before the rbrace.
+      # @return [Fixnum] the number of spaces before the rbrace.
       def count_spaces(lexed_line, column)
         current_index = lexed_line.event_index(column)
         log "Current event index: #{current_index}"
@@ -74,9 +74,9 @@ class Tailor
         end
       end
 
-      # For Ruby versions < 2.0.0-p0, this has to keep track of '{'s and only
-      # follow through with the check if the '{' was an lbrace because Ripper
-      # doesn't scan the '}' of an embedded expression (embexpr_end) as such.
+      # For Ruby versions < 2.0.0-p0, this has to keep track of +{+'s and only
+      # follow through with the check if the +{+ was an lbrace because Ripper
+      # doesn't scan the +}+ of an embedded expression (embexpr_end) as such.
       #
       # @param [Tailor::LexedLine] lexed_line
       # @param [Fixnum] lineno

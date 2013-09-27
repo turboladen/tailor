@@ -17,7 +17,6 @@ class Tailor
       #
       # @param [Array] lexed_line The lexed line with a conditional
       # @param [Fixnum] lineno Line the problem was found on.
-      # @param [Fixnum] column Column the problem was found on.
       def measure(lexed_line, lineno)
 
         idx = lexed_line.index do |pos, token, name|
@@ -43,9 +42,7 @@ class Tailor
             "#{spaces} spaces after conditional at column #{column}, " +
               "expected #{expected_spaces}.", @options[:level])
         end
-
       end
-
     end
   end
 end

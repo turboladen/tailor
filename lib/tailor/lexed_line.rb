@@ -202,7 +202,6 @@ class Tailor
     # observers that key off ending the line will never get triggered, and thus
     # style won't get checked for that line.
     #
-    # @param [Fixnum] column The column that the comment is at.
     # @param [String] file_text The whole file's worth of text.  Required in
     #   order to be able to reconstruct the context in which the line exists.
     # @return [LexedLine] The current lexed line, but with the trailing comment

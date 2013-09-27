@@ -27,7 +27,7 @@ class Tailor
   # to publish events (in this case, characters or string Ruby constructs) of
   # interest to its observers.  Rulers subscribe to those events so that they
   # can detect the problems they're looking for.  These are defined as a Set in
-  # @lexer_observers.  Adding to that list means the Ruler will subscribe to
+  # +@lexer_observers+.  Adding to that list means the Ruler will subscribe to
   # those events.
   #
   # Example:
