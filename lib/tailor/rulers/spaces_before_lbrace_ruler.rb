@@ -71,7 +71,7 @@ class Tailor
         count = count_spaces(lexed_line, column)
         log "Found #{count} space(s) before lbrace."
 
-        if @do_measurement == false
+        if !@do_measurement
           log "Skipping measurement."
         else
           measure(count, lineno, column)

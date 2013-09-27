@@ -53,7 +53,7 @@ class Tailor
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
 
-          if @do_measurement == false
+          if !@do_measurement
             log "Skipping measurement."
           else
             measure(actual_spaces, lineno, column)

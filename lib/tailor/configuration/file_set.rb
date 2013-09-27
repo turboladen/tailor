@@ -99,11 +99,9 @@ class Tailor
       # @param [String] base_dir The directory to get the file list for.
       # @return [Array<String>] The List of files.
       def all_files_in_dir(base_dir)
-        files = Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
+        Dir.glob(File.join(base_dir, '**', '*')).find_all do |file|
           file if File.file?(file)
         end
-
-        files
       end
     end
   end

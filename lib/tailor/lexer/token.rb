@@ -68,7 +68,7 @@ class Tailor
         line_of_text = @options[:full_line_of_text]
         log "Line of text: #{line_of_text}"
 
-        result = catch(:result) do
+        catch(:result) do
           sexp_line = Ripper.sexp(line_of_text)
 
           if sexp_line.nil?
@@ -99,10 +99,8 @@ class Tailor
             end
           end
         end
-
-        result
       end
-      
+
       # @return [Boolean]
       def fake_backslash_line_end?
         self =~ /^# TAILOR REMOVED BACKSLASH\n?$/
