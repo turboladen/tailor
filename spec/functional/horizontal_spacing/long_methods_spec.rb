@@ -47,7 +47,8 @@ describe 'Long method detection' do
     context 'method ends with line that ends with ==' do
       let(:file_name) { 'ok_with_equals' }
       specify {
-        p subject.problems
+        pending 'https://github.com/turboladen/tailor/issues/112'
+
         subject.problems[file_name].size.should be 1 }
     end
   end
