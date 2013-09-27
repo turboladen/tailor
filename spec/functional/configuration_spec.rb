@@ -125,6 +125,12 @@ end
           file =~ /spec\.rb$/
         end.should be_true
       end
+
+      it 'applies the nested configuration within the fileset' do
+        expect(config.file_sets[:default].style[
+          :max_line_length]).to eql [90, { :level => :warn }]
+      end
+
     end
   end
 
@@ -236,7 +242,10 @@ end
       end
 
       it 'creates a :default file set with the runtime file and default style' do
-        config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
+        style = Tailor::Configuration::Style.new.tap do |style|
+          style.max_line_length 90, level: :warn
+        end.to_hash
+        config.file_sets[:default].style.should == style
         config.file_sets[:default].file_list.size.should be 1
         config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
       end
