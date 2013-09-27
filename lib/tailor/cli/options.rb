@@ -9,9 +9,11 @@ require_relative '../configuration'
 class Tailor
   class CLI
     class Options
+      IntegerOrOff = /^(\d+|false|off)$/
       @output_color = true
 
       def self.parse!(args)
+        register_custom_option_types
         options = OpenStruct.new
         options.config_file = ''
         options.output_file = ''
@@ -73,62 +75,62 @@ class Tailor
             options.style[:allow_trailing_line_spaces] = c
           end
 
-          opt.on('--indentation-spaces NUMBER',
+          opt.on('--indentation-spaces NUMBER', IntegerOrOff,
             'Spaces to expect indentation.  (default: 2)') do |c|
             options.style[:indentation_spaces] = c
           end
 
-          opt.on('--max-line-length NUMBER',
+          opt.on('--max-line-length NUMBER', IntegerOrOff,
             'Max characters in a line. (default: 80)') do |c|
             options.style[:max_line_length] = c
           end
 
-          opt.on('--spaces-after-comma NUMBER',
+          opt.on('--spaces-after-comma NUMBER', IntegerOrOff,
             'Spaces to expect after a comma.  (default: 1)') do |c|
             options.style[:spaces_after_comma] = c
           end
 
-          opt.on('--spaces-before-comma NUMBER',
+          opt.on('--spaces-before-comma NUMBER', IntegerOrOff,
             'Spaces to expect before a comma.  (default: 0)') do |c|
             options.style[:spaces_before_comma] = c
           end
 
-          opt.on('--spaces-after-lbrace NUMBER',
+          opt.on('--spaces-after-lbrace NUMBER', IntegerOrOff,
             'Spaces to expect after a {.  (default: 1)') do |c|
             options.style[:spaces_after_lbrace] = c
           end
 
-          opt.on('--spaces-before-lbrace NUMBER',
+          opt.on('--spaces-before-lbrace NUMBER', IntegerOrOff,
             'Spaces to expect before a {.  (default: 1)') do |c|
             options.style[:spaces_before_lbrace] = c
           end
 
-          opt.on('--spaces-before-rbrace NUMBER', Integer,
+          opt.on('--spaces-before-rbrace NUMBER', IntegerOrOff,
             'Spaces to expect before a }.  (default: 1)') do |c|
             options.style[:spaces_before_rbrace] = c
           end
 
-          opt.on('--spaces-in-empty-braces NUMBER', Integer,
+          opt.on('--spaces-in-empty-braces NUMBER', IntegerOrOff,
             'Spaces to expect between a { and }.  (default: 0)') do |c|
             options.style[:spaces_in_empty_braces] = c
           end
 
-          opt.on('--spaces-after-lbracket NUMBER', Integer,
+          opt.on('--spaces-after-lbracket NUMBER', IntegerOrOff,
             'Spaces to expect after a [.  (default: 0)') do |c|
             options.style[:spaces_after_lbracket] = c
           end
 
-          opt.on('--spaces-before-rbracket NUMBER', Integer,
+          opt.on('--spaces-before-rbracket NUMBER', IntegerOrOff,
             'Spaces to expect before a ].  (default: 0)') do |c|
             options.style[:spaces_before_rbracket] = c
           end
 
-          opt.on('--spaces-after-lparen NUMBER', Integer,
+          opt.on('--spaces-after-lparen NUMBER', IntegerOrOff,
             'Spaces to expect after a (.  (default: 0)') do |c|
             options.style[:spaces_after_lparen] = c
           end
 
-          opt.on('--spaces-before-rparen NUMBER', Integer,
+          opt.on('--spaces-before-rparen NUMBER', IntegerOrOff,
             'Spaces to expect before a ).  (default: 0)') do |c|
             options.style[:spaces_before_rparen] = c
           end
@@ -153,17 +155,17 @@ class Tailor
           opt.separator ""
           opt.separator "  * Vertical Spacing"
 
-          opt.on('--max-code-lines-in-class NUMBER', Integer,
+          opt.on('--max-code-lines-in-class NUMBER', IntegerOrOff,
             'Max number lines of code in a class.', '(default: 300)') do |c|
             options.style[:max_code_lines_in_class] = c
           end
 
-          opt.on('--max-code-lines-in-method NUMBER', Integer,
+          opt.on('--max-code-lines-in-method NUMBER', IntegerOrOff,
             'Max number lines of code in a method.', '(default: 30)') do |c|
             options.style[:max_code_lines_in_method] = c
           end
 
-          opt.on('--trailing-newlines NUMBER', Integer,
+          opt.on('--trailing-newlines NUMBER', IntegerOrOff,
             'Newlines to expect at the end of the file.', '(default: 1)') do |c|
             options.style[:trailing_newlines] = c
           end
@@ -269,6 +271,20 @@ tailor --show-config
           File.open('.tailor', 'w') { |f| f.write default_config_file }
         end
       end
+
+      def self.register_custom_option_types
+        # We need to be able to mark integer options as :off as zero may be a
+        # valid value.
+        OptionParser.accept(IntegerOrOff) do |s|
+          raise OptionParser::InvalidArgument unless s =~ IntegerOrOff
+          if s == false.to_s || s == 'off'
+            :off
+          else
+            s.to_i
+          end
+        end
+      end
+
     end
   end
 end
