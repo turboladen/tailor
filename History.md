@@ -1,3 +1,21 @@
+### 1.3.0 2013-09-27
+
+* Features
+    * [gh-91](https://github.com/turboladen/tailor/issues/91) (partial fix)
+        * @acrmp added the spaces_after_conditional ruler, which checks for
+          conditional keywords that aren't followed with a space.
+
+* Bug fixes
+    * [gh-116](https://github.com/turboladen/tailor/issues/116) and
+      [gh-135](https://github.com/turboladen/tailor/issues/135)
+        * Recursive file sets now accept style properly.  Thanks, @acrmp!
+    * [gh-117](https://github.com/turboladen/tailor/issues/117) and
+      [gh-118](https://github.com/turboladen/tailor/issues/118)
+        * Command line options can now be turned off using `false` and `off`.
+          Thanks, @acrmp!
+
+
+
 ### 1.2.1 2013-03-12
 
 * [gh-134](https://github.com/turboladen/tailor/issues/134)

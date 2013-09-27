@@ -35,6 +35,7 @@ project, whatever style that may be.
         * Spacing around { and before }
         * Spacing after [ and before ]
         * Spacing after ( and before )
+        * Spacing after a conditional
     * Vertical spacing
         * Trailing newlines (at the end of the file)
         * Max code lines in a class/module
