@@ -108,6 +108,20 @@ describe Tailor::Configuration do
     end
   end
 
+  describe '#recursive_file_set' do
+    before do
+      subject.instance_variable_set(:@file_sets, {})
+    end
+    it 'yields if a block is provided' do
+      expect do |config|
+        subject.recursive_file_set('*.rb', &config)
+      end.to yield_control
+    end
+    it 'does not raise if a block is not provided' do
+      expect { subject.recursive_file_set('*.rb') }.not_to raise_error
+    end
+  end
+
   describe 'output file' do
     context 'defined' do
       subject do

@@ -213,7 +213,9 @@ class Tailor
     # @param [String] file_expression The expression to match recursively.
     # @param [Symbol] label The file set label to use.
     def recursive_file_set(file_expression, label=:default)
-      file_set("*/**/#{file_expression}", label)
+      file_set("*/**/#{file_expression}", label) do |style|
+        yield style if block_given?
+      end
     end
 
     # Displays the current configuration as a text table.
