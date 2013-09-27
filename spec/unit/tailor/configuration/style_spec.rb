@@ -160,6 +160,7 @@ describe Tailor::Configuration::Style do
         :allow_hard_tabs => [false, { :level => :error }],
         :allow_screaming_snake_case_classes => [false, { :level => :error }],
         :allow_trailing_line_spaces => [false, { :level => :error }],
+        :allow_unnecessary_interpolation => [false, { :level => :warn }],
         :allow_invalid_ruby => [false, { :level => :warn }],
         :indentation_spaces => [2, { :level => :error }],
         :max_code_lines_in_class => [300, { :level => :error }],

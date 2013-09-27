@@ -30,6 +30,7 @@ class Tailor
       define_property :allow_screaming_snake_case_classes
       define_property :allow_trailing_line_spaces
       define_property :allow_invalid_ruby
+      define_property :allow_unnecessary_interpolation
       define_property :indentation_spaces
       define_property :max_code_lines_in_class
       define_property :max_code_lines_in_method
@@ -53,6 +54,7 @@ class Tailor
         allow_hard_tabs(false, level: :error)
         allow_screaming_snake_case_classes(false, level: :error)
         allow_trailing_line_spaces(false, level: :error)
+        allow_unnecessary_interpolation(false, level: :warn)
         allow_invalid_ruby(false, level: :warn)
         indentation_spaces(2, level: :error)
         max_code_lines_in_class(300, level: :error)
