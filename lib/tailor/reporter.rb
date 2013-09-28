@@ -44,8 +44,8 @@ class Tailor
       @formatters.each do |formatter|
         summary = formatter.summary_report(all_problems)
         if formatter.respond_to?(:accepts_output_file) &&
-                         formatter.accepts_output_file &&
-                         !opts[:output_file].empty?
+          formatter.accepts_output_file &&
+          !opts[:output_file].empty?
           File.open(opts[:output_file], 'w') { |f| f.puts summary }
         end
       end

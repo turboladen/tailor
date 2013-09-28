@@ -142,7 +142,8 @@ class Tailor
         relative_path = file.relative_path_from(@pwd)
         problem_count = problem_list.size
 
-        "#{summary_first_col(relative_path)} | " + problem_count.to_s.rjust(5) + ' '
+        "#{summary_first_col(relative_path)} | " +
+          problem_count.to_s.rjust(5) + ' '
       end
 
       def summary_first_col(path, string_size=MAX_STRING_SIZE)

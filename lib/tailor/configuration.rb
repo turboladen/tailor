@@ -89,7 +89,8 @@ class Tailor
         log "Loading config from file: #{user_config_file}"
 
         begin
-          @config_from_file = instance_eval(File.read(user_config_file), user_config_file)
+          @config_from_file =
+            instance_eval(File.read(user_config_file), user_config_file)
           log "Got new config from file: #{user_config_file}"
         rescue LoadError => ex
           raise Tailor::RuntimeError,

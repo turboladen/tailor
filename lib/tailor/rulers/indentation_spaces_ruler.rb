@@ -199,7 +199,9 @@ class Tailor
           msg << ' Must be at an @embexpr_end.'
           log msg
           @embexpr_nesting.pop
-          @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
+          @manager.update_for_closing_reason(:on_embexpr_end,
+            current_lexed_line)
+
           return
         end
 

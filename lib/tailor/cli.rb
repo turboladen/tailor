@@ -47,7 +47,9 @@ class Tailor
         @reporter.file_report(problems_for_file, label)
       end
 
-      @reporter.summary_report(@critic.problems, output_file: @configuration.output_file)
+      @reporter.summary_report(@critic.problems,
+        output_file: @configuration.output_file)
+
       @critic.problem_count(:error) > 0
     end
 

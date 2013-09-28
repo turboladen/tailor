@@ -122,19 +122,19 @@ describe Tailor::Lexer do
       end
     end
   end
-  
+
   describe '#sub_line_ending_backslashes' do
     let!(:text) do
       %Q{command \\
   'something'}
     end
-    
+
     before do
       def subject.sub_publicly(file_text)
         sub_line_ending_backslashes(file_text)
       end
     end
-    
+
     it 'replaces all line-ending backslashes with a comment' do
       subject.sub_publicly(text).should == %Q{command # TAILOR REMOVED BACKSLASH
   'something'}
