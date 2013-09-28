@@ -3,7 +3,7 @@ require_relative '../ruler'
 class Tailor
   module Rulers
 
-    # Checks for spaces after a '{' as given by +@config+.  It skips checking
+    # Checks for spaces after a +{+ as given by +@config+.  It skips checking
     # when:
     # * it's at the end of a line.
     # * the next char is a '}'
@@ -17,7 +17,7 @@ class Tailor
 
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
-          log "Found comment with trailing newline."
+          log 'Found comment with trailing newline.'
           ignored_nl_update(lexed_line, lineno, column)
         end
       end
@@ -57,8 +57,8 @@ class Tailor
           actual_spaces = count_spaces(lexed_line, column)
           next if actual_spaces.nil?
 
-          if @do_measurement == false
-            log "Skipping measurement."
+          if !@do_measurement
+            log 'Skipping measurement.'
           else
             measure(actual_spaces, lineno, column)
           end
@@ -79,7 +79,7 @@ class Tailor
         event_index = lexed_line.event_index(column)
 
         if event_index.nil?
-          log "No lbrace in this line.  Moving on..."
+          log 'No lbrace in this line.  Moving on...'
           @do_measurement = false
           return
         end
@@ -87,7 +87,7 @@ class Tailor
         next_event = lexed_line.at(event_index + 1)
 
         if next_event.nil?
-          log "lbrace must be at the end of the line.  Moving on."
+          log 'lbrace must be at the end of the line.  Moving on.'
           @do_measurement = false
           return 0
         end
@@ -99,14 +99,14 @@ class Tailor
         end
 
         if next_event[1] == :on_rbrace
-          log "lbrace is followed by an rbrace.  Moving on."
+          log 'lbrace is followed by an rbrace.  Moving on.'
           @do_measurement = false
           return 0
         end
 
         second_next_event = lexed_line.at(event_index + 2)
         if second_next_event[1] == :on_comment
-          log "Event + 2 is a comment."
+          log 'Event + 2 is a comment.'
           @do_measurement = false
           return next_event.last.size
         end

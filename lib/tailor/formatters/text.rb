@@ -21,7 +21,7 @@ class Tailor
       # @return [String] The portion of the header that displays the file info.
       def file_header(file)
         file = Pathname(file)
-        message = "# "
+        message = '# '
         message << underscore { "File:\n" }
         message << "#   #{file.relative_path_from(@pwd)}\n"
         message << "#\n"
@@ -32,7 +32,7 @@ class Tailor
       # @return [String] The portion of the header that displays the file_set
       #   label info.
       def file_set_header(file_set)
-        message = "# "
+        message = '# '
         message << underscore { "File Set:\n" }
         message << "#   #{file_set}\n"
         message << "#\n"
@@ -43,19 +43,19 @@ class Tailor
       # @return [String] The portion of the report that displays all of the
       #   problems for the file.
       def problems_header(problem_list)
-        message = "# "
+        message = '# '
         message << underscore { "Problems:\n" }
 
         problem_list.each_with_index do |problem, i|
           color = PROBLEM_LEVEL_COLORS[problem[:level]] || 'white'
 
           position = position(problem[:line], problem[:column])
-          message << "#  " + bold { "#{(i + 1)}." } + "\n"
-          message << "#    * position:  "
+          message << '#  ' + bold { "#{(i + 1)}." } + "\n"
+          message << '#    * position:  '
           message << bold { instance_eval("#{color} position") } + "\n"
-          message << "#    * property:  "
+          message << '#    * property:  '
           message << instance_eval("#{color} problem[:type].to_s") + "\n"
-          message << "#    * message:   "
+          message << '#    * message:   '
           message << instance_eval("#{color} problem[:message].to_s") + "\n"
         end
 
@@ -108,14 +108,14 @@ class Tailor
             bold { report_line }
           end
 
-          summary_table << "# " << report_line << reset << "|\n"
+          summary_table << '# ' << report_line << reset << "|\n"
           i += 1
         end
 
         summary_table << line
         summary_table << summary_level_totals(problems)
-        summary_table << "#   " << bold{ summary_first_col('TOTAL', 67) }
-        summary_table << "|"
+        summary_table << '#   ' << bold{ summary_first_col('TOTAL', 67) }
+        summary_table << '|'
         summary_table << bold { total_problems(problems).to_s.rjust(6) }
         summary_table << " |\n"
         summary_table << line
@@ -125,7 +125,7 @@ class Tailor
 
       def summary_header
         summary_table = line
-        summary_table << "# "
+        summary_table << '# '
         summary_table << bold { 'Tailor Summary'.rjust(40)  }
         summary_table << "|\n".rjust(39)
         summary_table << line
@@ -142,7 +142,7 @@ class Tailor
         relative_path = file.relative_path_from(@pwd)
         problem_count = problem_list.size
 
-        "#{summary_first_col(relative_path)} | " + problem_count.to_s.rjust(5) + " "
+        "#{summary_first_col(relative_path)} | " + problem_count.to_s.rjust(5) + ' '
       end
 
       def summary_first_col(path, string_size=MAX_STRING_SIZE)
@@ -155,14 +155,14 @@ class Tailor
       end
 
       def summary_level_totals(problems)
-        return "" if total_problems(problems).zero?
+        return '' if total_problems(problems).zero?
 
-        output = problem_levels(problems).inject("") do |result, level|
+        output = problem_levels(problems).inject('') do |result, level|
           color = PROBLEM_LEVEL_COLORS[level] || 'white'
 
-          result << "#   "
+          result << '#   '
           result << instance_eval("#{color} { summary_first_col(level.capitalize, 67) }")
-          result << "|"
+          result << '|'
           result << instance_eval("#{color} { problems_at_level(problems, level).size.to_s.rjust(6) }")
           result << " |\n"
         end

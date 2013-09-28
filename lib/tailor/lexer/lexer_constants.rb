@@ -7,38 +7,38 @@ class Tailor
   # * https://github.com/ruby/ruby/blob/trunk/ext/ripper/eventids2.c
   # * https://github.com/ruby/ruby/blob/trunk/parse.y
   module LexerConstants
-    KEYWORDS_TO_INDENT = Set.new [
-      'begin',
-      'case',
-      'class',
-      'def',
-      'do',
-      'else',
-      'elsif',
-      'ensure',
-      'for',
-      'if',
-      'module',
-      'rescue',
-      'unless',
-      'until',
-      'when',
-      'while'
+    KEYWORDS_TO_INDENT = Set.new %w[
+      begin
+      case
+      class
+      def
+      do
+      else
+      elsif
+      ensure
+      for
+      if
+      module
+      rescue
+      unless
+      until
+      when
+      while
     ]
 
-    CONTINUATION_KEYWORDS = Set.new [
-      'elsif',
-      'else',
-      'ensure',
-      'rescue',
-      'when'
+    CONTINUATION_KEYWORDS = Set.new %w[
+      elsif
+      else
+      ensure
+      rescue
+      when
     ]
 
-    KEYWORDS_AND_MODIFIERS = Set.new [
-      'if',
-      'unless',
-      'until',
-      'while'
+    KEYWORDS_AND_MODIFIERS = Set.new %w[
+      if
+      unless
+      until
+      while
     ]
 
     MODIFIERS = {
@@ -68,10 +68,10 @@ class Tailor
       '~>'                              # gem_version op
     ]
 
-    LOOP_KEYWORDS = Set.new [
-      'for',
-      'until',
-      'while'
+    LOOP_KEYWORDS = Set.new %w[
+      for
+      until
+      while
     ]
   end
 end

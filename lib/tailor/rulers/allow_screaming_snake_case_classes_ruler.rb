@@ -16,7 +16,7 @@ class Tailor
         return if previous_event.nil?
 
         if previous_event[1] == :on_kw &&
-          (previous_event.last == "class" || previous_event.last == "module")
+          (previous_event.last == 'class' || previous_event.last == 'module')
           measure(token, lineno, column)
         end
       end
@@ -28,7 +28,7 @@ class Tailor
       # @param [Fixnum] column Column the potential problem is on.
       def measure(token, lineno, column)
         if token.screaming_snake_case?
-          problem_message = "Screaming-snake-case class/module found."
+          problem_message = 'Screaming-snake-case class/module found.'
 
           @problems << Problem.new(problem_type, lineno, column,
             problem_message, @options[:level])

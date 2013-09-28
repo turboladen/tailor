@@ -16,7 +16,7 @@ class Tailor
 
       # @return [Boolean]
       def invalid_ruby?
-        log "Checking for valid Ruby..."
+        log 'Checking for valid Ruby...'
         result = `"#{Gem.ruby}" -c "#{@file_name}"`
 
         result.size.zero?

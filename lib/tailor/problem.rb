@@ -9,7 +9,10 @@ class Tailor
     include LogSwitch::Mixin
 
     # @param [Symbol] type The problem type.
-    # @param [Binding] binding The context that the problem was discovered in.
+    # @param [Fixnum] line The line of the file the problem was found on.
+    # @param [Fixnum] column The column of the file line the problem was found on.
+    # @param [String] message The message to tell the user about the problem.
+    # @param [Fixnum] level The severity of the problem.
     def initialize(type, line, column, message, level)
       @type = type
       @line = line

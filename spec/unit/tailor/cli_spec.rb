@@ -33,7 +33,7 @@ describe Tailor::CLI do
   end
 
   describe '#initialize' do
-    let(:args) { ['last'] }
+    let(:args) { %w[last] }
 
     it 'uses Options to parse the args' do
       Tailor::Configuration.stub(:new).and_return config

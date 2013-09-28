@@ -286,11 +286,11 @@ class Tailor
 
           log "Updated :next after closing; it's now #{@proper[:next_line]}"
 
-          meth = "only_#{event_type.to_s.sub("^on_", '')}?"
+          meth = "only_#{event_type.to_s.sub('^on_', '')}?"
 
           if lexed_line.send(meth.to_sym) || lexed_line.to_s =~ /^\s*end\n?$/
             @proper[:this_line] = @proper[:this_line] - @spaces
-            msg = "End multi-line statement. "
+            msg = 'End multi-line statement. '
             msg < "change_this -= 1 -> #{@proper[:this_line]}."
             log msg
           end

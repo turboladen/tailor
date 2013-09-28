@@ -17,7 +17,7 @@ class Tailor
 
       def comment_update(token, lexed_line, file_text, lineno, column)
         if token =~ /\n$/
-          log "Found comment with trailing newline."
+          log 'Found comment with trailing newline.'
           ignored_nl_update(lexed_line, lineno, column)
         end
       end
@@ -42,7 +42,7 @@ class Tailor
         @comma_columns.each do |c|
           event_index = lexed_line.event_index(c)
           if event_index.nil?
-            log "Event index is nil.  Weird..."
+            log 'Event index is nil.  Weird...'
             next
           end
 

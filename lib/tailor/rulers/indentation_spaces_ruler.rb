@@ -275,7 +275,7 @@ class Tailor
       # @param [Fixnum] lineno The line the potential problem is on.
       # @param [Fixnum] column The column the potential problem is on.
       def measure(lineno, column)
-        log "Measuring..."
+        log 'Measuring...'
 
         if @manager.actual_indentation != @manager.should_be_at
           msg = "Line is indented to column #{@manager.actual_indentation}, "

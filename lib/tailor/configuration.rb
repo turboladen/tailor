@@ -68,7 +68,7 @@ class Tailor
           get_file_sets_from_config_file
         end
       else
-        log "Creating default file set..."
+        log 'Creating default file set...'
         @file_sets = { default: FileSet.new(@runtime_file_list) }
       end
 
@@ -122,7 +122,7 @@ class Tailor
         log "file set style: #{file_set[:style]}"
 
         if @file_sets[label]
-          log "label already exists.  Updating..."
+          log 'label already exists.  Updating...'
           @file_sets[label].update_file_list(file_set[:file_list])
           @file_sets[label].update_style(file_set[:style])
         else
@@ -145,7 +145,7 @@ class Tailor
 
       @options.style.each do |property, value|
         @file_sets.keys.each do |label|
-          if value == :off || value == "off"
+          if value == :off || value == 'off'
             @file_sets[label].style[property][1] = { level: :off }
           else
             @file_sets[label].style[property][0] = value
