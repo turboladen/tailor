@@ -56,7 +56,8 @@ describe Tailor::Reporter do
     context 'with output file' do
       let(:output_file) { 'output.whatever' }
       before do
-        formatter.should_receive(:respond_to?).with(:accepts_output_file).and_return(true)
+        formatter.should_receive(:respond_to?).with(:accepts_output_file).
+          and_return(true)
         formatter.should_receive(:accepts_output_file).and_return(true)
       end
 

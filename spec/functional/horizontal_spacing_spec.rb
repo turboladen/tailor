@@ -55,7 +55,7 @@ end}
         critic.problems.should == { file_name => [] }
       end
     end
-    
+
     context 'line after backslash is too long' do
       let(:contents) do
         %Q{execute 'myscript' do

@@ -124,7 +124,10 @@ class Tailor
       configuration = Tailor::Configuration.new([],
         Tailor::CLI::Options.parse!(@tailor_opts))
       configuration.load!
-      configuration.formatters(formatters) unless formatters.nil? || formatters.empty?
+
+      unless formatters.nil? || formatters.empty?
+        configuration.formatters(formatters)
+      end
 
       configuration
     end
