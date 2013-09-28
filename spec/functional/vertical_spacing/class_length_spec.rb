@@ -10,7 +10,7 @@ CLASS_LENGTH['class_too_long'] =
   include Pizza
 
   def barrel_roll
-    puts "DOABARRELROLL!"
+    puts 'DOABARRELROLL!'
   end
 end}
 

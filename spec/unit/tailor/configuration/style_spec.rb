@@ -161,6 +161,7 @@ describe Tailor::Configuration::Style do
         :allow_screaming_snake_case_classes => [false, { :level => :error }],
         :allow_trailing_line_spaces => [false, { :level => :error }],
         :allow_invalid_ruby => [false, { :level => :warn }],
+        :allow_unnecessary_double_quotes => [false, { :level => :warn }],
         :indentation_spaces => [2, { :level => :error }],
         :max_code_lines_in_class => [300, { :level => :error }],
         :max_code_lines_in_method => [30, { :level => :error }],

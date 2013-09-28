@@ -75,6 +75,12 @@ class Tailor
             options.style[:allow_trailing_line_spaces] = c
           end
 
+          opt.on('--allow-unnecessary-double-quotes BOOL',
+            'Check for unnecessary use of double quotes?',
+            '(default: false)') do |c|
+            options.style[:allow_unnecessary_double_quotes] = c
+          end
+
           opt.on('--indentation-spaces NUMBER', INTEGER_OR_OFF,
             'Spaces to expect indentation.  (default: 2)') do |c|
             options.style[:indentation_spaces] = c

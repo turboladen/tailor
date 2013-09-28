@@ -9,13 +9,13 @@ HARD_TABS = {}
 
 HARD_TABS['hard_tab'] =
   %Q{def something
-\tputs "something"
+\tputs 'something'
 end}
 
 HARD_TABS['hard_tab_with_spaces'] =
   %Q{class Thing
   def something
-\t  puts "something"
+\t  puts 'something'
   end
 end}
 
@@ -27,14 +27,14 @@ end}
 HARD_TABS['hard_tab_with_1_indented_space'] =
   %Q{class Thing
   def something
-\t   puts "something"
+\t   puts 'something'
   end
 end}
 
 HARD_TABS['hard_tab_with_2_indented_spaces'] =
   %Q{class Thing
   def something
-\t    puts "something"
+\t    puts 'something'
   end
 end}
 
