@@ -7,7 +7,7 @@ Feature: Valid Ruby
     Given a file named "extra_end.rb" with:
     """
     def a_method
-      puts "stuff"
+      puts 'stuff'
     end
     end
 
