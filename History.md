@@ -1,3 +1,10 @@
+### 1.3.1 2013-09-29
+
+* Bug fixes
+    * [gh-147](https://github.com/turboladen/tailor/issues/147)
+        * Added license type to the gemspec.
+
+
 ### 1.3.0 2013-09-27
 
 * Features
