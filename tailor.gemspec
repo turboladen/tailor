@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "tailor/version"
+$:.push File.expand_path('../lib', __FILE__)
+require 'tailor/version'
 
 Gem::Specification.new do |s|
-  s.name = "tailor"
+  s.name = 'tailor'
   s.version = Tailor::VERSION
 
-  s.author = "Steve Loveless"
-  s.summary = "A Ruby style & complexity measurer"
+  s.author = 'Steve Loveless'
+  s.summary = 'A Ruby style & complexity measurer'
   s.description = <<-DESC
 tailor parses Ruby files and measures them with some style and static analysis
 "rulers".  Default values for the Rulers are based on a number of style guides
@@ -17,25 +17,26 @@ http://wiki.github.com/turboladen/tailor.
 tailor's goal is to help you be consistent with your code, throughout your
 project, whatever style that may be.
   DESC
-  s.email = "steve.loveless@gmail.com"
-  s.homepage = "http://github.com/turboladen/tailor"
+  s.email = 'steve.loveless@gmail.com'
+  s.homepage = 'http://github.com/turboladen/tailor'
+  s.license = 'MIT'
 
   s.extra_rdoc_files = %w(History.md README.md)
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
 
-  s.add_runtime_dependency %q<log_switch>, ">= 0.3.0"
-  s.add_runtime_dependency %q<term-ansicolor>, ">= 1.0.5"
-  s.add_runtime_dependency %q<text-table>, ">= 1.2.2"
+  s.add_runtime_dependency 'log_switch', '>= 0.3.0'
+  s.add_runtime_dependency 'term-ansicolor', '>= 1.0.5'
+  s.add_runtime_dependency 'text-table', '>= 1.2.2'
 
-  s.add_development_dependency %q<aruba>
-  s.add_development_dependency %q<bundler>
-  s.add_development_dependency %q<cucumber>, ">= 1.0.2"
-  s.add_development_dependency %q<fakefs>, ">= 0.4.2"
-  s.add_development_dependency %q<rake>
-  s.add_development_dependency %q<rspec>, ">= 2.5.0"
-  s.add_development_dependency %q<simplecov>, ">= 0.4.0"
-  s.add_development_dependency %q<yard>, ">= 0.7.0"
+  s.add_development_dependency 'aruba'
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'cucumber', '>= 1.0.2'
+  s.add_development_dependency 'fakefs', '>= 0.4.2'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec', '>= 2.5.0'
+  s.add_development_dependency 'simplecov', '>= 0.4.0'
+  s.add_development_dependency 'yard', '>= 0.7.0'
 end
 
