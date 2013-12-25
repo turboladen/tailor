@@ -33,9 +33,6 @@ class Tailor
           on_rparen: :on_lparen
         }
 
-        # Allows for updating the indent expectation for the current line.
-        attr_accessor :amount_to_change_this
-
         # @return [Fixnum] The actual number of characters the current line is
         #   indented.
         attr_reader :actual_indentation
@@ -52,7 +49,6 @@ class Tailor
           @proper = { this_line: 0, next_line: 0 }
           @actual_indentation = 0
           @indent_reasons = []
-          @amount_to_change_this = 0
 
           start
         end
@@ -79,20 +75,12 @@ class Tailor
           end
         end
 
-        # Sets up expectations in +@proper+ based on the number of +/- reasons
-        # to change this and next lines, given in +@amount_to_change_this+.
-        def set_up_line_transition
-          log "Amount to change this line: #{@amount_to_change_this}"
-          decrease_this_line if @amount_to_change_this < 0
-        end
-
         # Should be called just before moving to the next line.  This sets the
         # expectation set in +@proper[:next_line]+ to
         # +@proper[:this_line]+.
         def transition_lines
           if started?
             log 'Resetting change_this to 0.'
-            @amount_to_change_this = 0
             log 'Setting @proper[:this_line] = that of :next_line'
             @proper[:this_line] = @proper[:next_line]
             log "Transitioning @proper[:this_line] to #{@proper[:this_line]}"
@@ -286,10 +274,10 @@ class Tailor
 
           log "Updated :next after closing; it's now #{@proper[:next_line]}"
 
-          meth = "only_#{event_type.to_s.sub('^on_', '')}?"
+          meth = "only_#{event_type.to_s.sub(/^on_/, '')}?"
 
           if lexed_line.send(meth.to_sym) || lexed_line.to_s =~ /^\s*end\n?$/
-            @proper[:this_line] = @proper[:this_line] - @spaces
+            @proper[:this_line] = [0, @proper[:this_line] - @spaces].max
             msg = 'End multi-line statement. '
             msg < "change_this -= 1 -> #{@proper[:this_line]}."
             log msg

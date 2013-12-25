@@ -44,7 +44,7 @@ describe Tailor::Rulers::IndentationSpacesRuler do
 
   describe '#embexpr_end_update' do
     before do
-      lexed_line.should_receive(:only_on_embexpr_end?).and_return(false)
+      lexed_line.should_receive(:only_embexpr_end?).and_return(false)
     end
 
     it 'pops @embexpr_nesting' do
