@@ -69,17 +69,6 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     end
   end
 
-  describe '#set_up_line_transition' do
-    context '@amount_to_change_this < 0' do
-      before { subject.instance_variable_set(:@amount_to_change_this, -1) }
-
-      it 'should call #decrease_this_line' do
-        subject.should_receive(:decrease_this_line)
-        subject.set_up_line_transition
-      end
-    end
-  end
-
   describe '#transition_lines' do
     context '#started? is true' do
       before { subject.stub(:started?).and_return true }

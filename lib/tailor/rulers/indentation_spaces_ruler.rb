@@ -67,18 +67,6 @@ class Tailor
       # More info: https://bugs.ruby-lang.org/issues/6211
       def embexpr_end_update(current_lexed_line, lineno, column)
         @embexpr_nesting.pop
-
-        if @manager.multi_line_braces?(lineno)
-          log 'End of multi-line braces!'
-
-          if current_lexed_line.only_embexpr_end?
-            @manager.amount_to_change_this -= 1
-            msg = 'lonely embexpr_end.  '
-            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
-            log msg
-          end
-        end
-
         @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
       end
 
@@ -110,7 +98,6 @@ class Tailor
         end
 
         @manager.update_actual_indentation(current_lexed_line)
-        @manager.set_up_line_transition
         measure(lineno, column)
 
         log "indent reasons on exit: #{@manager.indent_reasons}"
@@ -172,8 +159,6 @@ class Tailor
             last[:event_type], current_lexed_line)
         end
 
-        @manager.set_up_line_transition
-
         unless current_lexed_line.end_of_multi_line_string?
           measure(lineno, column)
         end
@@ -205,47 +190,14 @@ class Tailor
           return
         end
 
-        if @manager.multi_line_braces?(lineno)
-          log 'End of multi-line braces!'
-
-          if current_lexed_line.only_rbrace?
-            @manager.amount_to_change_this -= 1
-            msg = 'lonely rbrace.  '
-            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
-            log msg
-          end
-        end
-
         @manager.update_for_closing_reason(:on_rbrace, current_lexed_line)
       end
 
       def rbracket_update(current_lexed_line, lineno, column)
-        if @manager.multi_line_brackets?(lineno)
-          log 'End of multi-line brackets!'
-
-          if current_lexed_line.only_rbracket?
-            @manager.amount_to_change_this -= 1
-            msg = 'lonely rbracket.  '
-            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
-            log msg
-          end
-        end
-
         @manager.update_for_closing_reason(:on_rbracket, current_lexed_line)
       end
 
       def rparen_update(current_lexed_line, lineno, column)
-        if @manager.multi_line_parens?(lineno)
-          log 'End of multi-line parens!'
-
-          if current_lexed_line.only_rparen?
-            @manager.amount_to_change_this -= 1
-            msg = 'lonely rparen.  '
-            msg << "change_this -= 1 -> #{@manager.amount_to_change_this}"
-            log msg
-          end
-        end
-
         @manager.update_for_closing_reason(:on_rparen, current_lexed_line)
       end
 
