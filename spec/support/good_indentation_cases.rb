@@ -143,7 +143,7 @@ INDENT_OK['rescue_ending_with_comma'] =
 rescue SocketError, ArgumentError, SystemCallError,
   Net::SCP::Exception, Timeout::Error => ex
   @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
-    "\#{ex.message}"
+    ex.message
 end}
 
 INDENT_OK['rescue_ending_with_comma_trailing_comment'] =
@@ -154,7 +154,7 @@ INDENT_OK['rescue_ending_with_comma_trailing_comment'] =
 rescue SocketError, ArgumentError, SystemCallError,     # comment
   Net::SCP::Exception, Timeout::Error => ex
   @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
-    "\#{ex.message}"
+    ex.message
 end}
 
 INDENT_OK['def_rescue'] =
@@ -738,7 +738,7 @@ end}
 
 INDENT_OK['combo3'] =
   %Q{def report_turducken(results, performance_results)
-  stuffing[:log_files] = { "\#{File.basename @logger.log_file_location}" =>
+  stuffing[:log_files] = { "\#{File.basename @logger.log_file_location}/path" =>
     File.read(@logger.log_file_location).gsub(/(?<f><)(?<q>\\/)?(?<w>\\w)/,
       '\\k<f>!\\k<q>\\k<w>') }.merge remote_logs
 
