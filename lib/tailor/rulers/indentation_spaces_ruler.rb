@@ -1,7 +1,9 @@
+require 'nokogiri'
 require_relative '../ruler'
 require_relative '../lexed_line'
 require_relative '../lexer/token'
 require_relative 'indentation_spaces_ruler/indentation_manager'
+require_relative 'indentation_spaces_ruler/line_continuations'
 
 class Tailor
   module Rulers
@@ -12,6 +14,7 @@ class Tailor
           :comment,
           :embexpr_beg,
           :embexpr_end,
+          :file_beg,
           :ignored_nl,
           :kw,
           :lbrace,
@@ -68,6 +71,13 @@ class Tailor
       def embexpr_end_update(current_lexed_line, lineno, column)
         @embexpr_nesting.pop
         @manager.update_for_closing_reason(:on_embexpr_end, current_lexed_line)
+      end
+
+      def file_beg_update(file_name)
+        # For statements that continue over multiple lines we may want to treat
+        # the second and subsequent lines differently and ident them further,
+        # controlled by the :line_continuations option.
+        @lines = LineContinuations.new(file_name) if line_continuations?
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
@@ -224,6 +234,20 @@ class Tailor
         !@tstring_nesting.empty?
       end
 
+      def line_continuations?
+        @options[:line_continuations] and @options[:line_continuations] != :off
+      end
+
+      def with_line_continuations(lineno, should_be_at)
+        return should_be_at unless line_continuations?
+        if @lines.line_is_continuation?(lineno) and
+          @lines.line_has_nested_statements?(lineno)
+          should_be_at + @config
+        else
+          should_be_at
+        end
+      end
+
       # Checks if the line's indentation level is appropriate.
       #
       # @param [Fixnum] lineno The line the potential problem is on.
@@ -231,9 +255,11 @@ class Tailor
       def measure(lineno, column)
         log 'Measuring...'
 
-        if @manager.actual_indentation != @manager.should_be_at
+        should_be_at = with_line_continuations(lineno, @manager.should_be_at)
+
+        if @manager.actual_indentation != should_be_at
           msg = "Line is indented to column #{@manager.actual_indentation}, "
-          msg << "but should be at #{@manager.should_be_at}."
+          msg << "but should be at #{should_be_at}."
 
           @problems << Problem.new(problem_type, lineno,
             @manager.actual_indentation, msg, @options[:level])

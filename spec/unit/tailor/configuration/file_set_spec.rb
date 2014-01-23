@@ -13,7 +13,7 @@ describe Tailor::Configuration::FileSet do
         it 'builds an Array with that file\'s expanded path' do
           new_list = subject.instance_eval { build_file_list('./test.rb') }
           new_list.should be_an Array
-          new_list.first.should match /.+\/test.rb$/
+          new_list.first.should match %r[/test.rb$]
         end
       end
 
@@ -31,7 +31,7 @@ describe Tailor::Configuration::FileSet do
 
       it 'returns the Array with expanded file paths' do
         subject.instance_eval { build_file_list(['test.rb']) }.
-          first.should match /.+\/test.rb$/
+          first.should match %r[/test.rb$]
       end
     end
 
@@ -59,7 +59,7 @@ describe Tailor::Configuration::FileSet do
       subject.update_file_list('test2.rb')
       subject.instance_variable_get(:@file_list).size.should be 2
       subject.instance_variable_get(:@file_list).last.
-        should match /.+\/test2.rb/
+        should match %r[/test2.rb]
     end
   end
 end
