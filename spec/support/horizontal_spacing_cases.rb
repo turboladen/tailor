@@ -87,7 +87,7 @@ H_SPACING_OK['empty_hash_in_string_in_block'] =
   %Q{[1].map { |n| { :first => "\#{n}-\#{{}}" } }}
 
 H_SPACING_OK['string_interp_with_colonop'] =
-  %Q{"\#{::Rails.root}"}
+  %Q{"\#{::Rails.root + 'file'}"}
 
 
 

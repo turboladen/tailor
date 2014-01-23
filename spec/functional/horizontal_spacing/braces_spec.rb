@@ -224,15 +224,16 @@ describe "Detection of spacing around braces" do
 
     context "no space before consecutive rbraces" do
       let(:file_name) { 'no_space_before_consecutive_rbraces' }
-      specify { critic.problems[file_name].size.should be 2 }
-      specify { critic.problems[file_name].first[:type].should == "spaces_before_rbrace" }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 72 }
-      specify { critic.problems[file_name].first[:level].should be :error }
-      specify { critic.problems[file_name].last[:type].should == "spaces_before_rbrace" }
-      specify { critic.problems[file_name].last[:line].should be 1 }
-      specify { critic.problems[file_name].last[:column].should be 73 }
-      specify { critic.problems[file_name].last[:level].should be :error }
+      let(:problems) { critic.problems[file_name].select { |p| p[:type] == 'spaces_before_rbrace' } }
+      specify { problems.size.should be 2 }
+      specify { problems.first[:type].should == "spaces_before_rbrace" }
+      specify { problems.first[:line].should be 1 }
+      specify { problems.first[:column].should be 72 }
+      specify { problems.first[:level].should be :error }
+      specify { problems.last[:type].should == "spaces_before_rbrace" }
+      specify { problems.last[:line].should be 1 }
+      specify { problems.last[:column].should be 73 }
+      specify { problems.last[:level].should be :error }
     end
   end
 end
