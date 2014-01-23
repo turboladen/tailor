@@ -449,6 +449,7 @@ tailor.execute!
 * Rubies (tested)
     * 1.9.3
     * 2.0.0
+    * 2.1.0
 
 * Gems
     * log_switch
