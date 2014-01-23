@@ -61,7 +61,8 @@ class Tailor
 
           if node.respond_to?(:each)
             # First child is the node name
-            node.drop(1).each do |child|
+            node.drop(1) if node.first.is_a?(Symbol)
+            node.each do |child|
               if position_node?(child)
                 xml_position_node(doc, xml_node, child)
               else

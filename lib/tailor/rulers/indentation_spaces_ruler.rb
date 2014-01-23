@@ -2,6 +2,7 @@ require 'nokogiri'
 require_relative '../ruler'
 require_relative '../lexed_line'
 require_relative '../lexer/token'
+require_relative 'indentation_spaces_ruler/argument_alignment'
 require_relative 'indentation_spaces_ruler/indentation_manager'
 require_relative 'indentation_spaces_ruler/line_continuations'
 
@@ -78,6 +79,7 @@ class Tailor
         # the second and subsequent lines differently and ident them further,
         # controlled by the :line_continuations option.
         @lines = LineContinuations.new(file_name) if line_continuations?
+        @args = ArgumentAlignment.new(file_name) if argument_alignment?
       end
 
       def ignored_nl_update(current_lexed_line, lineno, column)
@@ -248,6 +250,15 @@ class Tailor
         end
       end
 
+      def argument_alignment?
+        @options[:argument_alignment] and @options[:argument_alignment] != :off
+      end
+
+      def with_argument_alignment(lineno, should_be_at)
+        return should_be_at unless argument_alignment?
+        @args.expected_column(lineno, should_be_at)
+      end
+
       # Checks if the line's indentation level is appropriate.
       #
       # @param [Fixnum] lineno The line the potential problem is on.
@@ -256,6 +267,7 @@ class Tailor
         log 'Measuring...'
 
         should_be_at = with_line_continuations(lineno, @manager.should_be_at)
+        should_be_at = with_argument_alignment(lineno, should_be_at)
 
         if @manager.actual_indentation != should_be_at
           msg = "Line is indented to column #{@manager.actual_indentation}, "
