@@ -45,6 +45,7 @@ project, whatever style that may be.
         * Camel case method names
     * Common syntax
         * Conditionals wrapped in parentheses
+        * Unnecessary interpolation in strings
     * Valid Ruby (warns by default)
 * Configurable
     * Specify style in

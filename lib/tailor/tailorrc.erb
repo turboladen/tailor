@@ -98,6 +98,10 @@
 #                         wrapped in parentheses.
 #                         Default:      true
 #
+# allow_unnecessary_interpolation
+#                         Checks for unnecessary interpolation in strings.
+#                         Default:      false
+#
 Tailor.config do |config|
   config.formatters "<%= formatters.join(', ') %>"
   config.file_set '<%= file_list %>' do |style|<% style.each do |rule, value| %>

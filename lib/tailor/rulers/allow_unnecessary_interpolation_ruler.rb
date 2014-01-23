@@ -28,12 +28,13 @@ class Tailor
         each_string(@tokens).each do |string|
           measure(line_number(@tokens.first), string)
         end
+
         reset_tokens
       end
 
-      # Checks if variables are interpolated unnecessarily
+      # Checks if variables are interpolated unnecessarily.
       #
-      # @param [Array] tokens The filtered tokens
+      # @param [Array] tokens The filtered tokens.
       def measure(lineno, tokens)
         return if @config
         if no_content?(tokens) and one_expression?(tokens)
@@ -81,7 +82,6 @@ class Tailor
       def string_tokens(lexed_line)
         lexed_line.select { |t| EVENTS.include?(t[1]) }
       end
-
     end
   end
 end
