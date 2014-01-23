@@ -34,7 +34,9 @@ describe 'Conditional spacing' do
   context :no_space_after_if do
     it 'warns when there is no space after an if statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 0,
@@ -46,7 +48,9 @@ describe 'Conditional spacing' do
     it 'warns with the correct number of expected spaces' do
       style.spaces_after_conditional 2, level: :error
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 0,
@@ -58,26 +62,34 @@ describe 'Conditional spacing' do
     it 'does not warn if spaces are set to zero' do
       style.spaces_after_conditional 0, level: :error
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
 
     it 'does not warn if spaces are disabled' do
       style.spaces_after_conditional 2, level: :off
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
   end
 
   context :space_after_if do
     it 'does not warn when there is a space after the if' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
 
     it 'warns if spaces has been set to zero' do
       style.spaces_after_conditional 0, level: :error
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 0,
@@ -90,14 +102,18 @@ describe 'Conditional spacing' do
   context :no_parens do
     it 'never warns' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
   end
 
   context :nested_parens do
     it 'warns when there is no space after an if statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 0,
@@ -110,7 +126,9 @@ describe 'Conditional spacing' do
   context :no_space_after_unless do
     it 'warns when there is no space after an unless statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 0,
@@ -123,14 +141,18 @@ describe 'Conditional spacing' do
   context :space_after_unless do
     it 'does not warn when there is space after an unless statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
   end
 
   context :no_space_after_case do
     it 'warns when there is no space after a case statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to eql [{
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to eql [{
         :type => 'spaces_after_conditional',
         :line => 1,
         :column => 5,
@@ -143,7 +165,9 @@ describe 'Conditional spacing' do
   context :space_after_case do
     it 'does not warn when there is space after a case statement' do
       critic.check_file(file_name, style.to_hash)
-      expect(critic.problems[file_name]).to be_empty
+      expect(critic.problems[file_name].reject do |p|
+        p[:type] == 'conditional_parentheses'
+      end).to be_empty
     end
   end
 end
