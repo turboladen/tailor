@@ -11,6 +11,11 @@
 #
 # indentation_spaces      The number of spaces to consider a proper indent.
 #                         Default:      2
+#                         Takes a secondary, boolean option: line_continuations,
+#                         to indicate that a statement that spans multiple lines
+#                         should indent the second and subsequent lines.  Ex.:
+#                         style.indentation_spaces 2, level: :error, line_continuations: true
+#
 #
 # max_line_length         The maximum number of characters in a line before
 #                         tailor complains.
