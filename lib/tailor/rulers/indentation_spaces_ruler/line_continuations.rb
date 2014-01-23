@@ -20,7 +20,7 @@ class Tailor
         def line_is_continuation?(lineno)
           @continuations ||= begin
             statements = @ast.xpath('//stmts_add/*[
-              preceding-sibling::stmts_new]')
+              preceding-sibling::stmts_new | preceding-sibling::stmts_add]')
             statements.reject do |stmt|
               s = stmt.xpath('ancestor::stmts_add').size
               stmt.xpath("descendant::pos[count(ancestor::stmts_add) = #{s}]/
