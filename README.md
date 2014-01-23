@@ -43,6 +43,8 @@ project, whatever style that may be.
     * Name cases
         * Snake case class & module names
         * Camel case method names
+    * Common syntax
+        * Conditionals wrapped in parentheses
     * Valid Ruby (warns by default)
 * Configurable
     * Specify style in

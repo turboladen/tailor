@@ -90,6 +90,14 @@
 #                         the file.
 #                         Default:      1
 #
+#------------------------------------------------------------------------------
+# Common Syntax
+#------------------------------------------------------------------------------
+# allow_conditional_parentheses
+#                         Checks to see if a conditional is unnecessarily
+#                         wrapped in parentheses.
+#                         Default:      true
+#
 Tailor.config do |config|
   config.formatters "<%= formatters.join(', ') %>"
   config.file_set '<%= file_list %>' do |style|<% style.each do |rule, value| %>

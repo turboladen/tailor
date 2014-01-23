@@ -60,7 +60,6 @@ class Tailor
       def without_spaces(tokens)
         tokens.reject { |t| t[1] == :on_sp }
       end
-
     end
   end
 end

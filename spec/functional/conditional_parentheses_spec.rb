@@ -28,6 +28,7 @@ describe 'Conditional parentheses' do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off
     style.allow_invalid_ruby true, level: :off
+
     style
   end
 
@@ -36,11 +37,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -59,11 +62,13 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -74,6 +79,7 @@ describe 'Conditional parentheses' do
   context :with_parentheses_no_space do
     it 'warns' do
       critic.check_file(file_name, style.to_hash)
+
       expect(critic.problems[file_name].select do |p|
         p[:type] == 'conditional_parentheses'
       end).to eql [{
@@ -84,6 +90,7 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
@@ -91,9 +98,11 @@ describe 'Conditional parentheses' do
         p[:type] == 'conditional_parentheses'
       end).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
+
       expect(critic.problems[file_name].select do |p|
         p[:type] == 'conditional_parentheses'
       end).to be_empty
@@ -105,11 +114,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -122,11 +133,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -139,11 +152,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -162,11 +177,13 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -179,11 +196,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -202,11 +221,13 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -219,11 +240,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -242,11 +265,13 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -259,11 +284,13 @@ describe 'Conditional parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
@@ -282,16 +309,17 @@ describe 'Conditional parentheses' do
         :level=> :warn
       }]
     end
+
     it 'does not warn when parentheses are allowed' do
       style.allow_conditional_parentheses true, level: :warn
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
+
     it 'does not warn when parentheses are disabled' do
       style.allow_conditional_parentheses false, level: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to be_empty
     end
   end
-
 end
