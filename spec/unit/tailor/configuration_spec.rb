@@ -40,6 +40,7 @@ describe Tailor::Configuration do
           file_list: [],
           style: {
             allow_camel_case_methods: [false, { level: :error }],
+            allow_conditional_parentheses: [false, { level: :warn }],
             allow_hard_tabs: [false, { level: :error }],
             allow_screaming_snake_case_classes: [false, { level: :error }],
             allow_trailing_line_spaces: [false, { level: :error }],

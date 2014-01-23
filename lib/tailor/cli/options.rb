@@ -64,6 +64,12 @@ class Tailor
 
           opt.separator ''
           opt.separator '  * Horizontal Spacing:'
+
+          opt.on('--allow-conditional-parentheses BOOL',
+            'Check for conditionals wrapped in parentheses?  (default: true)') do |c|
+            options.style[:allow_conditional_parentheses] = c
+          end
+
           opt.on('--allow-hard-tabs BOOL',
             'Check for hard tabs?  (default: true)') do |c|
             options.style[:allow_hard_tabs] = c
