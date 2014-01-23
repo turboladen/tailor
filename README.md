@@ -452,6 +452,7 @@ tailor.execute!
 
 * Gems
     * log_switch
+    * nokogiri
     * term-ansicolor
     * text-table
 
