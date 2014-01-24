@@ -83,4 +83,21 @@ end}
       pending
     end
   end
+
+  context 'block chained on a block' do
+    let(:file_name) { 'block_chain' }
+
+    let(:contents) do
+      %Q{{
+  a: 1
+}.each do |k, v|
+  puts k, v
+end}
+    end
+
+    it 'is OK' do
+      critic.check_file(file_name, style.to_hash)
+      critic.problems.should == { file_name =>  [] }
+    end
+  end
 end
