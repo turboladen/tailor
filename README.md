@@ -466,12 +466,23 @@ tailor.execute!
 ## INSTALL:
 
     $ (sudo) gem install tailor
+    
+
+## RELATED PROJECTS:
+
+* [rubocop](https://github.com/bbatsov/rubocop). *A robust Ruby code analyzer, based on the community Ruby style guide.*
+* [cane](https://github.com/square/cane). *Code quality threshold checking as part of your build*
+* [roodi](https://github.com/roodi/roodi).  *Ruby Object Oriented Design Inferometer*
+* [reek](https://github.com/troessner/reek/wiki). *Code smell detector for Ruby*
+* [flog](http://ruby.sadi.st/Ruby_Sadist.html). *Flog shows you the most torturous code you wrote. The more painful the code, the higher the score.*
+* [foodcritic](http://www.foodcritic.io).  *Foodcritic is a helpful lint tool you can use to check your Chef cookbooks for common problems.*
+* [metric_fu](https://github.com/metricfu/metric_fu).  *A fist full of code metrics*
 
 ## LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2010-2013 Steve Loveless
+Copyright (c) 2010-2014 Steve Loveless
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the 'Software'), to deal
