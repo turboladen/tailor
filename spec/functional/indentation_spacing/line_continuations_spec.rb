@@ -4,7 +4,6 @@ require 'tailor/critic'
 require 'tailor/configuration/style'
 
 describe 'Line continuation indentation' do
-
   def file_name
     self.class.description
   end
@@ -28,6 +27,8 @@ describe 'Line continuation indentation' do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off
     style.allow_invalid_ruby true, level: :off
+    style.allow_unnecessary_double_quotes true, level: :off
+
     style
   end
 
@@ -175,8 +176,6 @@ describe 'Line continuation indentation' do
           critic.check_file(file_name, style.to_hash)
           expect(critic.problems[file_name]).to be_empty
         end
-
       end
     end
-
 end

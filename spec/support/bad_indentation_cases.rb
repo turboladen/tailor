@@ -28,20 +28,20 @@ INDENT_1['def_indented_end'] =
 
 INDENT_1['def_content_indented_end'] =
   %Q{def a
-  puts "stuff"
+  puts 'stuff'
  end}
 
 INDENT_1['class_def_content_outdented_end'] =
   %Q{class A
   def a
-    puts "stuff"
+    puts 'stuff'
  end
 end}
 
 INDENT_1['class_def_outdented_content'] =
   %Q{class A
   def a
-   puts "stuff"
+   puts 'stuff'
   end
 end}
 
@@ -56,9 +56,9 @@ INDENT_1['case_indented_whens_level'] =
   %Q{def my_method
    case true
   when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -66,9 +66,9 @@ INDENT_1['case_indented_whens_level_trailing_comment'] =
   %Q{def my_method
    case true        # comment
   when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -76,9 +76,9 @@ INDENT_1['case_outdented_whens_level'] =
   %Q{def my_method
  case true
   when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -86,9 +86,9 @@ INDENT_1['case_when_indented_whens_level'] =
   %Q{def my_method
   case true
    when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -96,9 +96,9 @@ INDENT_1['case_when_outdented_whens_level'] =
   %Q{def my_method
   case true
  when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -106,35 +106,35 @@ INDENT_1['case_indented_whens_in'] =
   %Q{def my_method
    case true
     when true
-      puts "stuff"
+      puts 'stuff'
     when false
-      puts "blah blah"
+      puts 'blah blah'
   end
 end}
 
 INDENT_1['while_do_indented'] =
   %Q{ while true do
-  puts "something"
+  puts 'something'
 end}
 
 INDENT_1['while_do_outdented'] =
   %Q{def my_method
  while true do
-    puts "something"
+    puts 'something'
   end
 end}
 
 INDENT_1['while_do_content_outdented'] =
   %Q{def my_method
   while true do
-   puts "something"
+   puts 'something'
   end
 end}
 
 INDENT_1['while_do_content_indented'] =
   %Q{def my_method
   while true do
-     puts "something"
+     puts 'something'
   end
 end}
 
@@ -240,7 +240,7 @@ INDENT_1['multi_line_string_concat_with_plus_out'] =
  '/profiles/DVR5000/ssdp_notification.erb'}
 
 INDENT_1['multi_line_method_call_end_in'] =
-  %Q{def initialize(raw_response)
+  %q{def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
     raise RTSP::Error,
       "#{self.class} received nil string--this shouldn't happen."

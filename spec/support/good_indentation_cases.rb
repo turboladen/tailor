@@ -101,7 +101,7 @@ INDENT_OK['assignment_twolevel_array_multistatement'] =
 INDENT_OK['assignment_twolevel_paren_multistatement'] =
   %Q{result = Integer(
   String.new(
-    "1"
+    '1'
   ).to_i,
   16
 )}
@@ -161,7 +161,7 @@ INDENT_OK['def_rescue'] =
   %Q{def some_method
   do_something(one, two)
 rescue => e
-  log "It didn't work."
+  log 'It didn't work.'
   raise e
 end}
 
@@ -189,7 +189,7 @@ end}
 INDENT_OK['nested_def'] =
   %Q{def first_method
   def second_method
-    puts "hi"
+    puts 'hi'
   end
 end}
 
@@ -233,12 +233,12 @@ class MyClass
   include Stuff
 
   def a_method
-    puts "hello"
+    puts 'hello'
   end
 end}
 
 INDENT_OK['if_modifier'] =
-  %Q{puts "hi" if nil.nil?}
+  %Q{puts 'hi' if nil.nil?}
 
 INDENT_OK['if_modifier2'] =
   %Q{start_key_registration_server if @profiles.values.include? :SM5000}
@@ -249,7 +249,7 @@ INDENT_OK['def_return_if_modifier'] =
 end}
 
 INDENT_OK['unless_modifier'] =
-  %Q{puts "hi" unless nil.nil?}
+  %Q{puts 'hi' unless nil.nil?}
 
 INDENT_OK['def_return_unless_modifier'] =
   %Q{def a_method
@@ -269,9 +269,9 @@ INDENT_OK['case_whens_level'] =
   %Q{def my_method
   case true
   when true
-    puts "stuff"
+    puts 'stuff'
   when false
-    puts "blah blah"
+    puts 'blah blah'
   end
 end}
 
@@ -297,7 +297,7 @@ end}
 
 INDENT_OK['while_do_loop'] =
   %Q{while true do
-  puts "something"
+  puts 'something'
 end}
 
 INDENT_OK['while_do_loop2'] =
@@ -311,7 +311,7 @@ end}
 
 INDENT_OK['until_do_loop'] =
   %Q{until true do
-  puts "something"
+  puts 'something'
 end}
 
 INDENT_OK['until_do_loop2'] =
@@ -430,22 +430,22 @@ INDENT_OK['braces_combo'] =
 
 INDENT_OK['deep_hash_with_rockets'] =
   %Q[im_deep =
-  { "one" =>
-    { "1" =>
-      { "a" => "A",
-        "b" => "B",
-        "c" => "C" },
-      "2" =>
-      { "d" => "D",
-        "e" => "E",
-        "f" => "F" } } }]
+  { 'one' =>
+    { '1' =>
+      { 'a' => 'A',
+        'b' => 'B',
+        'c' => 'C' },
+      '2' =>
+      { 'd' => 'D',
+        'e' => 'E',
+        'f' => 'F' } } }]
 
 INDENT_OK['embedded_strings_in_embedded_strings'] =
   %q[def friendly_time(time)
   if hours < 24
     "#{(hours > 0) ? "#{hours} hour" : '' }#{(hours > 1) ? 's' : ''}" +
       " #{(mins > 0) ? "#{mins} minute" : '' }#{(mins > 1) ? 's' : ''}" +
-      " #{seconds} second#{(seconds > 1) ? "s" : ''} ago"
+      " #{seconds} second#{(seconds > 1) ? 's' : ''} ago"
   else
     time.to_s
   end
@@ -483,8 +483,8 @@ suckaaaaaa!
 ]}
 
 INDENT_OK['multi_line_brackets_embedded_hashes'] =
-  %Q{summary_table.rows << [{ value: "File", align: :center },
-  { value: "Total Problems", align: :center }]}
+  %Q{summary_table.rows << [{ value: 'File', align: :center },
+  { value: 'Total Problems', align: :center }]}
 
 INDENT_OK['brackets_combo'] =
   %Q{[2]
@@ -634,7 +634,7 @@ INDENT_OK['method_lonely_args'] =
   %Q{def your_thing(
   one
 )
-  puts "stuff"
+  puts 'stuff'
 end}
 
 #------------------------------------------------------------------------------
@@ -688,10 +688,10 @@ INDENT_OK['block_in_block_ends_on_same_line'] =
   baz
 }.each do |thing|
   function thing do
-    puts "stuff"
+    puts 'stuff'
   end end
 
-puts "post ends"}
+puts 'post ends'}
 
 =begin
 INDENT_OK['rparen_and_do_same_line'] =
@@ -706,8 +706,8 @@ end}
 #-------------------------------------------------------------------------------
 INDENT_OK['single_line_begin_rescue_end'] =
   %Q{def log
-  l = begin; lineno; rescue; "<EOF>"; end
-  c = begin; column; rescue; "<EOF>"; end
+  l = begin; lineno; rescue; '<EOF>'; end
+  c = begin; column; rescue; '<EOF>'; end
   subclass_name = self.class.to_s.sub(/^Tailor::/, '')
   args.first.insert(0, "<\#{subclass_name}> \#{l}[\#{c}]: ")
   Tailor::Logger.log(*args)
@@ -747,7 +747,7 @@ INDENT_OK['combo3'] =
       @config[:turducken_password])
     suite_result_url = Stuffer.stuff(stuffing)
   rescue Errno::ECONNREFUSED
-    @logger.error "Unable to connect to Turducken server!"
+    @logger.error 'Unable to connect to Turducken server!'
   end
 
   suite_result_url

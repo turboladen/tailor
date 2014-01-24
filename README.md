@@ -46,6 +46,7 @@ project, whatever style that may be.
     * Common syntax
         * Conditionals wrapped in parentheses
         * Unnecessary interpolation in strings
+        * Unnecessary use of double-quotes for strings
     * Valid Ruby (warns by default)
 * Configurable
     * Specify style in

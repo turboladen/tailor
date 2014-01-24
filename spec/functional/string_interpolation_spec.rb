@@ -4,7 +4,6 @@ require 'tailor/critic'
 require 'tailor/configuration/style'
 
 describe 'String interpolation cases' do
-
   def file_name
     self.class.description
   end
@@ -28,6 +27,8 @@ describe 'String interpolation cases' do
     style = Tailor::Configuration::Style.new
     style.trailing_newlines 0, level: :off
     style.allow_invalid_ruby true, level: :off
+    style.allow_unnecessary_double_quotes true, level: :off
+
     style
   end
 
@@ -113,5 +114,4 @@ describe 'String interpolation cases' do
       expect(critic.problems[file_name]).to be_empty
     end
   end
-
 end
