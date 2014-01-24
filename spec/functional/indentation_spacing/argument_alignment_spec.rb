@@ -78,11 +78,11 @@ describe 'Argument alignment' do
     it 'warns when argument alignment is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 14,
-        :message=> "Line is indented to column 14, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 14,
+        message: "Line is indented to column 14, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -90,11 +90,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 14,
-        :message=> "Line is indented to column 14, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 14,
+        message: "Line is indented to column 14, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -123,11 +123,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: true
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 2,
-        :message=> "Line is indented to column 2, but should be at 14.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 2,
+        message: "Line is indented to column 2, but should be at 14.",
+        level: :error
       }]
     end
 
@@ -180,11 +180,11 @@ describe 'Argument alignment' do
     it 'warns when argument alignment is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -192,11 +192,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -213,11 +213,11 @@ describe 'Argument alignment' do
     it 'warns when argument alignment is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -225,11 +225,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -246,11 +246,11 @@ describe 'Argument alignment' do
     it 'warns when argument alignment is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -258,11 +258,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -280,18 +280,18 @@ describe 'Argument alignment' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'indentation_spaces',
-          :line => 2,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 2,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         },
         {
-          :type => 'indentation_spaces',
-          :line => 3,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 3,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         }
       ]
     end
@@ -301,18 +301,18 @@ describe 'Argument alignment' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'indentation_spaces',
-          :line => 2,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 2,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         },
         {
-          :type => 'indentation_spaces',
-          :line => 3,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 3,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         }
       ]
     end
@@ -330,11 +330,11 @@ describe 'Argument alignment' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'indentation_spaces',
-          :line => 2,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 2,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         }
       ]
     end
@@ -344,11 +344,11 @@ describe 'Argument alignment' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'indentation_spaces',
-          :line => 2,
-          :column=> 49,
-          :message=> "Line is indented to column 49, but should be at 2.",
-          :level=> :error
+          type: 'indentation_spaces',
+          line: 2,
+          column: 49,
+          message: "Line is indented to column 49, but should be at 2.",
+          level: :error
         }
       ]
     end
@@ -367,11 +367,11 @@ describe 'Argument alignment' do
     it 'warns when argument alignment is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -379,11 +379,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 49,
-        :message=> "Line is indented to column 49, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 49,
+        message: "Line is indented to column 49, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -412,11 +412,11 @@ describe 'Argument alignment' do
       style.indentation_spaces 2, level: :error, argument_alignment: true
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 2,
-        :message=> "Line is indented to column 2, but should be at 49.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 2,
+        message: "Line is indented to column 2, but should be at 49.",
+        level: :error
       }]
     end
 

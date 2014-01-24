@@ -40,11 +40,11 @@ class Tailor
         end
       end
 
-      def embexpr_beg_update(lexed_line, lineno, column)
+      def embexpr_beg_update(_, _, _)
         @lbrace_nesting << :embexpr_beg
       end
 
-      def lbrace_update(lexed_line, lineno, column)
+      def lbrace_update(_, _, _)
         @lbrace_nesting << :lbrace
       end
 

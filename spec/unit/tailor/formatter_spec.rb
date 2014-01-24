@@ -10,11 +10,11 @@ describe Tailor::Formatter do
       {
         'some_file.rb' => [
           {
-            :type => 'allow_invalid_ruby',
-            :line => 0,
-            :column => 0,
-            :message => msg,
-            :level => :warn
+            type: 'allow_invalid_ruby',
+            line: 0,
+            column: 0,
+            message: msg,
+            level: :warn
           }
         ]
       }
@@ -33,11 +33,11 @@ describe Tailor::Formatter do
 
         subject.problems_at_level(problems, :warn).should == [
           {
-            :type => 'allow_invalid_ruby',
-            :line => 0,
-            :column => 0,
-            :message => msg,
-            :level => :warn
+            type: 'allow_invalid_ruby',
+            line: 0,
+            column: 0,
+            message: msg,
+            level: :warn
           }
         ]
       end

@@ -9,7 +9,6 @@ class Tailor
       end
 
       def ident_update(token, lexed_line, lineno, column)
-        ident_index = lexed_line.event_index(column)
         find_event = lexed_line.find { |e| e[1] == :on_kw && e.last == 'def' }
 
         if find_event && find_event.any?

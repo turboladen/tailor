@@ -32,6 +32,7 @@ class Tailor
               lines_nesting.reject { |_, n| n > min_level }.keys
             end.flatten
           end
+
           @continuations.include?(lineno)
         end
 

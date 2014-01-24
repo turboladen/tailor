@@ -11,11 +11,11 @@ class Tailor
         @comma_columns = []
       end
 
-      def comma_update(text_line, lineno, column)
+      def comma_update(_, _, column)
         @comma_columns << column
       end
 
-      def comment_update(token, lexed_line, file_text, lineno, column)
+      def comment_update(token, lexed_line, _, lineno, column)
         if token =~ /\n$/
           log 'Found comment with trailing newline.'
           ignored_nl_update(lexed_line, lineno, column)
@@ -59,7 +59,7 @@ class Tailor
         @comma_columns.clear
       end
 
-      def ignored_nl_update(lexed_line, lineno, column)
+      def ignored_nl_update(lexed_line, lineno, _)
         check_spaces_before_comma(lexed_line, lineno)
       end
 

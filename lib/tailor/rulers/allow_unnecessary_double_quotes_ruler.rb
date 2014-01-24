@@ -8,7 +8,7 @@ class Tailor
         add_lexer_observers :nl
       end
 
-      def nl_update(lexed_line, lineno, column)
+      def nl_update(lexed_line, lineno, _)
         quotes(lexed_line).each do |quote|
           unless contains_embedded_expression?(quote) ||
             contains_escape_sequence?(quote)

@@ -9,7 +9,7 @@ class Tailor
         add_lexer_observers :nl
       end
 
-      def nl_update(current_lexed_line, lineno, column)
+      def nl_update(current_lexed_line, lineno, _)
         measure(current_lexed_line, lineno)
       end
 
@@ -19,7 +19,7 @@ class Tailor
       # @param [Fixnum] lineno Line the problem was found on.
       def measure(lexed_line, lineno)
 
-        idx = lexed_line.index do |pos, token, name|
+        idx = lexed_line.index do |_, token, name|
           token == :on_kw and %w{if unless case}.include?(name)
         end
 
@@ -28,7 +28,7 @@ class Tailor
 
         if idx
           column = lexed_line[idx].first.last
-          pos, token, name = lexed_line[idx + 1]
+          pos, token, _ = lexed_line[idx + 1]
           spaces = case token
           when :on_lparen then 0
           when :on_sp

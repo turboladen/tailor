@@ -36,11 +36,11 @@ describe 'String interpolation cases' do
     it 'warns when interpolation is used unnecessarily' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'unnecessary_string_interpolation',
-        :line => 1,
-        :column=> 6,
-        :message=> 'Variable interpolated unnecessarily',
-        :level=> :warn
+        type: 'unnecessary_string_interpolation',
+        line: 1,
+        column: 6,
+        message: 'Variable interpolated unnecessarily',
+        level: :warn
       }]
     end
   end
@@ -71,18 +71,18 @@ describe 'String interpolation cases' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'unnecessary_string_interpolation',
-          :line => 1,
-          :column=> 6,
-          :message=> 'Variable interpolated unnecessarily',
-          :level=> :warn
+          type: 'unnecessary_string_interpolation',
+          line: 1,
+          column: 6,
+          message: 'Variable interpolated unnecessarily',
+          level: :warn
         },
         {
-          :type => 'unnecessary_string_interpolation',
-          :line => 1,
-          :column=> 17,
-          :message=> 'Variable interpolated unnecessarily',
-          :level=> :warn
+          type: 'unnecessary_string_interpolation',
+          line: 1,
+          column: 17,
+          message: 'Variable interpolated unnecessarily',
+          level: :warn
         }
       ]
     end
@@ -92,11 +92,11 @@ describe 'String interpolation cases' do
     it 'warns against the first line' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'unnecessary_string_interpolation',
-        :line => 1,
-        :column=> 6,
-        :message=> 'Variable interpolated unnecessarily',
-        :level=> :warn
+        type: 'unnecessary_string_interpolation',
+        line: 1,
+        column: 6,
+        message: 'Variable interpolated unnecessarily',
+        level: :warn
       }]
     end
   end

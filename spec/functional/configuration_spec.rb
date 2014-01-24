@@ -128,7 +128,7 @@ end
 
       it 'applies the nested configuration within the fileset' do
         expect(config.file_sets[:default].style[
-          :max_line_length]).to eql [90, { :level => :warn }]
+          :max_line_length]).to eql [90, { level: :warn }]
       end
 
     end

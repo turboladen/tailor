@@ -40,7 +40,6 @@ class Tailor
     include Tailor::Logger::Mixin
 
     attr_reader :lexer_observers
-    attr_reader :level
 
     # @param [Object] config
     # @param [Hash] options

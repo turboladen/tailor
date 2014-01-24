@@ -49,11 +49,11 @@ describe 'String Quoting' do
     it 'warns that double quotes are unnecessary' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'unnecessary_double_quotes',
-        :line => 1,
-        :column => 6,
-        :message => 'Unnecessary double quotes at column 6, expected single quotes.',
-        :level => :warn
+        type: 'unnecessary_double_quotes',
+        line: 1,
+        column: 6,
+        message: 'Unnecessary double quotes at column 6, expected single quotes.',
+        level: :warn
       }]
     end
   end
@@ -63,18 +63,18 @@ describe 'String Quoting' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [
         {
-          :type => 'unnecessary_double_quotes',
-          :line => 1,
-          :column => 6,
-          :message => 'Unnecessary double quotes at column 6, expected single quotes.',
-          :level => :warn
+          type: 'unnecessary_double_quotes',
+          line: 1,
+          column: 6,
+          message: 'Unnecessary double quotes at column 6, expected single quotes.',
+          level: :warn
         },
         {
-          :type => 'unnecessary_double_quotes',
-          :line => 1,
-          :column => 14,
-          :message => 'Unnecessary double quotes at column 14, expected single quotes.',
-          :level => :warn
+          type: 'unnecessary_double_quotes',
+          line: 1,
+          column: 14,
+          message: 'Unnecessary double quotes at column 14, expected single quotes.',
+          level: :warn
         }
       ]
     end

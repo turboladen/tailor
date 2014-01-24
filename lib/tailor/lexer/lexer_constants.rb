@@ -49,6 +49,7 @@ class Tailor
       'while' => :while_mod
     }
 
+    #noinspection RubyLiteralArrayInspection
     MULTILINE_OPERATORS = Set.new [
       '+', '-', '*', '**', '/', '%',    # +, -, tSTAR, tPOW, /, %
       '<', '>', '<=', '>=',             # <, >, tLEQ, tGEQ

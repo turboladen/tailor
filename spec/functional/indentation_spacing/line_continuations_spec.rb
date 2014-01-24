@@ -37,11 +37,11 @@ describe 'Line continuation indentation' do
     it 'warns when line continuation spacing is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 4,
-        :message=> "Line is indented to column 4, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 4,
+        message: "Line is indented to column 4, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -49,11 +49,11 @@ describe 'Line continuation indentation' do
       style.indentation_spaces 2, level: :error, line_continuations: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 4,
-        :message=> "Line is indented to column 4, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 4,
+        message: "Line is indented to column 4, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -82,11 +82,11 @@ describe 'Line continuation indentation' do
       style.indentation_spaces 2, level: :error, line_continuations: true
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 2,
-        :message=> "Line is indented to column 2, but should be at 4.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 2,
+        message: "Line is indented to column 2, but should be at 4.",
+        level: :error
       }]
     end
 
@@ -96,11 +96,11 @@ describe 'Line continuation indentation' do
     it 'warns when line continuation spacing is not specified' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 4,
-        :message=> "Line is indented to column 4, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 4,
+        message: "Line is indented to column 4, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -108,11 +108,11 @@ describe 'Line continuation indentation' do
       style.indentation_spaces 2, level: :error, line_continuations: :off
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 4,
-        :message=> "Line is indented to column 4, but should be at 2.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 4,
+        message: "Line is indented to column 4, but should be at 2.",
+        level: :error
       }]
     end
 
@@ -140,11 +140,11 @@ describe 'Line continuation indentation' do
       style.indentation_spaces 2, level: :error, line_continuations: true
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'indentation_spaces',
-        :line => 2,
-        :column=> 2,
-        :message=> "Line is indented to column 2, but should be at 4.",
-        :level=> :error
+        type: 'indentation_spaces',
+        line: 2,
+        column: 2,
+        message: "Line is indented to column 2, but should be at 4.",
+        level: :error
       }]
     end
 

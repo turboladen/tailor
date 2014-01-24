@@ -48,13 +48,13 @@ class Tailor
         previous_event.last.size
       end
 
-      def embexpr_beg_update(lexed_line, lineno, column)
+      def embexpr_beg_update(_, _, _)
         if RUBY_VERSION < '2.0.0'
           @lbrace_nesting << :embexpr_beg
         end
       end
 
-      def lbrace_update(lexed_line, lineno, column)
+      def lbrace_update(_, _, _)
         @lbrace_nesting << :lbrace
       end
 

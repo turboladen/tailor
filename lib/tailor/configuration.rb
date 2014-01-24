@@ -92,7 +92,7 @@ class Tailor
           @config_from_file =
             instance_eval(File.read(user_config_file), user_config_file)
           log "Got new config from file: #{user_config_file}"
-        rescue LoadError => ex
+        rescue LoadError
           raise Tailor::RuntimeError,
             "Couldn't load config file: #{user_config_file}"
         end
@@ -162,7 +162,7 @@ class Tailor
 
       # Only use options set for the :default file set because the user gave
       # a different set of files to measure.
-      @file_sets.delete_if { |k, v| k != :default }
+      @file_sets.delete_if { |k, _| k != :default }
 
       if @file_sets.include? :default
         @file_sets[:default].file_list = @runtime_file_list

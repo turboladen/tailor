@@ -45,7 +45,6 @@ describe Tailor::Reporter do
 
     context 'without output file' do
       it 'calls #file_report on each @formatters' do
-        label = :some_label
         formatter.should_receive(:summary_report).with(all_problems)
         File.should_not_receive(:open)
 

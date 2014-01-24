@@ -7,7 +7,7 @@ class Tailor
 
     # Helper methods for tokens that are parsed by {Tailor::Lexer}.
     class Token < String
-      include LexerConstants
+      include Tailor::LexerConstants
       include Tailor::Logger::Mixin
 
       # @param [String] the_token
@@ -63,7 +63,7 @@ class Tailor
       # @return [Boolean] True if there's a modifier in the current line that
       #   is the same type as +token+.
       def modifier_keyword?
-        return false if not keyword_to_indent?
+        return false unless keyword_to_indent?
 
         line_of_text = @options[:full_line_of_text]
         log "Line of text: #{line_of_text}"

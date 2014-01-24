@@ -18,19 +18,19 @@ end
 RSpec::Core::RakeTask.new
 
 namespace :spec do
-  desc "Run specs with Ruby warnings turned on"
+  desc 'Run specs with Ruby warnings turned on'
   RSpec::Core::RakeTask.new(:warn) do |t|
     t.ruby_opts = %w(-w)
   end
 
-  desc "Run unit tests"
+  desc 'Run unit tests'
   RSpec::Core::RakeTask.new(:unit) do |t|
-    t.pattern = "./spec/unit/**/*_spec.rb"
+    t.pattern = './spec/unit/**/*_spec.rb'
   end
 
-  desc "Run functional tests"
+  desc 'Run functional tests'
   RSpec::Core::RakeTask.new(:functional) do |t|
-    t.pattern = "./spec/functional/**/*_spec.rb"
+    t.pattern = './spec/functional/**/*_spec.rb'
   end
 end
 
@@ -50,6 +50,6 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 
-desc "Run RSpec examples and Cucumber features"
+desc 'Run RSpec examples and Cucumber features'
 task test: [:spec, :features]
 task default: [:test]

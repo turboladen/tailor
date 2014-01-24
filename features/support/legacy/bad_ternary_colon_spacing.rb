@@ -17,7 +17,7 @@ bobo = true ? true :  false
 bobo = true ? true  : false
 
 # Skip when colon is part of a symbol or namespace operator
-bobo = { :thing => ":clown" }
+bobo = { thing: ":clown" }
 bobo[:thing] == :dog ? bobo[:thing] : Math::PI
 
 # Skip when colon is part of Regexp class

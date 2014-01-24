@@ -4,7 +4,7 @@ require_relative '../lexer/lexer_constants'
 class Tailor
   module Rulers
     class MaxCodeLinesInMethodRuler < Tailor::Ruler
-      include LexerConstants
+      include Tailor::LexerConstants
 
       def initialize(config, options)
         super(config, options)
@@ -14,7 +14,7 @@ class Tailor
         @end_last_method = false
       end
 
-      def ignored_nl_update(lexed_line, lineno, column)
+      def ignored_nl_update(lexed_line, _, _)
         return if @method_start_lines.empty?
         return if lexed_line.only_spaces?
         return if lexed_line.comment_line?
@@ -33,7 +33,7 @@ class Tailor
         end
       end
 
-      def kw_update(token, lexed_line, lineno, column)
+      def kw_update(token, _, lineno, column)
         if token == 'def'
           @method_start_lines << { lineno: lineno, column: column, count: 0 }
           log "Method start lines: #{@method_start_lines}"

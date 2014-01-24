@@ -31,8 +31,8 @@ module MyModule
       # This is another comment
       an_array = [1, 2, 3]
       a_hash = {
-        :one => 1,
-        :two => 2
+        one: 1,
+        two: 2
       }
 
       if true

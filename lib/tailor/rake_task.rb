@@ -133,7 +133,7 @@ class Tailor
     end
 
     # @param [Tailor::Configuration] config
-    def create_recursive_file_sets_for config
+    def create_recursive_file_sets_for(config)
       unless @recursive_file_sets.empty?
         @recursive_file_sets.each do |fs|
           config.recursive_file_set(fs[0], fs[1], &fs[2])
@@ -142,7 +142,7 @@ class Tailor
     end
 
     # @param [Tailor::Configuration] config
-    def create_file_sets_for config
+    def create_file_sets_for(config)
       unless @file_sets.empty?
         @file_sets.each { |fs| config.file_set(fs[0], fs[1], &fs[2]) }
       end

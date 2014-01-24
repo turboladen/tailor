@@ -10,7 +10,7 @@ class Tailor
       return @logger if @logger
       @logger ||= ::Logger.new $stdout
 
-      def @logger.format_message(level, time, progname, msg)
+      def @logger.format_message(_, time, _, msg)
         "[#{time.strftime('%Y-%m-%d %H:%M:%S')}]  #{msg}\n"
       end
 
@@ -20,7 +20,7 @@ class Tailor
     # Provides an .included hook to insert the name of the class for each log
     # message in the class that includes the Mixin.
     module Mixin
-      def self.included(base)
+      def self.included(_)
         define_method :log do |*args|
           class_minus_main_name = self.class.to_s.sub(/^.*::/, '')
           args.first.insert(0, "<#{class_minus_main_name}> ")

@@ -19,11 +19,11 @@ class Tailor
         add_lexer_observers :ignored_nl, :nl
       end
 
-      def ignored_nl_update(lexed_line, lineno, column)
+      def ignored_nl_update(lexed_line, _, _)
         add_string_tokens(lexed_line)
       end
 
-      def nl_update(lexed_line, lineno, column)
+      def nl_update(lexed_line, _, _)
         add_string_tokens(lexed_line)
         each_string(@tokens).each do |string|
           measure(line_number(@tokens.first), string)

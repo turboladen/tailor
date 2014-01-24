@@ -82,9 +82,9 @@ other aspects of your Ruby code.
 
 ### Since 0.x...
 
-tailor 1.x is a marked improvment over 0.x.  While 0.x provided a few (pretty
+tailor 1.x is a marked improvement over 0.x.  While 0.x provided a few (pretty
 inconsistent) style checks, its design made the code get all spaghetti-like,
-with lots of really gnarly regular expression matching, making it a realy bear
+with lots of really gnarly regular expression matching, making it a really bear
 to add new features and fix bugs.  tailor 1.x is completely redesigned to make
 that whole process much easier.
 
@@ -277,7 +277,7 @@ In the default config file, you see a single parameter being passed to
 `config.file_set`--this is the glob that defines the list of files for that
 file set.  While you don't see it, `config.file_set` takes a second optional
 parameter that allows you to *label* your style properties, and thus use
-different sets of style properties for differet sets of files.  The label is
+different sets of style properties for different sets of files.  The label is
 simply just a name to refer to that file set by; it will show in your report
 (in the case that problems were found, of course) so you know what set of
 rulers caused the problem to be found.
@@ -378,7 +378,7 @@ Ruler must have:
 #### Add the Ruler to the list of Styles
 
 Internally, this all happens in `lib/tailor/configuration/style.rb`, but you
-can add infomation about your ruler to your config file.  If you created a
+can add information about your ruler to your config file.  If you created a
 Ruler:
 
 ```ruby

@@ -31,8 +31,9 @@ class Tailor
         def correct_for_literals(lineno, column)
           tstring_index = @lex.index do |pos, token|
             pos[0] == lineno and pos[1] == column and
-            token == :on_tstring_content
+              token == :on_tstring_content
           end
+
           tstring_index ? @lex[tstring_index -1][0][1] : column
         end
 

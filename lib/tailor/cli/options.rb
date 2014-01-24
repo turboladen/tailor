@@ -218,7 +218,7 @@ class Tailor
             Tailor::Logger.log = true
           end
 
-          opt.on_tail('-h', '--help', 'Show this message') do |help|
+          opt.on_tail('-h', '--help', 'Show this message') do |_|
             puts opt
             exit
           end

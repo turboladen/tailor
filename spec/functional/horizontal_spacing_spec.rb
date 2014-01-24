@@ -70,11 +70,11 @@ end}
         critic.problems.should == {
           file_name => [
             {
-              :type => 'max_line_length',
-              :line => 3,
-              :column => 81,
-              :message => 'Line is 81 chars long, but should be 80.',
-              :level=>:error
+              type: 'max_line_length',
+              line: 3,
+              column: 81,
+              message: 'Line is 81 chars long, but should be 80.',
+              level: :error
             }
           ]
         }

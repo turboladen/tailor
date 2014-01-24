@@ -55,11 +55,11 @@ describe 'Conditional parentheses' do
     it 'warns' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 4,
-        :message=> 'Parentheses around conditional expression at column 4.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 4,
+        message: 'Parentheses around conditional expression at column 4.',
+        level: :warn
       }]
     end
 
@@ -83,11 +83,11 @@ describe 'Conditional parentheses' do
       expect(critic.problems[file_name].select do |p|
         p[:type] == 'conditional_parentheses'
       end).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 3,
-        :message=> 'Parentheses around conditional expression at column 3.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 3,
+        message: 'Parentheses around conditional expression at column 3.',
+        level: :warn
       }]
     end
 
@@ -170,11 +170,11 @@ describe 'Conditional parentheses' do
     it 'warns by default' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 4,
-        :message=> 'Parentheses around conditional expression at column 4.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 4,
+        message: 'Parentheses around conditional expression at column 4.',
+        level: :warn
       }]
     end
 
@@ -214,11 +214,11 @@ describe 'Conditional parentheses' do
     it 'warns on parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 8,
-        :message=> 'Parentheses around conditional expression at column 8.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 8,
+        message: 'Parentheses around conditional expression at column 8.',
+        level: :warn
       }]
     end
 
@@ -258,11 +258,11 @@ describe 'Conditional parentheses' do
     it 'warns on parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 6,
-        :message=> 'Parentheses around conditional expression at column 6.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 6,
+        message: 'Parentheses around conditional expression at column 6.',
+        level: :warn
       }]
     end
 
@@ -302,11 +302,11 @@ describe 'Conditional parentheses' do
     it 'warns on parentheses' do
       critic.check_file(file_name, style.to_hash)
       expect(critic.problems[file_name]).to eql [{
-        :type => 'conditional_parentheses',
-        :line => 1,
-        :column=> 7,
-        :message=> 'Parentheses around conditional expression at column 7.',
-        :level=> :warn
+        type: 'conditional_parentheses',
+        line: 1,
+        column: 7,
+        message: 'Parentheses around conditional expression at column 7.',
+        level: :warn
       }]
     end
 

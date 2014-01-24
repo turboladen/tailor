@@ -8,7 +8,7 @@ class Tailor
         add_lexer_observers :nl
       end
 
-      def nl_update(current_lexed_line, lineno, column)
+      def nl_update(current_lexed_line, lineno, _)
         measure(current_lexed_line, lineno)
       end
 

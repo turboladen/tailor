@@ -15,18 +15,18 @@ class Tailor
         @lbracket_columns = []
       end
 
-      def comment_update(token, lexed_line, file_text, lineno, column)
+      def comment_update(token, lexed_line, _, lineno, column)
         if token =~ /\n$/
           log 'Found comment with trailing newline.'
           ignored_nl_update(lexed_line, lineno, column)
         end
       end
 
-      def ignored_nl_update(lexed_line, lineno, column)
+      def ignored_nl_update(lexed_line, lineno, _)
         check_spaces_after_lbracket(lexed_line, lineno)
       end
 
-      def lbracket_update(lexed_line, lineno, column)
+      def lbracket_update(_, _, column)
         @lbracket_columns << column
       end
 
