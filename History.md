@@ -1,3 +1,39 @@
+### 1.4.0 2014-01-23
+
+* Features
+    * Added Ruby 2.1.0 to the list of tested Rubies.
+    * Overall better indentation checking.
+    * [gh-143](https://github.com/turboladen/tailor/issues/143) and
+      [gh-102](https://github.com/turboladen/tailor/issues/102)
+        * The indentation ruler can now be told, using the `:line_continuations`
+          option, that when a statement spans multiple lines, second and
+          subsequent lines are/are not indented. See [these tests](https://github.com/turboladen/tailor/blob/aca324e449d3814c4473db3c28a7f719c0023750/spec/functional/indentation_spacing/line_continuations_spec.rb)
+          for more info.
+    * [gh-144](https://github.com/turboladen/tailor/issues/143) and
+      [gh-94](https://github.com/turboladen/tailor/issues/94)
+        * Added the `:argument_alignment` option to the indentation ruler,
+          which tells tailor to expect method declarations and calls that span
+          multiple lines to have their params be indented to the same spot
+          as the first param of the first line.  See [these tests](https://github.com/acrmp/tailor/blob/f8f3cb3c69bd4704cf8548d2c119a8d196a92043/spec/functional/indentation_spacing/argument_alignment_spec.rb)
+          for more info.
+    * [gh-148](https://github.com/turboladen/tailor/issues/148)
+        * Added new ruler: `allow_conditional_parentheses`.  This lets you
+          tell tailor to expect parentheses around statements that conditionals
+          check.  Defaults to true.
+    * [gh-149](https://github.com/turboladen/tailor/issues/149)
+        * Added new ruler: `allow_unnecessary_interpolation`.  This lets you
+          tell tailor to check for strings that use interpolation, but do it in
+          a gross way.  Defaults to false.
+    * [gh-150](https://github.com/turboladen/tailor/issues/150)
+        * Added new ruler: `allow_unnecessary_double_quotes`.  This lets you
+          tell tailor to check for strings that use double-quotes but aren't
+          doing interpolation.  Defaults to false.
+* Bug fixes
+    * [gh-154](https://github.com/turboladen/tailor/issues/154)
+        * Fixed indentation when do/end block chained on a {} block.  This
+          change also simplified IndentationManager.  Thanks @hollow!
+
+
 ### 1.3.1 2013-09-29
 
 * Bug fixes
