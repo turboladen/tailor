@@ -4,9 +4,7 @@
 
 
 [<img src="https://secure.travis-ci.org/turboladen/tailor.png?branch=master"
-alt="Build Status" />](http://travis-ci.org/turboladen/tailor) [<img
-src="https://codeclimate.com/badge.png"
-/>](https://codeclimate.com/github/turboladen/tailor)
+alt="Build Status" />](http://travis-ci.org/turboladen/tailor) [![Code Climate](https://codeclimate.com/github/turboladen/tailor.png)](https://codeclimate.com/github/turboladen/tailor)
 
 ## DESCRIPTION:
 
