@@ -15,8 +15,13 @@ class Tailor
       formats = %w[text] if formats.nil? || formats.empty?
 
       formats.flatten.each do |formatter|
-        require_relative "formatters/#{formatter}"
-        @formatters << eval("Tailor::Formatters::#{formatter.capitalize}.new")
+        begin
+          Tailor::Formatters.const_get(formatter.capitalize)
+        rescue NameError
+          require_relative "formatters/#{formatter}"
+        ensure
+          @formatters << Tailor::Formatters.const_get(formatter.capitalize).new
+        end
       end
     end
 
