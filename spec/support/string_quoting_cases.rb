@@ -23,3 +23,7 @@ QUOTING['escape_sequence'] =
 QUOTING['nested_quotes'] =
   %q{foo = "foo#{bar('baz')}"
 }
+
+QUOTING['double_quotes_contains_single_quote'] =
+  %q{foo = "foo'd"
+}

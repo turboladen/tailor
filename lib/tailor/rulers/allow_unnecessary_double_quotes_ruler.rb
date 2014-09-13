@@ -11,7 +11,8 @@ class Tailor
       def nl_update(lexed_line, lineno, _)
         quotes(lexed_line).each do |quote|
           unless contains_embedded_expression?(quote) ||
-            contains_escape_sequence?(quote)
+            contains_escape_sequence?(quote) ||
+            contains_single_quote?(quote)
             measure(lineno, column(quote.first))
           end
         end
@@ -36,6 +37,12 @@ class Tailor
       def contains_escape_sequence?(tokens)
         tokens.any? do |t|
           t[1] == :on_tstring_content and t[2].match(/\\[a-z]+/)
+        end
+      end
+
+      def contains_single_quote?(tokens)
+        tokens.any? do |t|
+          t[1] == :on_tstring_content and t[2].match(/'/)
         end
       end
 
