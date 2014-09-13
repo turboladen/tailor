@@ -87,6 +87,13 @@ describe 'String Quoting' do
     end
   end
 
+  context :double_quotes_contains_single_quote do
+    it 'does not warn' do
+      critic.check_file(file_name, style.to_hash)
+      expect(critic.problems[file_name]).to be_empty
+    end
+  end
+
   context :escape_sequence do
     it 'does not warn when a double quoted string contains a newline' do
       critic.check_file(file_name, style.to_hash)
