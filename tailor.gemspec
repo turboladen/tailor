@@ -36,8 +36,7 @@ project, whatever style that may be.
   s.add_development_dependency 'cucumber', '>= 1.0.2'
   s.add_development_dependency 'fakefs', '>= 0.4.2'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '>= 2.5.0'
+  s.add_development_dependency 'rspec', '~> 2.14.1'
   s.add_development_dependency 'simplecov', '>= 0.4.0'
   s.add_development_dependency 'yard', '>= 0.7.0'
 end
-
