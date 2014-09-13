@@ -16,11 +16,11 @@ class Tailor
 
       formats.flatten.each do |formatter|
         begin
-          Tailor::Formatters.const_get(formatter.capitalize)
+          eval("Tailor::Formatters::#{formatter.capitalize}")
         rescue NameError
           require_relative "formatters/#{formatter}"
         ensure
-          @formatters << Tailor::Formatters.const_get(formatter.capitalize).new
+          @formatters << eval("Tailor::Formatters::#{formatter.capitalize}").new
         end
       end
     end
