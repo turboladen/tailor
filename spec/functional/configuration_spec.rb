@@ -31,13 +31,14 @@ describe 'Config File' do
 
       it 'sets file_sets[:default].style to the default style' do
         config.file_sets[:default].style.should_not be_nil
-        config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
+        expect(config.file_sets[:default].style).
+          to eq Tailor::Configuration::Style.new.to_hash
       end
 
       it 'sets file_sets[:default].file_list to the files in lib/**/*.rb' do
-        config.file_sets[:default].file_list.all? do |path|
+        expect(config.file_sets[:default].file_list.all? do |path|
           path =~ /tailor\/lib/
-        end.should be_true
+        end).to eq true
       end
     end
 
@@ -61,18 +62,18 @@ end
 
         it 'creates the default file set' do
           config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
-          config.file_sets[:default].file_list.all? do |path|
+          expect(config.file_sets[:default].file_list.all? do |path|
             path =~ /tailor\/lib/
-          end.should be_true
+          end).to eq true
         end
 
         it 'creates the :features file set' do
           style = Tailor::Configuration::Style.new
           style.max_line_length(90, level: :warn)
           config.file_sets[:features].style.should == style.to_hash
-          config.file_sets[:features].file_list.all? do |path|
+          expect(config.file_sets[:features].file_list.all? do |path|
             path =~ /features/
-          end.should be_true
+          end).to eq true
         end
       end
     end
@@ -121,9 +122,9 @@ end
       end
 
       it 'has files in the file list levels deep' do
-        config.file_sets[:default].file_list.all? do |file|
+        expect(config.file_sets[:default].file_list.all? do |file|
           file =~ /spec\.rb$/
-        end.should be_true
+        end).to eq true
       end
 
       it 'applies the nested configuration within the fileset' do

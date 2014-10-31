@@ -3,7 +3,7 @@ require 'tailor/lexer/token'
 
 describe Tailor::Lexer::Token do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
   end
 
   describe '#modifier_keyword?' do
@@ -17,7 +17,7 @@ describe Tailor::Lexer::Token do
         let!(:full_line_of_text) { %q{puts "hi" if true == true} }
 
         it 'returns true' do
-          subject.modifier_keyword?.should be_true
+          expect(subject.modifier_keyword?).to eq true
         end
       end
 
@@ -25,7 +25,7 @@ describe Tailor::Lexer::Token do
         let!(:full_line_of_text) { %q{if true == true; puts "hi"; end} }
 
         it 'returns false' do
-          subject.modifier_keyword?.should be_false
+          expect(subject.modifier_keyword?).to eq false
         end
       end
     end
@@ -39,7 +39,7 @@ describe Tailor::Lexer::Token do
       end
 
       it 'returns false' do
-        subject.modifier_keyword?.should be_false
+        expect(subject.modifier_keyword?).to eq false
       end
     end
   end

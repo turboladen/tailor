@@ -8,7 +8,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:lexed_line) { double 'LexedLine' }
 
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     subject.instance_variable_set(:@spaces, spaces)
   end
 
@@ -19,7 +19,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   describe '#should_be_at' do
     it 'returns @proper[:this_line]' do
       subject.instance_variable_set(:@proper, { this_line: 321 })
-      subject.should_be_at.should == 321
+      expect(subject.should_be_at).to eq 321
     end
   end
 
@@ -27,7 +27,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     let!(:spaces) { 27 }
 
     context '#started? is true' do
-      before { subject.stub(:started?).and_return true }
+      before { allow(subject).to receive(:started?).and_return true }
 
       context '@proper[:this_line] gets decremented < 0' do
         it 'sets @proper[:this_line] to 0' do
@@ -37,7 +37,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
           subject.decrease_this_line
           proper_indentation = subject.instance_variable_get(:@proper)
-          proper_indentation[:this_line].should == 0
+          expect(proper_indentation[:this_line]).to be_zero
         end
       end
 
@@ -49,13 +49,13 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
           subject.decrease_this_line
 
           proper_indentation = subject.instance_variable_get(:@proper)
-          proper_indentation[:this_line].should == 1
+          expect(proper_indentation[:this_line]).to eq 1
         end
       end
     end
 
     context '#started? is false' do
-      before { subject.stub(:started?).and_return false }
+      before { allow(subject).to receive(:started?).and_return false }
 
       it 'does not decrement @proper[:this_line]' do
         subject.instance_variable_set(:@proper, {
@@ -64,29 +64,29 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         subject.decrease_this_line
 
         proper_indentation = subject.instance_variable_get(:@proper)
-        proper_indentation[:this_line].should == 28
+        expect(proper_indentation[:this_line]).to eq 28
       end
     end
   end
 
   describe '#transition_lines' do
     context '#started? is true' do
-      before { subject.stub(:started?).and_return true }
+      before { allow(subject).to receive(:started?).and_return true }
 
       it 'sets @proper[:this_line] to @proper[:next_line]' do
         subject.instance_variable_set(:@proper, { next_line: 33 })
 
-        expect { subject.transition_lines }.to change{subject.should_be_at}.
+        expect { subject.transition_lines }.to change{ subject.should_be_at }.
           from(subject.should_be_at).to(33)
       end
     end
 
     context '#started? is false' do
-      before { subject.stub(:started?).and_return false }
+      before { allow(subject).to receive(:started?).and_return false }
 
       it 'sets @proper[:this_line] to @proper[:next_line]' do
         subject.instance_variable_set(:@proper, { next_line: 33 })
-        expect { subject.transition_lines }.to_not change{subject.should_be_at}
+        expect { subject.transition_lines }.to_not change{ subject.should_be_at }
       end
     end
   end
@@ -95,7 +95,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     it 'sets @do_measurement to true' do
       subject.instance_variable_set(:@do_measurement, false)
       subject.start
-      subject.instance_variable_get(:@do_measurement).should be_true
+      expect(subject.instance_variable_get(:@do_measurement)).to eq true
     end
   end
 
@@ -103,38 +103,39 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
     it 'sets @do_measurement to false' do
       subject.instance_variable_set(:@do_measurement, true)
       subject.stop
-      subject.instance_variable_get(:@do_measurement).should be_false
+      expect(subject.instance_variable_get(:@do_measurement)).to eq false
     end
   end
 
   describe '#started?' do
     context '@do_measurement is true' do
       before { subject.instance_variable_set(:@do_measurement, true) }
-      specify { subject.started?.should be_true }
+      specify { expect(subject).to be_started }
     end
 
     context '@do_measurement is false' do
       before { subject.instance_variable_set(:@do_measurement, false) }
-      specify { subject.started?.should be_false }
+      specify { expect(subject).to_not be_started }
     end
   end
 
   describe '#update_actual_indentation' do
     context 'lexed_line_output.end_of_multi_line_string? is true' do
       before do
-        lexed_line.stub(:end_of_multi_line_string?).and_return true
+        allow(lexed_line).to receive(:end_of_multi_line_string?).and_return true
       end
 
       it 'returns without updating @actual_indentation' do
-        lexed_line.should_not_receive(:first_non_space_element)
+        expect(lexed_line).to_not receive(:first_non_space_element)
         subject.update_actual_indentation(lexed_line)
       end
     end
 
     context 'lexed_line_output.end_of_multi_line_string? is false' do
       before do
-        lexed_line.stub(:end_of_multi_line_string?).and_return false
-        lexed_line.stub(:first_non_space_element).
+        allow(lexed_line).to receive(:end_of_multi_line_string?).
+          and_return false
+        allow(lexed_line).to receive(:first_non_space_element).
           and_return first_non_space_element
       end
 
@@ -145,7 +146,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
         it 'returns the column value of that element' do
           subject.update_actual_indentation(lexed_line)
-          subject.instance_variable_get(:@actual_indentation).should == 5
+          expect(subject.instance_variable_get(:@actual_indentation)).to eq 5
         end
       end
 
@@ -156,7 +157,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
         it 'returns the column value of that element' do
           subject.update_actual_indentation(lexed_line)
-          subject.instance_variable_get(:@actual_indentation).should == 0
+          expect(subject.instance_variable_get(:@actual_indentation)).to be_zero
         end
       end
     end
@@ -165,86 +166,91 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   describe '#line_ends_with_single_token_indenter?' do
     context 'lexed_line does not end with an op, comma, period, label, or kw' do
       before do
-        lexed_line.stub(ends_with_op?: false)
-        lexed_line.stub(ends_with_comma?: false)
-        lexed_line.stub(ends_with_period?: false)
-        lexed_line.stub(ends_with_label?: false)
-        lexed_line.stub(ends_with_modifier_kw?: false)
+        allow(lexed_line).to receive(:ends_with_op?).and_return false
+        allow(lexed_line).to receive(:ends_with_comma?).and_return false
+        allow(lexed_line).to receive(:ends_with_period?).and_return false
+        allow(lexed_line).to receive(:ends_with_label?).and_return false
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return false
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).
-          should be_false
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq false
       end
     end
 
     context 'lexed_line ends with an op' do
       before do
-        lexed_line.stub(ends_with_op?: true)
-        lexed_line.stub(ends_with_comma?: false)
-        lexed_line.stub(ends_with_period?: false)
-        lexed_line.stub(ends_with_label?: false)
-        lexed_line.stub(ends_with_modifier_kw?: false)
+        allow(lexed_line).to receive(:ends_with_op?).and_return true
+        allow(lexed_line).to receive(:ends_with_comma?).and_return false
+        allow(lexed_line).to receive(:ends_with_period?).and_return false
+        allow(lexed_line).to receive(:ends_with_label?).and_return false
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return false
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq true
       end
     end
 
     context 'lexed_line ends with a comma' do
       before do
-        lexed_line.stub(ends_with_op?: false)
-        lexed_line.stub(ends_with_comma?: true)
-        lexed_line.stub(ends_with_period?: false)
-        lexed_line.stub(ends_with_label?: false)
-        lexed_line.stub(ends_with_modifier_kw?: false)
+        allow(lexed_line).to receive(:ends_with_op?).and_return false
+        allow(lexed_line).to receive(:ends_with_comma?).and_return true
+        allow(lexed_line).to receive(:ends_with_period?).and_return false
+        allow(lexed_line).to receive(:ends_with_label?).and_return false
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return false
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq true
       end
     end
 
     context 'lexed_line ends with a period' do
       before do
-        lexed_line.stub(ends_with_op?: false)
-        lexed_line.stub(ends_with_comma?: false)
-        lexed_line.stub(ends_with_period?: true)
-        lexed_line.stub(ends_with_label?: false)
-        lexed_line.stub(ends_with_modifier_kw?: false)
+        allow(lexed_line).to receive(:ends_with_op?).and_return false
+        allow(lexed_line).to receive(:ends_with_comma?).and_return false
+        allow(lexed_line).to receive(:ends_with_period?).and_return true
+        allow(lexed_line).to receive(:ends_with_label?).and_return false
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return false
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq true
       end
     end
 
     context 'lexed_line ends with a label' do
       before do
-        lexed_line.stub(ends_with_op?: false)
-        lexed_line.stub(ends_with_comma?: false)
-        lexed_line.stub(ends_with_period?: false)
-        lexed_line.stub(ends_with_label?: true)
-        lexed_line.stub(ends_with_modifier_kw?: false)
+        allow(lexed_line).to receive(:ends_with_op?).and_return false
+        allow(lexed_line).to receive(:ends_with_comma?).and_return false
+        allow(lexed_line).to receive(:ends_with_period?).and_return false
+        allow(lexed_line).to receive(:ends_with_label?).and_return true
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return false
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq true
       end
     end
 
     context 'lexed_line ends with a modified kw' do
       before do
-        lexed_line.stub(ends_with_op?: false)
-        lexed_line.stub(ends_with_comma?: false)
-        lexed_line.stub(ends_with_period?: false)
-        lexed_line.stub(ends_with_label?: false)
-        lexed_line.stub(ends_with_modifier_kw?: true)
+        allow(lexed_line).to receive(:ends_with_op?).and_return false
+        allow(lexed_line).to receive(:ends_with_comma?).and_return false
+        allow(lexed_line).to receive(:ends_with_period?).and_return false
+        allow(lexed_line).to receive(:ends_with_label?).and_return false
+        allow(lexed_line).to receive(:ends_with_modifier_kw?).and_return true
       end
 
       specify do
-        subject.line_ends_with_single_token_indenter?(lexed_line).should be_true
+        expect(subject.line_ends_with_single_token_indenter?(lexed_line)).
+          to eq true
       end
     end
   end
@@ -256,7 +262,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
 
       it 'returns false' do
-        subject.line_ends_with_same_as_last([]).should be_false
+        expect(subject.line_ends_with_same_as_last([])).to eq false
       end
     end
 
@@ -269,7 +275,8 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
 
       it 'returns false' do
-        subject.line_ends_with_same_as_last(last_single_token).should be_false
+        expect(subject.line_ends_with_same_as_last(last_single_token)).
+          to eq false
       end
     end
 
@@ -282,7 +289,8 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
 
       it 'returns true' do
-        subject.line_ends_with_same_as_last(last_single_token).should be_true
+        expect(subject.line_ends_with_same_as_last(last_single_token)).
+          to eq true
       end
     end
   end
@@ -296,7 +304,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         end
 
         it 'returns true' do
-          subject.multi_line_parens?(2).should be_true
+          expect(subject.multi_line_parens?(2)).to eq true
         end
       end
 
@@ -306,8 +314,8 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
           subject.instance_variable_set(:@indent_reasons, d_tokens)
         end
 
-        it 'returns true' do
-          subject.multi_line_parens?(2).should be_false
+        it 'returns false' do
+          expect(subject.multi_line_parens?(2)).to eq false
         end
       end
     end
@@ -318,8 +326,8 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         subject.instance_variable_set(:@indent_reasons, d_tokens)
       end
 
-      it 'returns true' do
-        subject.multi_line_parens?(1).should be_false
+      it 'returns false' do
+        expect(subject.multi_line_parens?(1)).to eq false
       end
     end
   end
@@ -327,7 +335,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   describe '#last_opening_event' do
     context '@indent_reasons is empty' do
       before { subject.instance_variable_set(:@indent_reasons, []) }
-      specify { subject.last_opening_event(nil).should be_nil }
+      specify { expect(subject.last_opening_event(nil)).to be_nil }
     end
 
     context '@indent_reasons contains the corresponding opening event' do
@@ -339,13 +347,15 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
       context 'the corresponding opening event is last' do
         it 'returns the matching opening event' do
-          subject.last_opening_event(:on_rbrace).should == indent_reasons.last
+          expect(subject.last_opening_event(:on_rbrace)).
+            to eq indent_reasons.last
         end
       end
 
       context 'the corresponding opening event is not last' do
         it 'returns the matching opening event' do
-          subject.last_opening_event(:on_rparen).should == indent_reasons.first
+          expect(subject.last_opening_event(:on_rparen)).
+            to eq indent_reasons.first
         end
       end
     end
@@ -365,7 +375,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
         i
       end
 
-      specify { subject.remove_continuation_keywords.should be_nil }
+      specify { expect(subject.remove_continuation_keywords).to be_nil }
     end
 
     context '@indent_reasons does not contain CONTINUATION_KEYWORDS' do
@@ -378,7 +388,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       end
 
       it 'should not call #pop on @indent_reasons' do
-        indent_reasons.should_not_receive(:pop)
+        expect(indent_reasons).to_not receive(:pop)
         subject.remove_continuation_keywords
       end
     end
@@ -391,8 +401,8 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       it 'should call #pop on @indent_reasons one time' do
         subject.instance_variable_set(:@indent_reasons, indent_reasons)
         subject.remove_continuation_keywords
-        subject.instance_variable_get(:@indent_reasons).should ==
-          [{ token: 'if' }]
+        expect(subject.instance_variable_get(:@indent_reasons)).
+          to eq [{ token: 'if' }]
       end
     end
   end

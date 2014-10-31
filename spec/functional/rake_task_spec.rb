@@ -60,7 +60,7 @@ describe Tailor::RakeTask do
 
       expect {
         rake[task_name].invoke
-      }.to_not raise_error RuntimeError, "Don't know how to build task '#{task_name}''"
+      }.to raise_exception SystemExit
     end
   end
 
@@ -93,7 +93,7 @@ describe Tailor::RakeTask do
         FileUtils.mkdir(test_dir)
       end
 
-      File.directory?(test_dir).should be_true
+      expect(File.directory?(test_dir)).to eq true
 
       File.open(test_dir + '/test.rb', 'w') do |f|
         f.write <<-CONTENTS
@@ -101,7 +101,7 @@ puts 'I no have end quote
         CONTENTS
       end
 
-      File.exists?(test_dir + '/test.rb').should be_true
+      expect(File.exists?(test_dir + '/test.rb')).to eq true
     end
 
     after do
