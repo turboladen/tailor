@@ -2,7 +2,6 @@ require 'ripper'
 require 'spec_helper'
 require 'tailor/rulers/indentation_spaces_ruler/indentation_manager'
 
-
 describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
   let!(:spaces) { 5 }
   let!(:lexed_line) { double 'LexedLine' }
@@ -18,7 +17,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
   describe '#should_be_at' do
     it 'returns @proper[:this_line]' do
-      subject.instance_variable_set(:@proper, { this_line: 321 })
+      subject.instance_variable_set(:@proper, this_line: 321)
       expect(subject.should_be_at).to eq 321
     end
   end
@@ -31,9 +30,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
       context '@proper[:this_line] gets decremented < 0' do
         it 'sets @proper[:this_line] to 0' do
-          subject.instance_variable_set(:@proper, {
-            this_line: 0, next_line: 0
-          })
+          subject.instance_variable_set(:@proper, this_line: 0, next_line: 0)
 
           subject.decrease_this_line
           proper_indentation = subject.instance_variable_get(:@proper)
@@ -43,9 +40,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
 
       context '@proper[:this_line] NOT decremented < 0' do
         it 'decrements @proper[:this_line] by @spaces' do
-          subject.instance_variable_set(:@proper, {
-            this_line: 28, next_line: 28
-          })
+          subject.instance_variable_set(:@proper, this_line: 28, next_line: 28)
           subject.decrease_this_line
 
           proper_indentation = subject.instance_variable_get(:@proper)
@@ -58,9 +53,7 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       before { allow(subject).to receive(:started?).and_return false }
 
       it 'does not decrement @proper[:this_line]' do
-        subject.instance_variable_set(:@proper, {
-          this_line: 28, next_line: 28
-        })
+        subject.instance_variable_set(:@proper, this_line: 28, next_line: 28)
         subject.decrease_this_line
 
         proper_indentation = subject.instance_variable_get(:@proper)
@@ -74,9 +67,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       before { allow(subject).to receive(:started?).and_return true }
 
       it 'sets @proper[:this_line] to @proper[:next_line]' do
-        subject.instance_variable_set(:@proper, { next_line: 33 })
+        subject.instance_variable_set(:@proper, next_line: 33)
 
-        expect { subject.transition_lines }.to change{ subject.should_be_at }.
+        expect { subject.transition_lines }.to change { subject.should_be_at }.
           from(subject.should_be_at).to(33)
       end
     end
@@ -85,8 +78,9 @@ describe Tailor::Rulers::IndentationSpacesRuler::IndentationManager do
       before { allow(subject).to receive(:started?).and_return false }
 
       it 'sets @proper[:this_line] to @proper[:next_line]' do
-        subject.instance_variable_set(:@proper, { next_line: 33 })
-        expect { subject.transition_lines }.to_not change{ subject.should_be_at }
+        subject.instance_variable_set(:@proper, next_line: 33)
+        expect { subject.transition_lines }.
+          to_not change { subject.should_be_at }
       end
     end
   end

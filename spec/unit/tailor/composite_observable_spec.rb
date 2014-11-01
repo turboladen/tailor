@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tailor/composite_observable'
 
-
+# Class to use for tests.
 class Tester
   include Tailor::CompositeObservable
 end

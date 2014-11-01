@@ -19,8 +19,8 @@ describe Tailor::Rulers::SpacesBeforeRbraceRuler do
 
       it 'sets @do_measurement to false' do
         expect { subject.count_spaces(lexed_line, 1) }.
-          to change{subject.instance_variable_get(:@do_measurement)}.from(true).
-          to(false)
+          to change { subject.instance_variable_get(:@do_measurement) }.
+          from(true).to(false)
       end
     end
 

@@ -30,7 +30,7 @@ describe Tailor::Configuration::FileSet do
 
       it 'returns the Array with expanded file paths' do
         expect(subject.instance_eval { build_file_list(['test.rb']) }.first).
-          to match(%r[/test.rb$])
+          to match(%r{/test.rb$})
       end
     end
 
@@ -58,7 +58,7 @@ describe Tailor::Configuration::FileSet do
       subject.update_file_list('test2.rb')
       expect(subject.instance_variable_get(:@file_list).size).to eq 2
       expect(subject.instance_variable_get(:@file_list).last).
-        to match(%r[/test2.rb])
+        to match(%r{/test2.rb})
     end
   end
 end
