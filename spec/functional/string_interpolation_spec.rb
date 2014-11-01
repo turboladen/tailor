@@ -15,7 +15,7 @@ describe 'String interpolation cases' do
   end
 
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
     FileUtils.touch file_name
     File.open(file_name, 'w') { |f| f.write contents }

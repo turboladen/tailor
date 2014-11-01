@@ -1,5 +1,4 @@
 class Tailor
-
   # Objects of this type are responsible for sending the right data to report
   # formatters.
   class Reporter

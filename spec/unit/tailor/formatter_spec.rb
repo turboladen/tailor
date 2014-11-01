@@ -22,7 +22,7 @@ describe Tailor::Formatter do
 
     context 'problems are empty' do
       it 'returns an empty Array' do
-        subject.problems_at_level({}, :error).should == []
+        expect(subject.problems_at_level({}, :error)).to eq []
       end
     end
 
@@ -31,7 +31,7 @@ describe Tailor::Formatter do
         msg = 'File contains invalid Ruby; '
         msg << 'run `ruby -c [your_file.rb]` for more details.'
 
-        subject.problems_at_level(problems, :warn).should == [
+        expect(subject.problems_at_level(problems, :warn)).to eq [
           {
             type: 'allow_invalid_ruby',
             line: 0,
@@ -45,7 +45,7 @@ describe Tailor::Formatter do
 
     context 'the level asked for does not exist in the problems' do
       it 'returns an empty Array' do
-        subject.problems_at_level(problems, :error).should == []
+        expect(subject.problems_at_level(problems, :error)).to eq []
       end
     end
   end

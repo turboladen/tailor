@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 LONG_METHOD_IN_CLASS = {}
 LONG_METHOD_IN_CLASS['ok_with_equals'] = <<-METH
 class Test
@@ -21,7 +20,7 @@ METH
 
 describe 'Long method detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
     File.open('long_method.rb', 'w') { |f| f.write contents }
     subject.check_file(file_name, style.to_hash)
@@ -46,10 +45,11 @@ describe 'Long method detection' do
   context 'methods are within limits' do
     context 'method ends with line that ends with ==' do
       let(:file_name) { 'ok_with_equals' }
-      specify {
+      specify do
         pending 'https://github.com/turboladen/tailor/issues/112'
 
-        subject.problems[file_name].size.should be 1 }
+        expect(subject.problems[file_name].size).to eq 1
+      end
     end
   end
 end

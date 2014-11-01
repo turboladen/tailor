@@ -1,6 +1,6 @@
 Given /^(.+) exists with(\w*) a newline at the end$/ do |file_name, no_newline|
   file_contents = get_file_contents(file_name)
-  file_contents.should_not be_nil
+  expect(file_contents).to_not be_nil
 
   if no_newline.empty?
     file_contents << "\n" unless file_contents[-1] == "\n"

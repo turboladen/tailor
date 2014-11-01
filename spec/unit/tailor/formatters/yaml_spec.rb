@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'tailor/formatters/yaml'
 require 'yaml'
 
-
 describe Tailor::Formatters::Yaml do
   describe '#summary_report' do
     context 'no files have problems' do
@@ -16,7 +15,7 @@ describe Tailor::Formatters::Yaml do
       it 'returns YAML with no body' do
         result = subject.summary_report(problems)
         hash = YAML.load(result)
-        hash.should == {}
+        expect(hash).to eq({})
       end
     end
 
@@ -34,10 +33,10 @@ describe Tailor::Formatters::Yaml do
       it 'returns YAML that contains the problem file and its problem' do
         result = subject.summary_report(problems)
         hash = YAML.load(result)
-        hash.keys.size.should == 1
-        hash.keys.first.should == '/path_to/file1.rb'
-        hash.should_not include '/path_to/file2.rb'
-        hash['/path_to/file1.rb'].first[:type].should eq 'type1'
+        expect(hash.keys.size).to eq 1
+        expect(hash.keys.first).to eq '/path_to/file1.rb'
+        expect(hash).to_not include '/path_to/file2.rb'
+        expect(hash['/path_to/file1.rb'].first[:type]).to eq 'type1'
       end
     end
 
@@ -62,13 +61,13 @@ describe Tailor::Formatters::Yaml do
       it 'returns YAML that contains the problem files and their problems' do
         result = subject.summary_report(problems)
         hash = YAML.load(result)
-        hash.keys.size.should == 2
-        hash.keys.first.should == '/path_to/file1.rb'
-        hash.keys.last.should == '/path_to/file3.rb'
-        hash.should_not include '/path_to/file2.rb'
-        hash['/path_to/file1.rb'].first[:type].should eq 'type1'
-        hash['/path_to/file3.rb'].first[:type].should eq 'type2'
-        hash['/path_to/file3.rb'].last[:type].should eq 'type3'
+        expect(hash.keys.size).to eq 2
+        expect(hash.keys.first).to eq '/path_to/file1.rb'
+        expect(hash.keys.last).to eq '/path_to/file3.rb'
+        expect(hash).to_not include '/path_to/file2.rb'
+        expect(hash['/path_to/file1.rb'].first[:type]).to eq 'type1'
+        expect(hash['/path_to/file3.rb'].first[:type]).to eq 'type2'
+        expect(hash['/path_to/file3.rb'].last[:type]).to eq 'type3'
       end
     end
   end

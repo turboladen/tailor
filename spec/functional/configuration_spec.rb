@@ -1,10 +1,9 @@
 require 'spec_helper'
 require 'tailor/configuration'
 
-
 describe 'Config File' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.deactivate!
   end
 
@@ -22,15 +21,16 @@ describe 'Config File' do
 
     context '.tailor does not exist' do
       before do
-        Tailor::Configuration.any_instance.stub(:config_file).and_return false
+        allow_any_instance_of(Tailor::Configuration).to receive(:config_file).
+          and_return false
       end
 
       it "sets formatters to 'text'" do
-        config.formatters.should == %w(text)
+        expect(config.formatters).to eq %w(text)
       end
 
       it 'sets file_sets[:default].style to the default style' do
-        config.file_sets[:default].style.should_not be_nil
+        expect(config.file_sets[:default].style).to_not be_nil
         expect(config.file_sets[:default].style).
           to eq Tailor::Configuration::Style.new.to_hash
       end
@@ -57,11 +57,13 @@ end
         end
 
         before do
-          File.should_receive(:read).and_return config_file
+          expect(File).to receive(:read).and_return config_file
         end
 
         it 'creates the default file set' do
-          config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
+          expect(config.file_sets[:default].style).
+            to eq Tailor::Configuration::Style.new.to_hash
+
           expect(config.file_sets[:default].file_list.all? do |path|
             path =~ /tailor\/lib/
           end).to eq true
@@ -70,7 +72,7 @@ end
         it 'creates the :features file set' do
           style = Tailor::Configuration::Style.new
           style.max_line_length(90, level: :warn)
-          config.file_sets[:features].style.should == style.to_hash
+          expect(config.file_sets[:features].style).to eq style.to_hash
           expect(config.file_sets[:features].file_list.all? do |path|
             path =~ /features/
           end).to eq true
@@ -90,15 +92,15 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
       it 'does not create a :default file set' do
-        config.file_sets.should_not include :default
+        expect(config.file_sets).to_not include :default
       end
 
       it 'creates the non-default file set' do
-        config.file_sets.should include :features
+        expect(config.file_sets).to include :features
       end
     end
 
@@ -114,11 +116,11 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
       it 'creates a :default file set' do
-        config.file_sets.keys.should == [:default]
+        expect(config.file_sets.keys).to eq [:default]
       end
 
       it 'has files in the file list levels deep' do
@@ -145,21 +147,24 @@ end
 
     context '.tailor does not exist' do
       before do
-        Tailor::Configuration.any_instance.stub(:config_file).and_return false
+        allow_any_instance_of(Tailor::Configuration).
+          to receive(:config_file).and_return false
       end
 
       it "sets formatters to 'text'" do
-        config.formatters.should == %w(text)
+        expect(config.formatters).to eq %w(text)
       end
 
       it 'sets file_sets[:default].style to the default style' do
-        config.file_sets[:default].style.should_not be_nil
-        config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
+        expect(config.file_sets[:default].style).to_not be_nil
+        expect(config.file_sets[:default].style).
+          to eq Tailor::Configuration::Style.new.to_hash
       end
 
       it 'sets file_sets[:default].file_list to the runtime files' do
-        config.file_sets[:default].file_list.size.should be 1
-        config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
+        expect(config.file_sets[:default].file_list.size).to eq 1
+        expect(config.file_sets[:default].file_list.first).
+          to match(/lib\/tailor\.rb$/)
       end
     end
 
@@ -180,19 +185,20 @@ end
         end
 
         before do
-          File.should_receive(:read).and_return config_file
+          expect(File).to receive(:read).and_return config_file
         end
 
         it 'creates the default file set using the runtime files' do
           style = Tailor::Configuration::Style.new
           style.max_line_length 85
-          config.file_sets[:default].style.should == style.to_hash
-          config.file_sets[:default].file_list.size.should be 1
-          config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
+          expect(config.file_sets[:default].style).to eq style.to_hash
+          expect(config.file_sets[:default].file_list.size).to eq 1
+          expect(config.file_sets[:default].file_list.first).
+            to match(/lib\/tailor\.rb$/)
         end
 
         it 'does not create the :features file set' do
-          config.file_sets.should_not include :features
+          expect(config.file_sets).to_not include :features
         end
       end
     end
@@ -209,17 +215,19 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
-      it 'creates a :default file set with the runtime file and default style' do
-        config.file_sets[:default].style.should == Tailor::Configuration::Style.new.to_hash
-        config.file_sets[:default].file_list.size.should be 1
-        config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
+      it 'creates a :default file set with the runtime file & default style' do
+        expect(config.file_sets[:default].style).
+          to eq Tailor::Configuration::Style.new.to_hash
+        expect(config.file_sets[:default].file_list.size).to eq 1
+        expect(config.file_sets[:default].file_list.first).
+          to match(/lib\/tailor\.rb$/)
       end
 
       it 'does not create the non-default file set' do
-        config.file_sets.should_not include :features
+        expect(config.file_sets).to_not include :features
       end
     end
 
@@ -235,20 +243,21 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
       it 'creates a :default file set' do
-        config.file_sets.keys.should == [:default]
+        expect(config.file_sets.keys).to eq [:default]
       end
 
-      it 'creates a :default file set with the runtime file and default style' do
-        style = Tailor::Configuration::Style.new.tap do |style|
-          style.max_line_length 90, level: :warn
+      it 'creates a :default file set with the runtime file & default style' do
+        style = Tailor::Configuration::Style.new.tap do |s|
+          s.max_line_length 90, level: :warn
         end.to_hash
-        config.file_sets[:default].style.should == style
-        config.file_sets[:default].file_list.size.should be 1
-        config.file_sets[:default].file_list.first.match /lib\/tailor\.rb$/
+        expect(config.file_sets[:default].style).to eq style
+        expect(config.file_sets[:default].file_list.size).to eq 1
+        expect(config.file_sets[:default].file_list.first).
+          to match(/lib\/tailor\.rb$/)
       end
     end
 
@@ -262,11 +271,11 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
       it "sets formatters to 'yaml'" do
-        config.formatters.should == %w(yaml)
+        expect(config.formatters).to eq %w(yaml)
       end
     end
 
@@ -280,13 +289,12 @@ end
       end
 
       before do
-        File.should_receive(:read).and_return config_file
+        expect(File).to receive(:read).and_return config_file
       end
 
       it 'sets formatters to the defined' do
-        config.formatters.should == %w(yaml text)
+        expect(config.formatters).to eq %w(yaml text)
       end
-
     end
   end
 end

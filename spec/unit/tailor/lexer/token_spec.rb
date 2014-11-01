@@ -14,7 +14,7 @@ describe Tailor::Lexer::Token do
 
     context 'the current line has a keyword that is also a modifier' do
       context 'the keyword is acting as a modifier' do
-        let!(:full_line_of_text) { %q{puts "hi" if true == true} }
+        let!(:full_line_of_text) { %(puts "hi" if true == true) }
 
         it 'returns true' do
           expect(subject.modifier_keyword?).to eq true
@@ -22,7 +22,7 @@ describe Tailor::Lexer::Token do
       end
 
       context 'they keyword is NOT acting as a modifier' do
-        let!(:full_line_of_text) { %q{if true == true; puts "hi"; end} }
+        let!(:full_line_of_text) { %(if true == true; puts "hi"; end) }
 
         it 'returns false' do
           expect(subject.modifier_keyword?).to eq false
@@ -31,7 +31,7 @@ describe Tailor::Lexer::Token do
     end
 
     context 'the current line does not have a keyword' do
-      let!(:full_line_of_text) { %q{puts true} }
+      let!(:full_line_of_text) { %(puts true) }
 
       subject do
         options = { full_line_of_text: full_line_of_text }

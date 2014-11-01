@@ -2,22 +2,20 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 BRACKETS = {}
-BRACKETS['space_in_empty_array'] = %Q{[ ]}
-BRACKETS['simple_array_space_after_lbracket'] = %Q{[ 1, 2, 3]}
-BRACKETS['simple_array_space_before_rbracket'] = %Q{[1, 2, 3 ]}
-BRACKETS['hash_key_ref_space_before_rbracket'] = %Q{thing[:one ]}
-BRACKETS['hash_key_ref_space_after_lbracket'] = %Q{thing[ :one]}
+BRACKETS['space_in_empty_array'] = %([ ])
+BRACKETS['simple_array_space_after_lbracket'] = %([ 1, 2, 3])
+BRACKETS['simple_array_space_before_rbracket'] = %([1, 2, 3 ])
+BRACKETS['hash_key_ref_space_before_rbracket'] = %(thing[:one ])
+BRACKETS['hash_key_ref_space_after_lbracket'] = %(thing[ :one])
 BRACKETS['two_d_array_space_after_lbrackets'] =
-  %Q{[ [1, 2, 3], [ 'a', 'b', 'c']]}
+  %([ [1, 2, 3], [ 'a', 'b', 'c']])
 BRACKETS['two_d_array_space_before_rbrackets'] =
-  %Q{[[1, 2, 3 ], [ 'a', 'b', 'c'] ]}
-
+  %([[1, 2, 3 ], [ 'a', 'b', 'c'] ])
 
 describe 'Detection of spaces around brackets' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
     File.open(file_name, 'w') { |f| f.write contents }
     critic.check_file(file_name, style.to_hash)
@@ -27,7 +25,7 @@ describe 'Detection of spaces around brackets' do
     Tailor::Critic.new
   end
 
-  let(:contents) { BRACKETS[file_name]}
+  let(:contents) { BRACKETS[file_name] }
 
   let(:style) do
     style = Tailor::Configuration::Style.new
@@ -40,49 +38,49 @@ describe 'Detection of spaces around brackets' do
   context 'Arrays' do
     context 'empty with space inside' do
       let(:file_name) { 'space_in_empty_array' }
-      specify { critic.problems[file_name].size.should be 1 }
-      specify { critic.problems[file_name].first[:type].should == 'spaces_after_lbracket' }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 1 }
-      specify { critic.problems[file_name].first[:level].should be :error }
+      specify { expect(critic.problems[file_name].size).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:type]).to eq 'spaces_after_lbracket' }
+      specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:column]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:level]).to eq :error }
     end
 
     context 'space after lbracket' do
       let(:file_name) { 'simple_array_space_after_lbracket' }
-      specify { critic.problems[file_name].size.should be 1 }
-      specify { critic.problems[file_name].first[:type].should == 'spaces_after_lbracket' }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 1 }
-      specify { critic.problems[file_name].first[:level].should be :error }
+      specify { expect(critic.problems[file_name].size).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:type]).to eq 'spaces_after_lbracket' }
+      specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:column]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:level]).to eq :error }
     end
 
     context 'space before rbracket' do
       let(:file_name) { 'simple_array_space_before_rbracket' }
-      specify { critic.problems[file_name].size.should be 1 }
-      specify { critic.problems[file_name].first[:type].should == 'spaces_before_rbracket' }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 9 }
-      specify { critic.problems[file_name].first[:level].should be :error }
+      specify { expect(critic.problems[file_name].size).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:type]).to eq 'spaces_before_rbracket' }
+      specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:column]).to eq 9 }
+      specify { expect(critic.problems[file_name].first[:level]).to eq :error }
     end
   end
 
   context 'Hash key references' do
     context 'space before rbracket' do
       let(:file_name) { 'hash_key_ref_space_before_rbracket' }
-      specify { critic.problems[file_name].size.should be 1 }
-      specify { critic.problems[file_name].first[:type].should == 'spaces_before_rbracket' }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 11 }
-      specify { critic.problems[file_name].first[:level].should be :error }
+      specify { expect(critic.problems[file_name].size).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:type]).to eq 'spaces_before_rbracket' }
+      specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:column]).to eq 11 }
+      specify { expect(critic.problems[file_name].first[:level]).to eq :error }
     end
 
     context 'space after lbracket' do
       let(:file_name) { 'hash_key_ref_space_after_lbracket' }
-      specify { critic.problems[file_name].size.should be 1 }
-      specify { critic.problems[file_name].first[:type].should == 'spaces_after_lbracket' }
-      specify { critic.problems[file_name].first[:line].should be 1 }
-      specify { critic.problems[file_name].first[:column].should be 6 }
-      specify { critic.problems[file_name].first[:level].should be :error }
+      specify { expect(critic.problems[file_name].size).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:type]).to eq 'spaces_after_lbracket' }
+      specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+      specify { expect(critic.problems[file_name].first[:column]).to eq 6 }
+      specify { expect(critic.problems[file_name].first[:level]).to eq :error }
     end
   end
 end

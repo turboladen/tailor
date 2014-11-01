@@ -8,7 +8,7 @@ describe Tailor::Reporter do
 
       it 'creates a new Formatter object of the type passed in' do
         reporter = Tailor::Reporter.new(formats)
-        reporter.formatters.first.should be_a Tailor::Formatters::Text
+        expect(reporter.formatters.first).to be_a Tailor::Formatters::Text
       end
     end
   end
@@ -26,7 +26,7 @@ describe Tailor::Reporter do
 
     it 'calls #file_report on each @formatters' do
       label = :some_label
-      formatter.should_receive(:file_report).with(file_problems, label)
+      expect(formatter).to receive(:file_report).with(file_problems, label)
 
       subject.file_report(file_problems, label)
     end
@@ -45,8 +45,8 @@ describe Tailor::Reporter do
 
     context 'without output file' do
       it 'calls #file_report on each @formatters' do
-        formatter.should_receive(:summary_report).with(all_problems)
-        File.should_not_receive(:open)
+        expect(formatter).to receive(:summary_report).with(all_problems)
+        expect(File).to_not receive(:open)
 
         subject.summary_report(all_problems)
       end
@@ -55,18 +55,17 @@ describe Tailor::Reporter do
     context 'with output file' do
       let(:output_file) { 'output.whatever' }
       before do
-        formatter.should_receive(:respond_to?).with(:accepts_output_file).
+        expect(formatter).to receive(:respond_to?).with(:accepts_output_file).
           and_return(true)
-        formatter.should_receive(:accepts_output_file).and_return(true)
+        expect(formatter).to receive(:accepts_output_file).and_return(true)
       end
 
       it 'calls #summary_report on each @formatters' do
-        formatter.should_receive(:summary_report).with(all_problems)
-        File.should_receive(:open).with(output_file, 'w')
+        expect(formatter).to receive(:summary_report).with(all_problems)
+        expect(File).to receive(:open).with(output_file, 'w')
 
         subject.summary_report(all_problems, output_file: output_file)
       end
     end
-
   end
 end

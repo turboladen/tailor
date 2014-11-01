@@ -7,7 +7,7 @@ describe Tailor::Rulers::SpacesAfterCommaRuler do
   describe '#comma_update' do
     it 'adds the column number to @comma_columns' do
       subject.comma_update(',', 2, 1)
-      subject.instance_variable_get(:@comma_columns).should == [1]
+      expect(subject.instance_variable_get(:@comma_columns)).to eq [1]
     end
   end
 
@@ -15,14 +15,14 @@ describe Tailor::Rulers::SpacesAfterCommaRuler do
     context 'no event after comma' do
       let(:lexed_line) do
         l = double 'LexedLine'
-        l.stub(:event_at)
-        l.stub(:index)
+        allow(l).to receive(:event_at)
+        allow(l).to receive(:index)
 
         l
       end
 
       it 'does not detect any problems' do
-        Tailor::Problem.should_not_receive(:new)
+        expect(Tailor::Problem).to_not receive(:new)
         expect { subject.check_spaces_after_comma(lexed_line, 1) }.
           to_not raise_error
       end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'tailor/version'
 
-
 describe Tailor::VERSION do
-  it { should == '1.4.0' }
+  it { is_expected.to eq '1.4.0' }
 end

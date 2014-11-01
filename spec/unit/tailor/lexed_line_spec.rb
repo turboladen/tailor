@@ -3,7 +3,7 @@ require 'tailor/lexed_line'
 
 describe Tailor::LexedLine do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
   end
 
   subject { Tailor::LexedLine.new(lexed_output, 1) }
@@ -29,7 +29,7 @@ describe Tailor::LexedLine do
     it 'returns all lexed output from line 1 when self.lineno is 1' do
       line = Tailor::LexedLine.new(lexed_output, 1)
 
-      line.should == [
+      expect(line).to eq [
         [[1, 0], :on_ident, 'require'],
         [[1, 7], :on_sp, ' '],
         [[1, 8], :on_tstring_beg, "'"],
@@ -249,7 +249,8 @@ describe Tailor::LexedLine do
       end
 
       it 'returns the event before it' do
-        expect(subject.last_non_line_feed_event).to eq [[1, 4], :on_ident, 'thing']
+        expect(subject.last_non_line_feed_event).
+          to eq [[1, 4], :on_ident, 'thing']
       end
     end
   end
@@ -376,7 +377,7 @@ describe Tailor::LexedLine do
       end
     end
 
-    context "lexed line contains only \\n" do
+    context 'lexed line contains only \n' do
       let(:lexed_output) { [[[1, 0], :on_ignored_nl, "\n"]] }
 
       it 'returns nil' do

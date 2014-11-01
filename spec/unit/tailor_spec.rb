@@ -6,12 +6,12 @@ describe Tailor do
 
   describe '.config' do
     it 'creates a new Configuration object' do
-      Tailor::Configuration.should_receive(:new)
+      expect(Tailor::Configuration).to receive(:new)
       Tailor.config
     end
 
     it 'returns a Configuration object' do
-      Tailor.config.should be_a Tailor::Configuration
+      expect(Tailor.config).to be_a Tailor::Configuration
     end
   end
 end
