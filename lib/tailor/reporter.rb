@@ -10,18 +10,26 @@ class Tailor
     #
     # @param [Array] formats A list of formatters to use for generating reports.
     def initialize(*formats)
-      @formatters = []
-      formats = %w[text] if formats.nil? || formats.empty?
+      formats = %w(text) if formats.nil? || formats.empty?
 
-      formats.flatten.each do |formatter|
+      @formatters = formats.flatten.map do |formatter|
+        retried = false
+
         begin
-          Tailor::Formatters.const_get(formatter.capitalize)
+          Tailor::Formatters.const_get(formatter.capitalize).new
         rescue NameError
           require_relative "formatters/#{formatter}"
-        ensure
-          @formatters << Tailor::Formatters.const_get(formatter.capitalize).new
+
+          if retried
+            next
+          else
+            retried = true
+            retry
+          end
         end
-      end
+      end.uniq
+
+      @formatters.compact!
     end
 
     # Sends the data to each +@formatters+ to generate the report of problems
