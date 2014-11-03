@@ -1,4 +1,5 @@
-# tailor
+tailor
+======
 
 * http://github.com/turboladen/tailor
 
@@ -6,7 +7,8 @@
 [<img src="https://secure.travis-ci.org/turboladen/tailor.png?branch=master"
 alt="Build Status" />](http://travis-ci.org/turboladen/tailor) [![Code Climate](https://codeclimate.com/github/turboladen/tailor.png)](https://codeclimate.com/github/turboladen/tailor)
 
-## DESCRIPTION:
+DESCRIPTION:
+------------
 
 tailor parses Ruby files and measures them with some style and static analysis
 "rulers".  Default values for the Rulers are based on a number of style guides
@@ -16,7 +18,8 @@ http://wiki.github.com/turboladen/tailor.
 tailor's goal is to help you be consistent with your style, throughout your
 project, whatever style that may be.
 
-## FEATURES/PROBLEMS:
+FEATURES/PROBLEMS:
+------------------
 
 * Checks for bad style in Ruby files
     * Recursively in a directory, or...
@@ -59,17 +62,17 @@ project, whatever style that may be.
     * (Well, this may be stretching things a bit, but...) Exit 1 on failures
 
 
+SYNOPSIS:
+---------
 
-## SYNOPSIS:
-
-### Why style check?
+### Why style check? ###
 
 If you're reading this, there's a good chance you already have your own
 reasons for doing so.  If you're not familiar with static analysis, give
 tailor a go for a few days and see if you think it improves your code's
 readability.
 
-### What's it do?
+### What's it do? ###
 
 At tailor's inception, there were some other static analysis tools for Ruby,
 but none which checked style stuff; tailor started off as a means to fill this
@@ -78,7 +81,7 @@ various Ruby 1.9 incompatibilities, and left a bigger tool gap for Rubyists.
 Right now it's mostly a style-checker, but might into a tool for analyzing
 other aspects of your Ruby code.
 
-### Since 0.x...
+### Since 0.x... ###
 
 tailor 1.x is a marked improvement over 0.x.  While 0.x provided a few (pretty
 inconsistent) style checks, its design made the code get all spaghetti-like,
@@ -86,7 +89,7 @@ with lots of really gnarly regular expression matching, making it a really bear
 to add new features and fix bugs.  tailor 1.x is completely redesigned to make
 that whole process much easier.
 
-### Measure Stuff
+### Measure Stuff ###
 
 Check *all* files in a directory:
 
@@ -129,7 +132,7 @@ require 'tailor/rake_task'
 Tailor::RakeTask.new
 ```
 
-#### On style...
+#### On style... ####
 
 The features list, above, shows some aspects of style that should be fairly
 straightforward (as to their meaning and reason), however, others make some
@@ -197,7 +200,7 @@ uses; it just might not support your style yet.  If tailor doesn't support
 your style, please feel free to take a look at the issues list and make a
 request. ...or fork away!
 
-### Configurable:
+### Configurable: ###
 
 Not everyone prefers the same style of, well, anything really.  tailor is
 configurable to allow you to check your code against the style measurements
@@ -206,7 +209,7 @@ that you want.
 It has default values for each of the "rulers" it uses, but if you want to
 customize these, there are a number of ways you can do so.
 
-#### CLI
+#### CLI ####
 
 At any time, you can tell tailor to show you the configuration that it's going
 to use by doing:
@@ -234,7 +237,7 @@ If you want to simply disable a ruler, just pass `off` to the option:
 $ tailor --max-line-length off lib/
 ```
 
-#### Configuration File
+#### Configuration File ####
 
 While you can drive most tailor options from the command line, configuration
 files allow for some more flexibility with style rulers, file lists, and
@@ -262,7 +265,7 @@ end
 
 This brings us to the concept of "file sets"...
 
-##### File Sets
+##### File Sets #####
 
 File sets allow you to use different style rulers against different groups of
 files.  You may, for example, want your Rails app code to allow for longer
@@ -328,7 +331,7 @@ Tailor.config do |config|
 end
 ```
 
-##### Formatters
+##### Formatters #####
 
 By default Tailor uses the text formatter, printing the results on console.
 Tailor also provides a YAML formatter, that accepts an output file if using
@@ -344,36 +347,36 @@ Tailor.config do |config|
 end
 ```
 
-### Define A Custom Ruler
+### Define A Custom Ruler ###
 
 While tailor provides a number of Rulers for checking style, it also provides
 a way for you to add your own rulers without having to delve into its innards.
  To do this, you need to do the following.
 
-#### Create the Ruler
+#### Create the Ruler ####
 
 Before jumping in to this, take a look at {Tailor::Ruler} and any of the
 existing Rulers in `lib/tailor/rulers/`.  There are some key things a new
 Ruler must have:
 
-*   the class name ends with "Ruler"
-*   it inherits {Tailor::Ruler}
-*   it's defined within the {Tailor::Rulers} module
-*   `#initialize` defines two parameters:
-    1.  `config` sets `@config` to the "golden rule" value for what you're
-        measuring
-    2.  `options` is a Hash, that should at least be passed the `:level =>` you
-        want the problem to be logged as
+* the class name ends with "Ruler"
+* it inherits {Tailor::Ruler}
+* it's defined within the {Tailor::Rulers} module
+* `#initialize` defines two parameters:
+    1.`config` sets `@config` to the "golden rule" value for what you're
+      measuring
+    2.`options` is a Hash, that should at least be passed the `:level =>` you
+      want the problem to be logged as
 
-*   `#add_lexer_observers` gets passed a list of {Tailor::Lexer} event types
-    that the ruler should get notified on
-*   it defines call-back methods for {Tailor::Lexer} to call when it comes
-    across an event of interest
-*   it calls `#measure` to assess if the criteria it's checking has been met
-*   it adds a {Tailor::Problem} to +@problems+ when one is found in `#measure`
+* `#add_lexer_observers` gets passed a list of {Tailor::Lexer} event types
+  that the ruler should get notified on
+* it defines call-back methods for {Tailor::Lexer} to call when it comes
+  across an event of interest
+* it calls `#measure` to assess if the criteria it's checking has been met
+* it adds a {Tailor::Problem} to +@problems+ when one is found in `#measure`
 
 
-#### Add the Ruler to the list of Styles
+#### Add the Ruler to the list of Styles ####
 
 Internally, this all happens in `lib/tailor/configuration/style.rb`, but you
 can add information about your ruler to your config file.  If you created a
@@ -425,7 +428,7 @@ end
 
 Next time you run tailor, your Ruler will get initialized and used.
 
-### Using the lib
+### Using the lib ###
 
 Sometimes you could use tailor as a lib, getting the results as a hash and
 manipulate them according your domain.
@@ -446,13 +449,13 @@ tailor = Tailor::CLI.new %w(--output-file=results.yaml)
 tailor.execute!
 ```
 
-## REQUIREMENTS:
+REQUIREMENTS:
+-------------
 
 * Rubies (tested)
-    * 1.9.3
-    * 2.0.0
-    * 2.1.0
-
+    * ruby-2.0.0
+    * ruby-2.1.4
+    * mruby-1.0.0
 * Gems
     * log_switch
     * nokogiri
@@ -460,13 +463,14 @@ tailor.execute!
     * text-table
 
 
-
-## INSTALL:
+INSTALL:
+--------
 
     $ (sudo) gem install tailor
-    
 
-## RELATED PROJECTS:
+
+RELATED PROJECTS:
+-----------------
 
 * [rubocop](https://github.com/bbatsov/rubocop). *A robust Ruby code analyzer, based on the community Ruby style guide.*
 * [cane](https://github.com/square/cane). *Code quality threshold checking as part of your build*
@@ -476,7 +480,8 @@ tailor.execute!
 * [foodcritic](http://www.foodcritic.io).  *Foodcritic is a helpful lint tool you can use to check your Chef cookbooks for common problems.*
 * [metric_fu](https://github.com/metricfu/metric_fu).  *A fist full of code metrics*
 
-## LICENSE:
+LICENSE:
+--------
 
 (The MIT License)
 
