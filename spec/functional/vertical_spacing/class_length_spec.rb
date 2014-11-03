@@ -2,27 +2,25 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 CLASS_LENGTH = {}
 CLASS_LENGTH['class_too_long'] =
-  %Q{class Party
+  %(class Party
   include Clowns
   include Pizza
 
   def barrel_roll
     puts 'DOABARRELROLL!'
   end
-end}
+end)
 
 CLASS_LENGTH['parent_class_too_long'] =
-  %Q{class Party
+  %(class Party
 
   class Pizza
     include Cheese
     include Yumminess
   end
-end}
-
+end)
 
 describe 'Detection of class length' do
   before do

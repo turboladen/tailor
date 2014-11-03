@@ -5,7 +5,7 @@ require 'tailor/configuration/style'
 
 describe 'Horizontal Space problem detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
   end
 
@@ -27,9 +27,9 @@ describe 'Horizontal Space problem detection' do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it 'should be OK' do
+    it 'is OK' do
       critic.check_file(file_name, style.to_hash)
-      critic.problems.should == { file_name =>  [] }
+      expect(critic.problems).to eq(file_name =>  [])
     end
   end
 
@@ -43,31 +43,31 @@ describe 'Horizontal Space problem detection' do
 
     context 'no problems' do
       let(:contents) do
-        %Q{execute 'myscript' do
+        %(execute 'myscript' do
   command \\
     '/some/line/that/is/not/over/eighty/chars.sh'
   only_if { something }
-end}
+end)
       end
 
       it 'is OK' do
         critic.check_file(file_name, style.to_hash)
-        critic.problems.should == { file_name => [] }
+        expect(critic.problems).to eq(file_name => [])
       end
     end
 
     context 'line after backslash is too long' do
       let(:contents) do
-        %Q{execute 'myscript' do
+        %(execute 'myscript' do
   command \\
     '#{'*' * 75}'
   only_if { something }
-end}
+end)
       end
 
       it 'is OK' do
         critic.check_file(file_name, style.to_hash)
-        critic.problems.should == {
+        expect(critic.problems).to eq(
           file_name => [
             {
               type: 'max_line_length',
@@ -76,8 +76,7 @@ end}
               message: 'Line is 81 chars long, but should be 80.',
               level: :error
             }
-          ]
-        }
+          ])
       end
     end
   end

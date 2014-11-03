@@ -2,16 +2,14 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 LONG_LINE = {}
-LONG_LINE['long_line_no_newline'] = %Q{'#{'#' * 79}'}
-LONG_LINE['long_line_newline_at_82'] = %Q{'#{'#' * 79}'
-}
-
+LONG_LINE['long_line_no_newline'] = %('#{'#' * 79}')
+LONG_LINE['long_line_newline_at_82'] = %('#{'#' * 79}'
+)
 
 describe 'Long line detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
     File.open(file_name, 'w') { |f| f.write contents }
     critic.check_file(file_name, style.to_hash)
@@ -21,7 +19,7 @@ describe 'Long line detection' do
     Tailor::Critic.new
   end
 
-  let(:contents) { LONG_LINE[file_name]}
+  let(:contents) { LONG_LINE[file_name] }
 
   let(:style) do
     style = Tailor::Configuration::Style.new
@@ -33,19 +31,19 @@ describe 'Long line detection' do
 
   context 'line is 81 chars, no newline' do
     let(:file_name) { 'long_line_no_newline' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'max_line_length' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 81 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'max_line_length' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 81 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 
   context 'line is 81 chars, plus a newline' do
     let(:file_name) { 'long_line_newline_at_82' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'max_line_length' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 81 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'max_line_length' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 81 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 end

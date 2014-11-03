@@ -3,21 +3,20 @@ require_relative '../../support/horizontal_spacing_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 TRAILING_WHITESPACE = {}
-TRAILING_WHITESPACE['empty_line_with_spaces'] = %Q{  }
-TRAILING_WHITESPACE['empty_line_with_spaces_in_method'] = %Q{def thing
+TRAILING_WHITESPACE['empty_line_with_spaces'] = %(  )
+TRAILING_WHITESPACE['empty_line_with_spaces_in_method'] = %(def thing
   
   puts 'something'
-end}
+end)
 
-TRAILING_WHITESPACE['trailing_spaces_on_def'] = %Q{def thing  
+TRAILING_WHITESPACE['trailing_spaces_on_def'] = %(def thing  
   puts 'something'
-end}
+end)
 
 describe 'Trailing whitespace detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
     File.open(file_name, 'w') { |f| f.write contents }
     critic.check_file(file_name, style.to_hash)
@@ -27,7 +26,7 @@ describe 'Trailing whitespace detection' do
     Tailor::Critic.new
   end
 
-  let(:contents) { TRAILING_WHITESPACE[file_name]}
+  let(:contents) { TRAILING_WHITESPACE[file_name] }
 
   let(:style) do
     style = Tailor::Configuration::Style.new

@@ -4,33 +4,33 @@ V_SPACING_OK = {}
 # Class length
 #-------------------------------------------------------------------------------
 V_SPACING_OK['class_five_code_lines'] =
-  %Q{class Party
+  %(class Party
   include Clowns
 
   def barrel_roll
   end
-end}
+end)
 
 V_SPACING_OK['embedded_class_five_code_lines'] =
-  %Q{class Party
+  %(class Party
   class Pizza
     include Cheese
   end
-end}
+end)
 
 #-------------------------------------------------------------------------------
 # Method length
 #-------------------------------------------------------------------------------
 V_SPACING_OK['method_3_code_lines'] =
-  %Q{def thing
+  %(def thing
 
 
   puts 'hi'
-end}
+end)
 
 V_SPACING_OK['embedded_method_3_code_lines'] =
-  %Q{def outter_thing
+  %(def outter_thing
   def thing; puts 'hi'; end
 
 
-end}
+end)

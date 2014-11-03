@@ -2,26 +2,23 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 SCREAMING_SNAKE_CASE_CLASSES = {}
 
 SCREAMING_SNAKE_CASE_CLASSES['one_screaming_snake_case_class'] =
-  %Q{class Thing_One
-end}
+  %(class Thing_One
+end)
 
 SCREAMING_SNAKE_CASE_CLASSES['one_screaming_snake_case_module'] =
-  %Q{module Thing_One
-end}
+  %(module Thing_One
+end)
 
 SCREAMING_SNAKE_CASE_CLASSES['double_screaming_snake_case_class'] =
-  %Q{class Thing_One_Again
-end}
+  %(class Thing_One_Again
+end)
 
 SCREAMING_SNAKE_CASE_CLASSES['double_screaming_snake_case_module'] =
-  %Q{module Thing_One_Again
-end}
-
-
+  %(module Thing_One_Again
+end)
 
 describe 'Detection of camel case methods' do
   before do
@@ -47,37 +44,37 @@ describe 'Detection of camel case methods' do
 
   context 'standard screaming snake case class' do
     let(:file_name) { 'one_screaming_snake_case_class' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 6 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'allow_screaming_snake_case_classes' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 6 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 
   context 'standard screaming snake case module' do
     let(:file_name) { 'one_screaming_snake_case_module' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 7 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'allow_screaming_snake_case_classes' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 7 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 
   context 'double screaming snake case class' do
     let(:file_name) { 'double_screaming_snake_case_class' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 6 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'allow_screaming_snake_case_classes' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 6 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 
   context 'double screaming snake case module' do
     let(:file_name) { 'double_screaming_snake_case_module' }
-    specify { critic.problems[file_name].size.should be 1 }
-    specify { critic.problems[file_name].first[:type].should == 'allow_screaming_snake_case_classes' }
-    specify { critic.problems[file_name].first[:line].should be 1 }
-    specify { critic.problems[file_name].first[:column].should be 7 }
-    specify { critic.problems[file_name].first[:level].should be :error }
+    specify { expect(critic.problems[file_name].size).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:type]).to eq 'allow_screaming_snake_case_classes' }
+    specify { expect(critic.problems[file_name].first[:line]).to eq 1 }
+    specify { expect(critic.problems[file_name].first[:column]).to eq 7 }
+    specify { expect(critic.problems[file_name].first[:level]).to eq :error }
   end
 end

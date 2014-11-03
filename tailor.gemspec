@@ -26,7 +26,7 @@ project, whatever style that may be.
   s.test_files = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
 
-  s.add_runtime_dependency 'log_switch', '= 0.3.0' # log_switch 1.0.0 isn't compatable
+  s.add_runtime_dependency 'log_switch', '~> 0.3.0'
   s.add_runtime_dependency 'nokogiri', '>= 1.6.0'
   s.add_runtime_dependency 'term-ansicolor', '>= 1.0.5'
   s.add_runtime_dependency 'text-table', '>= 1.2.2'
@@ -36,8 +36,8 @@ project, whatever style that may be.
   s.add_development_dependency 'cucumber', '>= 1.0.2'
   s.add_development_dependency 'fakefs', '>= 0.4.2'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '>= 2.5.0'
+  s.add_development_dependency 'rspec', '~> 3.1'
+  s.add_development_dependency 'rspec-its'
   s.add_development_dependency 'simplecov', '>= 0.4.0'
   s.add_development_dependency 'yard', '>= 0.7.0'
 end
-

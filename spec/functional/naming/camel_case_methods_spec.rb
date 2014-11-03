@@ -2,17 +2,15 @@ require 'spec_helper'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 CAMEL_CASE_METHODS = {}
 
 CAMEL_CASE_METHODS['one_caps_camel_case_method'] =
-  %Q{def thingOne
-end}
+  %(def thingOne
+end)
 
 CAMEL_CASE_METHODS['one_caps_camel_case_method_trailing_comment'] =
-  %Q{def thingOne   # comment
-end}
-
+  %(def thingOne   # comment
+end)
 
 describe 'Detection of camel case methods' do
   before do

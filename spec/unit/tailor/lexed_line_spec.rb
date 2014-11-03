@@ -3,7 +3,7 @@ require 'tailor/lexed_line'
 
 describe Tailor::LexedLine do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
   end
 
   subject { Tailor::LexedLine.new(lexed_output, 1) }
@@ -29,7 +29,7 @@ describe Tailor::LexedLine do
     it 'returns all lexed output from line 1 when self.lineno is 1' do
       line = Tailor::LexedLine.new(lexed_output, 1)
 
-      line.should == [
+      expect(line).to eq [
         [[1, 0], :on_ident, 'require'],
         [[1, 7], :on_sp, ' '],
         [[1, 8], :on_tstring_beg, "'"],
@@ -44,24 +44,24 @@ describe Tailor::LexedLine do
     context '0 length line, no \n ending' do
       let(:lexed_output) { [[[1, 0], :on_sp, '  ']] }
 
-      it 'should return true' do
-        subject.only_spaces?.should be_true
+      it 'is true' do
+        expect(subject.only_spaces?).to eq true
       end
     end
 
     context '0 length line, with \n ending' do
       let(:lexed_output) { [[[1, 0], :on_nl, "\n"]] }
 
-      it 'should return true' do
-        subject.only_spaces?.should be_true
+      it 'is true' do
+        expect(subject.only_spaces?).to eq true
       end
     end
 
     context 'comment line, starting at column 0' do
       let(:lexed_output) { [[[1, 0], :on_comment, '# comment']] }
 
-      it 'should return false' do
-        subject.only_spaces?.should be_false
+      it 'is false' do
+        expect(subject.only_spaces?).to eq false
       end
     end
 
@@ -73,8 +73,8 @@ describe Tailor::LexedLine do
         ]
       end
 
-      it 'should return false' do
-        subject.only_spaces?.should be_false
+      it 'is false' do
+        expect(subject.only_spaces?).to eq false
       end
     end
 
@@ -90,8 +90,8 @@ describe Tailor::LexedLine do
         ]
       end
 
-      it 'should return false' do
-        subject.only_spaces?.should be_false
+      it 'is false' do
+        expect(subject.only_spaces?).to eq false
       end
     end
   end
@@ -113,7 +113,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns true' do
-        subject.ends_with_op?.should be_true
+        expect(subject.ends_with_op?).to eq true
       end
     end
 
@@ -130,7 +130,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns false' do
-        subject.ends_with_op?.should be_false
+        expect(subject.ends_with_op?).to eq false
       end
     end
   end
@@ -148,10 +148,10 @@ describe Tailor::LexedLine do
         ]
       end
 
-      before { subject.stub(:ends_with_kw?).and_return true }
+      before { allow(subject).to receive(:ends_with_kw?).and_return true }
 
       it 'returns false' do
-        subject.ends_with_modifier_kw?.should be_false
+        expect(subject.ends_with_modifier_kw?).to eq false
       end
     end
 
@@ -173,29 +173,25 @@ describe Tailor::LexedLine do
 
       context 'the keyword is a modifier' do
         before do
-          token.stub(:modifier_keyword?).and_return true
-          Tailor::Lexer::Token.stub(:new).and_return token
-          subject.stub(:ends_with_kw?).and_return true
+          allow(token).to receive(:modifier_keyword?).and_return true
+          allow(Tailor::Lexer::Token).to receive(:new).and_return token
+          allow(subject).to receive(:ends_with_kw?).and_return true
         end
 
-        after { Tailor::Lexer::Token.unstub(:new) }
-
         it 'returns true' do
-          subject.ends_with_modifier_kw?.should be_true
+          expect(subject.ends_with_modifier_kw?).to eq true
         end
       end
 
       context 'the keyword is not a modifier' do
         before do
-          token.stub(:modifier_keyword?).and_return false
-          Tailor::Lexer::Token.stub(:new).and_return token
-          subject.stub(:ends_with_kw?).and_return true
+          allow(token).to receive(:modifier_keyword?).and_return false
+          allow(Tailor::Lexer::Token).to receive(:new).and_return token
+          allow(subject).to receive(:ends_with_kw?).and_return true
         end
 
-        after { Tailor::Lexer::Token.unstub(:new) }
-
-        it 'returns true' do
-          subject.ends_with_modifier_kw?.should be_false
+        it 'returns false' do
+          expect(subject.ends_with_modifier_kw?).to eq false
         end
       end
     end
@@ -214,13 +210,13 @@ describe Tailor::LexedLine do
 
     context 'line ends with the event' do
       it 'returns true' do
-        subject.does_line_end_with(:on_sp).should be_true
+        expect(subject.does_line_end_with(:on_sp)).to eq true
       end
     end
 
     context 'line does not even with event' do
       it 'returns false' do
-        subject.does_line_end_with(:on_kw).should be_false
+        expect(subject.does_line_end_with(:on_kw)).to eq false
       end
     end
   end
@@ -238,7 +234,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns the space' do
-        subject.last_non_line_feed_event.should == [[1, 9], :on_sp, ' ']
+        expect(subject.last_non_line_feed_event).to eq [[1, 9], :on_sp, ' ']
       end
     end
 
@@ -253,7 +249,8 @@ describe Tailor::LexedLine do
       end
 
       it 'returns the event before it' do
-        subject.last_non_line_feed_event.should == [[1, 4], :on_ident, 'thing']
+        expect(subject.last_non_line_feed_event).
+          to eq [[1, 4], :on_ident, 'thing']
       end
     end
   end
@@ -272,7 +269,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns true' do
-        subject.loop_with_do?.should be_true
+        expect(subject.loop_with_do?).to eq true
       end
     end
 
@@ -288,7 +285,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns false' do
-        subject.loop_with_do?.should be_false
+        expect(subject.loop_with_do?).to eq false
       end
     end
 
@@ -305,7 +302,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns true' do
-        subject.loop_with_do?.should be_true
+        expect(subject.loop_with_do?).to eq true
       end
     end
 
@@ -321,7 +318,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns false' do
-        subject.loop_with_do?.should be_false
+        expect(subject.loop_with_do?).to eq false
       end
     end
 
@@ -344,7 +341,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns true' do
-        subject.loop_with_do?.should be_true
+        expect(subject.loop_with_do?).to eq true
       end
     end
 
@@ -366,7 +363,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns false' do
-        subject.loop_with_do?.should be_false
+        expect(subject.loop_with_do?).to eq false
       end
     end
   end
@@ -376,15 +373,15 @@ describe Tailor::LexedLine do
       let(:lexed_output) { [[[1, 0], :on_sp, '     ']] }
 
       it 'returns nil' do
-        subject.first_non_space_element.should be_nil
+        expect(subject.first_non_space_element).to be_nil
       end
     end
 
-    context "lexed line contains only \\n" do
+    context 'lexed line contains only \n' do
       let(:lexed_output) { [[[1, 0], :on_ignored_nl, "\n"]] }
 
       it 'returns nil' do
-        subject.first_non_space_element.should be_nil
+        expect(subject.first_non_space_element).to be_nil
       end
     end
 
@@ -397,8 +394,8 @@ describe Tailor::LexedLine do
         ]
       end
 
-      it 'returns nil' do
-        subject.first_non_space_element.should == [[1, 2], :on_rbrace, '}']
+      it 'returns the token array' do
+        expect(subject.first_non_space_element).to eq [[1, 2], :on_rbrace, '}']
       end
     end
   end
@@ -408,13 +405,13 @@ describe Tailor::LexedLine do
 
     context 'self contains an event at the given column' do
       it 'returns that event' do
-        subject.event_at(0).should == lexed_output.first
+        expect(subject.event_at(0)).to eq lexed_output.first
       end
     end
 
     context 'self does not contain an event at the given column' do
       it 'returns nil' do
-        subject.event_at(1234).should be_nil
+        expect(subject.event_at(1234)).to be_nil
       end
     end
   end
@@ -423,13 +420,13 @@ describe Tailor::LexedLine do
     let(:lexed_output) { [[[1, 0], :on_sp, '     ']] }
 
     context '#event_at returns nil' do
-      before { subject.stub(:event_at).and_return nil }
-      specify { subject.event_index(1234).should be_nil }
+      before { allow(subject).to receive(:event_at).and_return nil }
+      specify { expect(subject.event_index(1234)).to be_nil }
     end
 
     context '#event_at returns a valid column' do
       it 'returns the event' do
-        subject.event_index(0).should be_zero
+        expect(subject.event_index(0)).to be_zero
       end
     end
   end
@@ -446,7 +443,7 @@ describe Tailor::LexedLine do
     end
 
     it "returns the String made up of self's tokens" do
-      subject.to_s.should == "def thing \n"
+      expect(subject.to_s).to eq "def thing \n"
     end
   end
 
@@ -471,7 +468,7 @@ describe Tailor::LexedLine do
         end
 
         it 'replaces the comment with an :on_ignored_nl' do
-          subject.remove_trailing_comment(file_text).should == [
+          expect(subject.remove_trailing_comment(file_text)).to eq [
             [[1, 0], :on_kw, 'def'],
             [[1, 3], :on_sp, ' '],
             [[1, 4], :on_ident, 'thing'],
@@ -501,7 +498,7 @@ describe Tailor::LexedLine do
         end
 
         it 'replaces the comment with an :on_ignored_nl' do
-          subject.remove_trailing_comment(file_text).should == [
+          expect(subject.remove_trailing_comment(file_text)).to eq [
             [[1, 0], :on_kw, 'def'],
             [[1, 3], :on_sp, ' '],
             [[1, 4], :on_ident, 'thing'],
@@ -533,7 +530,7 @@ describe Tailor::LexedLine do
         end
 
         it 'replaces the comment with an :on_nl' do
-          subject.remove_trailing_comment(file_text).should == [
+          expect(subject.remove_trailing_comment(file_text)).to eq [
             [[1, 0], :on_kw, 'def'],
             [[1, 3], :on_sp, ' '],
             [[1, 4], :on_ident, 'thing'],
@@ -561,7 +558,7 @@ describe Tailor::LexedLine do
         end
 
         it 'replaces the comment with an :on_nl' do
-          subject.remove_trailing_comment(file_text).should == [
+          expect(subject.remove_trailing_comment(file_text)).to eq [
             [[1, 0], :on_kw, 'def'],
             [[1, 3], :on_sp, ' '],
             [[1, 4], :on_ident, 'thing'],
@@ -572,8 +569,8 @@ describe Tailor::LexedLine do
         end
 
         it 'returns a LexedLine' do
-          subject.remove_trailing_comment(file_text).
-            should be_a Tailor::LexedLine
+          expect(subject.remove_trailing_comment(file_text)).
+            to be_a Tailor::LexedLine
         end
       end
     end
@@ -586,7 +583,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns true' do
-        subject.end_of_multi_line_string?.should be_true
+        expect(subject.end_of_multi_line_string?).to eq true
       end
     end
 
@@ -595,8 +592,8 @@ describe Tailor::LexedLine do
         [[[1, 11], :on_comma, ','], [[1, 12], :on_nl, "\n"]]
       end
 
-      it 'returns true' do
-        subject.end_of_multi_line_string?.should be_false
+      it 'returns false' do
+        expect(subject.end_of_multi_line_string?).to eq false
       end
     end
 
@@ -609,8 +606,8 @@ describe Tailor::LexedLine do
         ]
       end
 
-      it 'returns true' do
-        subject.end_of_multi_line_string?.should be_false
+      it 'returns false' do
+        expect(subject.end_of_multi_line_string?).to eq false
       end
     end
   end
@@ -626,10 +623,11 @@ describe Tailor::LexedLine do
       end
 
       before do
-        subject.stub(:last_non_line_feed_event).and_return last_event
+        allow(subject).to receive(:last_non_line_feed_event).
+          and_return last_event
       end
 
-      specify { subject.is_line_only_a(:on_period).should be_false }
+      specify { expect(subject.is_line_only_a(:on_period)).to eq false }
     end
 
     context 'last event is the last event passed in' do
@@ -641,7 +639,7 @@ describe Tailor::LexedLine do
             [[1, 12], :on_nl, "\n"]]
         end
 
-        specify { subject.is_line_only_a(:on_comma).should be_true }
+        specify { expect(subject.is_line_only_a(:on_comma)).to eq true }
       end
 
       context 'there is non-spaces before the last event' do
@@ -653,7 +651,7 @@ describe Tailor::LexedLine do
             [[1, 12], :on_nl, "\n"]]
         end
 
-        specify { subject.is_line_only_a(:on_comma).should be_false }
+        specify { expect(subject.is_line_only_a(:on_comma)).to eq false }
       end
     end
   end
@@ -669,7 +667,7 @@ describe Tailor::LexedLine do
       end
 
       it 'returns false' do
-        subject.keyword_is_symbol?.should be_false
+        expect(subject.keyword_is_symbol?).to eq false
       end
     end
 
@@ -682,7 +680,7 @@ describe Tailor::LexedLine do
         end
 
         it 'returns false' do
-          subject.keyword_is_symbol?.should be_false
+          expect(subject.keyword_is_symbol?).to eq false
         end
       end
 
@@ -695,7 +693,7 @@ describe Tailor::LexedLine do
         end
 
         it 'returns false' do
-          subject.keyword_is_symbol?.should be_false
+          expect(subject.keyword_is_symbol?).to eq false
         end
       end
 
@@ -709,7 +707,7 @@ describe Tailor::LexedLine do
         end
 
         it 'returns true' do
-          subject.keyword_is_symbol?.should be_true
+          expect(subject.keyword_is_symbol?).to eq true
         end
       end
     end

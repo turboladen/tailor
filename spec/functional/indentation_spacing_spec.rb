@@ -3,10 +3,9 @@ require_relative '../support/good_indentation_cases'
 require 'tailor/critic'
 require 'tailor/configuration/style'
 
-
 describe 'Indentation spacing problem detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
   end
 
@@ -30,9 +29,9 @@ describe 'Indentation spacing problem detection' do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it 'should be OK' do
+    it 'is OK' do
       critic.check_file(file_name, style.to_hash)
-      critic.problems.should == { file_name =>  [] }
+      expect(critic.problems).to eq(file_name =>  [])
     end
   end
 
@@ -40,18 +39,18 @@ describe 'Indentation spacing problem detection' do
     let(:file_name) { 'case_whens_in' }
 
     let(:contents) do
-      %Q{def my_method
+      %(def my_method
   case true
     when true
       puts "stuff"
     when false
       puts "blah blah"
   end
-end}
+end)
     end
 
     it 'is OK' do
-      pending 'Implementation of the option to allow for this'
+      skip 'Implementation of the option to allow for this'
     end
   end
 
@@ -59,13 +58,13 @@ end}
     let(:file_name) { 'method_closing_lonely_paren' }
 
     let(:contents) do
-      %Q{def your_thing(one
+      %{def your_thing(one
   )
 end}
     end
 
     it 'is OK' do
-      pending
+      skip 'Implementation'
     end
   end
 
@@ -73,14 +72,14 @@ end}
     let(:file_name) { 'rparen_and_do_same_line' }
 
     let(:contents) do
-      %Q{opt.on('-c', '--config-file FILE',
+      %{opt.on('-c', '--config-file FILE',
   "Use a specific config file.") do |config|
   options.config_file = config
 end}
     end
 
     it 'is OK' do
-      pending
+      skip 'Implementation'
     end
   end
 
@@ -88,16 +87,16 @@ end}
     let(:file_name) { 'block_chain' }
 
     let(:contents) do
-      %Q{{
+      %({
   a: 1
 }.each do |k, v|
   puts k, v
-end}
+end)
     end
 
     it 'is OK' do
       critic.check_file(file_name, style.to_hash)
-      critic.problems.should == { file_name =>  [] }
+      expect(critic.problems).to eq(file_name =>  [])
     end
   end
 end

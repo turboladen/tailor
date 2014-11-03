@@ -3,7 +3,7 @@ require 'tailor/configuration'
 require 'tailor/cli'
 
 describe Tailor::Configuration do
-  before { Tailor::Logger.stub(:log) }
+  before { allow(Tailor::Logger).to receive(:log) }
 
   subject do
     Tailor::Configuration.new('.')
@@ -13,14 +13,14 @@ describe Tailor::Configuration do
     context 'param is nil' do
       it 'returns the pre-exisiting @formatters' do
         subject.instance_variable_set(:@formatters, [:blah])
-        subject.formatters.should == [:blah]
+        expect(subject.formatters).to eq [:blah]
       end
     end
 
     context 'param is some value' do
       it 'sets @formatters to that value' do
         subject.formatters 'blah'
-        subject.instance_variable_get(:@formatters).should == ['blah']
+        expect(subject.instance_variable_get(:@formatters)).to eq ['blah']
       end
     end
   end
@@ -35,7 +35,7 @@ describe Tailor::Configuration do
         style.trailing_newlines 2
       end
 
-      subject.instance_variable_get(:@file_sets).should == {
+      expect(subject.instance_variable_get(:@file_sets)).to eq(
         bobo: {
           file_list: [],
           style: {
@@ -65,13 +65,13 @@ describe Tailor::Configuration do
             trailing_newlines: [2, { level: :error }]
           }
         }
-      }
+      )
     end
 
     context 'first param is nil' do
       it 'uses :default as the label' do
         subject.file_set
-        subject.instance_variable_get(:@file_sets).should include(:default)
+        expect(subject.instance_variable_get(:@file_sets)).to include(:default)
       end
     end
   end
@@ -81,14 +81,14 @@ describe Tailor::Configuration do
       it 'returns @config_file' do
         subject.instance_variable_set(:@config_file, 'pants')
         subject.config_file
-        subject.instance_variable_get(:@config_file).should == 'pants'
+        expect(subject.instance_variable_get(:@config_file)).to eq 'pants'
       end
     end
 
     context '@config_file is nil' do
       context 'DEFAULT_PROJECT_CONFIG exists' do
         before do
-          File.should_receive(:exists?).with(/\.tailor/).and_return true
+          expect(File).to receive(:exists?).with(/\.tailor/).and_return true
         end
 
         it "returns Dir.pwd + './tailor'" do
@@ -98,14 +98,14 @@ describe Tailor::Configuration do
 
       context 'DEFAULT_PROJECT_CONFIG does not exist' do
         before do
-          File.should_receive(:exists?).with(/\.tailor/).and_return false
-          File.should_receive(:exists?).with(/\.tailorrc/).and_return true
+          expect(File).to receive(:exists?).with(/\.tailor/).and_return false
+          expect(File).to receive(:exists?).with(/\.tailorrc/).and_return true
         end
 
         it 'returns DEFAULT_RC_FILE' do
           subject.config_file
-          subject.instance_variable_get(:@config_file).should ==
-            Tailor::Configuration::DEFAULT_RC_FILE
+          expect(subject.instance_variable_get(:@config_file)).
+            to eq Tailor::Configuration::DEFAULT_RC_FILE
         end
       end
     end
@@ -115,11 +115,13 @@ describe Tailor::Configuration do
     before do
       subject.instance_variable_set(:@file_sets, {})
     end
+
     it 'yields if a block is provided' do
       expect do |config|
         subject.recursive_file_set('*.rb', &config)
       end.to yield_control
     end
+
     it 'does not raise if a block is not provided' do
       expect { subject.recursive_file_set('*.rb') }.not_to raise_error
     end

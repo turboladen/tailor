@@ -6,7 +6,7 @@ require 'tailor/configuration/style'
 
 describe 'Vertical Space problem detection' do
   before do
-    Tailor::Logger.stub(:log)
+    allow(Tailor::Logger).to receive(:log)
     FakeFS.activate!
   end
 
@@ -28,9 +28,9 @@ describe 'Vertical Space problem detection' do
       File.open(file_name, 'w') { |f| f.write contents }
     end
 
-    it 'should be OK' do
+    it 'is OK' do
       critic.check_file(file_name, style.to_hash)
-      critic.problems.should == { file_name =>  [] }
+      expect(critic.problems).to eq(file_name =>  [])
     end
   end
 end

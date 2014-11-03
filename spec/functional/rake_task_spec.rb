@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'tailor/rake_task'
 
-
 describe Tailor::RakeTask do
   let(:rake) do
     Rake::Application.new
@@ -22,10 +21,7 @@ describe Tailor::RakeTask do
 
       it 'finds problems' do
         subject
-
-        expect {
-          rake['tailor'].invoke
-        }.to raise_error SystemExit
+        expect { rake['tailor'].invoke }.to raise_error SystemExit
       end
     end
 
@@ -38,10 +34,7 @@ describe Tailor::RakeTask do
 
       it 'does not find problems' do
         subject
-
-        expect {
-          rake['tailor'].invoke
-        }.to_not raise_error
+        expect { rake['tailor'].invoke }.to_not raise_error
       end
     end
   end
@@ -57,10 +50,7 @@ describe Tailor::RakeTask do
 
     it 'runs the task' do
       subject
-
-      expect {
-        rake[task_name].invoke
-      }.to_not raise_error RuntimeError, "Don't know how to build task '#{task_name}''"
+      expect { rake[task_name].invoke }.to raise_exception SystemExit
     end
   end
 
@@ -68,16 +58,13 @@ describe Tailor::RakeTask do
     subject do
       Tailor::RakeTask.new do |t|
         t.config_file = File.expand_path 'spec/support/rake_task_config_problems.rb'
-        t.tailor_opts = %w[--max-line-length=1000]
+        t.tailor_opts = %w(--max-line-length=1000)
       end
     end
 
     it 'uses the options from the rake task' do
       subject
-
-      expect {
-        rake['tailor'].invoke
-      }.to_not raise_error
+      expect { rake['tailor'].invoke }.to_not raise_error
     end
   end
 
@@ -89,11 +76,8 @@ describe Tailor::RakeTask do
     before do
       require 'fileutils'
 
-      unless File.exists?(test_dir)
-        FileUtils.mkdir(test_dir)
-      end
-
-      File.directory?(test_dir).should be_true
+      FileUtils.mkdir(test_dir)  unless File.exist?(test_dir)
+      expect(File.directory?(test_dir)).to eq true
 
       File.open(test_dir + '/test.rb', 'w') do |f|
         f.write <<-CONTENTS
@@ -101,7 +85,7 @@ puts 'I no have end quote
         CONTENTS
       end
 
-      File.exists?(test_dir + '/test.rb').should be_true
+      expect(File.exist?(test_dir + '/test.rb')).to eq true
     end
 
     after do
@@ -120,10 +104,7 @@ puts 'I no have end quote
 
     it 'uses the options from the rake task' do
       subject
-
-      expect {
-        rake['tailor'].invoke
-      }.to raise_error
+      expect { rake['tailor'].invoke }.to raise_error
     end
   end
 end

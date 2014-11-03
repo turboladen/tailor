@@ -38,19 +38,19 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     it 'sets @embexpr_nesting to [true]' do
       subject.instance_variable_set(:@embexpr_nesting, [])
       subject.embexpr_beg_update(lexed_line, 1, 1)
-      subject.instance_variable_get(:@embexpr_nesting).should == [true]
+      expect(subject.instance_variable_get(:@embexpr_nesting)).to eq [true]
     end
   end
 
   describe '#embexpr_end_update' do
     before do
-      lexed_line.should_receive(:only_embexpr_end?).and_return(false)
+      expect(lexed_line).to receive(:only_embexpr_end?).and_return(false)
     end
 
     it 'pops @embexpr_nesting' do
       subject.instance_variable_set(:@embexpr_nesting, [true])
       subject.embexpr_end_update(lexed_line, 1, 1)
-      subject.instance_variable_get(:@embexpr_nesting).should == []
+      expect(subject.instance_variable_get(:@embexpr_nesting)).to eq []
     end
   end
 
@@ -98,18 +98,18 @@ describe Tailor::Rulers::IndentationSpacesRuler do
     let(:manager) { double 'IndentationManager' }
 
     it 'calls #stop on the indentation_manager object' do
-      manager.should_receive(:update_actual_indentation).with lexed_line
-      manager.should_receive(:stop)
+      expect(manager).to receive(:update_actual_indentation).with lexed_line
+      expect(manager).to receive(:stop)
       subject.instance_variable_set(:@manager, manager)
       subject.tstring_beg_update(lexed_line, 1)
     end
 
     it 'adds the lineno to @tstring_nesting' do
-      manager.stub(:update_actual_indentation)
-      manager.stub(:stop)
+      allow(manager).to receive(:update_actual_indentation)
+      allow(manager).to receive(:stop)
       subject.instance_variable_set(:@manager, manager)
       subject.tstring_beg_update(lexed_line, 1)
-      subject.instance_variable_get(:@tstring_nesting).should == [1]
+      expect(subject.instance_variable_get(:@tstring_nesting)).to eq [1]
     end
   end
 
@@ -118,19 +118,19 @@ describe Tailor::Rulers::IndentationSpacesRuler do
       let(:manager) { double 'IndentationManager' }
 
       it 'calls #start' do
-        manager.should_receive(:start)
+        expect(manager).to receive(:start)
         subject.instance_variable_set(:@manager, manager)
         subject.tstring_end_update(2)
       end
 
       it 'removes the lineno to @tstring_nesting then calls @manager.start' do
-        manager.should_receive(:actual_indentation)
-        manager.should_receive(:start)
+        expect(manager).to receive(:actual_indentation)
+        expect(manager).to receive(:start)
         subject.instance_variable_set(:@manager, manager)
         subject.instance_variable_set(:@tstring_nesting, [1])
-        subject.should_receive(:measure)
+        expect(subject).to receive(:measure)
         subject.tstring_end_update(2)
-        subject.instance_variable_get(:@tstring_nesting).should be_empty
+        expect(subject.instance_variable_get(:@tstring_nesting)).to be_empty
       end
     end
   end

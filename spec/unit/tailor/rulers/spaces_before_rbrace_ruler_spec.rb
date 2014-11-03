@@ -15,12 +15,12 @@ describe Tailor::Rulers::SpacesBeforeRbraceRuler do
         l
       end
 
-      specify { subject.count_spaces(lexed_line, 1).should be_zero }
+      specify { expect(subject.count_spaces(lexed_line, 1)).to be_zero }
 
       it 'sets @do_measurement to false' do
         expect { subject.count_spaces(lexed_line, 1) }.
-          to change{subject.instance_variable_get(:@do_measurement)}.from(true).
-          to(false)
+          to change { subject.instance_variable_get(:@do_measurement) }.
+          from(true).to(false)
       end
     end
 
@@ -33,7 +33,7 @@ describe Tailor::Rulers::SpacesBeforeRbraceRuler do
         l
       end
 
-      specify { subject.count_spaces(lexed_line, 1).should be_zero }
+      specify { expect(subject.count_spaces(lexed_line, 1)).to be_zero }
     end
 
     context '1 space before rbrace' do
@@ -45,7 +45,7 @@ describe Tailor::Rulers::SpacesBeforeRbraceRuler do
         l
       end
 
-      specify { subject.count_spaces(lexed_line, 1).should == 1 }
+      specify { expect(subject.count_spaces(lexed_line, 1)).to eq 1 }
     end
 
     context '> 1 space before rbrace' do
@@ -57,7 +57,7 @@ describe Tailor::Rulers::SpacesBeforeRbraceRuler do
         l
       end
 
-      specify { subject.count_spaces(lexed_line, 1).should == 2 }
+      specify { expect(subject.count_spaces(lexed_line, 1)).to eq 2 }
     end
   end
 end

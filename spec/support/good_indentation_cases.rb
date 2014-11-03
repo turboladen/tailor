@@ -1,84 +1,84 @@
 INDENT_OK = {}
 
 INDENT_OK['class'] =
-  %Q{class MyClass
-end}
+  %(class MyClass
+end)
 
 INDENT_OK['one_line_class'] =
-  %Q{class MyClass; end}
+  %(class MyClass; end)
 
 INDENT_OK['one_line_subclass'] =
-  %Q{class MyClass < RuntimeError; end}
+  %(class MyClass < RuntimeError; end)
 
 INDENT_OK['one_line_subclass_with_inheritance'] =
-  %Q{class MyClass < Array
+  %(class MyClass < Array
   class MyError < RuntimeError; end
   include AnotherThing
-end}
+end)
 
 INDENT_OK['class_empty'] =
-  %Q{class MyClass
+  %(class MyClass
 
-end}
+end)
 
 INDENT_OK['class_empty_trailing_comment'] =
-  %Q{class MyClass    # Comment!
+  %(class MyClass    # Comment!
 
-end}
+end)
 
 INDENT_OK['class_singlestatement'] =
-  %Q{class MyClass
+  %(class MyClass
   include Stuff
-end}
+end)
 
 INDENT_OK['assignment_addition_multistatement'] =
-  %Q{thing = 1 +
+  %(thing = 1 +
   2 + 3 + 4 +
-  5}
+  5)
 
 INDENT_OK['assignment_addition_multistatement_trailing_comment'] =
-  %Q{thing = 1 +    # Comment!
+  %(thing = 1 +    # Comment!
   2 + 3 + 4 +
-  5}
+  5)
 
 INDENT_OK['assignment_hash_multistatement'] =
-  %Q{thing = {
+  %(thing = {
   :one => 'one',
   two: 'two'
-}}
+})
 
 INDENT_OK['assignment_hash_multistatement_trailing_comment'] =
-  %Q{thing = {
+  %(thing = {
   :one => 'one', # Comment
   two: 'two'
-}}
+})
 
 INDENT_OK['assignment_array_multistatement'] =
-  %Q{thing = [
+  %(thing = [
   :one,
   :two
-]}
+])
 
 INDENT_OK['assignment_array_multistatement_trailing_comment'] =
-  %Q{thing = [
+  %(thing = [
   :one,            # comment
   :two
-]}
+])
 
 INDENT_OK['assignment_paren_multistatement'] =
-  %Q{eval('puts',
+  %(eval('puts',
   binding,
   'my_file.rb',
-  5)}
+  5))
 
 INDENT_OK['assignment_paren_multistatement_trailing_comment'] =
-  %Q{eval('puts',
+  %(eval('puts',
   binding,
   'my_file.rb',         # comment
-  5)}
+  5))
 
 INDENT_OK['assignment_twolevel_hash_multistatement'] =
-  %Q{thing = {
+  %(thing = {
   :one => {
     :a => 'a',
     b: 'b'
@@ -87,56 +87,56 @@ INDENT_OK['assignment_twolevel_hash_multistatement'] =
     x: 'x',
     :y => 'y'
   }
-}}
+})
 
 INDENT_OK['assignment_twolevel_array_multistatement'] =
-  %Q{thing = [
+  %(thing = [
   [:one],
   [
     :two,
     :three
   ]
-]}
+])
 
 INDENT_OK['assignment_twolevel_paren_multistatement'] =
-  %Q{result = Integer(
+  %(result = Integer(
   String.new(
     '1'
   ).to_i,
   16
-)}
+))
 
 INDENT_OK['method_call_multistatement'] =
-  %Q{my_method_with_many_params(one, two,
+  %(my_method_with_many_params(one, two,
   three,
   four,
-  five)}
+  five))
 
 INDENT_OK['method_call_multistatement_trailing_comment'] =
-  %Q{my_method_with_many_params(one, two,
+  %(my_method_with_many_params(one, two,
   three,    # comment
   four,
-  five)}
+  five))
 
 INDENT_OK['method_call_multistatement_lonely_paren'] =
-  %Q{my_method_with_many_params(one, two,
+  %(my_method_with_many_params(one, two,
   three,
   four,
   five
-)}
+))
 
 INDENT_OK['method_call_multistatement_lonely_paren_trailing_comment'] =
-  %Q{my_method_with_many_params(one, two,  # comment
+  %(my_method_with_many_params(one, two,  # comment
   three,
   four,
   five
-)}
+))
 
 #-------------------------------------------------------------------------------
 # Continuation keywords
 #-------------------------------------------------------------------------------
 INDENT_OK['rescue_ending_with_comma'] =
-  %Q{begin
+  %(begin
   ssh.upload source, dest
   @logger.info "Successfully copied the file \#{source} to " +
     "\#{@config[:scp_hostname]}:\#{dest}."
@@ -144,10 +144,10 @@ rescue SocketError, ArgumentError, SystemCallError,
   Net::SCP::Exception, Timeout::Error => ex
   @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
     ex.message
-end}
+end)
 
 INDENT_OK['rescue_ending_with_comma_trailing_comment'] =
-  %Q{begin
+  %(begin
   ssh.upload source, dest
   @logger.info "Successfully copied the file \#{source} to " +
     "\#{@config[:scp_hostname]}:\#{dest}."
@@ -155,79 +155,79 @@ rescue SocketError, ArgumentError, SystemCallError,     # comment
   Net::SCP::Exception, Timeout::Error => ex
   @logger.error "Failed to copy the file \#{source} to \#{dest} due to " +
     ex.message
-end}
+end)
 
 INDENT_OK['def_rescue'] =
-  %Q{def some_method
+  %(def some_method
   do_something(one, two)
 rescue => e
   log 'It didn't work.'
   raise e
-end}
+end)
 
 INDENT_OK['keyword_ending_with_period'] =
-  %Q{if [].
+  %(if [].
   empty?
   puts 'hi'
-end}
+end)
 
 INDENT_OK['keyword_ending_with_period_trailing_comment'] =
-  %Q{if [].   # comment
+  %(if [].   # comment
   empty?
   puts 'hi'
-end}
+end)
 
 INDENT_OK['def'] =
-  %Q{def a_method
-end}
+  %(def a_method
+end)
 
 INDENT_OK['def_empty'] =
-  %Q{def a_method
+  %(def a_method
 
-end}
+end)
 
 INDENT_OK['nested_def'] =
-  %Q{def first_method
+  %(def first_method
   def second_method
     puts 'hi'
   end
-end}
+end)
 
 INDENT_OK['nested_class'] =
-  %Q{class MyClass
+  %(class MyClass
   class AnotherClass
   end
-end}
+end)
 
 INDENT_OK['require_class_singlestatement'] =
-  %Q{require 'time'
+  %(require 'time'
 
 class MyClass
   include Stuff
-end}
+end)
 
 INDENT_OK['class_as_symbol'] =
-  %Q{INDENT_OK = {}
+  %(INDENT_OK = {}
 
 INDENT_OK[:class] =
   %Q{class MyClass
 end}
 
 INDENT_OK[:one_line_class] =
-  %Q{class MyClass; end}}
+  %Q{class MyClass; end})
 
 INDENT_OK['require_class_singlestatement_def'] =
-  %Q{require 'time'
+  %(require 'time'
 
 class MyClass
   include Stuff
 
   def a_method
   end
-end}
+end)
 
 INDENT_OK['require_class_singlestatement_def_content'] =
-  %Q{require 'time'
+  %(require 'time'
 
 class MyClass
   include Stuff
@@ -235,201 +235,201 @@ class MyClass
   def a_method
     puts 'hello'
   end
-end}
+end)
 
 INDENT_OK['if_modifier'] =
-  %Q{puts 'hi' if nil.nil?}
+  %(puts 'hi' if nil.nil?)
 
 INDENT_OK['if_modifier2'] =
-  %Q{start_key_registration_server if @profiles.values.include? :SM5000}
+  %(start_key_registration_server if @profiles.values.include? :SM5000)
 
 INDENT_OK['def_return_if_modifier'] =
-  %Q{def a_method
+  %(def a_method
   return @something if @something
-end}
+end)
 
 INDENT_OK['unless_modifier'] =
-  %Q{puts 'hi' unless nil.nil?}
+  %(puts 'hi' unless nil.nil?)
 
 INDENT_OK['def_return_unless_modifier'] =
-  %Q{def a_method
+  %(def a_method
   return @something unless @something
-end}
+end)
 
 INDENT_OK['multi_line_if_with_trailing_andop'] =
-  %Q{unless Tim::Runner.configuration[:scp_hostname].nil?
+  %(unless Tim::Runner.configuration[:scp_hostname].nil?
   @reporter.secure_copy if Tim::Runner.configuration[:scp_username] &&
     Tim::Runner.configuration[:scp_password]
-end}
+end)
 
 INDENT_OK['while_within_single_line_block'] =
-  %Q{Timeout::timeout(DEVICE_TIMEOUT) { sleep(0.5) while @device_server.urls.nil? }}
+  %(Timeout::timeout(DEVICE_TIMEOUT) { sleep(0.5) while @device_server.urls.nil? })
 
 INDENT_OK['case_whens_level'] =
-  %Q{def my_method
+  %(def my_method
   case true
   when true
     puts 'stuff'
   when false
     puts 'blah blah'
   end
-end}
+end)
 
 INDENT_OK['case_strings_in_strings'] =
-  %Q{case type
+  %(case type
 when :output
   "I like to \#{eval('puts')}, but should be \#{eval('print')}"
 when :input
   "Gimme \#{eval('gets')}!"
-end}
+end)
 
 =begin
 INDENT_OK['case_whens_in'] =
-  %Q{def my_method
+  %(def my_method
   case true
     when true
       puts "stuff"
     when false
       puts "blah blah"
   end
-end}
+end)
 =end
 
 INDENT_OK['while_do_loop'] =
-  %Q{while true do
+  %(while true do
   puts 'something'
-end}
+end)
 
 INDENT_OK['while_do_loop2'] =
-  %Q{i = 0;
+  %(i = 0;
 num = 5;
 
 while i < num do
   puts("Inside the loop i = \#{i}");
   i +=1;
-end}
+end)
 
 INDENT_OK['until_do_loop'] =
-  %Q{until true do
+  %(until true do
   puts 'something'
-end}
+end)
 
 INDENT_OK['until_do_loop2'] =
-  %Q{i = 0;
+  %(i = 0;
 num = 5;
 
 until i > num  do
   puts("Inside the loop i = \#{i}");
   i +=1;
-end}
+end)
 
 INDENT_OK['for_do_loop'] =
-  %Q{for i in 1..100 do
+  %(for i in 1..100 do
   puts i
-end}
+end)
 
 INDENT_OK['loop_do_loop'] =
-  %Q{loop do
+  %(loop do
   puts 'looping'
-end}
+end)
 
 INDENT_OK['while_as_modifier_loop'] =
-  %Q{i = 0;
+  %(i = 0;
 num = 5;
 begin
   puts("Inside the loop i = \#{i}");
   i +=1;
-end while i < num}
+end while i < num)
 
 INDENT_OK['until_as_modifier_loop'] =
-  %Q{i = 0;
+  %(i = 0;
 num = 5;
 begin
   puts("Inside the loop i = \#{i}");
   i +=1;
-end until i > num}
+end until i > num)
 
 INDENT_OK['for_with_break_loop'] =
-  %Q{for i in 0..5
+  %(for i in 0..5
   if i > 2 then
     break
   end
   puts "Value of local variable is \#{i}"
-end}
+end)
 
 INDENT_OK['for_with_next_loop'] =
-  %Q{for i in 0..5
+  %(for i in 0..5
   if i < 2 then
     next
   end
   puts "Value of local variable is \#{i}"
-end}
+end)
 
 INDENT_OK['for_with_redo_loop'] =
-  %Q{for i in 0..5
+  %(for i in 0..5
   if i < 2 then
     puts "Value of local variable is \#{i}"
     redo
   end
-end}
+end)
 
 INDENT_OK['for_with_retry_loop'] =
-  %Q{for i in 1..5
+  %(for i in 1..5
   retry if i > 2
   puts "Value of local variable is \#{i}"
-end}
+end)
 
 INDENT_OK['loop_with_braces'] =
-  %Q<loop {
+  %(loop {
   puts 'stuff'
-}>
+})
 
 #----------- Braces ----------#
 INDENT_OK['single_line_braces'] =
-  %Q<{ one: 1, two: 2 }>
+  %({ one: 1, two: 2 })
 
 INDENT_OK['single_line_braces_as_t_string'] =
-  %Q<%Q{this is a t string!}>
+  %(%Q{this is a t string!})
 
 INDENT_OK['multi_line_braces'] =
-  %Q<{ one: 1,
-  two: 2 }>
+  %({ one: 1,
+  two: 2 })
 
 INDENT_OK['multi_line_braces_as_t_string'] =
-  %Q<%Q{this is a t string!
-suckaaaaaa!}>
+  %(%Q{this is a t string!
+suckaaaaaa!})
 
-# For some reason, Ruby doesn't like '%Q<> here.  Using [] instead.
+# For some reason, Ruby doesn't like '%Q<> here.
 INDENT_OK['multi_line_lonely_braces'] =
-  %Q[{
+  %({
   :one => 'one', :two => 'two',
   :three => 'three'
-}]
+})
 
 INDENT_OK['multi_line_lonely_braces_as_t_string'] =
-  %Q<%Q{
+  %(%Q{
 this is a t string!
 suckaaaaaa!
-}>
+})
 
 INDENT_OK['multi_line_braces_embedded_arrays'] =
-  %Q[{
+  %({
   :one => ['one', 17, {}], :two => ['two'],
   :three => 'three'
-}]
+})
 
 INDENT_OK['braces_combo'] =
-  %Q<{ three: 3 }
+  %({ three: 3 }
 {
   three: 3 }
 { three: 3
 }
 {
   three: 3
-}>
+})
 
 INDENT_OK['deep_hash_with_rockets'] =
-  %Q[im_deep =
+  %(im_deep =
   { 'one' =>
     { '1' =>
       { 'a' => 'A',
@@ -438,10 +438,10 @@ INDENT_OK['deep_hash_with_rockets'] =
       '2' =>
       { 'd' => 'D',
         'e' => 'E',
-        'f' => 'F' } } }]
+        'f' => 'F' } } })
 
 INDENT_OK['embedded_strings_in_embedded_strings'] =
-  %q[def friendly_time(time)
+  %q(def friendly_time(time)
   if hours < 24
     "#{(hours > 0) ? "#{hours} hour" : '' }#{(hours > 1) ? 's' : ''}" +
       " #{(mins > 0) ? "#{mins} minute" : '' }#{(mins > 1) ? 's' : ''}" +
@@ -449,116 +449,116 @@ INDENT_OK['embedded_strings_in_embedded_strings'] =
   else
     time.to_s
   end
-end]
+end)
 
 #----------- Brackets ----------#
 INDENT_OK['single_line_brackets'] =
-  %Q{['one', 'two', 'three']}
+  %(['one', 'two', 'three'])
 
 INDENT_OK['single_line_brackets_as_t_string'] =
-  %Q{%Q[this is a t string!]}
+  %(%Q[this is a t string!])
 
 INDENT_OK['multi_line_brackets'] =
-  %Q{['one',
+  %(['one',
   'two',
-  'three']}
+  'three'])
 
 INDENT_OK['multi_line_brackets_as_t_string'] =
-  %Q{%Q[this is a t string!
+  %(%Q[this is a t string!
                                 it doesn't matter that this is way over here.
-suckaaaaaa!]}
+suckaaaaaa!])
 
 INDENT_OK['multi_line_lonely_brackets'] =
-  %Q{[
+  %([
   'one',
   'two',
   'three'
-]}
+])
 
 INDENT_OK['multi_line_lonely_brackets_as_t_string'] =
-  %Q{%Q[
+  %(%Q[
 this is a t string!
                                 it doesn't matter that this is way over here.
 suckaaaaaa!
-]}
+])
 
 INDENT_OK['multi_line_brackets_embedded_hashes'] =
-  %Q{summary_table.rows << [{ value: 'File', align: :center },
-  { value: 'Total Problems', align: :center }]}
+  %(summary_table.rows << [{ value: 'File', align: :center },
+  { value: 'Total Problems', align: :center }])
 
 INDENT_OK['brackets_combo'] =
-  %Q{[2]
+  %([2]
 [
   2]
 [2
 ]
 [
   2
-]}
+])
 
 #----------- Parens ----------#
 
 INDENT_OK['single_line_parens'] =
-  %Q{(true || false)}
+  %((true || false))
 
 INDENT_OK['single_line_parens_as_t_string'] =
-  %Q{%Q(this is a t string!)}
+  %(%Q(this is a t string!))
 
 INDENT_OK['multi_line_parens'] =
-  %Q{my_method(first_argument, second_arg,
-  third_arg)}
+  %(my_method(first_argument, second_arg,
+  third_arg))
 
 INDENT_OK['multi_line_parens_as_t_string'] =
-  %Q{%Q(this is a t string!
+  %(%Q(this is a t string!
 and i'm not going
-anywhere!')}
+anywhere!'))
 
 INDENT_OK['multi_line_lonely_parens'] =
-  %Q{my_method(
+  %(my_method(
   first_argument
-)}
+))
 
 INDENT_OK['multi_line_lonely_parens_with_commas'] =
-  %Q{my_method(
+  %(my_method(
   first_argument, second_arg,
   third_arg
-)}
+))
 
 INDENT_OK['multi_line_lonely_parens_as_t_string'] =
-  %Q{%Q(
+  %(%Q(
 this is a t string!
 and i'm not going
 anywhere!'
-)}
+))
 
 INDENT_OK['parens_combo'] =
-  %Q{(1)
+  %((1)
 (
   1)
 (1
 )
 (
   1
-)}
+))
 
 
 #-------------------------------------------------------------------------------
 # Operators
 #-------------------------------------------------------------------------------
 INDENT_OK['multi_line_ops'] =
-  %Q{2 -
+  %(2 -
   1 -
   0 +
-  12}
+  12)
 
 INDENT_OK['multi_line_andop_in_method'] =
-  %Q{def end_of_multiline_string?(lexed_line_output)
+  %(def end_of_multiline_string?(lexed_line_output)
   lexed_line_output.any? { |e| e[1] == :on_tstring_end } &&
     lexed_line_output.none? { |e| e[1] == :on_tstring_beg }
-end}
+end)
 
 INDENT_OK['multi_line_rshift_in_method'] =
-  %Q{rule(:transport_specifier) do
+  %(rule(:transport_specifier) do
   match('[A-Za-z]').repeat(3).as(:streaming_protocol) >> forward_slash >>
     match('[A-Za-z]').repeat(3).as(:profile) >>
     (forward_slash >> match('[A-Za-z]').repeat(3).as(:transport_protocol)).maybe
@@ -571,18 +571,18 @@ end
 
 rule(:ttl) do
   str('ttl=') >> match('[\d]').repeat(1, 3).as(:ttl)
-end}
+end)
 
 INDENT_OK['multi_line_string_concat_with_plus'] =
-  %Q{DVR_SSDP_NOTIFICATION_TEMPLATE = File.dirname(__FILE__) +
-  '/profiles/DVR5000/ssdp_notification.erb'}
+  %(DVR_SSDP_NOTIFICATION_TEMPLATE = File.dirname(__FILE__) +
+  '/profiles/DVR5000/ssdp_notification.erb')
 
 INDENT_OK['multi_line_string_concat_with_plus_in_parens'] =
-  %Q{DVR_CONFIG_RENDERER = Erubis::Eruby.new(File.read File.dirname(__FILE__) +
-  '/profiles/DVR5000/device_config.xml.erb')}
+  %(DVR_CONFIG_RENDERER = Erubis::Eruby.new(File.read File.dirname(__FILE__) +
+  '/profiles/DVR5000/device_config.xml.erb'))
 
 INDENT_OK['multi_line_string_concat_twice'] =
-  %Q{unless Tim::Runner.configuration[:email].nil? ||
+  %(unless Tim::Runner.configuration[:email].nil? ||
   Tim::Runner.configuration[:email].empty?
   Tim::EmailReporter.subject_status ||= subject_status
   @email_reporter.send_email
@@ -592,13 +592,13 @@ def print_iteration_start iteration_number
   iteration_message = "Running Iteration \#{iteration_number} of " +
     @config[:suite_iterations].to_s
   @logger.info bar(iteration_message)
-end}
+end)
 
 #-------------------------------------------------------------------------------
 # Method calls
 #-------------------------------------------------------------------------------
 INDENT_OK['multi_line_method_call'] =
-  %Q{def initialize(raw_response)
+  %(def initialize(raw_response)
   if raw_response.nil? || raw_response.empty?
     raise RTSP::Error,
       "\#{self.class} received nil string--this shouldn't happen."
@@ -609,39 +609,39 @@ INDENT_OK['multi_line_method_call'] =
   head, body = split_head_and_body_from @raw_response
   parse_head(head)
   @body = parse_body(body)
-end}
+end)
 
 INDENT_OK['multi_line_method_call_ends_with_period'] =
-  %Q{unless streamer == MulticastStreamer.instance
+  %(unless streamer == MulticastStreamer.instance
   streamer.state = :DISCONNECTED
   UnicastStreamer.pool << streamer unless UnicastStreamer.pool.
     member? streamer
-end}
+end)
 
 INDENT_OK['multi_line_method_call_ends_with_many_periods'] =
-  %Q{my_hashie.first_level.
+  %(my_hashie.first_level.
   second_level.
-  third_level}
+  third_level)
 
 =begin
 INDENT_OK['method_closing_lonely_paren'] =
-  %Q{def your_thing(one
+  %(def your_thing(one
   )
-end}
+end)
 =end
 
 INDENT_OK['method_lonely_args'] =
-  %Q{def your_thing(
+  %(def your_thing(
   one
 )
   puts 'stuff'
-end}
+end)
 
 #------------------------------------------------------------------------------
 # If + logical operators
 #------------------------------------------------------------------------------
 INDENT_OK['multi_line_if_logical_and'] =
-  %Q{if @indentation_ruler.op_statement_nesting.empty? &&
+  %(if @indentation_ruler.op_statement_nesting.empty? &&
   @indentation_ruler.tstring_nesting.empty? &&
   @indentation_ruler.paren_nesting.empty? &&
   @indentation_ruler.brace_nesting.empty? &&
@@ -654,35 +654,35 @@ INDENT_OK['multi_line_if_logical_and'] =
     @indentation_ruler.last_comma_statement_line = lineno
     log "last: \#{@indentation_ruler.last_comma_statement_line}"
   end
-end}
+end)
 
 INDENT_OK['multi_line_each_block'] =
-  %Q{style.each do |ruler_name, value|
+  %(style.each do |ruler_name, value|
   instance_eval(
     "Tailor::Rulers::\#{camelize(ruler_name.to_s)}Ruler.new(\#{value})"
   )
   parent_ruler.add_child_ruler(ruler)
-end}
+end)
 
 INDENT_OK['multi_line_each_block_with_op_and_parens'] =
-  %Q{style.each do |ruler_name, value|
+  %(style.each do |ruler_name, value|
   ruler =
     instance_eval(
       "Tailor::Rulers::\#{camelize(ruler_name.to_s)}Ruler.new(\#{value})"
     )
   parent_ruler.add_child_ruler(ruler)
-end}
+end)
 
 INDENT_OK['do_end_block_in_parens'] =
-  %Q{begin
+  %(begin
   throw(:result, sexp_line.flatten.compact.any? do |s|
     s == MODIFIERS[self]
   end)
 rescue NoMethodError
-end}
+end)
 
 INDENT_OK['block_in_block_ends_on_same_line'] =
-  %Q{%w{
+  %(%w{
   foo
   bar
   baz
@@ -691,53 +691,53 @@ INDENT_OK['block_in_block_ends_on_same_line'] =
     puts 'stuff'
   end end
 
-puts 'post ends'}
+puts 'post ends')
 
 =begin
 INDENT_OK['rparen_and_do_same_line'] =
-  %Q{opt.on('-c', '--config-file FILE',
+  %(opt.on('-c', '--config-file FILE',
   "Use a specific config file.") do |config|
   options.config_file = config
-end}
+end)
 =end
 
 #-------------------------------------------------------------------------------
 # Single-line keywords
 #-------------------------------------------------------------------------------
 INDENT_OK['single_line_begin_rescue_end'] =
-  %Q{def log
+  %(def log
   l = begin; lineno; rescue; '<EOF>'; end
   c = begin; column; rescue; '<EOF>'; end
   subclass_name = self.class.to_s.sub(/^Tailor::/, '')
   args.first.insert(0, "<\#{subclass_name}> \#{l}[\#{c}]: ")
   Tailor::Logger.log(*args)
-end}
+end)
 
 #-------------------------------------------------------------------------------
 # Combos
 #-------------------------------------------------------------------------------
 INDENT_OK['combo1'] =
-  %Q{def set_default_smtp
+  %(def set_default_smtp
   Mail.defaults do
     @config = Tim::Runner.configuration
     delivery_method(:smtp,
       { :address => @config[:smtp_server],
         :port => @config[:smtp_server_port] })
   end
-end}
+end)
 
 INDENT_OK['combo2'] =
-  %Q{class C
+  %(class C
 
   send :each do
     def foo
     end
   end
 
-end}
+end)
 
 INDENT_OK['combo3'] =
-  %Q{def report_turducken(results, performance_results)
+  %(def report_turducken(results, performance_results)
   stuffing[:log_files] = { "\#{File.basename @logger.log_file_location}/path" =>
     File.read(@logger.log_file_location).gsub(/(?<f><)(?<q>\\/)?(?<w>\\w)/,
       '\\k<f>!\\k<q>\\k<w>') }.merge remote_logs
@@ -751,24 +751,24 @@ INDENT_OK['combo3'] =
   end
 
   suite_result_url
-end}
+end)
 
 INDENT_OK['brace_bracket_paren_combo1'] =
-  %Q{[{ :one => your_thing(
+  %([{ :one => your_thing(
   1)
 }
-]}
+])
 
 INDENT_OK['paren_comma_combo1'] =
-  %Q{def do_something
+  %(def do_something
   self[:log_file_location] = Time.now.strftime(File.join(Tim::LOG_DIR,
     "\#{self[:product]}_%Y-%m-%d_%H-%M-%S.log"))
 
   handle_arguments arg_list
-end}
+end)
 
 INDENT_OK['line_ends_with_label'] =
-  %Q{options = {
+  %(options = {
   actual_trailing_spaces:
     lexed_line.last_non_line_feed_event.last.size
-}}
+})

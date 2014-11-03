@@ -7,14 +7,14 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
   describe '#comment_update' do
     context 'token has a trailing newline' do
       it 'calls #ignored_nl_update' do
-        subject.should_receive(:ignored_nl_update)
+        expect(subject).to receive(:ignored_nl_update)
         subject.comment_update("\n", '', '', 1, 1)
       end
     end
 
     context 'token does not have a trailing newline' do
       it 'does not call #ignored_nl_update' do
-        subject.should_not_receive(:ignored_nl_update)
+        expect(subject).to_not receive(:ignored_nl_update)
         subject.comment_update('# comment', '', '', 1, 1)
       end
     end
@@ -22,7 +22,7 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
 
   describe '#ignored_nl_update' do
     it 'calls #check_spaces_after_lbrace' do
-      subject.should_receive(:check_spaces_after_lbrace)
+      expect(subject).to receive(:check_spaces_after_lbrace)
       subject.ignored_nl_update('', 1, 1)
     end
   end
@@ -30,13 +30,13 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
   describe '#lbrace_update' do
     it 'adds column to @lbrace_columns' do
       subject.lbrace_update('', 1, 1)
-      subject.instance_variable_get(:@lbrace_columns).should == [1]
+      expect(subject.instance_variable_get(:@lbrace_columns)).to eq [1]
     end
   end
 
   describe '#nl_update' do
     it 'calls #ignored_nl_update' do
-      subject.should_receive(:ignored_nl_update)
+      expect(subject).to receive(:ignored_nl_update)
       subject.nl_update('', 1, 1)
     end
   end
@@ -51,8 +51,8 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
       end
 
       it 'breaks from the loop and returns nil' do
-        lexed_line.should_not_receive(:at)
-        subject.count_spaces(lexed_line, 1).should be_nil
+        expect(lexed_line).to_not receive(:at)
+        expect(subject.count_spaces(lexed_line, 1)).to be_nil
       end
     end
 
@@ -66,7 +66,7 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
       end
 
       it 'returns 0' do
-        subject.count_spaces(lexed_line, 1).should be_zero
+        expect(subject.count_spaces(lexed_line, 1)).to be_zero
       end
     end
 
@@ -77,14 +77,14 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
 
       let(:lexed_line) do
         l = double 'LexedLine'
-        l.stub(:event_index).and_return 1
-        l.should_receive(:at).with(2).and_return next_event
+        allow(l).to receive(:event_index).and_return 1
+        expect(l).to receive(:at).with(2).and_return next_event
 
         l
       end
 
       it 'returns 0' do
-        subject.count_spaces(lexed_line, 1).should be_zero
+        expect(subject.count_spaces(lexed_line, 1)).to be_zero
       end
     end
 
@@ -95,8 +95,8 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
 
       let(:lexed_line) do
         l = double 'LexedLine'
-        l.stub(:event_index).and_return 1
-        l.should_receive(:at).with(2).and_return next_event
+        allow(l).to receive(:event_index).and_return 1
+        expect(l).to receive(:at).with(2).and_return next_event
 
         l
       end
@@ -113,14 +113,14 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
 
       let(:lexed_line) do
         l = double 'LexedLine'
-        l.stub(:event_index).and_return 1
-        l.stub(:at).and_return next_event
+        allow(l).to receive(:event_index).and_return 1
+        allow(l).to receive(:at).and_return next_event
 
         l
       end
 
       it 'returns 0' do
-        subject.count_spaces(lexed_line, 1).should be_zero
+        expect(subject.count_spaces(lexed_line, 1)).to be_zero
       end
     end
 
@@ -131,14 +131,14 @@ describe Tailor::Rulers::SpacesAfterLbraceRuler do
 
       let(:lexed_line) do
         l = double 'LexedLine'
-        l.stub(:event_index).and_return 1
-        l.stub(:at).and_return next_event
+        allow(l).to receive(:event_index).and_return 1
+        allow(l).to receive(:at).and_return next_event
 
         l
       end
 
       it 'returns 2' do
-        subject.count_spaces(lexed_line, 1).should == 2
+        expect(subject.count_spaces(lexed_line, 1)).to eq 2
       end
     end
   end
