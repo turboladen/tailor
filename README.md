@@ -455,7 +455,6 @@ REQUIREMENTS:
 * Rubies (tested)
     * ruby-2.0.0
     * ruby-2.1.4
-    * mruby-1.0.0
 * Gems
     * log_switch
     * nokogiri
