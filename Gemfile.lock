@@ -26,7 +26,7 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     fakefs (0.6.0)
-    ffi (1.9.6)
+    ffi (1.11.2)
     gherkin (2.12.2)
       multi_json (~> 1.3)
     log_switch (0.3.0)
