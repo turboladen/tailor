@@ -33,7 +33,7 @@ GEM
     mini_portile2 (2.4.0)
     multi_json (1.10.1)
     multi_test (0.1.1)
-    nokogiri (1.10.5)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     rake (10.3.2)
     rspec (3.1.0)
