@@ -35,7 +35,7 @@ GEM
     multi_test (0.1.1)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
-    rake (10.3.2)
+    rake (13.0.1)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
